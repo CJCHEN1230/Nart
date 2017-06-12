@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
-
+        xmlns:Controls="clr-namespace:NartControl;assembly=NartControl"
         xmlns:local="clr-namespace:Nart"
         mc:Ignorable="d"
         xmlns:helix="http://helix-toolkit.org/wpf"
@@ -45,7 +45,7 @@
             <!-- Remember to add light to the scene -->
             <helix:DefaultLights/>
         </helix:HelixViewport3D>
-        <!--Controls:ImgButton2 ButtonLabel="12345" ButtonImageSource="../Icon/TEST.ico" Margin="108,88,114,640" Grid.Row="1" /-->
+        <Controls:ImgButton ButtonLabel="12345" ButtonImageSource="/Icon/TEST.ico" Margin="156,35,128,762" Grid.Row="1" />
         <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
 
 

@@ -91,7 +91,6 @@ namespace Nart
         private void defaultCameraSetting(TIS.Imaging.ICImagingControl icImagingControl)
         {
 
-
             icImagingControl.DeviceListChangedExecutionMode = TIS.Imaging.EventExecutionMode.Invoke;
             icImagingControl.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
             icImagingControl.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
@@ -143,30 +142,30 @@ namespace Nart
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
-            if (!icImagingControl1.DeviceValid)
-            {
-                icImagingControl1.ShowDeviceSettingsDialog();
+            //if (!icImagingControl1.DeviceValid)
+            //{
+            //    icImagingControl1.ShowDeviceSettingsDialog();
 
-                if (!icImagingControl1.DeviceValid)
-                {
-                    System.Windows.Forms.MessageBox.Show("No device was selected.", "Grabbing an Image",
-                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Close();
-                }
-            }
-            if (!icImagingControl2.DeviceValid)
-            {
-                icImagingControl2.ShowDeviceSettingsDialog();
+            //    if (!icImagingControl1.DeviceValid)
+            //    {
+            //        System.Windows.Forms.MessageBox.Show("No device was selected.", "Grabbing an Image",
+            //                         MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //        this.Close();
+            //    }
+            //}
+            //if (!icImagingControl2.DeviceValid)
+            //{
+            //    icImagingControl2.ShowDeviceSettingsDialog();
 
-                if (!icImagingControl2.DeviceValid)
-                {
-                    System.Windows.Forms.MessageBox.Show("No device was selected.", "Grabbing an Image",
-                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Close();
-                }
-            }
-            icImagingControl1.LiveStart();
-            icImagingControl2.LiveStart();
+            //    if (!icImagingControl2.DeviceValid)
+            //    {
+            //        System.Windows.Forms.MessageBox.Show("No device was selected.", "Grabbing an Image",
+            //                         MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //        this.Close();
+            //    }
+            //}
+            //icImagingControl1.LiveStart();
+            //icImagingControl2.LiveStart();
         }
 
         private void ShowImageBuffer(TIS.Imaging.ImageBuffer buffer, TIS.Imaging.ICImagingControl icImagingControl)
