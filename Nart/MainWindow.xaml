@@ -1,12 +1,53 @@
 ﻿<Window x:Class="Nart.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"  
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
+
         xmlns:local="clr-namespace:Nart"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        xmlns:helix="http://helix-toolkit.org/wpf"
+        Foreground="White"
+        Title="Nart" Height="997" Width="1800" Loaded="Window_Loaded">
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCmdExecuted"/>
+        <CommandBinding Command="ApplicationCommands.New" Executed="NewCmdExecuted"/>
+    </Window.CommandBindings>
+    <Grid HorizontalAlignment="Right" Width="1764" Margin="0,0,0,-1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="183*"/>
+            <ColumnDefinition Width="190*"/>
+            <ColumnDefinition Width="504*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="29*"/>
+            <RowDefinition Height="403*"/>
+            <RowDefinition Height="18*"/>
+        </Grid.RowDefinitions>
+        <WindowsFormsHost x:Name="CamHost1" Height="343" VerticalAlignment="Top" Margin="16,142,0,0" Grid.Row="1" HorizontalAlignment="Left" Width="342"/>
+        <WindowsFormsHost x:Name="CamHost2" Height="343" Margin="23,142,0,0" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="349"/>
+
+        <StackPanel HorizontalAlignment="Left" Height="62" Margin="10,0,0,0"  Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Width="358"/>
+
+        <helix:HelixViewport3D x:Name="viewPort3d" ZoomExtentsWhenLoaded="true" Grid.Column="2" Margin="10,10,0,18" Background="Black" HorizontalAlignment="Left" Width="988" Grid.Row="1" >
+            <helix:HelixViewport3D.RotateGesture>
+                <MouseGesture MouseAction="LeftClick" />
+            </helix:HelixViewport3D.RotateGesture>
+            <helix:HelixViewport3D.PanGesture>
+                <MouseGesture MouseAction="RightClick" />
+            </helix:HelixViewport3D.PanGesture>
+            <helix:HelixViewport3D.ZoomGesture>
+                <MouseGesture MouseAction="MiddleClick" />
+            </helix:HelixViewport3D.ZoomGesture>
+
+            <!-- helix:Teapot/-->
+
+            <!-- Remember to add light to the scene -->
+            <helix:DefaultLights/>
+        </helix:HelixViewport3D>
+        <!--Controls:ImgButton2 ButtonLabel="12345" ButtonImageSource="../Icon/TEST.ico" Margin="108,88,114,640" Grid.Row="1" /-->
+        <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
+
+
     </Grid>
 </Window>
