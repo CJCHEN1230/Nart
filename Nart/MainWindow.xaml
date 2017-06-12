@@ -45,7 +45,7 @@
             <!-- Remember to add light to the scene -->
             <helix:DefaultLights/>
         </helix:HelixViewport3D>
-        <Controls:ImgButton ButtonLabel="12345" ButtonImageSource="/Icon/TEST.ico" Margin="156,35,128,762" Grid.Row="1" />
+        <Controls:ImgButton ButtonLabel="12345" ButtonImageSource="/Icon/TEST.ico" Margin="156,35,128,762" Grid.Row="1" RenderTransformOrigin="-0.636,0.382" />
         <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
 
 
