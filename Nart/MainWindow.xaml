@@ -8,44 +8,57 @@
         mc:Ignorable="d"
         xmlns:helix="http://helix-toolkit.org/wpf"
         Foreground="White"
-        Title="Nart" Height="997" Width="1800" Loaded="Window_Loaded">
+        Title="Nart" Height="946" Width="2020.5" Loaded="Window_Loaded" WindowState="Maximized">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCmdExecuted"/>
         <CommandBinding Command="ApplicationCommands.New" Executed="NewCmdExecuted"/>
     </Window.CommandBindings>
-    <Grid HorizontalAlignment="Right" Width="1764" Margin="0,0,0,-1">
+    <Grid Margin="10,10,0,-1">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="183*"/>
-            <ColumnDefinition Width="190*"/>
-            <ColumnDefinition Width="504*"/>
+            <ColumnDefinition Width="19*"/>
+            <ColumnDefinition Width="72*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="29*"/>
-            <RowDefinition Height="403*"/>
-            <RowDefinition Height="18*"/>
+            <RowDefinition Height="62*"/>
+            <RowDefinition Height="861*"/>
+            <RowDefinition Height="44*"/>
         </Grid.RowDefinitions>
-        <WindowsFormsHost x:Name="CamHost1" Height="343" VerticalAlignment="Top" Margin="16,142,0,0" Grid.Row="1" HorizontalAlignment="Left" Width="342"/>
-        <WindowsFormsHost x:Name="CamHost2" Height="343" Margin="23,142,0,0" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="349"/>
+        <WindowsFormsHost x:Name="CamHost1" Height="343" VerticalAlignment="Top" Margin="10,112,0,0" Grid.Row="1" HorizontalAlignment="Left" Width="348"/>
+        <WindowsFormsHost x:Name="CamHost2" Height="343" Margin="9,460,0,0" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" Width="349"/>
 
-        <StackPanel HorizontalAlignment="Left" Height="62" Margin="10,0,0,0"  Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Width="358"/>
 
-        <helix:HelixViewport3D x:Name="viewPort3d" ZoomExtentsWhenLoaded="true" Grid.Column="2" Margin="10,10,0,18" Background="Black" HorizontalAlignment="Left" Width="988" Grid.Row="1" >
+        <helix:HelixViewport3D x:Name="helixViewport"  ShowCoordinateSystem="True" ZoomExtentsWhenLoaded="true" Grid.Column="1" Background="Green" Margin="30,10,0,28" HorizontalAlignment="Left" Width="1330" Grid.Row="1" >
             <helix:HelixViewport3D.RotateGesture>
                 <MouseGesture MouseAction="LeftClick" />
             </helix:HelixViewport3D.RotateGesture>
+
             <helix:HelixViewport3D.PanGesture>
                 <MouseGesture MouseAction="RightClick" />
             </helix:HelixViewport3D.PanGesture>
+
             <helix:HelixViewport3D.ZoomGesture>
                 <MouseGesture MouseAction="MiddleClick" />
             </helix:HelixViewport3D.ZoomGesture>
 
-            <!-- helix:Teapot/-->
+            <helix:ThreePointLights ShowLights="False"/>
+            <helix:Teapot/>
+            <helix:SphereVisual3D Center="0,0,0" Radius="0.1" Fill="White"/>
 
             <!-- Remember to add light to the scene -->
             <helix:DefaultLights/>
+
+            <ModelVisual3D x:Name="modelVisual">
+
+            </ModelVisual3D>
+
+
+
+
         </helix:HelixViewport3D>
-        <Controls:ImgButton ButtonLabel="12345" ButtonImageSource="/Icon/TEST.ico" Margin="156,35,128,762" Grid.Row="1" RenderTransformOrigin="-0.636,0.382" />
+        <Controls:ImgButton ButtonLabel="12345" ButtonImageSource="/Icon/TEST.ico" Margin="16,12,302,0" RenderTransformOrigin="-0.636,0.382" Height="Auto" Width="Auto" />
+        <Button x:Name="button" Command="ApplicationCommands.Open" Content="Open" HorizontalAlignment="Left" Margin="16,14,0,0" Grid.Row="1" VerticalAlignment="Top" Width="87" Height="79" />
+        <Button x:Name="button1" Click="button2_Click" Content="RotateBtn" HorizontalAlignment="Left" Margin="113,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="97" Height="97"/>
+        <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="232,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="96" Height="97"/>
         <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
 
 
