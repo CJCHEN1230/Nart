@@ -30,12 +30,6 @@ namespace Nart
     /// </summary>
     public partial class MainWindow : Window
     {
-      
-
-        Model3DGroup model3dgroup = new Model3DGroup();
-
-        internal OrthographicCamera OrthographicCam = new OrthographicCamera();
-
         internal ModelVisual3D LightModel = new ModelVisual3D();
 
         private Environment _envSetting;
@@ -46,20 +40,18 @@ namespace Nart
             InitializeComponent();
             AllocConsole();
 
+            displaytest();
 
             _envSetting = new Environment(this);
-            //modelVisual = new ModelVisual3D();
-            //modelVisual.Content = Display3d(MODEL_PATH);
 
-            // this.helixViewport.Background = new SolidColorBrush(Colors.Black);
-
-
-            //helixViewport.Children.Add(modelVisual);
 
             CamCtrl = new CameraControl((int)CamHost2.Width, (int)CamHost2.Height);
 
             CamHost1.Child = CamCtrl.icImagingControl[0];
             CamHost2.Child = CamCtrl.icImagingControl[1];
+
+
+            
 
         }
 
@@ -71,21 +63,7 @@ namespace Nart
         {
            // CamCtrl.CameraStart();
         }
-
-        internal void SetCamera()
-        {
-            //myOCamera = helixViewport.Camera as OrthographicCamera;
-
-            //myOCamera.LookAt(environmentSetting.BoundingBox_center, new Vector3D(0, 0, -1), new Vector3D(0, 1, 0), 1.0);
-
-            //double dx = environmentSetting.BoundingBox_max.X - environmentSetting.BoundingBox_min.X;
-            //double dy = environmentSetting.BoundingBox_max.Y - environmentSetting.BoundingBox_min.Y;
-            //double dz = environmentSetting.BoundingBox_max.Z - environmentSetting.BoundingBox_min.Z;
-
-            //myOCamera.Width = Math.Max(dx, Math.Max(dy, dz)) * 1.5;
-            //myOCamera.NearPlaneDistance = environmentSetting.BoundingBox_min.Y - dy * 15.0;
-        }
-
+        
         private Model3DGroup Display3d(string model)
         {
             Model3DGroup device = null;
@@ -122,63 +100,36 @@ namespace Nart
 
             if (result == true)
             {
-                Model3DGroup model = Display3d(dlg.FileNames[0]);
+                ModelData mData3 = new ModelData(dlg.FileNames[0]);
 
-                Rect3D rect3d = model.Bounds;
 
-                GeometryModel3D Geomodel = model.Children[0] as GeometryModel3D;
+                mainModelVisual.Children.Add(mData3.ModelVisual);
 
-                DiffuseMaterial material = new DiffuseMaterial(new SolidColorBrush(Colors.White));
-                Geomodel.Material = material;
-
-                var dev = new Vector3D(rect3d.X + rect3d.SizeX / 2.0, rect3d.Y + rect3d.SizeY / 2.0, rect3d.Z + rect3d.SizeZ / 2.0);
-                dev = dev * -1;
-
-                var matrix = modelVisual.Transform.Value;
-
-                matrix.Translate(dev);
-
-                var moreModelVisual3D = new ModelVisual3D();
-
-                
-
-                moreModelVisual3D.Content = model;
-                moreModelVisual3D.Transform = new MatrixTransform3D(matrix);
-
-                // model3dgroup.Children.Add(model);
-                //model3dgroup.Children.Add(model);
-                //modelVisual.Content = model3dgroup; ;
-
-                //modelVisual.Content = model;                               
-                helixViewport.Children.Add(moreModelVisual3D);
+                _envSetting.SetCamera();
             }
         }
 
-        private void NewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-
-        }
-
-        private void button2_Click(object sender, RoutedEventArgs e)
+       
+        private void Rotate_Click(object sender, RoutedEventArgs e)
         {
             var axis = new Vector3D(0, 0, 1);
             var angle = 10;
 
-            var matrix = modelVisual.Transform.Value;
+            var matrix = MV2.Transform.Value;
             matrix.Rotate(new Quaternion(axis, angle));
 
-            modelVisual.Transform = new MatrixTransform3D(matrix);
+            MV2.Transform = new MatrixTransform3D(matrix);
         }
 
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
-            var dev = new Vector3D(0, 100, 0);
+            var dev = new Vector3D(0, 10, 0);
 
-            var matrix = modelVisual.Transform.Value;
+            var matrix = MV1.Transform.Value;
             matrix.Translate(dev);
             //matrix.Rotate(new Quaternion(axis, angle));
 
-            modelVisual.Transform = new MatrixTransform3D(matrix);
+            MV1.Transform = new MatrixTransform3D(matrix);
 
             //Model3DGroup triangle = new Model3DGroup();
             //Point3D p0 = new Point3D(0, 0, 0);
@@ -200,6 +151,106 @@ namespace Nart
            
         }
 
+        private void allRotate_Click(object sender, RoutedEventArgs e)
+        {
+            var axis = new Vector3D(0, 0, 1);
+            var angle = 30;
+
+            var matrix = mainModelVisual.Transform.Value;
+            matrix.Rotate(new Quaternion(axis, angle));
+
+            mainModelVisual.Transform = new MatrixTransform3D(matrix);
+        }
+
+        private ModelVisual3D MV1 = new ModelVisual3D();
+        private ModelVisual3D MV2 = new ModelVisual3D();
+        private ModelData mData1 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\Ramus L-fine.stl");
+        private ModelData mData2 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\Ramus R-fine.stl");
+        private ModelData mData3 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\maxilla cut-teeth4-fine-combine.stl");
+
+        private void displaytest() {
+
+           
+
+            mainModelVisual.Children.Add(mData1.ModelVisual);
+            mainModelVisual.Children.Add(mData2.ModelVisual);
+            mainModelVisual.Children.Add(mData3.ModelVisual);
+
+            //Rect3D rect3d = mainModelVisual.FindBounds(mainModelVisual.Transform);
+            //var dev1 = new Vector3D(rect3d.X + rect3d.SizeX / 2.0, rect3d.Y + rect3d.SizeY / 2.0, rect3d.Z + rect3d.SizeZ / 2.0);
+            //dev1 = dev1 * -1;
+
+            //var matrix1 = mainModelVisual.Transform.Value;
+            
+            //matrix1.Translate(dev1);
+
+            //mainModelVisual.Transform = new MatrixTransform3D(matrix1);
+
+
+
+            //Model3DGroup model1 = Display3d("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\Ramus L-fine.stl");
+
+
+            //Model3DGroup model2 = Display3d("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\Ramus R-fine.stl");
+
+
+            //Rect3D rect3d1 = model1.Bounds;
+            //Rect3D rect3d2 = model2.Bounds;
+
+            //GeometryModel3D Geomodel = model1.Children[0] as GeometryModel3D;
+
+            //DiffuseMaterial material = new DiffuseMaterial(new SolidColorBrush(Color.FromRgb(40, 181, 187)));
+            //Geomodel.Material = material;
+
+
+
+            //var dev1 = new Vector3D(rect3d1.X + rect3d1.SizeX / 2.0, rect3d1.Y + rect3d1.SizeY / 2.0, rect3d1.Z + rect3d1.SizeZ / 2.0);
+            //dev1 = dev1 * -1;
+
+
+            //var dev2 = new Vector3D(rect3d2.X + rect3d2.SizeX / 2.0, rect3d2.Y + rect3d2.SizeY / 2.0, rect3d2.Z + rect3d2.SizeZ / 2.0);
+            //dev2 = dev2 * -1;
+
+
+            //var matrix1 = MV1.Transform.Value;
+            //var matrix2 = MV2.Transform.Value;
+
+            //matrix1.Translate(dev1);
+            //matrix2.Translate(dev2);
+
+
+            //MV1.Content = model1;
+            //MV1.Transform = new MatrixTransform3D(matrix1);
+
+            //MV2.Content = model2;
+            //MV2.Transform = new MatrixTransform3D(matrix2);
+
+
+            //mainModelVisual.Children.Add(MV1);
+            //mainModelVisual.Children.Add(MV2);
+            //helixViewport.Children.Add(MV1);
+            //helixViewport.Children.Add(MV2);
+
+        }
+
+
+
+        private void NewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+
+        
+
+
+
+
+
+
+
+
+
+
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
@@ -207,5 +258,6 @@ namespace Nart
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
+        
     }
 }

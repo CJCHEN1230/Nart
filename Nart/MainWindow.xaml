@@ -27,7 +27,15 @@
         <WindowsFormsHost x:Name="CamHost2" Height="343" Margin="9,460,0,0" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" Width="349"/>
 
 
-        <helix:HelixViewport3D x:Name="helixViewport"  ShowCoordinateSystem="True" ZoomExtentsWhenLoaded="true" Grid.Column="1" Background="Green" Margin="30,10,0,28" HorizontalAlignment="Left" Width="1330" Grid.Row="1" >
+        <helix:HelixViewport3D x:Name="helixViewport" ShowViewCube="False" ShowCoordinateSystem="True" ZoomExtentsWhenLoaded="False" Grid.Column="1" 
+                               Background="Green" Margin="46,14,0,24" HorizontalAlignment="Left" Width="1330" Grid.Row="1" 
+                               CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect">
+            <helix:HelixViewport3D.Camera>
+                <!--OrthographicCamera Position="200,200,200" LookDirection="-200,-200,-200" UpDirection="0,0,1" NearPlaneDistance="1090"/-->
+                <!--OrthographicCamera Position="200,200,200"  LookDirection="-100,-100,-100" UpDirection="0,0,1" NearPlaneDistance="0.1"/-->
+                <OrthographicCamera x:Name="OrthographicCam" Width="200" Position="0,0,150"  LookDirection="0,0,-150" UpDirection="0,1,0" NearPlaneDistance="0.1"/>
+            </helix:HelixViewport3D.Camera>
+
             <helix:HelixViewport3D.RotateGesture>
                 <MouseGesture MouseAction="LeftClick" />
             </helix:HelixViewport3D.RotateGesture>
@@ -40,14 +48,14 @@
                 <MouseGesture MouseAction="MiddleClick" />
             </helix:HelixViewport3D.ZoomGesture>
 
-            <helix:ThreePointLights ShowLights="False"/>
-            <helix:Teapot/>
-            <helix:SphereVisual3D Center="0,0,0" Radius="0.1" Fill="White"/>
-
+            <!--helix:ThreePointLights ShowLights="False"/-->
+            <!--helix:Teapot/-->
+            <helix:SphereVisual3D Center="0,0,0" Radius="1" Fill="White"/>
+            <!--helix:GridLinesVisual3D  Center="0,0,0" Fill="Black"/-->
             <!-- Remember to add light to the scene -->
-            <helix:DefaultLights/>
-
-            <ModelVisual3D x:Name="modelVisual">
+            <!--helix:DefaultLights/-->
+            <!--helix:SunLight/-->
+            <ModelVisual3D x:Name="mainModelVisual">
 
             </ModelVisual3D>
 
@@ -57,8 +65,9 @@
         </helix:HelixViewport3D>
         <Controls:ImgButton ButtonLabel="12345" ButtonImageSource="/Icon/TEST.ico" Margin="16,12,302,0" RenderTransformOrigin="-0.636,0.382" Height="Auto" Width="Auto" />
         <Button x:Name="button" Command="ApplicationCommands.Open" Content="Open" HorizontalAlignment="Left" Margin="16,14,0,0" Grid.Row="1" VerticalAlignment="Top" Width="87" Height="79" />
-        <Button x:Name="button1" Click="button2_Click" Content="RotateBtn" HorizontalAlignment="Left" Margin="113,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="97" Height="97"/>
-        <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="232,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="96" Height="97"/>
+        <Button x:Name="button1" Click="Rotate_Click" Content="RotateBtn" HorizontalAlignment="Left" Margin="113,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="97" Height="97"/>
+        <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="215,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="96" Height="97"/>
+        <Button x:Name="button3" Click="allRotate_Click" Content="AllRotateBtn" HorizontalAlignment="Left" Margin="322,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="96" Height="97"/>
         <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
 
 

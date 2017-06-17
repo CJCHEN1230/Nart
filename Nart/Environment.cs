@@ -20,27 +20,55 @@ namespace Nart
             _window = window;
             //backgroundColor = Colors.Black;
             SetCamera();
+
+            ambientLightColor = Color.FromScRgb(1.0f, 0.4f, 0.4f, 0.4f);
+            directionalLightColor1 = Color.FromScRgb(1.0f, 0.1f, 0.1f, 0.1f);
+            directionalLightColor2 = Color.FromScRgb(1.0f, 0.1f, 0.1f, 0.1f);
+            directionalLightColor3 = Color.FromScRgb(1.0f, 0.1f, 0.1f, 0.1f);
+
             LightSetting();
         }
 
         internal void SetCamera()
         {
 
+            Rect3D rect3d = _window.mainModelVisual.FindBounds(_window.mainModelVisual.Transform);
 
-            //_window.OrthographicCam.LookAt(environmentSetting.BoundingBox_center, new Vector3D(0, 0, -1), new Vector3D(0, 1, 0), 1.0);
-            _window.OrthographicCam.LookAt(new Point3D(0,0,0), new Vector3D(0, 0, -1), new Vector3D(0, 1, 0), 1.0);
-            //double dx = environmentSetting.BoundingBox_max.X - environmentSetting.BoundingBox_min.X;
-            //double dy = environmentSetting.BoundingBox_max.Y - environmentSetting.BoundingBox_min.Y;
-            //double dz = environmentSetting.BoundingBox_max.Z - environmentSetting.BoundingBox_min.Z;
-
-            //_window.OrthographicCam.Width = Math.Max(dx, Math.Max(dy, dz)) * 1.5;
-            //_window.OrthographicCam.NearPlaneDistance = environmentSetting.BoundingBox_min.Y - dy * 15.0;
-
-            _window.OrthographicCam.Width = 500;
-            _window.OrthographicCam.NearPlaneDistance = -200;
+            Point3D Center = new Point3D(rect3d.X + rect3d.SizeX / 2.0, rect3d.Y + rect3d.SizeY / 2.0, rect3d.Z + rect3d.SizeZ / 2.0);
 
 
-            _window.helixViewport.Camera = _window.OrthographicCam;
+            Console.WriteLine(Center);
+            _window.OrthographicCam.Position = new Point3D(Center.X, Center.Y-500, Center.Z );
+
+            _window.OrthographicCam.LookAt(Center, new Vector3D(0, 1, 0), new Vector3D(0, 0, 1), 0.1);
+
+
+
+
+
+
+
+            //_window.OrthographicCam.LookAt(new Point3D(0, 0, 0), new Vector3D(0, 0, -150), new Vector3D(0, 1, 0), 1.0);
+            ////_window.OrthographicCam.LookAt(new Point3D(0,1000,1000), new Vector3D(0, 0, -1), new Vector3D(0, 1, 0), 1.0);
+
+            //_window.OrthographicCam.Position = new Point3D(0, 0, 150);
+            //_window.OrthographicCam.UpDirection = new Vector3D(0, 1, 0);
+            //_window.OrthographicCam.LookDirection = new Vector3D(0, 0, -150);
+
+            ////double dx = environmentSetting.BoundingBox_max.X - environmentSetting.BoundingBox_min.X;
+            ////double dy = environmentSetting.BoundingBox_max.Y - environmentSetting.BoundingBox_min.Y;
+            ////double dz = environmentSetting.BoundingBox_max.Z - environmentSetting.BoundingBox_min.Z;
+
+            ////_window.OrthographicCam.Width = Math.Max(dx, Math.Max(dy, dz)) * 1.5;
+            ////_window.OrthographicCam.NearPlaneDistance = environmentSetting.BoundingBox_min.Y - dy * 15.0;
+
+            //_window.OrthographicCam.Width = 200;
+
+
+            ////_window.OrthographicCam.NearPlaneDistance = -200;
+
+
+            ////_window.helixViewport.Camera = _window.OrthographicCam;
 
         }
 
@@ -103,6 +131,27 @@ namespace Nart
             }
         }
 
+        /// <summary>
+        /// Directional Light 2
+        /// </summary>
+        private Color directionalLightColor3;
+        /// <summary>
+        /// Directional Light 2
+        /// </summary>
+        public Color DirectionalLightColor3
+        {
+            set
+            {
+                directionalLightColor3 = value;
+                DirectionalLight light = ((Model3DGroup)_window.LightModel.Content).Children[2] as DirectionalLight;
+                light.Color = directionalLightColor3;
+            }
+            get
+            {
+                return directionalLightColor3;
+            }
+        }
+
 
         private Color backgroundColor;
 
@@ -142,16 +191,42 @@ namespace Nart
 
             DirectionalLight myDirectionalLight1 = new DirectionalLight();            
             myDirectionalLight1.Color = DirectionalLightColor1;
-            myDirectionalLight1.Direction = new Vector3D(-1.0, 0.0, -0.6);
+            myDirectionalLight1.Direction = new Vector3D(-1.0, 0.5, -0.6);
+            
+
 
             DirectionalLight myDirectionalLight2 = new DirectionalLight();
             myDirectionalLight2.Color = DirectionalLightColor2;
-            myDirectionalLight2.Direction = new Vector3D(1.0, 0.0, -0.6);
+            myDirectionalLight2.Direction = new Vector3D(1.0, -0.5, -0.6);
+
+            DirectionalLight myDirectionalLight3 = new DirectionalLight();
+            myDirectionalLight3.Color = DirectionalLightColor3;
+            myDirectionalLight3.Direction = new Vector3D(1.0, -0.5, 0.6);
+
+            //SpotLight spotLight3 = new SpotLight();
+            
+
+
+            SphereVisual3D SphereVisual1 = new SphereVisual3D();
+            SphereVisual1.Center = new Point3D(100.0, -50.0, 60.0);
+
+            SphereVisual3D SphereVisual2 = new SphereVisual3D();
+            SphereVisual2.Center = new Point3D(-100.0, 50.0, 60.0);
+
+            SphereVisual3D SphereVisual3 = new SphereVisual3D();
+            SphereVisual3.Center = new Point3D(-100.0, 50.0, -60.0);
+
+           
+            _window.helixViewport.Children.Add(SphereVisual1);
+            _window.helixViewport.Children.Add(SphereVisual2);
+            _window.helixViewport.Children.Add(SphereVisual3);
+
 
             Model3DGroup myLightGroup = new Model3DGroup();
             myLightGroup.Children.Add(myAmbientLight);
             myLightGroup.Children.Add(myDirectionalLight1);
-            myLightGroup.Children.Add(myDirectionalLight2);
+            //myLightGroup.Children.Add(myDirectionalLight2);
+            myLightGroup.Children.Add(myDirectionalLight3);
 
             _window.LightModel.Content = myLightGroup;
 
