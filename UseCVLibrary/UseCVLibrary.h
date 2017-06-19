@@ -10,8 +10,9 @@ namespace UseCVLibrary {
 	public ref class CornerPointFilter
 	{
 		// TODO:  在此加入這個類別的方法。
+	
 	public:
 		CornerPointFilter();
-		void GetCornerPoint(System::Byte* imageHeadPointer);
+		void GetCornerPoint(int width, int height, System::Byte* imageHeadPointer);
 	};
 }

@@ -33,7 +33,7 @@ double CalcEllipse(RotatedRect&, vector<Point>&);
 inline bool IsInTriangle(RotatedRect&, vector<Point2f>&, Rect&);
 inline Rect getBoundingRect(RotatedRect& ellipse);
 
-DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vector<MyPoint>& OutputCornerPoint)
+DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vector<vector<MyPoint>>& OutputCornerPoint)
 //DLLIMPORT void CalcPoint(unsigned char* srcPtr, int ImageRow, int ImageCol, unsigned int& PointNumber)
 {
 	/*Mat src1(ImageRow, ImageCol, CV_8U);
@@ -61,7 +61,7 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 	*/
 	Mat src1(ImageRow, ImageCol, CV_8U, srcPtr1);
 
-	concurrent_vector<Point2f> answers;  //最後答案的儲存容器，分別為第一張跟第二張的點
+	concurrent_vector<Point2f> answers;  //最後答案的儲存容器
 
 
 	Mat threshold_output; //二值化後結果
@@ -75,14 +75,15 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 	concurrent_vector<RotatedRect> EllipseSet;
 	//將所有輪廓平行化計算來篩選
 	parallel_for(0u, (unsigned int)contours.size(), [&newContours, &EllipseSet, &contours](int i) {
+		RotatedRect temp;
 		if (contours.at(i).size() < 100 || contours.at(i).size() > 500)
 		{
 			return;
 		}
-		else if (CalcEllipse(fitEllipse(Mat(contours.at(i))), contours.at(i)) < 5)//4為橢圓輪廓累積誤差值
+		else if (CalcEllipse(temp = fitEllipse(Mat(contours.at(i))), contours.at(i)) < 5)//4為橢圓輪廓累積誤差值
 		{
 			newContours.push_back(contours.at(i));//將符合條件的輪廓再存入新的輪廓當中
-			EllipseSet.push_back(fitEllipse(Mat(contours.at(i))));//將符合條件的輪廓丟入擬和橢圓，存下回傳的RotatedRect資料
+			EllipseSet.push_back(temp);//將符合條件的輪廓丟入擬和橢圓，存下回傳的RotatedRect資料
 		}
 	});
 
@@ -94,11 +95,9 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 	//創建ROI mask
 	Mat mask(src1.size(), CV_8UC1, Scalar(0));
 
-	//tempNewContours用來存上面newcontours，因為型態無法直接轉
-	vector<vector<Point>> tempNewContours;
-	for (concurrent_vector<vector<Point>>::iterator it = newContours.begin(); it != newContours.end(); it++) {
-		tempNewContours.push_back(*it);
-	}
+	//tempNewContours用來存上面newcontours，因為型態無法直接在drawContours用
+	vector<vector<Point>> tempNewContours(newContours.size());
+	tempNewContours.assign(newContours.begin(), newContours.end());
 
 	////標出關鍵區域，將橢圓區塊反白
 	for (size_t i = 0; i < tempNewContours.size(); i++) {
@@ -106,13 +105,13 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 	}
 
 
-	Mat srcCopy = src1.clone();//複製一份進去做平行運算
-	concurrent_vector<Point2f> EachPicPoint;//存每張照片的點
-	concurrent_vector<RotatedRect> newEllipseSet;
+	
+	concurrent_vector<vector<MyPoint>> EachEllipsePoint;//存每個橢圓內部角點
+	
 
 
 	//此平行運算是分別對找到的橢圓計算角點
-	parallel_for(0u,/*1u*/ (unsigned int)EllipseSet.size(), [&srcCopy, &mask, &EllipseSet, &newEllipseSet, &EachPicPoint](int value)
+	parallel_for(0u,/*1u*/ (unsigned int)EllipseSet.size(), [&src1, &mask, &EllipseSet, &EachEllipsePoint](int value)
 	{
 		//分別對橢圓所在的位置擷取成最小方框
 
@@ -120,11 +119,11 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 		Rect ROI = getBoundingRect(EllipseSet.at(value));
 
 		//先判斷邊界有沒有超過
-		if (ROI.x <= 0 || ROI.y <= 0 || (ROI.x + ROI.width > srcCopy.cols) || (ROI.y + ROI.height > srcCopy.rows)) {
+		if (ROI.x <= 0 || ROI.y <= 0 || (ROI.x + ROI.width > src1.cols) || (ROI.y + ROI.height > src1.rows)) {
 			return;
 		}
 
-		Mat srcTemp = srcCopy(ROI);
+		Mat srcTemp = src1(ROI);
 		Mat maskTemp = mask(ROI);
 
 
@@ -151,8 +150,7 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 			return;
 		}
 
-		newEllipseSet.push_back(EllipseSet.at(value));
-
+		
 		/// 角點位置精準化參數  
 		Size winSize = Size(5, 5);
 		Size zeroZone = Size(-1, -1);
@@ -162,38 +160,33 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 			0.001);  //epsilon=0.001  
 		cornerSubPix(srcTemp, corners, winSize, zeroZone, criteria);// 計算精準化後的角點位置 
 
-		for (vector<Point2f>::iterator it = corners.begin(); it != corners.end(); it++) {
-			EachPicPoint.push_back(Point2f((*it).x + ROI.x, (*it).y + ROI.y));
+		///這段畫橢圓要畫橢圓再加
+		//ellipse(src1, EllipseSet.at(value), Scalar(255), 1, 8);
+
+
+		vector<MyPoint> myPointVec(3);	//轉存成MyPoint的暫存器
+		vector<MyPoint>::iterator it2 = myPointVec.begin();
+		//加上ROI的位置才是原圖位置
+		for (vector<Point2f>::iterator it = corners.begin(); it != corners.end(); it++)
+		{
+			circle(src1, Point2f((*it2).x = (*it).x + ROI.x, (*it2).y = (*it).y + ROI.y), 10, Scalar(255), 2, 8, 0);//畫出所有角點位置，並將位置存進MyPoint2f當中
+/*			(*it2).x = (*it).x + ROI.x;
+			(*it2).y = (*it).y + ROI.y;		*/																																																			
+			it2++;
 		}
 
+		EachEllipsePoint.push_back(myPointVec);
+
 	});
-	//將點存進answer		
-	for (concurrent_vector<Point2f>::iterator it = EachPicPoint.begin(); it != EachPicPoint.end(); it++) {
-		answers.push_back(*it);
-	}
+	
+	OutputCornerPoint.reserve(EachEllipsePoint.size());
 
-	for (size_t i = 0; i < EachPicPoint.size(); i++) {
-		// 標示出角點  
-		circle(src1, EachPicPoint.at(i), 10, Scalar(255), 2, 8, 0);
-	}
+	OutputCornerPoint.assign(EachEllipsePoint.begin(), EachEllipsePoint.end());
 
 
 
 
-
-	//將點轉存進corners
-	//vector<vector<MyPoint>> OutputCornerPoint(2);
-	MyPoint tempPoint;
-	for (unsigned int i = 0; i < answers.size(); i++)
-	{
-		//cout << "\n\n第" << i + 1 << "張圖";		
-		tempPoint.x = answers.at(i).x;
-		tempPoint.y = answers.at(i).y;
-		//cout << "\n(" << tempPoint.x << "," << tempPoint.y << ")";
-
-		OutputCornerPoint.push_back(tempPoint);
-
-	}
+	
 	//cout << "\n第一張圖" << OutputCornerPoint.at(0).size() << "個點";
 	//cout << "\n第二張圖" << OutputCornerPoint.at(1).size() << "個點";
 	//if (OutputCornerPoint.at(0).size() == OutputCornerPoint.at(1).size()) {

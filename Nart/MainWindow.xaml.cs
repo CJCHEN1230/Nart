@@ -61,7 +61,7 @@ namespace Nart
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-           // CamCtrl.CameraStart();
+           CamCtrl.CameraStart();
         }
         
         private Model3DGroup Display3d(string model)
@@ -100,11 +100,12 @@ namespace Nart
 
             if (result == true)
             {
-                ModelData mData3 = new ModelData(dlg.FileNames[0]);
+                foreach (String filename in dlg.FileNames)
+                {
+                    ModelData mData = new ModelData(filename);
 
-
-                mainModelVisual.Children.Add(mData3.ModelVisual);
-
+                    mainModelVisual.Children.Add(mData.ModelVisual);
+                }
                 _envSetting.SetCamera();
             }
         }
@@ -172,64 +173,11 @@ namespace Nart
 
            
 
-            mainModelVisual.Children.Add(mData1.ModelVisual);
-            mainModelVisual.Children.Add(mData2.ModelVisual);
-            mainModelVisual.Children.Add(mData3.ModelVisual);
+            //mainModelVisual.Children.Add(mData1.ModelVisual);
+            //mainModelVisual.Children.Add(mData2.ModelVisual);
+            //mainModelVisual.Children.Add(mData3.ModelVisual);
 
-            //Rect3D rect3d = mainModelVisual.FindBounds(mainModelVisual.Transform);
-            //var dev1 = new Vector3D(rect3d.X + rect3d.SizeX / 2.0, rect3d.Y + rect3d.SizeY / 2.0, rect3d.Z + rect3d.SizeZ / 2.0);
-            //dev1 = dev1 * -1;
-
-            //var matrix1 = mainModelVisual.Transform.Value;
-            
-            //matrix1.Translate(dev1);
-
-            //mainModelVisual.Transform = new MatrixTransform3D(matrix1);
-
-
-
-            //Model3DGroup model1 = Display3d("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\Ramus L-fine.stl");
-
-
-            //Model3DGroup model2 = Display3d("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\Ramus R-fine.stl");
-
-
-            //Rect3D rect3d1 = model1.Bounds;
-            //Rect3D rect3d2 = model2.Bounds;
-
-            //GeometryModel3D Geomodel = model1.Children[0] as GeometryModel3D;
-
-            //DiffuseMaterial material = new DiffuseMaterial(new SolidColorBrush(Color.FromRgb(40, 181, 187)));
-            //Geomodel.Material = material;
-
-
-
-            //var dev1 = new Vector3D(rect3d1.X + rect3d1.SizeX / 2.0, rect3d1.Y + rect3d1.SizeY / 2.0, rect3d1.Z + rect3d1.SizeZ / 2.0);
-            //dev1 = dev1 * -1;
-
-
-            //var dev2 = new Vector3D(rect3d2.X + rect3d2.SizeX / 2.0, rect3d2.Y + rect3d2.SizeY / 2.0, rect3d2.Z + rect3d2.SizeZ / 2.0);
-            //dev2 = dev2 * -1;
-
-
-            //var matrix1 = MV1.Transform.Value;
-            //var matrix2 = MV2.Transform.Value;
-
-            //matrix1.Translate(dev1);
-            //matrix2.Translate(dev2);
-
-
-            //MV1.Content = model1;
-            //MV1.Transform = new MatrixTransform3D(matrix1);
-
-            //MV2.Content = model2;
-            //MV2.Transform = new MatrixTransform3D(matrix2);
-
-
-            //mainModelVisual.Children.Add(MV1);
-            //mainModelVisual.Children.Add(MV2);
-            //helixViewport.Children.Add(MV1);
-            //helixViewport.Children.Add(MV2);
+           
 
         }
 

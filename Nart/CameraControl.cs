@@ -13,29 +13,10 @@ namespace Nart
 {
     public class CameraControl :DispatcherObject //繼承此DispatcherObject才能使用Dispatch
     {
-        
-        public CameraControl(int width,int height)
-        {
-            icImagingControl[0] = new TIS.Imaging.ICImagingControl();
-            icImagingControl[1] = new TIS.Imaging.ICImagingControl();
 
-            ((System.ComponentModel.ISupportInitialize)(icImagingControl[0])).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(icImagingControl[1])).BeginInit();
+        private int _width;
 
-            icImagingControl[0].Size = new System.Drawing.Size(width, height);
-            icImagingControl[1].Size = new System.Drawing.Size(width, height);
-
-            defaultCameraSetting(icImagingControl[0]);
-            defaultCameraSetting(icImagingControl[1]);
-
-            icImagingControl[0].ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl1_ImageAvailable);
-            icImagingControl[1].ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl2_ImageAvailable);
-
-
-            ((System.ComponentModel.ISupportInitialize)(icImagingControl[0])).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(icImagingControl[1])).EndInit();
-        }
-
+        private int _height;
         /// <summary>
         /// 雙相機控制項
         /// </summary>
@@ -55,6 +36,31 @@ namespace Nart
         /// <summary>
         /// 顯示畫面的函數實作
         /// </summary>
+        public CameraControl(int width, int height)
+        {
+            icImagingControl[0] = new TIS.Imaging.ICImagingControl();
+            icImagingControl[1] = new TIS.Imaging.ICImagingControl();
+
+            ((System.ComponentModel.ISupportInitialize)(icImagingControl[0])).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(icImagingControl[1])).BeginInit();
+
+            icImagingControl[0].Size = new System.Drawing.Size(width, height);
+            icImagingControl[1].Size = new System.Drawing.Size(width, height);
+
+            defaultControlSetting(icImagingControl[0]);
+            defaultControlSetting(icImagingControl[1]);
+
+            icImagingControl[0].ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl1_ImageAvailable);
+            icImagingControl[1].ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl2_ImageAvailable);
+
+
+            ((System.ComponentModel.ISupportInitialize)(icImagingControl[0])).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(icImagingControl[1])).EndInit();
+
+            LoadCamSetting();
+
+        }
+
         private void ShowImageBuffer(TIS.Imaging.ImageBuffer buffer, TIS.Imaging.ICImagingControl icImagingControl)
         {
             icImagingControl.DisplayImageBuffer(buffer);
@@ -62,7 +68,7 @@ namespace Nart
         /// <summary>
         /// 雙相機的初始化設定
         /// </summary>
-        private void defaultCameraSetting(TIS.Imaging.ICImagingControl icImagingControl)
+        private void defaultControlSetting(TIS.Imaging.ICImagingControl icImagingControl)
         {
             icImagingControl.DeviceListChangedExecutionMode = TIS.Imaging.EventExecutionMode.Invoke;
             icImagingControl.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
@@ -76,6 +82,20 @@ namespace Nart
             icImagingControl.LiveDisplayHeight = icImagingControl.Height;
             icImagingControl.LiveDisplayWidth = icImagingControl.Width;
             icImagingControl.MemoryCurrentGrabberColorformat = ICImagingControlColorformats.ICY800;
+        }
+
+        private void LoadCamSetting()
+        {
+            try
+            {
+                icImagingControl[0].LoadDeviceStateFromFile("../../../data/Cam1.xml", true);
+                icImagingControl[1].LoadDeviceStateFromFile("../../../data/Cam2.xml", true);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Load device setting failed.");
+            }
+           
         }
 
         public void CameraStart()
@@ -104,6 +124,10 @@ namespace Nart
             }
             if (icImagingControl[0].DeviceValid && icImagingControl[1].DeviceValid) 
             {
+               
+                _width = icImagingControl[0].ImageSize.Width;
+                _height = icImagingControl[0].ImageSize.Height;
+
                 icImagingControl[0].LiveStart();
                 icImagingControl[1].LiveStart();
             }
@@ -116,8 +140,8 @@ namespace Nart
             unsafe
             {
 
-                byte* data = _displayBuffer[0].Ptr;
-                _corPtFltr.GetCornerPoint(data);
+                byte* data = _displayBuffer[0].Ptr;                
+                _corPtFltr.GetCornerPoint(_width, _height, data);
                 Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer), _displayBuffer[0], icImagingControl[0]);
 
             }
@@ -131,7 +155,7 @@ namespace Nart
             {
 
                 byte* data = _displayBuffer[1].Ptr;
-                _corPtFltr.GetCornerPoint(data);
+                _corPtFltr.GetCornerPoint(_width, _height, data);
                 Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer), _displayBuffer[1], icImagingControl[1]);
 
             }

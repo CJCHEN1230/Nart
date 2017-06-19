@@ -27,9 +27,10 @@
         <WindowsFormsHost x:Name="CamHost2" Height="343" Margin="9,460,0,0" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" Width="349"/>
 
 
-        <helix:HelixViewport3D x:Name="helixViewport" ShowViewCube="False" ShowCoordinateSystem="True" ZoomExtentsWhenLoaded="False" Grid.Column="1" 
-                               Background="Green" Margin="46,14,0,24" HorizontalAlignment="Left" Width="1330" Grid.Row="1" 
-                               CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect">
+        <helix:HelixViewport3D x:Name="helixViewport" ShowViewCube="True" ShowCoordinateSystem="True" ZoomExtentsWhenLoaded="False" Grid.Column="1" 
+                               Background="Black" Margin="46,14,0,24" HorizontalAlignment="Left" Width="1330" Grid.Row="1" 
+                               CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"
+                               ShowFrameRate="True">
             <helix:HelixViewport3D.Camera>
                 <!--OrthographicCamera Position="200,200,200" LookDirection="-200,-200,-200" UpDirection="0,0,1" NearPlaneDistance="1090"/-->
                 <!--OrthographicCamera Position="200,200,200"  LookDirection="-100,-100,-100" UpDirection="0,0,1" NearPlaneDistance="0.1"/-->

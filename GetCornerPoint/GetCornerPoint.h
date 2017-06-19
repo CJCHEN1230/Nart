@@ -15,7 +15,7 @@ struct MyPoint
 
 extern "C"
 {
-	DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, std::vector<MyPoint>& OutputCornerPoint);
+	DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, std::vector<std::vector<MyPoint>>& OutputCornerPoint);
 	//DLLIMPORT void CalcPoint(unsigned char* srcPtr, int ImageRow, int ImageCol, unsigned int& PointNumber);
 }
 

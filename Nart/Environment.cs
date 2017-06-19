@@ -32,44 +32,14 @@ namespace Nart
         internal void SetCamera()
         {
 
-            Rect3D rect3d = _window.mainModelVisual.FindBounds(_window.mainModelVisual.Transform);
+            var rect3d = _window.mainModelVisual.FindBounds(_window.mainModelVisual.Transform);
 
             Point3D Center = new Point3D(rect3d.X + rect3d.SizeX / 2.0, rect3d.Y + rect3d.SizeY / 2.0, rect3d.Z + rect3d.SizeZ / 2.0);
-
-
-            Console.WriteLine(Center);
-            _window.OrthographicCam.Position = new Point3D(Center.X, Center.Y-500, Center.Z );
-
-            _window.OrthographicCam.LookAt(Center, new Vector3D(0, 1, 0), new Vector3D(0, 0, 1), 0.1);
-
-
-
-
-
-
-
-            //_window.OrthographicCam.LookAt(new Point3D(0, 0, 0), new Vector3D(0, 0, -150), new Vector3D(0, 1, 0), 1.0);
-            ////_window.OrthographicCam.LookAt(new Point3D(0,1000,1000), new Vector3D(0, 0, -1), new Vector3D(0, 1, 0), 1.0);
-
-            //_window.OrthographicCam.Position = new Point3D(0, 0, 150);
-            //_window.OrthographicCam.UpDirection = new Vector3D(0, 1, 0);
-            //_window.OrthographicCam.LookDirection = new Vector3D(0, 0, -150);
-
-            ////double dx = environmentSetting.BoundingBox_max.X - environmentSetting.BoundingBox_min.X;
-            ////double dy = environmentSetting.BoundingBox_max.Y - environmentSetting.BoundingBox_min.Y;
-            ////double dz = environmentSetting.BoundingBox_max.Z - environmentSetting.BoundingBox_min.Z;
-
-            ////_window.OrthographicCam.Width = Math.Max(dx, Math.Max(dy, dz)) * 1.5;
-            ////_window.OrthographicCam.NearPlaneDistance = environmentSetting.BoundingBox_min.Y - dy * 15.0;
-
-            //_window.OrthographicCam.Width = 200;
-
-
-            ////_window.OrthographicCam.NearPlaneDistance = -200;
-
-
-            ////_window.helixViewport.Camera = _window.OrthographicCam;
-
+            _window.OrthographicCam.Position = new Point3D(Center.X, Center.Y - (rect3d.SizeY), Center.Z);
+            _window.OrthographicCam.UpDirection = new Vector3D(0, 0, 1);
+            _window.OrthographicCam.LookDirection= new Vector3D(0, rect3d.SizeY, 0);
+            _window.OrthographicCam.Width = rect3d.SizeX+150;
+            
         }
 
         private Color ambientLightColor;
