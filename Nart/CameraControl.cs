@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -17,6 +18,8 @@ namespace Nart
         private int _width;
 
         private int _height;
+
+        List<List<PointF>>[] OutpurCorPt = new List<List<PointF>>[2];
         /// <summary>
         /// 雙相機控制項
         /// </summary>
@@ -28,7 +31,7 @@ namespace Nart
         /// <summary>
         /// 角點影像處理
         /// </summary>
-        private CornerPointFilter _corPtFltr = new CornerPointFilter();
+        private CornerPointFilter[] _corPtFltr = new CornerPointFilter[2];
         /// <summary>
         /// 顯示畫面的委派
         /// </summary>
@@ -40,6 +43,13 @@ namespace Nart
         {
             icImagingControl[0] = new TIS.Imaging.ICImagingControl();
             icImagingControl[1] = new TIS.Imaging.ICImagingControl();
+
+            _corPtFltr[0] = new CornerPointFilter(0);
+            _corPtFltr[1] = new CornerPointFilter(1);
+
+            OutpurCorPt[0] = new List<List<PointF>>();
+            OutpurCorPt[1] = new List<List<PointF>>();
+
 
             ((System.ComponentModel.ISupportInitialize)(icImagingControl[0])).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(icImagingControl[1])).BeginInit();
@@ -139,10 +149,20 @@ namespace Nart
 
             unsafe
             {
-
-                byte* data = _displayBuffer[0].Ptr;                
-                _corPtFltr.GetCornerPoint(_width, _height, data);
+                
+                byte* data = _displayBuffer[0].Ptr;
+                OutpurCorPt[0]=_corPtFltr[0].GetCornerPoint(_width, _height, data);
                 Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer), _displayBuffer[0], icImagingControl[0]);
+
+                //for (byte i = 0; i < OutpurCorPt.Count; i++)
+                //{
+                //    Console.WriteLine("第" + i + "組");
+                //    for (byte j = 0; j < OutpurCorPt[i].Count; j++)
+                //    {
+                //        Console.WriteLine("(" + OutpurCorPt[i][j].X + "," + OutpurCorPt[i][j].Y + ")");
+                        
+                //    }                    
+                //}
 
             }
         }
@@ -155,7 +175,7 @@ namespace Nart
             {
 
                 byte* data = _displayBuffer[1].Ptr;
-                _corPtFltr.GetCornerPoint(_width, _height, data);
+                OutpurCorPt[1] = _corPtFltr[1].GetCornerPoint(_width, _height, data);
                 Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer), _displayBuffer[1], icImagingControl[1]);
 
             }

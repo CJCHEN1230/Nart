@@ -38,6 +38,7 @@ namespace Nart
             _window.OrthographicCam.Position = new Point3D(Center.X, Center.Y - (rect3d.SizeY), Center.Z);
             _window.OrthographicCam.UpDirection = new Vector3D(0, 0, 1);
             _window.OrthographicCam.LookDirection= new Vector3D(0, rect3d.SizeY, 0);
+            _window.OrthographicCam.NearPlaneDistance = -500;
             _window.OrthographicCam.Width = rect3d.SizeX+150;
             
         }

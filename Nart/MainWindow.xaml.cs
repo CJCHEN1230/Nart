@@ -31,7 +31,7 @@ namespace Nart
     public partial class MainWindow : Window
     {
         internal ModelVisual3D LightModel = new ModelVisual3D();
-
+        
         private Environment _envSetting;
 
         private CameraControl CamCtrl;
@@ -171,13 +171,13 @@ namespace Nart
 
         private void displaytest() {
 
-           
 
-            //mainModelVisual.Children.Add(mData1.ModelVisual);
-            //mainModelVisual.Children.Add(mData2.ModelVisual);
-            //mainModelVisual.Children.Add(mData3.ModelVisual);
 
-           
+            mainModelVisual.Children.Add(mData1.ModelVisual);
+            mainModelVisual.Children.Add(mData2.ModelVisual);
+            mainModelVisual.Children.Add(mData3.ModelVisual);
+
+
 
         }
 
@@ -189,13 +189,6 @@ namespace Nart
         }
 
         
-
-
-
-
-
-
-
 
 
 
