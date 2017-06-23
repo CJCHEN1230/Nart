@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 //using System.Threading.Tasks;
@@ -18,8 +20,10 @@ namespace Nart
         private int _width;
 
         private int _height;
-
-        List<List<PointF>>[] OutpurCorPt = new List<List<PointF>>[2];
+        /// <summary>
+        /// 儲存兩相機的點資料
+        /// </summary>
+        List<List<PointF>>[] OutputCorPt = new List<List<PointF>>[2];
         /// <summary>
         /// 雙相機控制項
         /// </summary>
@@ -32,13 +36,17 @@ namespace Nart
         /// 角點影像處理
         /// </summary>
         private CornerPointFilter[] _corPtFltr = new CornerPointFilter[2];
+
+
+        public Thread[] _camThread = new Thread[2];
         /// <summary>
         /// 顯示畫面的委派
         /// </summary>
-        private delegate void ShowBufferDelegate(TIS.Imaging.ImageBuffer buffer, TIS.Imaging.ICImagingControl icImagingControl1);
+        private delegate void   ShowBufferDelegate(TIS.Imaging.ImageBuffer buffer, TIS.Imaging.ICImagingControl icImagingControl1);
         /// <summary>
         /// 顯示畫面的函數實作
         /// </summary>
+        private Thread sample ;
         public CameraControl(int width, int height)
         {
             icImagingControl[0] = new TIS.Imaging.ICImagingControl();
@@ -47,12 +55,16 @@ namespace Nart
             _corPtFltr[0] = new CornerPointFilter(0);
             _corPtFltr[1] = new CornerPointFilter(1);
 
-            OutpurCorPt[0] = new List<List<PointF>>();
-            OutpurCorPt[1] = new List<List<PointF>>();
+            OutputCorPt[0] = new List<List<PointF>>();
+            OutputCorPt[1] = new List<List<PointF>>();
 
 
             ((System.ComponentModel.ISupportInitialize)(icImagingControl[0])).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(icImagingControl[1])).BeginInit();
+
+            icImagingControl[0].Name = "cam1";
+            icImagingControl[1].Name = "cam2";
+
 
             icImagingControl[0].Size = new System.Drawing.Size(width, height);
             icImagingControl[1].Size = new System.Drawing.Size(width, height);
@@ -69,12 +81,38 @@ namespace Nart
 
             LoadCamSetting();
 
+
+            sample = new Thread(_ThreadFunction);
+
+
+            sample.Start();
+
+
         }
 
         private void ShowImageBuffer(TIS.Imaging.ImageBuffer buffer, TIS.Imaging.ICImagingControl icImagingControl)
         {
             icImagingControl.DisplayImageBuffer(buffer);
         }
+
+
+        private delegate void ShowBufferDelegate2(TIS.Imaging.ImageBuffer buffer1, TIS.Imaging.ImageBuffer buffer2);
+        private void ShowImageBuffer2(TIS.Imaging.ImageBuffer buffer1, TIS.Imaging.ImageBuffer buffer2)
+        {
+            
+            Parallel.For(0, 2, i =>
+            {
+                icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
+            });
+            //Console.WriteLine("show buffer: "+Thread.CurrentThread.ManagedThreadId);
+            mre.Set();
+            mre.Set();
+
+            //icImagingControl[0].DisplayImageBuffer(buffer1);
+            //icImagingControl[1].DisplayImageBuffer(buffer2);
+
+        }
+
         /// <summary>
         /// 雙相機的初始化設定
         /// </summary>
@@ -142,29 +180,43 @@ namespace Nart
                 icImagingControl[1].LiveStart();
             }
         }
-        
+        private void DisplayTest()
+        {
+            if (_camThread[0] is Thread && _camThread[1] is Thread)
+            {
+                if (_camThread[1].ThreadState != ThreadState.Unstarted)
+                {
+                    _camThread[1].Join();
+                    Dispatcher.BeginInvoke(new ShowBufferDelegate2(ShowImageBuffer2), _displayBuffer[0], _displayBuffer[1]);
+                }
+            }
+          
+            
+           
+        }
+
+        public AutoResetEvent mre = new AutoResetEvent(false);
+        public CountdownEvent count = new CountdownEvent(2);
+
         private void icImagingControl1_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
         {
             _displayBuffer[0] = icImagingControl[0].ImageBuffers[e.bufferIndex];
 
+   
             unsafe
             {
-                
+                //Console.WriteLine("Thread A: "+Thread.CurrentThread.ManagedThreadId);
                 byte* data = _displayBuffer[0].Ptr;
-                OutpurCorPt[0]=_corPtFltr[0].GetCornerPoint(_width, _height, data);
-                Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer), _displayBuffer[0], icImagingControl[0]);
-
-                //for (byte i = 0; i < OutpurCorPt.Count; i++)
-                //{
-                //    Console.WriteLine("第" + i + "組");
-                //    for (byte j = 0; j < OutpurCorPt[i].Count; j++)
-                //    {
-                //        Console.WriteLine("(" + OutpurCorPt[i][j].X + "," + OutpurCorPt[i][j].Y + ")");
-                        
-                //    }                    
-                //}
+                
+                OutputCorPt[0] = _corPtFltr[0].GetCornerPoint(_width, _height, data);
+                //Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer), _displayBuffer[0], icImagingControl[0]);
+                //Thread.Sleep(1000);
+                count.Signal();
+                //Console.WriteLine("\n\nThreadA:" + count.CurrentCount);
+                mre.WaitOne();
 
             }
+          
         }
 
         private void icImagingControl2_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
@@ -174,10 +226,47 @@ namespace Nart
             unsafe
             {
 
+                //Console.WriteLine("Thread B: " + Thread.CurrentThread.ManagedThreadId);
                 byte* data = _displayBuffer[1].Ptr;
-                OutpurCorPt[1] = _corPtFltr[1].GetCornerPoint(_width, _height, data);
-                Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer), _displayBuffer[1], icImagingControl[1]);
+                //Thread.Sleep(1000);
+                OutputCorPt[1] = _corPtFltr[1].GetCornerPoint(_width, _height, data);
+                //Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer), _displayBuffer[1], icImagingControl[1]);
+                count.Signal();
+                //Console.WriteLine("\n\nThreadB:" + count.CurrentCount);
 
+                mre.WaitOne();
+               
+                
+                //Console.WriteLine("Thread State:"+sample.ThreadState);
+                //DisplayTest();
+                //_camThread[1].Join();
+
+            }
+        }
+
+
+
+
+        private void _ThreadFunction()
+        {
+            
+            while (true)
+            {
+                //Console.WriteLine("\n\n\n\nThreadC0: " + count.CurrentCount);
+
+                count.Wait();
+                //Console.WriteLine("\n\nThreadC1: " + count.CurrentCount);
+                count.Reset(2);
+                //Console.WriteLine("\n\nThreadC2: " + count.CurrentCount);
+
+                //mre.Reset();
+                //Console.WriteLine("third: " + Thread.CurrentThread.ManagedThreadId);
+                Dispatcher.BeginInvoke(new ShowBufferDelegate2(ShowImageBuffer2), _displayBuffer[0], _displayBuffer[1]);
+
+
+                //Thread.Sleep(1000);
+
+                //Console.Read();
             }
         }
     }

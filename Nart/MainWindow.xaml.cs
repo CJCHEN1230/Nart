@@ -19,9 +19,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Threading;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
-
-
-
+using System.Threading;
 
 namespace Nart
 {
@@ -113,6 +111,8 @@ namespace Nart
        
         private void Rotate_Click(object sender, RoutedEventArgs e)
         {
+            CamCtrl.mre.Set();
+            
             var axis = new Vector3D(0, 0, 1);
             var angle = 10;
 
@@ -120,10 +120,14 @@ namespace Nart
             matrix.Rotate(new Quaternion(axis, angle));
 
             MV2.Transform = new MatrixTransform3D(matrix);
+
+            //Console.WriteLine("執行緒:  " + Thread.CurrentThread.ManagedThreadId);
         }
 
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
+            CamCtrl.count.Signal();
+            Console.WriteLine("TRANSLATE: "+CamCtrl.count.CurrentCount);
             var dev = new Vector3D(0, 10, 0);
 
             var matrix = MV1.Transform.Value;
@@ -154,6 +158,8 @@ namespace Nart
 
         private void allRotate_Click(object sender, RoutedEventArgs e)
         {
+
+            Console.WriteLine("allRotate_Click: " + CamCtrl.count.CurrentCount);
             var axis = new Vector3D(0, 0, 1);
             var angle = 30;
 
