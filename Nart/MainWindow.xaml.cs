@@ -33,6 +33,9 @@ namespace Nart
         private Environment _envSetting;
 
         private CameraControl CamCtrl;
+
+        private CalcCoord _calcCoord;
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -48,8 +51,8 @@ namespace Nart
             CamHost1.Child = CamCtrl.icImagingControl[0];
             CamHost2.Child = CamCtrl.icImagingControl[1];
 
+            _calcCoord = new CalcCoord() ;
 
-            
 
         }
 
@@ -111,7 +114,7 @@ namespace Nart
        
         private void Rotate_Click(object sender, RoutedEventArgs e)
         {
-            CamCtrl.mre.Set();
+            
             
             var axis = new Vector3D(0, 0, 1);
             var angle = 10;
