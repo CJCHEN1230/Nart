@@ -16,9 +16,13 @@ namespace Nart
 {
     public class CameraControl :DispatcherObject //繼承此DispatcherObject才能使用Dispatch
     {
-
+        /// <summary>
+        /// 相片寬度
+        /// </summary>
         private int _width;
-
+        /// <summary>
+        /// 相片長度
+        /// </summary>
         private int _height;
         /// <summary>
         /// 儲存兩相機的點資料
@@ -36,17 +40,25 @@ namespace Nart
         /// 角點影像處理
         /// </summary>
         private CornerPointFilter[] _corPtFltr = new CornerPointFilter[2];
-
-
-        public Thread[] _camThread = new Thread[2];
         /// <summary>
         /// 顯示畫面的委派
         /// </summary>
-        private delegate void   ShowBufferDelegate(TIS.Imaging.ImageBuffer buffer, TIS.Imaging.ICImagingControl icImagingControl1);
+        private delegate void ShowBufferDelegate();
         /// <summary>
         /// 顯示畫面的函數實作
         /// </summary>
-        private Thread sample ;
+        private Thread _displayThread ;
+        /// <summary>
+        /// 管理Thread通行
+        /// </summary>
+        private AutoResetEvent _are = new AutoResetEvent(false);
+        /// <summary>
+        /// 管理Thread記數
+        /// </summary>
+        private CountdownEvent _count = new CountdownEvent(2);
+        /// <summary>
+        /// 傳進來的width跟height決定inImageControl的長寬
+        /// </summary>
         public CameraControl(int width, int height)
         {
             icImagingControl[0] = new TIS.Imaging.ICImagingControl();
@@ -61,11 +73,7 @@ namespace Nart
 
             ((System.ComponentModel.ISupportInitialize)(icImagingControl[0])).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(icImagingControl[1])).BeginInit();
-
-            icImagingControl[0].Name = "cam1";
-            icImagingControl[1].Name = "cam2";
-
-
+           
             icImagingControl[0].Size = new System.Drawing.Size(width, height);
             icImagingControl[1].Size = new System.Drawing.Size(width, height);
 
@@ -82,39 +90,29 @@ namespace Nart
             LoadCamSetting();
 
 
-            sample = new Thread(_ThreadFunction);
+            _displayThread = new Thread(DisplayLoop);
 
 
-            sample.Start();
+            _displayThread.Start();
 
 
         }
-
-        private void ShowImageBuffer(TIS.Imaging.ImageBuffer buffer, TIS.Imaging.ICImagingControl icImagingControl)
-        {
-            icImagingControl.DisplayImageBuffer(buffer);
-        }
-
-
-        private delegate void ShowBufferDelegate2(TIS.Imaging.ImageBuffer buffer1, TIS.Imaging.ImageBuffer buffer2);
-        private void ShowImageBuffer2(TIS.Imaging.ImageBuffer buffer1, TIS.Imaging.ImageBuffer buffer2)
+        /// <summary>
+        /// 實體化委派的顯示函數
+        /// </summary>
+        private void ShowImageBuffer()
         {
             
             Parallel.For(0, 2, i =>
             {
                 icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
             });
-            //Console.WriteLine("show buffer: "+Thread.CurrentThread.ManagedThreadId);
-            mre.Set();
-            mre.Set();
-
-            //icImagingControl[0].DisplayImageBuffer(buffer1);
-            //icImagingControl[1].DisplayImageBuffer(buffer2);
+            _are.Set();
+            _are.Set();
 
         }
-
         /// <summary>
-        /// 雙相機的初始化設定
+        /// 雙相機控制項的初始化設定
         /// </summary>
         private void defaultControlSetting(TIS.Imaging.ICImagingControl icImagingControl)
         {
@@ -131,7 +129,9 @@ namespace Nart
             icImagingControl.LiveDisplayWidth = icImagingControl.Width;
             icImagingControl.MemoryCurrentGrabberColorformat = ICImagingControlColorformats.ICY800;
         }
-
+        /// <summary>
+        /// 從xml匯入相機參數
+        /// </summary>
         private void LoadCamSetting()
         {
             try
@@ -145,7 +145,9 @@ namespace Nart
             }
            
         }
-
+        /// <summary>
+        /// 目的是開啟相機，但匯入相機參數檔失敗之後，會自動進入設定參數頁面
+        /// </summary>
         public void CameraStart()
         {
             if (!icImagingControl[0].DeviceValid)
@@ -155,8 +157,7 @@ namespace Nart
                 if (!icImagingControl[0].DeviceValid)
                 {
                     System.Windows.Forms.MessageBox.Show("No device was selected.", "Grabbing an Image",
-                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    
+                                     MessageBoxButtons.OK, MessageBoxIcon.Information);                    
                 }
             }
             if (!icImagingControl[1].DeviceValid)
@@ -166,8 +167,7 @@ namespace Nart
                 if (!icImagingControl[1].DeviceValid)
                 {
                     System.Windows.Forms.MessageBox.Show("No device was selected.", "Grabbing an Image",
-                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    
+                                     MessageBoxButtons.OK, MessageBoxIcon.Information);                    
                 }
             }
             if (icImagingControl[0].DeviceValid && icImagingControl[1].DeviceValid) 
@@ -180,24 +180,9 @@ namespace Nart
                 icImagingControl[1].LiveStart();
             }
         }
-        private void DisplayTest()
-        {
-            if (_camThread[0] is Thread && _camThread[1] is Thread)
-            {
-                if (_camThread[1].ThreadState != ThreadState.Unstarted)
-                {
-                    _camThread[1].Join();
-                    Dispatcher.BeginInvoke(new ShowBufferDelegate2(ShowImageBuffer2), _displayBuffer[0], _displayBuffer[1]);
-                }
-            }
-          
-            
-           
-        }
-
-        public AutoResetEvent mre = new AutoResetEvent(false);
-        public CountdownEvent count = new CountdownEvent(2);
-
+        /// <summary>
+        /// 相機拍攝的所觸發的事件函數
+        /// </summary>  
         private void icImagingControl1_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
         {
             _displayBuffer[0] = icImagingControl[0].ImageBuffers[e.bufferIndex];
@@ -205,68 +190,48 @@ namespace Nart
    
             unsafe
             {
-                //Console.WriteLine("Thread A: "+Thread.CurrentThread.ManagedThreadId);
+                
                 byte* data = _displayBuffer[0].Ptr;
                 
                 OutputCorPt[0] = _corPtFltr[0].GetCornerPoint(_width, _height, data);
-                //Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer), _displayBuffer[0], icImagingControl[0]);
-                //Thread.Sleep(1000);
-                count.Signal();
-                //Console.WriteLine("\n\nThreadA:" + count.CurrentCount);
-                mre.WaitOne();
+               
+                _count.Signal();
+              
+                _are.WaitOne();
 
             }
           
         }
-
+        /// <summary>
+        /// 相機拍攝的所觸發的事件函數
+        /// </summary>
         private void icImagingControl2_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
         {
             _displayBuffer[1] = icImagingControl[1].ImageBuffers[e.bufferIndex];
 
             unsafe
-            {
-
-                //Console.WriteLine("Thread B: " + Thread.CurrentThread.ManagedThreadId);
+            {               
                 byte* data = _displayBuffer[1].Ptr;
-                //Thread.Sleep(1000);
+
                 OutputCorPt[1] = _corPtFltr[1].GetCornerPoint(_width, _height, data);
-                //Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer), _displayBuffer[1], icImagingControl[1]);
-                count.Signal();
-                //Console.WriteLine("\n\nThreadB:" + count.CurrentCount);
 
-                mre.WaitOne();
+                _count.Signal();
+
+                _are.WaitOne();
                
-                
-                //Console.WriteLine("Thread State:"+sample.ThreadState);
-                //DisplayTest();
-                //_camThread[1].Join();
-
             }
         }
-
-
-
-
-        private void _ThreadFunction()
+        /// <summary>
+        /// 在此顯示區域無限循環         
+        /// </summary>
+        private void DisplayLoop()
         {
             
             while (true)
-            {
-                //Console.WriteLine("\n\n\n\nThreadC0: " + count.CurrentCount);
-
-                count.Wait();
-                //Console.WriteLine("\n\nThreadC1: " + count.CurrentCount);
-                count.Reset(2);
-                //Console.WriteLine("\n\nThreadC2: " + count.CurrentCount);
-
-                //mre.Reset();
-                //Console.WriteLine("third: " + Thread.CurrentThread.ManagedThreadId);
-                Dispatcher.BeginInvoke(new ShowBufferDelegate2(ShowImageBuffer2), _displayBuffer[0], _displayBuffer[1]);
-
-
-                //Thread.Sleep(1000);
-
-                //Console.Read();
+            {              
+                _count.Wait();            //等到兩個擷取畫面各執行一次Signal()後才通過
+                _count.Reset(2);          //重設定count為兩次
+                Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer));
             }
         }
     }

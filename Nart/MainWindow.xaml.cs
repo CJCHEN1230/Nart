@@ -126,8 +126,8 @@ namespace Nart
 
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
-            CamCtrl.count.Signal();
-            Console.WriteLine("TRANSLATE: "+CamCtrl.count.CurrentCount);
+            //CamCtrl.count.Signal();
+            //Console.WriteLine("TRANSLATE: "+CamCtrl.count.CurrentCount);
             var dev = new Vector3D(0, 10, 0);
 
             var matrix = MV1.Transform.Value;
@@ -159,7 +159,7 @@ namespace Nart
         private void allRotate_Click(object sender, RoutedEventArgs e)
         {
 
-            Console.WriteLine("allRotate_Click: " + CamCtrl.count.CurrentCount);
+            //Console.WriteLine("allRotate_Click: " + CamCtrl.count.CurrentCount);
             var axis = new Vector3D(0, 0, 1);
             var angle = 30;
 

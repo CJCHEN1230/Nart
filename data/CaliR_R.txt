@@ -1,0 +1,21 @@
+DMM 25GP445-ML 3610386
+ 0.984805 -0.010039  0.173376
+-0.012630  0.991544  0.129154
+-0.173206 -0.129381  0.976350
+-172.428932 -92.581654 679.574307
+8.312451 
+1.064673e-003 
+804.514533 589.364456 
+-0.131747 0.174084 -0.012825
+1.017186
+       distorted image plane error:
+         mean = 0.334648,  stddev = 0.190031,  max = 1.055408  [pix],  sse = 40.691684  [pix^2]
+
+       undistorted image plane error:
+         mean = 0.335825,  stddev = 0.190781,  max = 1.061738  [pix],  sse = 40.987001  [pix^2]
+
+       object space error:
+         mean = 0.122519,  stddev = 0.068723,  max = 0.370369  [mm],  sse = 5.422063  [mm^2]
+
+       normalized calibration error:  0.822624
+N-art4/20170624
