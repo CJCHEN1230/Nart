@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="CameraControl.cs" />
     <Compile Include="CalcCoord.cs" />
+    <Compile Include="CamParam.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
