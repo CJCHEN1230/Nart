@@ -111,27 +111,26 @@ namespace Nart
                 icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
             });
 
-            //_calcCoord.Rectificaion(OutputCorPt);
+            
+
+            _calcCoord.Rectificaion(OutputMarker);
 
             _are.Set();
             _are.Set();
-            for (int i = 0; i < OutputMarker.Length; i++)
-            {
-                Console.WriteLine("\n\n外部第" + (i + 1) + "組");
+            //for (int i = 0; i < OutputMarker.Length; i++)
+            //{
+            //    Console.WriteLine("\n\n外部第" + (i + 1) + "組");
 
-                for (int j = 0; j < OutputMarker[i].Count; j++)
-                {
+            //    for (int j = 0; j < OutputMarker[i].Count; j++)
+            //    {
 
-                    for (int k = 0; k < OutputMarker[i][j].CornerPoint.Count; k++) 
-                    {
+            //        for (int k = 0; k < OutputMarker[i][j].CornerPoint.Count; k++) 
+            //        {
                        
-                        Console.WriteLine("\n :(" + OutputMarker[i][j].CornerPoint[k].X + "," + OutputMarker[i][j].CornerPoint[k].Y + ")");
-                    }
-                }
-            }
-
-
-           
+            //            Console.WriteLine("\n :(" + OutputMarker[i][j].CornerPoint[k].X + "," + OutputMarker[i][j].CornerPoint[k].Y + ")");
+            //        }
+            //    }
+            //}
 
         }
         /// <summary>
@@ -215,6 +214,7 @@ namespace Nart
             {
                 
                 byte* data = _displayBuffer[0].Ptr;
+                //Thread.Sleep(1000);
 
                 OutputMarker[0] = _corPtFltr[0].GetCornerPoint(_width, _height, data);
 

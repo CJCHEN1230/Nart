@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
+using UseCVLibrary;
 
 namespace Nart
 {
@@ -93,41 +94,24 @@ namespace Nart
                                                0,       0,       0, 1);
         }
 
-        public void Rectificaion(List<List<PointF>>[] OutputCorPt)
+        public void Rectificaion(List<BWMarker>[] OutputMarker)
         {
 
-            //OutputCorPt = gcnew List < List<PointF> ^> ();
-            //eachEllipse = gcnew List<PointF>(3);
-
-            //Parallel.For(0, 2, i =>
-            //{
-            //    icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
-            //});
-
-            //for (int i=0; i< OutputCorPt.Length; i++)
-            
-            List<PointF>[] RectifyY= new List<PointF>[2];
-            
-
-            RectifyY[0] = new List<PointF>(OutputCorPt[0].Count);
-            RectifyY[1] = new List<PointF>(OutputCorPt[1].Count);
-          
-            
             Parallel.For(0, 2, i =>
             {
-                Console.WriteLine("\n第" + (i + 1) + "張圖片");
-                for (int j = 0; j < OutputCorPt[i].Count; j++)
+                //Console.WriteLine("\n第" + (i + 1) + "張圖片");
+                for (int j = 0; j < OutputMarker[i].Count; j++)
                 {
                     double accumX = 0;
                     double accumRecY = 0;
                     
-                    Console.WriteLine("\n第" + (j + 1) + "個Marker");
+                    //Console.WriteLine("\n第" + (j + 1) + "個Marker");
                     for (int k = 0; k < 3; k++) //一個標記裡面三個點
                     {
                         //Console.WriteLine("\n(" + OutputCorPt[i][j][k].X + "\t" + OutputCorPt[i][j][k].Y + ")");
 
-                        double xd = _camParam[i].dpx * (OutputCorPt[i][j][k].X - _camParam[i].Cx) / _camParam[i].Sx;
-                        double yd = _camParam[i].dy * (/*1200 - */OutputCorPt[i][j][k].Y - _camParam[i].Cy);
+                        double xd = _camParam[i].dpx * (OutputMarker[i][j].CornerPoint[k].X - _camParam[i].Cx) / _camParam[i].Sx;
+                        double yd = _camParam[i].dy * (/*1200 - */OutputMarker[i][j].CornerPoint[k].Y - _camParam[i].Cy);
 
                         double r = Math.Sqrt(xd * xd + yd * yd);
                       
@@ -144,32 +128,56 @@ namespace Nart
 
                         double Rectify_Y = _camParam[i].FocalLength * rectify_Point.Y / rectify_Point.Z / _camParam[i].dy;
 
-                        Console.WriteLine("\n(" + OutputCorPt[i][j][k].X + "\t" + Rectify_Y + ")");
+                      
+                        OutputMarker[i][j].CornerPoint[k] = new Point3D(OutputMarker[i][j].CornerPoint[k].X, OutputMarker[i][j].CornerPoint[k].Y, Rectify_Y);                                                
 
-                        accumX += OutputCorPt[i][j][k].X;
+                        accumX += OutputMarker[i][j].CornerPoint[k].X;
                         accumRecY += Rectify_Y;
                     }
+                    OutputMarker[i][j].AvgRectifyY = accumRecY / 3.0;
+                    OutputMarker[i][j].AvgX = accumX / 3.0;
 
-                    PointF temp = new PointF(Convert.ToSingle(accumX / 3.0), Convert.ToSingle(accumRecY / 3.0));
+                    OutputMarker[i][j].CornerPoint.Sort(delegate (Point3D point1, Point3D point2)
+                    {
+                        double diff = point1.Z - point2.Z;
+                        if (diff > 2)
+                            return 1;
+                        else if (diff < -2)
+                            return -1;
+                        else
+                        {
+                            double diff2 = point1.X - point2.X;
+                            if (diff2 > 0)
+                                return 1;
+                            else
+                                return -1;
+                        }
+                    });
 
-                    RectifyY[i].Add(temp);
-                
-                   
                 }
+
+                OutputMarker[i].Sort();
             });
 
-            //for (int i=0;i<RectifyY.Length ;i++)
+            //for (int i = 0; i < OutputMarker.Length; i++)
             //{
-            //    Console.WriteLine("\n\n第" + (i + 1) + "張圖片");
-            //    for (int j=0;j< RectifyY[i].Count; j++)
+            //    Console.WriteLine("\n\n\n第" + (i + 1) + "張");
+
+            //    for (int j = 0; j < OutputMarker[i].Count; j++)
             //    {
-            //        Console.WriteLine("\nX:" + RectifyY[i][j].X + "   Y:" + RectifyY[i][j].Y);
+            //        Console.WriteLine("\n\n第" + (j + 1) + "組");
+            //        for (int k = 0; k < OutputMarker[i][j].CornerPoint.Count; k++)
+            //        {
+            //            Console.WriteLine("\n :(" + OutputMarker[i][j].CornerPoint[k].X + "," + OutputMarker[i][j].CornerPoint[k].Y + "," + OutputMarker[i][j].CornerPoint[k].Z + ")");                        
+            //        }
+            //        Console.WriteLine("\nAvergeX :" + OutputMarker[i][j].AvgX);
+            //        Console.WriteLine("\nRectifyY :" + OutputMarker[i][j].AvgRectifyY);
             //    }
             //}
 
 
             //Console.Read();
-            
+
         }
     }
 
