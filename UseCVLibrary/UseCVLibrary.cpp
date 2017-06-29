@@ -5,17 +5,16 @@
 #include "UseCVLibrary.h"
 using namespace System::Drawing;
 using namespace System::Collections::Generic;
-
+using namespace System::Windows::Media::Media3D;
 
 
 
 UseCVLibrary::CornerPointFilter::CornerPointFilter(int number) : CameraNumber(number)
-{
-	OutputCorPt = gcnew List<List<PointF>^>();
-	eachEllipse = gcnew List<PointF>(3);
+{	
+	AllMarker = gcnew List<BWMarker^>();
 }
 
-List<List<PointF>^>^ UseCVLibrary::CornerPointFilter::GetCornerPoint(int width, int height, System::Byte* imageHeadPointer)
+List<UseCVLibrary::BWMarker^>^ UseCVLibrary::CornerPointFilter::GetCornerPoint(int width, int height, System::Byte* imageHeadPointer)
 {
 	std::vector<std::vector<MyPoint>> OutputCornerPoint; //最後Corner Point的容器
 	pin_ptr<System::Byte> p1 = imageHeadPointer;
@@ -24,25 +23,61 @@ List<List<PointF>^>^ UseCVLibrary::CornerPointFilter::GetCornerPoint(int width, 
 
 	CalcPoint(pby1, height, width, OutputCornerPoint);
 	
-	OutputCorPt->Clear();
-	//Console::WriteLine("\n\n第" + CameraNumber + "台相機");
+	AllMarker->Clear();
 	for (unsigned int i = 0; i < OutputCornerPoint.size(); i++)
-	{
-		//Console::WriteLine("\n\n第" + (i + 1) + "組");
-		eachEllipse->Clear();
-		for (unsigned int j = 0; j < OutputCornerPoint.at(i).size(); j++)
-		{			
-			eachEllipse->Add(PointF(OutputCornerPoint.at(i).at(j).x, OutputCornerPoint.at(i).at(j).y));
-			
-			/*eachEllipse[j].X = OutputCornerPoint.at(i).at(j).x;
-			eachEllipse[j].Y = OutputCornerPoint.at(i).at(j).y;*/
-			//Console::WriteLine("\n(" + eachEllipse[j].X + "," + eachEllipse[j].Y + ")");
-		}
-		OutputCorPt->Add(eachEllipse);
+	{		
+		BWMarker^ marker = gcnew BWMarker();
 
+		for (unsigned int j = 0; j < OutputCornerPoint.at(i).size(); j++)
+		{
+			
+			Point3D^ A = gcnew Point3D(OutputCornerPoint.at(i).at(j).x, height - OutputCornerPoint.at(i).at(j).y, -2000.0); //-2000代表尚未初始化
+			marker->CornerPoint->Add(*A);
+			//Console::WriteLine("MARKER COUNT:" + marker->CornerPoint->Count);
+		}
+
+		AllMarker->Add(marker);
 	}
 
 	
 	OutputCornerPoint.clear();
-	return OutputCorPt;
+	return AllMarker;
+}
+
+UseCVLibrary::BWMarker::BWMarker()
+{
+	CornerPoint = gcnew List<Point3D>(4);
+
+}
+//
+//UseCVLibrary::BWMarker::BWMarker(List<Point3D>^ markerPoint) 
+//{
+//	CornerPoint = markerPoint;
+//}
+//
+//UseCVLibrary::BWMarker::BWMarker(Point3D A, Point3D B, Point3D C)
+//{
+//	CornerPoint = gcnew List<Point3D>(3);
+//	CornerPoint->Add(A);
+//	CornerPoint->Add(B);
+//	CornerPoint->Add(C);
+//
+//	AvgRectifyY = (A.Z + B.Z + C.Z) / 3.0;
+//	AvgX = (A.X + B.X + C.X) / 3.0;
+//}
+
+int UseCVLibrary::BWMarker::CompareTo(BWMarker^ other)
+{
+	if (this->AvgRectifyY - other->AvgRectifyY > 2)
+		return 1;
+	else if (this->AvgRectifyY - other->AvgRectifyY < -2)
+		return -1;
+	else
+	{
+		double diff2 = this->AvgX - other->AvgX;
+		if (diff2 > 0)
+			return 1;
+		else
+			return -1;
+	}
 }

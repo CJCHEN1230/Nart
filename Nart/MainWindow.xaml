@@ -19,15 +19,15 @@
             <ColumnDefinition Width="72*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="62*"/>
-            <RowDefinition Height="861*"/>
-            <RowDefinition Height="44*"/>
+            <RowDefinition Height="145*"/>
+            <RowDefinition Height="720*"/>
+            <RowDefinition Height="41*"/>
         </Grid.RowDefinitions>
-        <WindowsFormsHost x:Name="CamHost1" Height="546" VerticalAlignment="Top" Margin="10,112,0,0" Grid.Row="1" HorizontalAlignment="Left" Width="648" Grid.ColumnSpan="2"/>
+        <WindowsFormsHost x:Name="CamHost1" Height="546" VerticalAlignment="Top" Margin="0,212,0,0" Grid.Row="1" HorizontalAlignment="Left" Width="648" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
 
 
         <helix:HelixViewport3D x:Name="helixViewport" ShowViewCube="True" ShowCoordinateSystem="True" ZoomExtentsWhenLoaded="False" Grid.Column="1" 
-                               Background="Black" Margin="1360,298,0,268" HorizontalAlignment="Left" Width="214" Grid.Row="1" 
+                               Background="Black" Margin="935,112,0,193" HorizontalAlignment="Left" Width="589" Grid.Row="1" 
                                CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"
                                ShowFrameRate="True">
             <helix:HelixViewport3D.Camera>
@@ -63,12 +63,13 @@
 
 
         </helix:HelixViewport3D>
-        <Controls:ImgButton ButtonLabel="12345" ButtonImageSource="/Icon/TEST.ico" Margin="16,12,302,0" RenderTransformOrigin="-0.636,0.382" Height="Auto" Width="Auto" />
-        <Button x:Name="button" Command="ApplicationCommands.Open" Content="Open" HorizontalAlignment="Left" Margin="16,14,0,0" Grid.Row="1" VerticalAlignment="Top" Width="87" Height="79" />
-        <Button x:Name="button1" Click="Rotate_Click" Content="RotateBtn" HorizontalAlignment="Left" Margin="113,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="97" Height="97"/>
-        <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="215,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="96" Height="97"/>
-        <Button x:Name="button3" Click="allRotate_Click" Content="AllRotateBtn" HorizontalAlignment="Left" Margin="322,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="96" Height="97"/>
-        <WindowsFormsHost x:Name="CamHost2" Height="546" Margin="267,112,0,0" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" Width="648" Grid.Column="1"/>
+        <Controls:ImgButton ButtonLabel="12345"  ButtonImageSource="/Icon/test.ico" Margin="25,10,338,72" RenderTransformOrigin="-0.636,0.382" Height="Auto" Width="Auto" />
+        <Button x:Name="button" Command="ApplicationCommands.Open" Content="Open" HorizontalAlignment="Left" Margin="6,90,0,0" Grid.Row="1" VerticalAlignment="Top" Width="87" Height="79" />
+        <Button x:Name="button1" Click="Rotate_Click" Content="RotateBtn" HorizontalAlignment="Left" Margin="103,81,0,0" Grid.Row="1" VerticalAlignment="Top" Width="97" Height="97"/>
+        <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="205,81,0,0" Grid.Row="1" VerticalAlignment="Top" Width="96" Height="97"/>
+        <Button x:Name="button3" Click="allRotate_Click" Content="AllRotateBtn" HorizontalAlignment="Left" Margin="312,81,0,0" Grid.Row="1" VerticalAlignment="Top" Width="96" Height="97"/>
+        
+        <WindowsFormsHost x:Name="CamHost2" Height="546" Margin="248,212,0,0" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" Width="648" Grid.Column="1" Grid.RowSpan="2"/>
         <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
 
 

@@ -12,7 +12,9 @@ namespace Nart
     class CamParam
     {
         public Matrix3D extParam; //exteranl parameters
-        
+        public Matrix3D RotationInvert;
+
+
         public double FocalLength;
         public double Kappa1;
         public double Cx;
@@ -53,11 +55,20 @@ namespace Nart
                                        cameraData[2], cameraData[5], cameraData[8], 0,
                                        cameraData[9], cameraData[10], cameraData[11], 1);
 
-             
+                RotationInvert = new Matrix3D(cameraData[0], cameraData[1], cameraData[2], 0,
+                                        cameraData[3], cameraData[4], cameraData[5], 0,
+                                        cameraData[6], cameraData[7], cameraData[8], 0,
+                                                    0,             0,             0, 1);
+
+
                 FocalLength = cameraData[12];
                 Kappa1 = cameraData[13];
                 Cx = cameraData[14];
+
+                Console.WriteLine("Cx:"+Cx);
+                
                 Cy = cameraData[15];
+                Console.WriteLine("Cy:" + Cy);
                 Sx = cameraData[19];
 
             }

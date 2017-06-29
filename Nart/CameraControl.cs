@@ -24,10 +24,10 @@ namespace Nart
         /// 相片長度
         /// </summary>
         private int _height;
-        /// <summary>
+         /// <summary>
         /// 儲存兩相機的點資料
         /// </summary>
-        List<List<PointF>>[] OutputCorPt = new List<List<PointF>>[2];
+        List<BWMarker>[] OutputMarker = new List<BWMarker>[2];
         /// <summary>
         /// 雙相機控制項
         /// </summary>
@@ -56,6 +56,10 @@ namespace Nart
         /// 管理Thread記數
         /// </summary>
         private CountdownEvent _count = new CountdownEvent(2);
+
+
+
+        private CalcCoord _calcCoord = new CalcCoord();
         /// <summary>
         /// 傳進來的width跟height決定inImageControl的長寬
         /// </summary>
@@ -65,11 +69,10 @@ namespace Nart
             icImagingControl[1] = new TIS.Imaging.ICImagingControl();
 
             _corPtFltr[0] = new CornerPointFilter(0);
-            _corPtFltr[1] = new CornerPointFilter(1);
+            _corPtFltr[1] = new CornerPointFilter(1);           
 
-            OutputCorPt[0] = new List<List<PointF>>();
-            OutputCorPt[1] = new List<List<PointF>>();
-
+            OutputMarker[0] = new List<BWMarker>(10);// 儲存的Marker空間，預設10個
+            OutputMarker[1] = new List<BWMarker>(10);
 
             ((System.ComponentModel.ISupportInitialize)(icImagingControl[0])).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(icImagingControl[1])).BeginInit();
@@ -107,8 +110,28 @@ namespace Nart
             {
                 icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
             });
+
+            //_calcCoord.Rectificaion(OutputCorPt);
+
             _are.Set();
             _are.Set();
+            for (int i = 0; i < OutputMarker.Length; i++)
+            {
+                Console.WriteLine("\n\n外部第" + (i + 1) + "組");
+
+                for (int j = 0; j < OutputMarker[i].Count; j++)
+                {
+
+                    for (int k = 0; k < OutputMarker[i][j].CornerPoint.Count; k++) 
+                    {
+                       
+                        Console.WriteLine("\n :(" + OutputMarker[i][j].CornerPoint[k].X + "," + OutputMarker[i][j].CornerPoint[k].Y + ")");
+                    }
+                }
+            }
+
+
+           
 
         }
         /// <summary>
@@ -192,9 +215,9 @@ namespace Nart
             {
                 
                 byte* data = _displayBuffer[0].Ptr;
-                
-                OutputCorPt[0] = _corPtFltr[0].GetCornerPoint(_width, _height, data);
-               
+
+                OutputMarker[0] = _corPtFltr[0].GetCornerPoint(_width, _height, data);
+
                 _count.Signal();
               
                 _are.WaitOne();
@@ -213,7 +236,7 @@ namespace Nart
             {               
                 byte* data = _displayBuffer[1].Ptr;
 
-                OutputCorPt[1] = _corPtFltr[1].GetCornerPoint(_width, _height, data);
+                OutputMarker[1] = _corPtFltr[1].GetCornerPoint(_width, _height, data);
 
                 _count.Signal();
 

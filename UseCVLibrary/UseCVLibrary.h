@@ -11,18 +11,43 @@ namespace UseCVLibrary {
 	using namespace System::Windows;
 	using namespace System::Drawing;
 	using namespace System::Collections::Generic;
+	using namespace System::Windows::Media::Media3D;
 
+
+	public ref class BWMarker : public IComparable<BWMarker^>
+	{
+	public:
+
+		List<Point3D>^ CornerPoint/* = gcnew List<Point3D>(3)*/;
+
+		double AvgRectifyY = 0;
+
+		double AvgX = 0;
+
+		BWMarker();
+
+		//BWMarker(List<Point3D>^ markerPoint);
+
+		//BWMarker(Point3D A, Point3D B, Point3D C);
+
+
+		virtual int CompareTo(BWMarker^ other);
+
+	};
 
 	public ref class CornerPointFilter
 	{
 		// TODO:  在此加入這個類別的方法。
 	private:
 		int CameraNumber = -1;
-		
-		List<List<PointF>^>^ OutputCorPt;
-		List<PointF>^ eachEllipse;
+
+		List<BWMarker^>^ AllMarker; //儲存單張照片的所有Marker
+
 	public:
 		CornerPointFilter(int CameraNumber);
-		List<List<PointF>^>^ GetCornerPoint(int width, int height, System::Byte* imageHeadPointer);
+
+		List<BWMarker^>^ GetCornerPoint(int width, int height, System::Byte* imageHeadPointer);
 	};
+
+	
 }
