@@ -1,7 +1,7 @@
 <device_state libver="3.4" filemajor="1" fileminor="0">
     <device name="DMK 23G274" base_name="DMK 23G274" unique_name="DMK 23G274 51414082">
         <videoformat>Y800 (1600x1200)</videoformat>
-        <fps>15.000015000015000766</fps>
+        <fps>20.</fps>
         <vcdpropertyitems>
             <item guid="{284C0E06-010B-45BF-8291-09D90A459B28}" name="Brightness">
                 <element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Value">
@@ -47,7 +47,7 @@
             </item>
             <item guid="{90D57031-E43B-4366-AAEB-7A7A10B448B4}" name="Trigger">
                 <element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Enable">
-                    <itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="1" />
+                    <itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="0" />
                 </element>
                 <element guid="{6519038D-1AD8-4E91-9021-66D64090CC85}" name="Polarity">
                     <itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="0" />

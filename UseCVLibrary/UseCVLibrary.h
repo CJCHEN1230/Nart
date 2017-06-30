@@ -20,6 +20,7 @@ namespace UseCVLibrary {
 
 		List<Point3D>^ CornerPoint/* = gcnew List<Point3D>(3)*/;
 
+
 		double AvgRectifyY = 0;
 
 		double AvgX = 0;

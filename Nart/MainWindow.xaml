@@ -70,6 +70,7 @@
         <Button x:Name="button3" Click="allRotate_Click" Content="AllRotateBtn" HorizontalAlignment="Left" Margin="312,81,0,0" Grid.Row="1" VerticalAlignment="Top" Width="96" Height="97"/>
         
         <WindowsFormsHost x:Name="CamHost2" Height="546" Margin="248,212,0,0" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" Width="648" Grid.Column="1" Grid.RowSpan="2"/>
+        <Button x:Name="button4" Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="34,81,0,0" Grid.Row="1" VerticalAlignment="Top" Width="98" Height="97" Click="button4_Click"/>
         <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
 
 

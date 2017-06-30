@@ -208,6 +208,21 @@ namespace Nart
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
-        
+
+        public bool toggle = true;
+        private void button4_Click(object sender, RoutedEventArgs e)
+        {
+            if (toggle == true)
+            {
+                CamCtrl.icImagingControl[0].LiveStop();
+                CamCtrl.icImagingControl[1].LiveStop();
+            }
+            else
+            {
+                CamCtrl.icImagingControl[0].LiveStart();
+                CamCtrl.icImagingControl[1].LiveStart();
+            }
+            toggle = !toggle;
+        }
     }
 }
