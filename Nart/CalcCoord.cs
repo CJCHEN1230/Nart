@@ -32,7 +32,7 @@ namespace Nart
             _camParam[1] = new CamParam("../../../data/CaliR_R.txt");
             CalcLensCenter();
             CalcEpipolarGeometry();
-            //Rectificaion();
+            Match();
         }
         /// <summary>
         /// 計算鏡心在世界座標
@@ -48,8 +48,8 @@ namespace Nart
             //    _camParam[0].extParam.M31 + "\t" + _camParam[0].extParam.M32 + "\t" + _camParam[0].extParam.M33 + "\t" + _camParam[0].extParam.M34 + "\n" +
             //    _camParam[0].extParam.OffsetX + "\t" + _camParam[0].extParam.OffsetY + "\t" + _camParam[0].extParam.OffsetZ + "\t" + _camParam[0].extParam.M44 + "\n");
 
-            _camParam[0].extParam.Invert();
-            _camParam[1].extParam.Invert();
+            //_camParam[0].extParam.Invert();
+            //_camParam[1].extParam.Invert();
 
             //Console.WriteLine("Rotation2:\n" +
             //   _camParam[0].extParam.M11 + "\t" + _camParam[0].extParam.M12 + "\t" + _camParam[0].extParam.M13 + "\t" + _camParam[0].extParam.M14 + "\n" +
@@ -58,11 +58,15 @@ namespace Nart
             //   _camParam[0].extParam.OffsetX + "\t" + _camParam[0].extParam.OffsetY + "\t" + _camParam[0].extParam.OffsetZ + "\t" + _camParam[0].extParam.M44 + "\n");
 
 
-            LensCenter[0] = _camParam[0].extParam.Transform(LensCenter[0]);
-            LensCenter[1] = _camParam[1].extParam.Transform(LensCenter[1]);
 
-            
-       
+            //Console.WriteLine("\n\ninvinvExtParam\n" + _camParam[0].invExtParam);
+
+            LensCenter[0] = _camParam[0].invExtParam.Transform(LensCenter[0]);
+            LensCenter[1] = _camParam[1].invExtParam.Transform(LensCenter[1]);
+
+            Console.WriteLine("\n\nlens1:" + LensCenter[0]);
+            Console.WriteLine("lens2:" + LensCenter[1]);
+
         }
         /// <summary>
         /// 計算基線座標系
@@ -178,6 +182,66 @@ namespace Nart
 
             //Console.Read();
 
+        }
+
+
+        public void Match(/*List<BWMarker>[] OutputMarker*/)
+        {
+
+            double xd = _camParam[0].dpx * (499.896 - _camParam[0].Cx) / _camParam[0].Sx;
+            double yd = _camParam[0].dy * (343.433 - _camParam[0].Cy);
+
+            double r = Math.Sqrt(xd * xd + yd * yd);
+
+            double xu = xd * (1 + _camParam[0].Kappa1 * r * r);
+            double yu = yd * (1 + _camParam[0].Kappa1 * r * r);
+
+
+            double xd1 = _camParam[1].dpx * (209.103 - _camParam[1].Cx) / _camParam[1].Sx;
+            double yd1 = _camParam[1].dy * (350.744 - _camParam[1].Cy);
+
+            double r1 = Math.Sqrt(xd1 * xd1 + yd1 * yd1);
+
+            double xu1 = xd1 * (1 + _camParam[1].Kappa1 * r1 * r1);
+            double yu1 = yd1 * (1 + _camParam[1].Kappa1 * r1 * r1);
+
+
+            Point4D CamPoint1 = new Point4D(xu, yu, _camParam[0].FocalLength, 1);
+            Point4D CamPoint2 = new Point4D(xu1, yu1, _camParam[1].FocalLength, 1);
+
+            CamPoint1 = _camParam[0].invExtParam.Transform(CamPoint1);
+            CamPoint2 = _camParam[1].invExtParam.Transform(CamPoint2);
+
+
+            Vector3D d1 = new Vector3D(LensCenter[0].X - CamPoint1.X, LensCenter[0].Y - CamPoint1.Y, LensCenter[0].Z - CamPoint1.Z);
+            Vector3D d2 = new Vector3D(LensCenter[1].X - CamPoint2.X, LensCenter[1].Y - CamPoint2.Y, LensCenter[1].Z - CamPoint2.Z);
+            Point3D A1 = new Point3D(LensCenter[0].X, LensCenter[0].Y, LensCenter[0].Z);
+            Point3D A2 = new Point3D(LensCenter[1].X, LensCenter[1].Y, LensCenter[1].Z);
+
+            double delta = d1.LengthSquared * d2.LengthSquared - Vector3D.DotProduct(d2, d1) * Vector3D.DotProduct(d2, d1);
+
+            double deltaX = Vector3D.DotProduct(A2 - A1, d1) * d2.LengthSquared - (Vector3D.DotProduct(A2 - A1, d2)) * Vector3D.DotProduct(d2, d1);
+
+            double deltaY = d1.LengthSquared * Vector3D.DotProduct(A1 - A2, d2) - Vector3D.DotProduct(d2, d1) * Vector3D.DotProduct(A1 - A2, d1);
+
+            double tt = deltaX / delta;
+
+            double ss = deltaY / delta;
+
+            Console.WriteLine("\ntt:" + tt + "    ss:" + ss);
+
+
+            Console.WriteLine("\n\n!!!!!: (" + (A1.X + tt * d1.X) + "," + (A1.Y + tt * d1.Y) + "," + (A1.Z + tt * d1.Z) + ")");
+            Console.WriteLine("!!!!!: (" + (A2.X + ss * d2.X) + "," + (A2.Y + ss * d2.Y) + "," + (A2.Z + ss * d2.Z) + ")");
+
+
+            Point3D temp1 = new Point3D(A1.X + tt * d1.X, A1.Y + tt * d1.Y, A1.Z + tt * d1.Z);
+            Point3D temp2 = new Point3D(A2.X + ss * d2.X, A2.Y + ss * d2.Y, A2.Z + ss * d2.Z);
+
+            Console.WriteLine("\n\n真實座標(" + (temp1.X + temp2.X) / 2.0 + "," + (temp1.Y + temp2.Y) / 2.0 + "," + (temp1.Z + temp2.Z) / 2.0 + ")");
+
+
+            Console.Read();
         }
     }
 

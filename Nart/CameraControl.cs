@@ -105,17 +105,17 @@ namespace Nart
         /// </summary>
         private void ShowImageBuffer()
         {
-            time_start = DateTime.Now;
+            
             Parallel.For(0, 2, i =>
             {
                 icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
             });
+            time_start = DateTime.Now;
 
-             time_end = DateTime.Now;
 
             _calcCoord.Rectificaion(OutputMarker);
 
-            
+            time_end = DateTime.Now;
             string result2 = ((TimeSpan)(time_end - time_start)).TotalMilliseconds.ToString();
 
             Console.WriteLine("time: " + result2);
