@@ -1,7 +1,7 @@
 <device_state libver="3.4" filemajor="1" fileminor="0">
     <device name="DMK 23G274 1" base_name="DMK 23G274" unique_name="DMK 23G274 51414083">
         <videoformat>Y800 (1600x1200)</videoformat>
-        <fps>15.000015000015000766</fps>
+        <fps>20.</fps>
         <vcdpropertyitems>
             <item guid="{284C0E06-010B-45BF-8291-09D90A459B28}" name="Brightness">
                 <element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Value">

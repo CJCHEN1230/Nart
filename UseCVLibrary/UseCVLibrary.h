@@ -13,13 +13,28 @@ namespace UseCVLibrary {
 	using namespace System::Collections::Generic;
 	using namespace System::Windows::Media::Media3D;
 
+	public ref class NartPoint
+	{
+		public: 
+			PointF^ ImagePoint;
+
+			Point4D CameraPoint;
+
+			double RectifyY;
+
+			NartPoint();
+			
+			NartPoint(PointF imagePoints);
+			
+	};
 
 	public ref class BWMarker : public IComparable<BWMarker^>
 	{
 	public:
 
-		List<Point3D>^ CornerPoint/* = gcnew List<Point3D>(3)*/;
+		//List<Point3D>^ CornerPoint/* = gcnew List<Point3D>(3)*/;
 
+		List<NartPoint^>^ CornerPoint;
 
 		double AvgRectifyY = 0;
 
@@ -27,11 +42,7 @@ namespace UseCVLibrary {
 
 		BWMarker();
 
-		//BWMarker(List<Point3D>^ markerPoint);
-
-		//BWMarker(Point3D A, Point3D B, Point3D C);
-
-
+		
 		virtual int CompareTo(BWMarker^ other);
 
 	};

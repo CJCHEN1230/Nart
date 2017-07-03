@@ -56,9 +56,9 @@ namespace Nart
         /// 管理Thread記數
         /// </summary>
         private CountdownEvent _count = new CountdownEvent(2);//代表要計數兩次
-
-       
-
+        /// <summary>
+        /// 計算座標的類別
+        /// </summary>
         private CalcCoord _calcCoord = new CalcCoord();
         /// <summary>
         /// 傳進來的width跟height決定inImageControl的長寬
@@ -110,21 +110,22 @@ namespace Nart
             {
                 icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
             });
-            time_start = DateTime.Now;
+
+            //time_start = DateTime.Now;
 
 
             _calcCoord.Rectificaion(OutputMarker);
 
-            time_end = DateTime.Now;
-            string result2 = ((TimeSpan)(time_end - time_start)).TotalMilliseconds.ToString();
+            //time_end = DateTime.Now;
+            //string result2 = ((TimeSpan)(time_end - time_start)).TotalMilliseconds.ToString();
 
-            Console.WriteLine("time: " + result2);
-
+            //Console.WriteLine("time: " + result2);
+            _calcCoord.MatchAndCalc3D(OutputMarker);
 
 
             _are.Set();
             _are.Set();
-            
+
             //for (int i = 0; i < OutputMarker.Length; i++)
             //{
             //    Console.WriteLine("\n\n外部第" + (i + 1) + "組");
@@ -132,10 +133,11 @@ namespace Nart
             //    for (int j = 0; j < OutputMarker[i].Count; j++)
             //    {
 
-            //        for (int k = 0; k < OutputMarker[i][j].CornerPoint.Count; k++) 
+            //        for (int k = 0; k < OutputMarker[i][j].CornerPoint.Count; k++)
             //        {
-
-            //            Console.WriteLine("\n :(" + OutputMarker[i][j].CornerPoint[k].X + "," + OutputMarker[i][j].CornerPoint[k].Y + ")");
+            //            PointF temp;
+            //            temp = (PointF)OutputMarker[i][j].CornerPoint[k].ImagePoint;
+            //            Console.WriteLine("\n :(" + temp.X + "," + temp.Y + ")");
             //        }
             //    }
             //}
@@ -206,9 +208,7 @@ namespace Nart
                 _width = icImagingControl[0].ImageSize.Width;
                 _height = icImagingControl[0].ImageSize.Height;
 
-                //icImagingControl[1].LiveStart();
-                //icImagingControl[0].LiveStart();
-
+               
                 Parallel.For(0, 2, i =>
                 {
                     icImagingControl[i].LiveStart();
@@ -242,7 +242,7 @@ namespace Nart
 
                 OutputMarker[0] = _corPtFltr[0].GetCornerPoint(_width, _height, data);
 
-                //Console.WriteLine("1: "+DateTime.Now.ToString("ss.ffff"));
+                Console.WriteLine("\n\n1: "+DateTime.Now.ToString("ss.ffff"));
 
                 _count.Signal();
 
@@ -264,8 +264,11 @@ namespace Nart
                 byte* data = _displayBuffer[1].Ptr;
 
                 OutputMarker[1] = _corPtFltr[1].GetCornerPoint(_width, _height, data);
-                //Console.WriteLine("2: " + DateTime.Now.ToString("ss.ffff"));
+
+                Console.WriteLine("\n\n2: " + DateTime.Now.ToString("ss.ffff"));
+
                 _count.Signal();
+
                 _are.WaitOne();
               
             }
@@ -274,14 +277,16 @@ namespace Nart
         /// 在此顯示區域無限循環         
         /// </summary>
         private void DisplayLoop()
-        {
-            
+        {            
             while (true)
             {
-
                 _count.Wait();            //等到兩個擷取畫面各執行一次Signal()後才通過  
                 _count.Reset(2);          //重設定count為兩次
+
+                Console.WriteLine("\n\n3");
                 Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer));
+
+
             }
         }
 
