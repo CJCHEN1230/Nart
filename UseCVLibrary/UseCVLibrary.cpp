@@ -51,6 +51,11 @@ UseCVLibrary::BWMarker::BWMarker()
 //	AvgX = (A.X + B.X + C.X) / 3.0;
 //}
 
+void UseCVLibrary::BWMarker::sort()
+{
+	
+}
+
 int UseCVLibrary::BWMarker::CompareTo(BWMarker^ other)
 {
 	if (this->AvgRectifyY - other->AvgRectifyY > 2)
@@ -65,6 +70,13 @@ int UseCVLibrary::BWMarker::CompareTo(BWMarker^ other)
 		else
 			return -1;
 	}
+
+
+	/*if (this->AvgRectifyY - other->AvgRectifyY > 0)
+		return 1;
+	else
+		return -1;*/
+	
 }
 
 UseCVLibrary::CornerPointFilter::CornerPointFilter(int number) : CameraNumber(number)

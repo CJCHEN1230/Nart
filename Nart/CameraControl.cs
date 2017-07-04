@@ -123,25 +123,11 @@ namespace Nart
             _calcCoord.MatchAndCalc3D(OutputMarker);
 
 
+            
+
             _are.Set();
             _are.Set();
-
-            //for (int i = 0; i < OutputMarker.Length; i++)
-            //{
-            //    Console.WriteLine("\n\n外部第" + (i + 1) + "組");
-
-            //    for (int j = 0; j < OutputMarker[i].Count; j++)
-            //    {
-
-            //        for (int k = 0; k < OutputMarker[i][j].CornerPoint.Count; k++)
-            //        {
-            //            PointF temp;
-            //            temp = (PointF)OutputMarker[i][j].CornerPoint[k].ImagePoint;
-            //            Console.WriteLine("\n :(" + temp.X + "," + temp.Y + ")");
-            //        }
-            //    }
-            //}
-
+          
         }
         /// <summary>
         /// 雙相機控制項的初始化設定
@@ -283,7 +269,7 @@ namespace Nart
                 _count.Wait();            //等到兩個擷取畫面各執行一次Signal()後才通過  
                 _count.Reset(2);          //重設定count為兩次
 
-                Console.WriteLine("\n\n3");
+                Console.WriteLine("    ");
                 Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer));
 
 

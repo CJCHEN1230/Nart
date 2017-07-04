@@ -38,15 +38,16 @@ namespace Nart
         
         public MainWindow()
         {
+
             InitializeComponent();
+
             AllocConsole();
 
             displaytest();
 
             _envSetting = new Environment(this);
-
-
-            CamCtrl = new CameraControl((int)CamHost2.Width, (int)CamHost2.Height);
+          
+            CamCtrl = new CameraControl(0, 0);
 
             CamHost1.Child = CamCtrl.icImagingControl[0];
             CamHost2.Child = CamCtrl.icImagingControl[1];
@@ -62,7 +63,19 @@ namespace Nart
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-           CamCtrl.CameraStart();
+
+
+            CamCtrl.icImagingControl[0].Size = new System.Drawing.Size((int)CamHost1.ActualWidth, (int)CamHost1.ActualHeight);
+            CamCtrl.icImagingControl[1].Size = new System.Drawing.Size((int)CamHost2.ActualWidth, (int)CamHost2.ActualHeight);
+
+            CamCtrl.icImagingControl[0].LiveDisplayHeight = CamCtrl.icImagingControl[0].Height;
+            CamCtrl.icImagingControl[0].LiveDisplayWidth = CamCtrl.icImagingControl[0].Width;
+            CamCtrl.icImagingControl[1].LiveDisplayHeight = CamCtrl.icImagingControl[1].Height;
+            CamCtrl.icImagingControl[1].LiveDisplayWidth = CamCtrl.icImagingControl[1].Width;
+
+          
+
+            CamCtrl.CameraStart();
         }
         
         private Model3DGroup Display3d(string model)

@@ -72,12 +72,8 @@ namespace Nart
 
                 FocalLength = cameraData[12];
                 Kappa1 = cameraData[13];
-                Cx = cameraData[14];
-
-                Console.WriteLine("Cx:"+Cx);
-                
+                Cx = cameraData[14];                             
                 Cy = cameraData[15];
-                Console.WriteLine("Cy:" + Cy);
                 Sx = cameraData[19];
 
             }

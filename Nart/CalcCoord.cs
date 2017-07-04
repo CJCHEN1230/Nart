@@ -29,6 +29,8 @@ namespace Nart
 
         private List<List<Point3D>> WorldPoints = new List<List<Point3D>>(10);
 
+        public static int PointsNumber = 0;
+
         public CalcCoord()
         {
             _camParam[0] = new CamParam("../../../data/CaliR_L.txt");
@@ -67,8 +69,7 @@ namespace Nart
             LensCenter[0] = _camParam[0].invExtParam.Transform(LensCenter[0]);
             LensCenter[1] = _camParam[1].invExtParam.Transform(LensCenter[1]);
 
-            Console.WriteLine("\nlens1:" + LensCenter[0]);
-            Console.WriteLine("lens2:" + LensCenter[1]);
+            
 
         }
         /// <summary>
@@ -76,10 +77,7 @@ namespace Nart
         /// </summary>
         private void CalcEpipolarGeometry()
         {
-            Point4D PlainCenter = new Point4D(0, 0, _camParam[0].FocalLength, 1);
-            
-            //PlainCenter[1] = new Point4D(0, 0, _camParam[1].FocalLength, 1);
-            //LensCenter[1] = new Point4D(0, 0, 0, 1);
+            Point4D PlainCenter = new Point4D(0, 0, _camParam[0].FocalLength, 1);                       
 
             PlainCenter = _camParam[0].invExtParam.Transform(PlainCenter);
 
@@ -116,8 +114,9 @@ namespace Nart
                     
                     for (int k = 0; k < 3; k++) //一個標記裡面三個點
                     {
-                        //Console.WriteLine("\n(" + OutputCorPt[i][j][k].X + "\t" + OutputCorPt[i][j][k].Y + ")");
+
                         PointF imagePoint=(PointF)(OutputMarker[i][j].CornerPoint[k].ImagePoint);
+
                         double xd = _camParam[i].dpx * (imagePoint.X - _camParam[i].Cx) / _camParam[i].Sx;
                         double yd = _camParam[i].dy * (imagePoint.Y - _camParam[i].Cy);
 
@@ -127,6 +126,7 @@ namespace Nart
                         double xu = xd * (1 + _camParam[i].Kappa1 * r * r);
                         double yu = yd * (1 + _camParam[i].Kappa1 * r * r);
 
+                        
                         OutputMarker[i][j].CornerPoint[k].CameraPoint = new Point4D(xu, yu, _camParam[i].FocalLength, 1);
 
                         Point4D WorldPoint = _camParam[i].RotationInvert.Transform(OutputMarker[i][j].CornerPoint[k].CameraPoint);
@@ -186,92 +186,22 @@ namespace Nart
 
         public void MatchAndCalc3D(List<BWMarker>[] OutputMarker)
         {
-
-
-            //if (OutputMarker[0].Count > 2)
-            //{
-            //    PointF temp2 = (PointF)(OutputMarker[0][0].CornerPoint[0].ImagePoint);
-            //    PointF temp3 = (PointF)(OutputMarker[0][1].CornerPoint[0].ImagePoint);
-
-            //    Console.WriteLine(" 0:" + OutputMarker[0][0].AvgRectifyY);
-            //    Console.WriteLine(" 1:" + OutputMarker[0][1].AvgRectifyY);
-
-            //    Console.WriteLine(" 0:" + temp2.X + "  " + temp2.Y);
-            //    Console.WriteLine(" 1:" + temp3.X + "  " + temp3.Y);
-
-            //    BWMarker temp = OutputMarker[0][1];
-
-            //    OutputMarker[0][1] = OutputMarker[0][0];
-
-            //    OutputMarker[0][0] = temp;
-
-
-
-            //    PointF temp4 = (PointF)(OutputMarker[0][0].CornerPoint[0].ImagePoint);
-            //    PointF temp5 = (PointF)(OutputMarker[0][1].CornerPoint[0].ImagePoint);
-
-
-            //    Console.WriteLine(" 0:" + OutputMarker[0][0].AvgRectifyY);
-            //    Console.WriteLine(" 1:" + OutputMarker[0][1].AvgRectifyY);
-
-            //    Console.WriteLine(" 0:" + temp4.X + "  " + temp4.Y);
-            //    Console.WriteLine(" 1:" + temp5.X + "  " + temp5.Y);
-
-            //    Console.Read();
-            //}
-
-
-
-
-            
-
-            //for (int i = 0, tempj = 0; i < OutputMarker[0].Count; i++) //左相機Marker尋訪
-            //{
-            //    for (int j = tempj; j < OutputMarker[1].Count; j++) //右相機Marker尋訪
-            //    {
-
-            //        if (Math.Abs(OutputMarker[0][i].AvgRectifyY - OutputMarker[0][j].AvgRectifyY) < MatchError)
-            //        {
-            //            for (int k = 0; k < OutputMarker[0][i].CornerPoint.Count; k++)
-            //            {
-            //                if (Math.Abs(OutputMarker[0][i].CornerPoint[k].Z - OutputMarker[0][j].CornerPoint[k].Z) < MatchError)
-            //                {
-            //                    if (k == 2)
-            //                    {
-            //                        for (int n = 0; n < OutputMarker[0][i].CornerPoint.Count; n++)
-            //                        {
-            //                            CalcWorldPoint(OutputMarker[0][i].CornerPoint[k], OutputMarker[0][j].CornerPoint[k]);
-            //                        }
-            //                        tempj = j + 1;
-            //                    }
-            //                }
-            //                else
-            //                    break;
-            //            }
-            //        }
-            //        else
-            //            continue;
-            //    }
-            //}
-
-
-
+            WorldPoints.Clear();
             for (int i = 0, count = 0; i < OutputMarker[0].Count; i++) //左相機Marker尋訪
             {
                 for (int j = count; j < OutputMarker[1].Count; j++) //右相機Marker尋訪
                 {
-                    List<Point3D> threePoints = new List<Point3D>(3);
+                    
                     if (Math.Abs(OutputMarker[0][i].AvgRectifyY - OutputMarker[1][j].AvgRectifyY) < MatchError
                        && Math.Abs(OutputMarker[0][i].CornerPoint[0].RectifyY - OutputMarker[1][j].CornerPoint[0].RectifyY) < MatchError
                        && Math.Abs(OutputMarker[0][i].CornerPoint[1].RectifyY - OutputMarker[1][j].CornerPoint[1].RectifyY) < MatchError
                        && Math.Abs(OutputMarker[0][i].CornerPoint[2].RectifyY - OutputMarker[1][j].CornerPoint[2].RectifyY) < MatchError)
                     {
-                        //Console.WriteLine("\n第"+i+"組:");
+                        List<Point3D> threePoints = new List<Point3D>(3);
                         for (int k = 0; k < OutputMarker[0][i].CornerPoint.Count; k++)
-                        {
+                        {                           
                             var point3D = CalcWorldPoint(OutputMarker[0][i].CornerPoint[k].CameraPoint, OutputMarker[1][j].CornerPoint[k].CameraPoint);
-                            threePoints.Add(point3D);
-                           // Console.WriteLine("\n\n"+point3D);
+                            threePoints.Add(point3D);                           
                         }
                         WorldPoints.Add(threePoints);
                         count = j + 1;
@@ -280,6 +210,23 @@ namespace Nart
                     else
                         continue;
                 }
+            }
+
+            PointsNumber = WorldPoints.Count * 3;
+
+            for (int i = 0; i < WorldPoints.Count; i++) //左相機Marker尋訪
+            {
+                Console.WriteLine("\n\n第"+(i+1)+"組三邊長度");
+
+                Vector3D a = new Vector3D(WorldPoints[i][0].X - WorldPoints[i][1].X, WorldPoints[i][0].Y - WorldPoints[i][1].Y, WorldPoints[i][0].Z - WorldPoints[i][1].Z);
+
+                Vector3D b = new Vector3D(WorldPoints[i][2].X - WorldPoints[i][1].X, WorldPoints[i][2].Y - WorldPoints[i][1].Y, WorldPoints[i][2].Z - WorldPoints[i][1].Z);
+
+                Vector3D c = new Vector3D(WorldPoints[i][0].X - WorldPoints[i][2].X, WorldPoints[i][0].Y - WorldPoints[i][2].Y, WorldPoints[i][0].Z - WorldPoints[i][2].Z);
+
+                Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
+
+                Console.WriteLine("    ");
             }
 
         }
@@ -308,11 +255,60 @@ namespace Nart
 
 
             Point3D LeftPoint = new Point3D(A1.X + t1 * d1.X, A1.Y + t1 * d1.Y, A1.Z + t1 * d1.Z);
-            Point3D RightPoint = new Point3D(A2.X + t2 * d2.X, A2.Y + t2 * d2.Y, A2.Z + t2 * d2.Z);           
+            Point3D RightPoint = new Point3D(A2.X + t2 * d2.X, A2.Y + t2 * d2.Y, A2.Z + t2 * d2.Z);
 
-            return new Point3D(LeftPoint.X + RightPoint.X, LeftPoint.Y + RightPoint.Y, (LeftPoint.Z + RightPoint.Z) / 2.0);
+            //Console.WriteLine("左相機真實解:" + LeftPoint);
+            //Console.WriteLine("右相機真實解:" + RightPoint);
+            //Console.WriteLine("真實解:" + new Point3D((LeftPoint.X + RightPoint.X) / 2.0, (LeftPoint.Y + RightPoint.Y) / 2.0, (LeftPoint.Z + RightPoint.Z) / 2.0));
+            return new Point3D((LeftPoint.X + RightPoint.X) / 2.0, (LeftPoint.Y + RightPoint.Y) / 2.0, (LeftPoint.Z + RightPoint.Z) / 2.0);
 
            
+        }
+
+        private void SortMarker(List<BWMarker>[] OutputMarker)
+        {
+            Parallel.For(0, 2, Image_Index =>
+            {
+                for (int i = 0; i < OutputMarker[Image_Index].Count; i++)
+                { //第一張圖每個點輪流
+                    int ClosePoints = 0;
+
+                    for (int j = i + 1; j < OutputMarker[Image_Index].Count;)
+                    { //同樣是第一張圖，但是對自己的下一個點算y距離
+
+
+                        if (Math.Abs(OutputMarker[Image_Index][i].AvgRectifyY - OutputMarker[Image_Index][j].AvgRectifyY) < 3)
+                        { //y距離小於3pixel則計算累積個數在count，並直接算下一個點
+                            ClosePoints++;
+                            i++;
+                            j = i + 1;
+                            continue;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    if (ClosePoints != 0)
+                    { //count不等於0，意謂該高度附進有超過一個點，對此附近的點再進行x方向的排序
+                        for (int k = i - ClosePoints, test = 0; k < i; k++, test++)
+                        {
+                            BWMarker temp;
+                            for (int l = i - ClosePoints; l < i - test; l++)
+                            {
+                                if (OutputMarker[Image_Index][l].AvgX > OutputMarker[Image_Index][l + 1].AvgX)
+                                {
+                                    temp = OutputMarker[Image_Index][l];
+                                    OutputMarker[Image_Index][l] = OutputMarker[Image_Index][l + 1];
+                                    OutputMarker[Image_Index][l + 1] = temp;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+
         }
     }
 

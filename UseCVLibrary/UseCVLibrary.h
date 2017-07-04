@@ -42,6 +42,7 @@ namespace UseCVLibrary {
 
 		BWMarker();
 
+		void sort(void);
 		
 		virtual int CompareTo(BWMarker^ other);
 
