@@ -34,7 +34,7 @@ namespace Nart
 
         private CameraControl CamCtrl;
 
-        private CalcCoord _calcCoord;
+
         
         public MainWindow()
         {
@@ -47,12 +47,11 @@ namespace Nart
 
             _envSetting = new Environment(this);
           
-            CamCtrl = new CameraControl(0, 0);
+            CamCtrl = new CameraControl(0, 0 , this);
 
             CamHost1.Child = CamCtrl.icImagingControl[0];
             CamHost2.Child = CamCtrl.icImagingControl[1];
 
-            _calcCoord = new CalcCoord() ;
 
 
         }
@@ -225,17 +224,17 @@ namespace Nart
         public bool toggle = true;
         private void button4_Click(object sender, RoutedEventArgs e)
         {
-            if (toggle == true)
-            {
-                CamCtrl.icImagingControl[0].LiveStop();
-                CamCtrl.icImagingControl[1].LiveStop();
-            }
-            else
-            {
-                CamCtrl.icImagingControl[0].LiveStart();
-                CamCtrl.icImagingControl[1].LiveStart();
-            }
-            toggle = !toggle;
+            //if (toggle == true)
+            //{
+            //    CamCtrl.icImagingControl[0].LiveStop();
+            //    CamCtrl.icImagingControl[1].LiveStop();
+            //}
+            //else
+            //{
+            //    CamCtrl.icImagingControl[0].LiveStart();
+            //    CamCtrl.icImagingControl[1].LiveStart();
+            //}
+            //toggle = !toggle;
         }
     }
 }

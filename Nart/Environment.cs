@@ -39,7 +39,7 @@ namespace Nart
             _window.OrthographicCam.UpDirection = new Vector3D(0, 0, 1);
             _window.OrthographicCam.LookDirection= new Vector3D(0, rect3d.SizeY, 0);
             _window.OrthographicCam.NearPlaneDistance = -500;
-            _window.OrthographicCam.Width = rect3d.SizeX+150;
+            _window.OrthographicCam.Width = rect3d.SizeX + 150;
             
         }
 
@@ -52,8 +52,7 @@ namespace Nart
                 return ambientLightColor;
             }
             set
-            {
-                
+            {                
                 ambientLightColor = value;
                 AmbientLight light = ((Model3DGroup)_window.LightModel.Content).Children[0] as AmbientLight;
                 light.Color = ambientLightColor;
@@ -164,40 +163,20 @@ namespace Nart
             myDirectionalLight1.Color = DirectionalLightColor1;
             myDirectionalLight1.Direction = new Vector3D(-1.0, 0.5, -0.6);
             
-
-
             DirectionalLight myDirectionalLight2 = new DirectionalLight();
             myDirectionalLight2.Color = DirectionalLightColor2;
-            myDirectionalLight2.Direction = new Vector3D(1.0, -0.5, -0.6);
+            myDirectionalLight2.Direction = new Vector3D(1.0, -0.5, 0.6);
 
             DirectionalLight myDirectionalLight3 = new DirectionalLight();
             myDirectionalLight3.Color = DirectionalLightColor3;
-            myDirectionalLight3.Direction = new Vector3D(1.0, -0.5, 0.6);
+            myDirectionalLight3.Direction = new Vector3D(1.0, -0.5, -0.6);
 
-            //SpotLight spotLight3 = new SpotLight();
-            
-
-
-            SphereVisual3D SphereVisual1 = new SphereVisual3D();
-            SphereVisual1.Center = new Point3D(100.0, -50.0, 60.0);
-
-            SphereVisual3D SphereVisual2 = new SphereVisual3D();
-            SphereVisual2.Center = new Point3D(-100.0, 50.0, 60.0);
-
-            SphereVisual3D SphereVisual3 = new SphereVisual3D();
-            SphereVisual3.Center = new Point3D(-100.0, 50.0, -60.0);
-
-           
-            _window.helixViewport.Children.Add(SphereVisual1);
-            _window.helixViewport.Children.Add(SphereVisual2);
-            _window.helixViewport.Children.Add(SphereVisual3);
 
 
             Model3DGroup myLightGroup = new Model3DGroup();
             myLightGroup.Children.Add(myAmbientLight);
             myLightGroup.Children.Add(myDirectionalLight1);
-            //myLightGroup.Children.Add(myDirectionalLight2);
-            myLightGroup.Children.Add(myDirectionalLight3);
+            myLightGroup.Children.Add(myDirectionalLight2);
 
             _window.LightModel.Content = myLightGroup;
 

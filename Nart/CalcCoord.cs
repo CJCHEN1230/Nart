@@ -4,7 +4,9 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media.Media3D;
 using UseCVLibrary;
 
@@ -31,13 +33,17 @@ namespace Nart
 
         public static int PointsNumber = 0;
 
-        public CalcCoord()
+        private MainWindow _window = null;
+
+        public CalcCoord(MainWindow window)
         {
+            _window = window;
             _camParam[0] = new CamParam("../../../data/CaliR_L.txt");
             _camParam[1] = new CamParam("../../../data/CaliR_R.txt");
             CalcLensCenter();
             CalcEpipolarGeometry();
-            
+            LoadNartReg("../../../data/reg.txt");
+
         }
         /// <summary>
         /// 計算鏡心在世界座標
@@ -183,55 +189,7 @@ namespace Nart
             //}
         }
 
-
-        public void MatchAndCalc3D(List<BWMarker>[] OutputMarker)
-        {
-            WorldPoints.Clear();
-            for (int i = 0, count = 0; i < OutputMarker[0].Count; i++) //左相機Marker尋訪
-            {
-                for (int j = count; j < OutputMarker[1].Count; j++) //右相機Marker尋訪
-                {
-                    
-                    if (Math.Abs(OutputMarker[0][i].AvgRectifyY - OutputMarker[1][j].AvgRectifyY) < MatchError
-                       && Math.Abs(OutputMarker[0][i].CornerPoint[0].RectifyY - OutputMarker[1][j].CornerPoint[0].RectifyY) < MatchError
-                       && Math.Abs(OutputMarker[0][i].CornerPoint[1].RectifyY - OutputMarker[1][j].CornerPoint[1].RectifyY) < MatchError
-                       && Math.Abs(OutputMarker[0][i].CornerPoint[2].RectifyY - OutputMarker[1][j].CornerPoint[2].RectifyY) < MatchError)
-                    {
-                        List<Point3D> threePoints = new List<Point3D>(3);
-                        for (int k = 0; k < OutputMarker[0][i].CornerPoint.Count; k++)
-                        {                           
-                            var point3D = CalcWorldPoint(OutputMarker[0][i].CornerPoint[k].CameraPoint, OutputMarker[1][j].CornerPoint[k].CameraPoint);
-                            threePoints.Add(point3D);                           
-                        }
-                        WorldPoints.Add(threePoints);
-                        count = j + 1;
-                        break;                        
-                    }
-                    else
-                        continue;
-                }
-            }
-
-            PointsNumber = WorldPoints.Count * 3;
-
-            for (int i = 0; i < WorldPoints.Count; i++) //左相機Marker尋訪
-            {
-                Console.WriteLine("\n\n第"+(i+1)+"組三邊長度");
-
-                Vector3D a = new Vector3D(WorldPoints[i][0].X - WorldPoints[i][1].X, WorldPoints[i][0].Y - WorldPoints[i][1].Y, WorldPoints[i][0].Z - WorldPoints[i][1].Z);
-
-                Vector3D b = new Vector3D(WorldPoints[i][2].X - WorldPoints[i][1].X, WorldPoints[i][2].Y - WorldPoints[i][1].Y, WorldPoints[i][2].Z - WorldPoints[i][1].Z);
-
-                Vector3D c = new Vector3D(WorldPoints[i][0].X - WorldPoints[i][2].X, WorldPoints[i][0].Y - WorldPoints[i][2].Y, WorldPoints[i][0].Z - WorldPoints[i][2].Z);
-
-                Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
-
-                Console.WriteLine("    ");
-            }
-
-        }
-
-        public Point3D  CalcWorldPoint(Point4D a,Point4D b)
+        public Point3D CalcWorldPoint(Point4D a, Point4D b)
         {
 
             Point4D WorldPoint1 = _camParam[0].invExtParam.Transform(a);
@@ -262,7 +220,128 @@ namespace Nart
             //Console.WriteLine("真實解:" + new Point3D((LeftPoint.X + RightPoint.X) / 2.0, (LeftPoint.Y + RightPoint.Y) / 2.0, (LeftPoint.Z + RightPoint.Z) / 2.0));
             return new Point3D((LeftPoint.X + RightPoint.X) / 2.0, (LeftPoint.Y + RightPoint.Y) / 2.0, (LeftPoint.Z + RightPoint.Z) / 2.0);
 
-           
+
+        }
+
+        public void MatchAndCalc3D(List<BWMarker>[] OutputMarker)
+        {
+            WorldPoints.Clear();
+            for (int i = 0, count = 0; i < OutputMarker[0].Count; i++) //左相機Marker尋訪
+            {
+                for (int j = count; j < OutputMarker[1].Count; j++) //右相機Marker尋訪
+                {
+                    
+                    if (Math.Abs(OutputMarker[0][i].AvgRectifyY - OutputMarker[1][j].AvgRectifyY) < MatchError
+                       && Math.Abs(OutputMarker[0][i].CornerPoint[0].RectifyY - OutputMarker[1][j].CornerPoint[0].RectifyY) < MatchError
+                       && Math.Abs(OutputMarker[0][i].CornerPoint[1].RectifyY - OutputMarker[1][j].CornerPoint[1].RectifyY) < MatchError
+                       && Math.Abs(OutputMarker[0][i].CornerPoint[2].RectifyY - OutputMarker[1][j].CornerPoint[2].RectifyY) < MatchError)
+                    {
+                        List<Point3D> threePoints = new List<Point3D>(3);
+                        for (int k = 0; k < OutputMarker[0][i].CornerPoint.Count; k++)
+                        {                           
+                            var point3D = CalcWorldPoint(OutputMarker[0][i].CornerPoint[k].CameraPoint, OutputMarker[1][j].CornerPoint[k].CameraPoint);
+                            threePoints.Add(point3D);                           
+                        }
+                        WorldPoints.Add(threePoints);
+                        count = j + 1;
+                        break;                        
+                    }
+                    else
+                        continue;
+                }
+            }
+
+            SortedByLength(WorldPoints);
+
+            PointsNumber = WorldPoints.Count * 3;
+            _window.PointLabel.Content = PointsNumber.ToString() + "個點";
+
+            for (int i = 0; i < WorldPoints.Count; i++) //左相機Marker尋訪
+            {
+                Console.WriteLine("\n\n第"+(i+1)+"組三邊長度");
+
+                Vector3D a = new Vector3D(WorldPoints[i][0].X - WorldPoints[i][1].X, WorldPoints[i][0].Y - WorldPoints[i][1].Y, WorldPoints[i][0].Z - WorldPoints[i][1].Z);
+
+                Vector3D b = new Vector3D(WorldPoints[i][2].X - WorldPoints[i][1].X, WorldPoints[i][2].Y - WorldPoints[i][1].Y, WorldPoints[i][2].Z - WorldPoints[i][1].Z);
+
+                Vector3D c = new Vector3D(WorldPoints[i][0].X - WorldPoints[i][2].X, WorldPoints[i][0].Y - WorldPoints[i][2].Y, WorldPoints[i][0].Z - WorldPoints[i][2].Z);
+
+                Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
+
+                Console.WriteLine("    ");
+            }
+
+        }
+
+        /// <summary>
+        /// 排序點大小
+        /// </summary>
+        private void SortedByLength(List<List<Point3D>> WorldPoints)
+        {
+            //第幾組點
+            for (int i = 0; i < WorldPoints.Count; i++) 
+            {
+                double[] Length = new double[3];
+                Length[0] = Math.Abs(WorldPoints[i][0].X - WorldPoints[i][1].X) + Math.Abs(WorldPoints[i][0].Y - WorldPoints[i][1].Y) + Math.Abs(WorldPoints[i][0].Z - WorldPoints[i][1].Z);
+
+                Length[1] = Math.Abs(WorldPoints[i][1].X - WorldPoints[i][2].X) + Math.Abs(WorldPoints[i][1].Y - WorldPoints[i][2].Y) + Math.Abs(WorldPoints[i][1].Z - WorldPoints[i][2].Z);
+
+                Length[2] = Math.Abs(WorldPoints[i][2].X - WorldPoints[i][0].X) + Math.Abs(WorldPoints[i][2].Y - WorldPoints[i][0].Y) + Math.Abs(WorldPoints[i][2].Z - WorldPoints[i][0].Z);
+
+                //Vector3D VecA = new Vector3D(WorldPoints[i][0].X - WorldPoints[i][1].X, WorldPoints[i][0].Y - WorldPoints[i][1].Y, WorldPoints[i][2].Z - WorldPoints[i][2].Z);
+                int[] Index = new int[3];
+
+                if (Length[0] > Length[1] && Length[1] > Length[2])
+                {
+                    Index[0] = 0;
+                    Index[1] = 1;
+                    Index[2] = 2;
+                }
+
+                else if (Length[0] > Length[2] && Length[2] > Length[1]) 
+                {
+                    Index[0] = 1;
+                    Index[1] = 0;
+                    Index[2] = 2;
+                }
+
+                else if (Length[1] > Length[0] && Length[0] > Length[2])
+                {
+                    Index[0] = 2;
+                    Index[1] = 1;
+                    Index[2] = 0;
+                }
+
+                else if (Length[1] > Length[2] && Length[2] > Length[0]) 
+                {
+                    Index[0] = 1;
+                    Index[1] = 2;
+                    Index[2] = 0;
+                }
+
+                else if (Length[2] > Length[1] && Length[1] > Length[0])
+                {
+                    Index[0] = 0;
+                    Index[1] = 2;
+                    Index[2] = 1;
+
+                }
+
+                else if (Length[2] > Length[0] && Length[0] > Length[1])
+                {
+                    Index[0] = 2;
+                    Index[1] = 0;
+                    Index[2] = 1;
+                }
+
+                Point3D tempA = new Point3D(WorldPoints[i][Index[0]].X, WorldPoints[i][Index[0]].Y, WorldPoints[i][Index[0]].Z);
+                Point3D tempB = new Point3D(WorldPoints[i][Index[1]].X, WorldPoints[i][Index[1]].Y, WorldPoints[i][Index[1]].Z);
+                Point3D tempC = new Point3D(WorldPoints[i][Index[2]].X, WorldPoints[i][Index[2]].Y, WorldPoints[i][Index[2]].Z);
+
+                WorldPoints[i][0] = tempA;
+                WorldPoints[i][1] = tempB;
+                WorldPoints[i][2] = tempC;
+            }
         }
 
         private void SortMarker(List<BWMarker>[] OutputMarker)
@@ -310,6 +389,109 @@ namespace Nart
 
 
         }
+
+        /// <summary>
+        /// 傳入兩組三個點所組成的座標系，回傳轉換矩陣
+        /// </summary>
+        private Matrix3D TransformCoordinate(Point3D[] A,Point3D[] B)
+        {
+            Point3D AvgA = new Point3D((A[0].X + A[1].X + A[2].X) / 3.0, (A[0].Y + A[1].Y + A[2].Y) / 3.0, (A[0].Z + A[1].Z + A[2].Z) / 3.0);
+            
+            Vector3D u1 = AvgA - A[0];
+
+            Vector3D AC = AvgA - A[2];
+
+            Vector3D v1 = Vector3D.CrossProduct(u1, AC);
+
+            Vector3D w1 = Vector3D.CrossProduct(u1, v1);
+            u1.Normalize();
+            v1.Normalize();
+            w1.Normalize();
+
+
+            Point3D AvgB = new Point3D((B[0].X + B[1].X + B[2].X) / 3.0, (B[0].Y + B[1].Y + B[2].Y) / 3.0, (B[0].Z + B[1].Z + B[2].Z) / 3.0);
+
+            Vector3D u2 = AvgB - B[0];
+
+            Vector3D AC2 = AvgB - B[2];
+
+            Vector3D v2 = Vector3D.CrossProduct(u2, AC2);
+
+            Vector3D w2 = Vector3D.CrossProduct(u2, v2);
+            u2.Normalize();
+            v2.Normalize();
+            w2.Normalize();
+
+            Matrix3D transform1 =new Matrix3D(u1.X, v1.X, w1.X, 0,
+                                              u1.Y, v1.Y, w1.Y, 0,
+                                              u1.Z, v1.Z, w1.Z, 0,
+                                             AvgA.X, AvgA.Y, AvgA.Z, 1);
+
+            transform1.Invert();
+
+
+            Matrix3D transform2 = new Matrix3D(u2.X, v2.X, w2.X, 0,
+                                              u2.Y, v2.Y, w2.Y, 0,
+                                              u2.Z, v2.Z, w2.Z, 0,
+                                             AvgB.X, AvgB.Y, AvgB.Z, 1);
+
+            Matrix3D finalTransform = transform1 * transform2;
+
+            return finalTransform;
+        }
+
+
+        private void LoadNartReg(string path)
+        {
+            try
+            {
+                string fileContent = File.ReadAllText(path);//"../../../data/CaliR_L.txt"
+                string[] contentArray = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
+
+                string[] data = new string[27];
+                Array.Copy(contentArray, 0, data, 0, 27);
+
+                double[] regData = Array.ConvertAll(data, double.Parse);
+
+                Point3D[] CTball = new Point3D[3];
+                CTball[0] = new Point3D(regData[0], regData[1], regData[2]);
+                CTball[1] = new Point3D(regData[3], regData[4], regData[5]);
+                CTball[2] = new Point3D(regData[6], regData[7], regData[8]);
+
+                Point3D[] SplintBall = new Point3D[3];
+                SplintBall[0] = new Point3D(regData[9], regData[10], regData[11]);
+                SplintBall[1] = new Point3D(regData[12], regData[13], regData[14]);
+                SplintBall[2] = new Point3D(regData[15], regData[16], regData[17]);
+
+                Point3D[] SplintMarker = new Point3D[3];
+                SplintMarker[0] = new Point3D(regData[18], regData[19], regData[20]);
+                SplintMarker[1] = new Point3D(regData[21], regData[22], regData[23]);
+                SplintMarker[2] = new Point3D(regData[24], regData[25], regData[26]);
+                for (int i =0;i< CTball.Length ;i++)
+                {
+                    Console.WriteLine(CTball[i]);
+                }
+
+                for (int i = 0; i < SplintBall.Length; i++)
+                {
+                    Console.WriteLine(SplintBall[i]);
+                }
+
+                for (int i = 0; i < SplintMarker.Length; i++)
+                {
+                    Console.WriteLine(SplintMarker[i]);
+                }
+                Console.WriteLine("  ");
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("註冊檔案錯誤");
+            }
+        }
+
+
+
     }
 
     

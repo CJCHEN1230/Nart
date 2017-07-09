@@ -59,12 +59,20 @@ namespace Nart
         /// <summary>
         /// 計算座標的類別
         /// </summary>
-        private CalcCoord _calcCoord = new CalcCoord();
+        private CalcCoord _calcCoord ;
+
+
+        private MainWindow _window = null;
+
         /// <summary>
         /// 傳進來的width跟height決定inImageControl的長寬
         /// </summary>
-        public CameraControl(int width, int height)
+        public CameraControl(int width, int height , MainWindow window)
         {
+            _window = window;
+
+            _calcCoord = new CalcCoord(_window);
+
             icImagingControl[0] = new TIS.Imaging.ICImagingControl();
             icImagingControl[1] = new TIS.Imaging.ICImagingControl();
 
@@ -105,7 +113,7 @@ namespace Nart
         /// </summary>
         private void ShowImageBuffer()
         {
-            
+
             Parallel.For(0, 2, i =>
             {
                 icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
@@ -116,17 +124,20 @@ namespace Nart
 
             _calcCoord.Rectificaion(OutputMarker);
 
+
+            _calcCoord.MatchAndCalc3D(OutputMarker);
+
             //time_end = DateTime.Now;
             //string result2 = ((TimeSpan)(time_end - time_start)).TotalMilliseconds.ToString();
 
+
             //Console.WriteLine("time: " + result2);
-            _calcCoord.MatchAndCalc3D(OutputMarker);
 
-
-            
-
-            _are.Set();
-            _are.Set();
+            Parallel.For(0, 2, i =>
+            {
+                _are.Set();
+            });
+                
           
         }
         /// <summary>
@@ -194,30 +205,23 @@ namespace Nart
                 _width = icImagingControl[0].ImageSize.Width;
                 _height = icImagingControl[0].ImageSize.Height;
 
-               
+
                 Parallel.For(0, 2, i =>
                 {
                     icImagingControl[i].LiveStart();
                 });
-
+              
 
             }
         }
-
-
-        int count1 = 0;
-        int count2 = 0;
-
-        int buf1 = 0;
-        int buf2 = 0;
-
+ 
         /// <summary>
         /// 相機拍攝的所觸發的事件函數
         /// </summary>  
         private void icImagingControl1_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
         {
             
-            buf1 = e.bufferIndex;
+           
             _displayBuffer[0] = icImagingControl[0].ImageBuffers[e.bufferIndex];
 
    
@@ -242,7 +246,7 @@ namespace Nart
         /// </summary>
         private void icImagingControl2_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
         {
-            buf2 = e.bufferIndex;
+           
             _displayBuffer[1] = icImagingControl[1].ImageBuffers[e.bufferIndex];
 
             unsafe
@@ -269,7 +273,7 @@ namespace Nart
                 _count.Wait();            //等到兩個擷取畫面各執行一次Signal()後才通過  
                 _count.Reset(2);          //重設定count為兩次
 
-                Console.WriteLine("    ");
+                Console.WriteLine("\n\n333333333");
                 Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer));
 
 

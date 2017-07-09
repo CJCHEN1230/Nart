@@ -14,7 +14,7 @@ namespace Nart
         public Matrix3D extParam; //exteranl parameters
         public Matrix3D invExtParam; //exteranl parameters
         public Matrix3D RotationInvert;
-
+        public Matrix3D CTtoMSTransform;
 
         public double FocalLength;
         public double Kappa1;
@@ -36,10 +36,11 @@ namespace Nart
             Nfx = 1600;//1280
             dpx = dx * Ncx / Nfx;
             LoadCalibrationFile(path);
+            
         }
 
 
-        public void LoadCalibrationFile(string path)
+        private void LoadCalibrationFile(string path)
         {
             try
             {
@@ -95,5 +96,6 @@ namespace Nart
 
         }
 
+        
     }
 }

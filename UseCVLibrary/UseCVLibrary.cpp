@@ -107,17 +107,8 @@ List<UseCVLibrary::BWMarker^>^ UseCVLibrary::CornerPointFilter::GetCornerPoint(i
 		AllMarker->Add(marker);
 	}
 
-
-	//for (int i = 0; i < AllMarker->Count; i++)
-	//{
-	//	for (int j=0;j<AllMarker[i]->CornerPoint->Count;j++)
-	//	{
-	//		Console::WriteLine(AllMarker[i]->CornerPoint[j]->ImagePoints->X + "  " + AllMarker[i]->CornerPoint[j]->ImagePoints->Y);
-	//	}
-	//}
-
-
 	OutputCornerPoint.clear();
+
 	return AllMarker;
 }
 

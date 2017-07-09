@@ -30,7 +30,7 @@
         <Button x:Name="button3" Click="allRotate_Click" Content="AllRotateBtn" HorizontalAlignment="Left" Margin="385,10,0,0" VerticalAlignment="Top" Width="56" Height="55"/>
         <Button x:Name="button4" Content="Button" HorizontalAlignment="Left" Margin="454,8,0,0" VerticalAlignment="Top" Width="58" Height="55" Click="button4_Click"/>
         <TabControl x:Name="tabControl" Margin="-10,78,0,43" Grid.RowSpan="2" Background="#FF474747" OpacityMask="Black">
-            <TabItem Header="Camera">
+            <TabItem Header="Camera" FontSize="15">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -42,7 +42,7 @@
                     <Rectangle Fill="#FF474747" HorizontalAlignment="Center" Grid.Column="1" Margin="0" Stroke="Black" Width="10" RadiusY="61" RadiusX="61" Grid.ColumnSpan="1"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="3D View">
+            <TabItem Header="3D View" FontSize="15">
                 <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
@@ -83,7 +83,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Label x:Name="PointLabel" Content="Label" HorizontalAlignment="Left" Margin="276,600,0,0" Grid.Row="1" VerticalAlignment="Top" Height="34" Width="172" FontSize="20"/>
+        <Label x:Name="PointLabel" Content="Label!!!!!!!!!" HorizontalAlignment="Left" Margin="1116,20,0,0" VerticalAlignment="Top" Height="46" Width="164" FontSize="20"/>
 
         <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
 
