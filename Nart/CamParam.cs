@@ -14,7 +14,7 @@ namespace Nart
         public Matrix3D extParam; //exteranl parameters
         public Matrix3D invExtParam; //exteranl parameters
         public Matrix3D RotationInvert;
-        public Matrix3D CTtoMSTransform;
+        
 
         public double FocalLength;
         public double Kappa1;

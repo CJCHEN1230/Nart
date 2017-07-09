@@ -47,7 +47,7 @@ namespace Nart
 
             _envSetting = new Environment(this);
           
-            CamCtrl = new CameraControl(0, 0 , this);
+            CamCtrl = new CameraControl(951, 852 , this);
 
             CamHost1.Child = CamCtrl.icImagingControl[0];
             CamHost2.Child = CamCtrl.icImagingControl[1];
@@ -62,15 +62,15 @@ namespace Nart
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //Console.WriteLine("\nActualWidth:" + (int)CamHost1.ActualWidth + "\nActualHeight:" + (int)CamHost1.ActualHeight);
 
+            //CamCtrl.icImagingControl[0].Size = new System.Drawing.Size((int)CamHost1.ActualWidth, (int)CamHost1.ActualHeight);
+            //CamCtrl.icImagingControl[1].Size = new System.Drawing.Size((int)CamHost2.ActualWidth, (int)CamHost2.ActualHeight);
 
-            CamCtrl.icImagingControl[0].Size = new System.Drawing.Size((int)CamHost1.ActualWidth, (int)CamHost1.ActualHeight);
-            CamCtrl.icImagingControl[1].Size = new System.Drawing.Size((int)CamHost2.ActualWidth, (int)CamHost2.ActualHeight);
-
-            CamCtrl.icImagingControl[0].LiveDisplayHeight = CamCtrl.icImagingControl[0].Height;
-            CamCtrl.icImagingControl[0].LiveDisplayWidth = CamCtrl.icImagingControl[0].Width;
-            CamCtrl.icImagingControl[1].LiveDisplayHeight = CamCtrl.icImagingControl[1].Height;
-            CamCtrl.icImagingControl[1].LiveDisplayWidth = CamCtrl.icImagingControl[1].Width;
+            //CamCtrl.icImagingControl[0].LiveDisplayHeight = CamCtrl.icImagingControl[0].Height;
+            //CamCtrl.icImagingControl[0].LiveDisplayWidth = CamCtrl.icImagingControl[0].Width;
+            //CamCtrl.icImagingControl[1].LiveDisplayHeight = CamCtrl.icImagingControl[1].Height;
+            //CamCtrl.icImagingControl[1].LiveDisplayWidth = CamCtrl.icImagingControl[1].Width;
 
           
 
@@ -222,19 +222,9 @@ namespace Nart
 
 
         public bool toggle = true;
-        private void button4_Click(object sender, RoutedEventArgs e)
+        private void RegButton_Click(object sender, RoutedEventArgs e)
         {
-            //if (toggle == true)
-            //{
-            //    CamCtrl.icImagingControl[0].LiveStop();
-            //    CamCtrl.icImagingControl[1].LiveStop();
-            //}
-            //else
-            //{
-            //    CamCtrl.icImagingControl[0].LiveStart();
-            //    CamCtrl.icImagingControl[1].LiveStart();
-            //}
-            //toggle = !toggle;
+            CameraControl.RegToggle = !CameraControl.RegToggle;            
         }
     }
 }

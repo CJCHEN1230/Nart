@@ -29,11 +29,27 @@ namespace Nart
 
         private const double MatchError= 3;
 
-        private List<List<Point3D>> WorldPoints = new List<List<Point3D>>(10);
+        private List<Marker3D> WorldPoints = new List<Marker3D>(10);
 
         public static int PointsNumber = 0;
 
         private MainWindow _window = null;
+
+        public List<double[]> MarkerDB = new List<double[]>(5);
+
+        private Point3D[] CTBall; //CT珠子中心座標
+
+        private Point3D[] MSBall; //MS點的珠子中心座標
+
+        private Point3D[] MSMarker; //MS點的Marker中心座標
+
+        List<Marker3D> OriWorldPoints = new List<Marker3D>(10);
+
+        List<Marker3D> MSWorldPoints = new List<Marker3D>(10);
+
+        public Matrix3D CTtoMS;
+
+        public Matrix3D OriWorldtoMS;
 
         public CalcCoord(MainWindow window)
         {
@@ -43,6 +59,9 @@ namespace Nart
             CalcLensCenter();
             CalcEpipolarGeometry();
             LoadNartReg("../../../data/reg.txt");
+            CreateDatabase();
+            CTtoMS = TransformCoordinate(CTBall, MSBall);
+
 
         }
         /// <summary>
@@ -106,7 +125,9 @@ namespace Nart
 
             
         }
-
+        /// <summary>
+        /// 扭正左右兩邊拍攝到的像素座標點
+        /// </summary>
         public void Rectificaion(List<BWMarker>[] OutputMarker)
         {
 
@@ -188,7 +209,9 @@ namespace Nart
             //    }
             //}
         }
-
+        /// <summary>
+        /// 輸入兩個相機座標點並反算出世界座標
+        /// </summary>
         public Point3D CalcWorldPoint(Point4D a, Point4D b)
         {
 
@@ -222,7 +245,9 @@ namespace Nart
 
 
         }
-
+        /// <summary>
+        /// 匹配兩張圖的扭正點並反算出世界座標
+        /// </summary>
         public void MatchAndCalc3D(List<BWMarker>[] OutputMarker)
         {
             WorldPoints.Clear();
@@ -230,19 +255,20 @@ namespace Nart
             {
                 for (int j = count; j < OutputMarker[1].Count; j++) //右相機Marker尋訪
                 {
-                    
+                    //比對包括中間及四個點的Marker扭正Y位置
                     if (Math.Abs(OutputMarker[0][i].AvgRectifyY - OutputMarker[1][j].AvgRectifyY) < MatchError
                        && Math.Abs(OutputMarker[0][i].CornerPoint[0].RectifyY - OutputMarker[1][j].CornerPoint[0].RectifyY) < MatchError
                        && Math.Abs(OutputMarker[0][i].CornerPoint[1].RectifyY - OutputMarker[1][j].CornerPoint[1].RectifyY) < MatchError
                        && Math.Abs(OutputMarker[0][i].CornerPoint[2].RectifyY - OutputMarker[1][j].CornerPoint[2].RectifyY) < MatchError)
                     {
-                        List<Point3D> threePoints = new List<Point3D>(3);
+                        Marker3D threeWorldPoints = new Marker3D(); 
                         for (int k = 0; k < OutputMarker[0][i].CornerPoint.Count; k++)
                         {                           
-                            var point3D = CalcWorldPoint(OutputMarker[0][i].CornerPoint[k].CameraPoint, OutputMarker[1][j].CornerPoint[k].CameraPoint);
-                            threePoints.Add(point3D);                           
+                            Point3D point3D = CalcWorldPoint(OutputMarker[0][i].CornerPoint[k].CameraPoint, OutputMarker[1][j].CornerPoint[k].CameraPoint);
+                            threeWorldPoints.ThreePoints[k] = point3D;
                         }
-                        WorldPoints.Add(threePoints);
+                        
+                        WorldPoints.Add(threeWorldPoints);
                         count = j + 1;
                         break;                        
                     }
@@ -251,99 +277,115 @@ namespace Nart
                 }
             }
 
-            SortedByLength(WorldPoints);
+
+            //對計算到的3D點排序並比對資料庫
+            for (int i =0; i< WorldPoints.Count; i++)
+            {
+                WorldPoints[i].SortedByLength();
+
+                //Console.WriteLine("a:" + WorldPoints[i].ThreeLength[0] + "b:" + WorldPoints[i].ThreeLength[1] + "c:" + WorldPoints[i].ThreeLength[2]);
+
+                WorldPoints[i].CompareDatabase(MarkerDB);
+            }
 
             PointsNumber = WorldPoints.Count * 3;
+
             _window.PointLabel.Content = PointsNumber.ToString() + "個點";
 
             for (int i = 0; i < WorldPoints.Count; i++) //左相機Marker尋訪
             {
-                Console.WriteLine("\n\n第"+(i+1)+"組三邊長度");
+                Console.WriteLine("\n\n排序後第" + (i + 1) + "組三邊長度");
 
-                Vector3D a = new Vector3D(WorldPoints[i][0].X - WorldPoints[i][1].X, WorldPoints[i][0].Y - WorldPoints[i][1].Y, WorldPoints[i][0].Z - WorldPoints[i][1].Z);
+                Vector3D a = new Vector3D(WorldPoints[i].ThreePoints[0].X - WorldPoints[i].ThreePoints[1].X, WorldPoints[i].ThreePoints[0].Y - WorldPoints[i].ThreePoints[1].Y, WorldPoints[i].ThreePoints[0].Z - WorldPoints[i].ThreePoints[1].Z);
 
-                Vector3D b = new Vector3D(WorldPoints[i][2].X - WorldPoints[i][1].X, WorldPoints[i][2].Y - WorldPoints[i][1].Y, WorldPoints[i][2].Z - WorldPoints[i][1].Z);
+                Vector3D b = new Vector3D(WorldPoints[i].ThreePoints[2].X - WorldPoints[i].ThreePoints[1].X, WorldPoints[i].ThreePoints[2].Y - WorldPoints[i].ThreePoints[1].Y, WorldPoints[i].ThreePoints[2].Z - WorldPoints[i].ThreePoints[1].Z);
 
-                Vector3D c = new Vector3D(WorldPoints[i][0].X - WorldPoints[i][2].X, WorldPoints[i][0].Y - WorldPoints[i][2].Y, WorldPoints[i][0].Z - WorldPoints[i][2].Z);
+                Vector3D c = new Vector3D(WorldPoints[i].ThreePoints[0].X - WorldPoints[i].ThreePoints[2].X, WorldPoints[i].ThreePoints[0].Y - WorldPoints[i].ThreePoints[2].Y, WorldPoints[i].ThreePoints[0].Z - WorldPoints[i].ThreePoints[2].Z);
 
                 Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
+
+                Console.WriteLine("\nIndex:" + WorldPoints[i].DatabaseIndex);
 
                 Console.WriteLine("    ");
             }
 
         }
-
         /// <summary>
-        /// 排序點大小
+        /// 以長度排序點大小
         /// </summary>
-        private void SortedByLength(List<List<Point3D>> WorldPoints)
+        private void SortedByLength(Point3D[] WorldPoints)
         {
             //第幾組點
-            for (int i = 0; i < WorldPoints.Count; i++) 
-            {
+           
                 double[] Length = new double[3];
-                Length[0] = Math.Abs(WorldPoints[i][0].X - WorldPoints[i][1].X) + Math.Abs(WorldPoints[i][0].Y - WorldPoints[i][1].Y) + Math.Abs(WorldPoints[i][0].Z - WorldPoints[i][1].Z);
 
-                Length[1] = Math.Abs(WorldPoints[i][1].X - WorldPoints[i][2].X) + Math.Abs(WorldPoints[i][1].Y - WorldPoints[i][2].Y) + Math.Abs(WorldPoints[i][1].Z - WorldPoints[i][2].Z);
+                Vector3D a = new Vector3D(WorldPoints[0].X - WorldPoints[1].X, WorldPoints[0].Y - WorldPoints[1].Y, WorldPoints[0].Z - WorldPoints[1].Z);
 
-                Length[2] = Math.Abs(WorldPoints[i][2].X - WorldPoints[i][0].X) + Math.Abs(WorldPoints[i][2].Y - WorldPoints[i][0].Y) + Math.Abs(WorldPoints[i][2].Z - WorldPoints[i][0].Z);
+                Vector3D b = new Vector3D(WorldPoints[1].X - WorldPoints[2].X, WorldPoints[1].Y - WorldPoints[2].Y, WorldPoints[1].Z - WorldPoints[2].Z);
 
-                //Vector3D VecA = new Vector3D(WorldPoints[i][0].X - WorldPoints[i][1].X, WorldPoints[i][0].Y - WorldPoints[i][1].Y, WorldPoints[i][2].Z - WorldPoints[i][2].Z);
+                Vector3D c = new Vector3D(WorldPoints[2].X - WorldPoints[0].X, WorldPoints[2].Y - WorldPoints[0].Y, WorldPoints[2].Z - WorldPoints[0].Z);
+
+
+                Length[0] = a.Length;
+
+                Length[1] = b.Length;
+
+                Length[2] = c.Length;
+
                 int[] Index = new int[3];
 
-                if (Length[0] > Length[1] && Length[1] > Length[2])
-                {
-                    Index[0] = 0;
-                    Index[1] = 1;
-                    Index[2] = 2;
-                }
-
-                else if (Length[0] > Length[2] && Length[2] > Length[1]) 
-                {
-                    Index[0] = 1;
-                    Index[1] = 0;
-                    Index[2] = 2;
-                }
-
-                else if (Length[1] > Length[0] && Length[0] > Length[2])
-                {
-                    Index[0] = 2;
-                    Index[1] = 1;
-                    Index[2] = 0;
-                }
-
-                else if (Length[1] > Length[2] && Length[2] > Length[0]) 
-                {
-                    Index[0] = 1;
-                    Index[1] = 2;
-                    Index[2] = 0;
-                }
-
-                else if (Length[2] > Length[1] && Length[1] > Length[0])
-                {
-                    Index[0] = 0;
-                    Index[1] = 2;
-                    Index[2] = 1;
-
-                }
-
-                else if (Length[2] > Length[0] && Length[0] > Length[1])
-                {
-                    Index[0] = 2;
-                    Index[1] = 0;
-                    Index[2] = 1;
-                }
-
-                Point3D tempA = new Point3D(WorldPoints[i][Index[0]].X, WorldPoints[i][Index[0]].Y, WorldPoints[i][Index[0]].Z);
-                Point3D tempB = new Point3D(WorldPoints[i][Index[1]].X, WorldPoints[i][Index[1]].Y, WorldPoints[i][Index[1]].Z);
-                Point3D tempC = new Point3D(WorldPoints[i][Index[2]].X, WorldPoints[i][Index[2]].Y, WorldPoints[i][Index[2]].Z);
-
-                WorldPoints[i][0] = tempA;
-                WorldPoints[i][1] = tempB;
-                WorldPoints[i][2] = tempC;
+            if (Length[0] > Length[1] && Length[1] > Length[2])
+            {
+                Index[0] = 0;
+                Index[1] = 1;
+                Index[2] = 2;
             }
-        }
 
+            else if (Length[0] > Length[2] && Length[2] > Length[1])
+            {
+                Index[0] = 1;
+                Index[1] = 0;
+                Index[2] = 2;
+            }
+
+            else if (Length[1] > Length[0] && Length[0] > Length[2])
+            {
+                Index[0] = 2;
+                Index[1] = 1;
+                Index[2] = 0;
+            }
+
+            else if (Length[1] > Length[2] && Length[2] > Length[0])
+            {
+                Index[0] = 1;
+                Index[1] = 2;
+                Index[2] = 0;
+            }
+
+            else if (Length[2] > Length[1] && Length[1] > Length[0])
+            {
+                Index[0] = 0;
+                Index[1] = 2;
+                Index[2] = 1;
+
+            }
+
+            else if (Length[2] > Length[0] && Length[0] > Length[1])
+            {
+                Index[0] = 2;
+                Index[1] = 0;
+                Index[2] = 1;
+            }
+
+            Point3D tempA = new Point3D(WorldPoints[Index[0]].X, WorldPoints[Index[0]].Y, WorldPoints[Index[0]].Z);
+            Point3D tempB = new Point3D(WorldPoints[Index[1]].X, WorldPoints[Index[1]].Y, WorldPoints[Index[1]].Z);
+            Point3D tempC = new Point3D(WorldPoints[Index[2]].X, WorldPoints[Index[2]].Y, WorldPoints[Index[2]].Z);
+
+            WorldPoints[0] = tempA;
+            WorldPoints[1] = tempB;
+            WorldPoints[2] = tempC;
+            
+        }
         private void SortMarker(List<BWMarker>[] OutputMarker)
         {
             Parallel.For(0, 2, Image_Index =>
@@ -389,7 +431,6 @@ namespace Nart
 
 
         }
-
         /// <summary>
         /// 傳入兩組三個點所組成的座標系，回傳轉換矩陣
         /// </summary>
@@ -440,7 +481,6 @@ namespace Nart
             return finalTransform;
         }
 
-
         private void LoadNartReg(string path)
         {
             try
@@ -453,33 +493,37 @@ namespace Nart
 
                 double[] regData = Array.ConvertAll(data, double.Parse);
 
-                Point3D[] CTball = new Point3D[3];
-                CTball[0] = new Point3D(regData[0], regData[1], regData[2]);
-                CTball[1] = new Point3D(regData[3], regData[4], regData[5]);
-                CTball[2] = new Point3D(regData[6], regData[7], regData[8]);
+                
+                CTBall = new Point3D[3] { new Point3D(regData[0], regData[1], regData[2]),
+                                          new Point3D(regData[3], regData[4], regData[5]),
+                                          new Point3D(regData[6], regData[7], regData[8])};
+                
+                MSBall = new Point3D[3] { new Point3D(regData[9], regData[10], regData[11]),
+                                          new Point3D(regData[12], regData[13], regData[14]),
+                                          new Point3D(regData[15], regData[16], regData[17])};
 
-                Point3D[] SplintBall = new Point3D[3];
-                SplintBall[0] = new Point3D(regData[9], regData[10], regData[11]);
-                SplintBall[1] = new Point3D(regData[12], regData[13], regData[14]);
-                SplintBall[2] = new Point3D(regData[15], regData[16], regData[17]);
-
-                Point3D[] SplintMarker = new Point3D[3];
-                SplintMarker[0] = new Point3D(regData[18], regData[19], regData[20]);
-                SplintMarker[1] = new Point3D(regData[21], regData[22], regData[23]);
-                SplintMarker[2] = new Point3D(regData[24], regData[25], regData[26]);
-                for (int i =0;i< CTball.Length ;i++)
+                MSMarker = new Point3D[3] { new Point3D(regData[18], regData[19], regData[20]),
+                                            new Point3D(regData[21], regData[22], regData[23]),
+                                            new Point3D(regData[24], regData[25], regData[26])};
+                SortedByLength(CTBall);
+                SortedByLength(MSBall);
+                SortedByLength(MSMarker);
+                Console.WriteLine("\nCTBall");
+                for (int i =0;i< CTBall.Length ;i++)
                 {
-                    Console.WriteLine(CTball[i]);
+                    Console.WriteLine(CTBall[i]);
                 }
 
-                for (int i = 0; i < SplintBall.Length; i++)
+                Console.WriteLine("\nSplintBall");
+                for (int i = 0; i < MSBall.Length; i++)
                 {
-                    Console.WriteLine(SplintBall[i]);
+                    Console.WriteLine(MSBall[i]);
                 }
 
-                for (int i = 0; i < SplintMarker.Length; i++)
+                Console.WriteLine("\nSplintMarker");
+                for (int i = 0; i < MSMarker.Length; i++)
                 {
-                    Console.WriteLine(SplintMarker[i]);
+                    Console.WriteLine(MSMarker[i]);
                 }
                 Console.WriteLine("  ");
             }
@@ -489,9 +533,88 @@ namespace Nart
                 MessageBox.Show("註冊檔案錯誤");
             }
         }
+        /// <summary>
+        /// 輸入Marker的data
+        /// </summary>
+        private void CreateDatabase()
+        {
+            double[] data1 = new double[3] { 21.36, 15.64, 11.8 }; //咬片
+            double[] data2 = new double[3] { 24.64, 20.58, 13.79 };
+            double[] data3 = new double[3] { 24.6, 22.597, 9.96 };
+            double[] data4 = new double[3] { 23.06, 17.753, 14.886 };
+            double[] data5 = new double[3] { 22.82, 19.59, 11.88 };
+
+            MarkerDB.Add(data1);
+            MarkerDB.Add(data2);
+            MarkerDB.Add(data3);
+            MarkerDB.Add(data4);
+            MarkerDB.Add(data5);
+
+            
+        }
+        /// <summary>
+        /// 註冊當前狀態的值
+        /// </summary>
+        public void Registraion()
+        {
+            int index = -1;
+            for (int i=0;i<WorldPoints.Count ;i++)
+            {
+                Console.WriteLine("\n\n第" + (i + 1) + "組點");
+                if (WorldPoints[i].CompareLength(MarkerDB[0]))
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index != -1)
+            {
+                OriWorldtoMS = TransformCoordinate(WorldPoints[index].ThreePoints, MSMarker);
+
+                for (int i = 0; i < WorldPoints.Count; i++)
+                {
+                    //創建註冊時的世界座標點
+                    Marker3D OriWorldPoint = new Marker3D();
+                    WorldPoints[i].ThreePoints.CopyTo(OriWorldPoint.ThreePoints, 0); //將當前世界座標點存進OriWorldPoint當作註冊時的狀態
+                    OriWorldPoint.DatabaseIndex = WorldPoints[i].DatabaseIndex;
+                    //創建轉成MS座標系的世界座標點
+                    Marker3D MSWorldPoint = new Marker3D();
+                    MSWorldPoint.DatabaseIndex = WorldPoints[i].DatabaseIndex;
+                    OriWorldtoMS.Transform(WorldPoints[i].ThreePoints);
+                    WorldPoints[i].ThreePoints.CopyTo(MSWorldPoint.ThreePoints, 0);
+
+                    OriWorldPoints.Add(OriWorldPoint);
+                    MSWorldPoints.Add(MSWorldPoint);
+                }
 
 
+                for (int i = 0; i < OriWorldPoints.Count; i++)
+                {
+                    Console.WriteLine("第" + (i + 1) + "組");
+                    Console.WriteLine(OriWorldPoints[i].ThreePoints[0]);
+                    Console.WriteLine(OriWorldPoints[i].ThreePoints[1]);
+                    Console.WriteLine(OriWorldPoints[i].ThreePoints[2]);
+                    Console.WriteLine(OriWorldPoints[i].DatabaseIndex);
+                }
 
+                for (int i = 0; i < MSWorldPoints.Count; i++)
+                {
+                    Console.WriteLine("第" + (i + 1) + "組");
+                    Console.WriteLine(MSWorldPoints[i].ThreePoints[0]);
+                    Console.WriteLine(MSWorldPoints[i].ThreePoints[1]);
+                    Console.WriteLine(MSWorldPoints[i].ThreePoints[2]);
+                    Console.WriteLine(MSWorldPoints[i].DatabaseIndex);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("找不到咬板Marker");
+
+            }
+            CameraControl.RegToggle = false;
+        }
     }
 
     

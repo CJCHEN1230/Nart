@@ -60,7 +60,10 @@ namespace Nart
         /// 計算座標的類別
         /// </summary>
         private CalcCoord _calcCoord ;
-
+        /// <summary>
+        /// 開啟Registration Button的功能
+        /// </summary>
+        public static bool RegToggle = false;
 
         private MainWindow _window = null;
 
@@ -126,6 +129,13 @@ namespace Nart
 
 
             _calcCoord.MatchAndCalc3D(OutputMarker);
+
+            if (CameraControl.RegToggle)
+            {
+                _calcCoord.Registraion();
+            }
+
+
 
             //time_end = DateTime.Now;
             //string result2 = ((TimeSpan)(time_end - time_start)).TotalMilliseconds.ToString();
@@ -210,8 +220,6 @@ namespace Nart
                 {
                     icImagingControl[i].LiveStart();
                 });
-              
-
             }
         }
  
@@ -220,19 +228,17 @@ namespace Nart
         /// </summary>  
         private void icImagingControl1_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
         {
-            
-           
+                       
             _displayBuffer[0] = icImagingControl[0].ImageBuffers[e.bufferIndex];
-
    
             unsafe
             {
-                
+
+                Console.WriteLine("\n\n1: " + DateTime.Now.ToString("ss.ffff"));
+
                 byte* data = _displayBuffer[0].Ptr;
 
                 OutputMarker[0] = _corPtFltr[0].GetCornerPoint(_width, _height, data);
-
-                Console.WriteLine("\n\n1: "+DateTime.Now.ToString("ss.ffff"));
 
                 _count.Signal();
 
@@ -250,13 +256,13 @@ namespace Nart
             _displayBuffer[1] = icImagingControl[1].ImageBuffers[e.bufferIndex];
 
             unsafe
-            {               
+            {
+                Console.WriteLine("\n\n2: " + DateTime.Now.ToString("ss.ffff"));
+
                 byte* data = _displayBuffer[1].Ptr;
 
                 OutputMarker[1] = _corPtFltr[1].GetCornerPoint(_width, _height, data);
-
-                Console.WriteLine("\n\n2: " + DateTime.Now.ToString("ss.ffff"));
-
+               
                 _count.Signal();
 
                 _are.WaitOne();

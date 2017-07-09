@@ -153,7 +153,9 @@ namespace Nart
                 return boundingBoxCenter;
             }           
         }
-
+        /// <summary>
+        /// 設定光位置
+        /// </summary>
         private void LightSetting()
         {
             AmbientLight myAmbientLight = new AmbientLight();
