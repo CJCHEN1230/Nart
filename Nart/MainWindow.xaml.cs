@@ -42,18 +42,14 @@ namespace Nart
             InitializeComponent();
 
             AllocConsole();
+            _envSetting = new Environment(this);
 
             displaytest();
 
-            _envSetting = new Environment(this);
-          
-            CamCtrl = new CameraControl(951, 852 , this);
+            CamCtrl = new CameraControl(951, 852, this);
 
             CamHost1.Child = CamCtrl.icImagingControl[0];
             CamHost2.Child = CamCtrl.icImagingControl[1];
-
-
-
         }
 
         
@@ -72,9 +68,9 @@ namespace Nart
             //CamCtrl.icImagingControl[1].LiveDisplayHeight = CamCtrl.icImagingControl[1].Height;
             //CamCtrl.icImagingControl[1].LiveDisplayWidth = CamCtrl.icImagingControl[1].Width;
 
-          
 
             CamCtrl.CameraStart();
+            
         }
         
         private Model3DGroup Display3d(string model)
@@ -209,7 +205,7 @@ namespace Nart
 
         }
 
-        
+
 
 
 
@@ -221,10 +217,26 @@ namespace Nart
         public static extern void FreeConsole();
 
 
-        public bool toggle = true;
         private void RegButton_Click(object sender, RoutedEventArgs e)
         {
-            CameraControl.RegToggle = !CameraControl.RegToggle;            
+          
+            CameraControl.RegToggle = !CameraControl.RegToggle; 
         }
+
+        private void load_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {            
+            
+        }
+
+        private void load_Closed(object sender, EventArgs e)
+        {
+            //Console.WriteLine("load_Closed Thread ID:" + Thread.CurrentThread.ManagedThreadId);
+            
+            CamCtrl.CameraClose();
+            
+            System.Windows.Application.Current.Shutdown();
+            //System.Environment.Exit(System.Environment.ExitCode);
+
+        }      
     }
 }

@@ -6,8 +6,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
-//using System.Threading.Tasks;
 using System.Windows.Threading;
 using TIS.Imaging;
 using UseCVLibrary;
@@ -47,11 +45,11 @@ namespace Nart
         /// <summary>
         /// 顯示畫面的函數實作
         /// </summary>
-        private Thread _displayThread ;
+        internal Thread _displayThread ;
         /// <summary>
         /// 管理Thread通行
         /// </summary>
-        private AutoResetEvent _are = new AutoResetEvent(false);
+        private AutoResetEvent[] _are = new AutoResetEvent[2];        
         /// <summary>
         /// 管理Thread記數
         /// </summary>
@@ -64,6 +62,9 @@ namespace Nart
         /// 開啟Registration Button的功能
         /// </summary>
         public static bool RegToggle = false;
+
+        public bool testToggle1 = true;
+        public bool testToggle2 = true;
 
         private MainWindow _window = null;
 
@@ -78,6 +79,9 @@ namespace Nart
 
             icImagingControl[0] = new TIS.Imaging.ICImagingControl();
             icImagingControl[1] = new TIS.Imaging.ICImagingControl();
+
+            _are[0] = new AutoResetEvent(false);
+            _are[1] = new AutoResetEvent(false);
 
             _corPtFltr[0] = new CornerPointFilter(0);
             _corPtFltr[1] = new CornerPointFilter(1);           
@@ -96,6 +100,8 @@ namespace Nart
 
             icImagingControl[0].ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl1_ImageAvailable);
             icImagingControl[1].ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl2_ImageAvailable);
+            //icImagingControl[0].OverlayUpdateEventEnable = true;
+            //icImagingControl[0].OverlayUpdate += new System.EventHandler<ICImagingControl.OverlayUpdateEventArgs>(this.icImagingControl1_OverlayUpdate);
 
 
             ((System.ComponentModel.ISupportInitialize)(icImagingControl[0])).EndInit();
@@ -105,51 +111,10 @@ namespace Nart
 
 
             _displayThread = new Thread(DisplayLoop);
-
-
-            _displayThread.Start();
-
+            _displayThread.IsBackground = true;
 
         }
-        /// <summary>
-        /// 實體化委派的顯示函數
-        /// </summary>
-        private void ShowImageBuffer()
-        {
-
-            Parallel.For(0, 2, i =>
-            {
-                icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
-            });
-
-            //time_start = DateTime.Now;
-
-
-            _calcCoord.Rectificaion(OutputMarker);
-
-
-            _calcCoord.MatchAndCalc3D(OutputMarker);
-
-            if (CameraControl.RegToggle)
-            {
-                _calcCoord.Registraion();
-            }
-
-
-
-            //time_end = DateTime.Now;
-            //string result2 = ((TimeSpan)(time_end - time_start)).TotalMilliseconds.ToString();
-
-
-            //Console.WriteLine("time: " + result2);
-
-            Parallel.For(0, 2, i =>
-            {
-                _are.Set();
-            });
-                
-          
-        }
+       
         /// <summary>
         /// 雙相機控制項的初始化設定
         /// </summary>
@@ -158,7 +123,7 @@ namespace Nart
             icImagingControl.DeviceListChangedExecutionMode = TIS.Imaging.EventExecutionMode.Invoke;
             icImagingControl.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
             icImagingControl.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
-            icImagingControl.ImageRingBufferSize = 10;
+            icImagingControl.ImageRingBufferSize = 8;
             icImagingControl.BackColor = System.Drawing.Color.Black;
             icImagingControl.LiveDisplayDefault = false; //如果設定為true，將無法改變顯示視窗大小，所以下面的icImagingControl.Height將無法使用
             icImagingControl.LiveCaptureContinuous = true; //LiveCaptureContinuous = True means that every frame is copied to the ring buffer.
@@ -211,39 +176,106 @@ namespace Nart
             }
             if (icImagingControl[0].DeviceValid && icImagingControl[1].DeviceValid) 
             {
-               
+                _displayThread.Start();
+
                 _width = icImagingControl[0].ImageSize.Width;
                 _height = icImagingControl[0].ImageSize.Height;
 
-
                 Parallel.For(0, 2, i =>
                 {
+                    Console.WriteLine("剛開始 " + i + ":" + Thread.CurrentThread.ManagedThreadId);
                     icImagingControl[i].LiveStart();
                 });
+                
             }
         }
- 
+        public void CameraClose()
+        {
+            _displayThread.Abort();
+
+            if (icImagingControl[0].LiveVideoRunning)
+            {
+                Console.WriteLine("load_Closed Thread ID1:" + Thread.CurrentThread.ManagedThreadId);
+                icImagingControl[0].LiveStop();
+                Console.WriteLine("load_Closed Thread ID2:" + Thread.CurrentThread.ManagedThreadId);
+            }
+            if (icImagingControl[1].LiveVideoRunning)
+            {
+                icImagingControl[1].LiveStop();
+                Console.WriteLine("load_Closed Thread ID3:" + Thread.CurrentThread.ManagedThreadId);
+            }
+            
+        }
+        /// <summary>
+        /// 實體化委派的顯示函數
+        /// </summary>
+        private void ShowImageBuffer()
+        {
+
+
+            Parallel.For(0, 2, i =>
+            {
+                //Console.WriteLine("顯示Thread" + i + ":" + Thread.CurrentThread.ManagedThreadId);
+                icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
+            });
+
+           
+          
+            //Console.WriteLine("\n顯示時間:" + ((TimeSpan)(time_start - time_end)).TotalMilliseconds.ToString());
+
+            _calcCoord.Rectificaion(OutputMarker);
+            ////////////time_end = DateTime.Now;
+            ////////////Console.WriteLine("\n扭正時間:" + ((TimeSpan)(time_end - time_start)).TotalMilliseconds.ToString());
+
+            _calcCoord.MatchAndCalc3D(OutputMarker);
+            ////////////time_start = DateTime.Now;
+            ////////////Console.WriteLine("\nMatch時間:" + ((TimeSpan)(time_start - time_end)).TotalMilliseconds.ToString());
+
+            //Console.WriteLine("\n\n\n");
+            if (CameraControl.RegToggle)
+            {
+                _calcCoord.Registraion();
+            }
+
+
+            testToggle1 = true;
+            testToggle2 = true;
+
+            //time_end = DateTime.Now;
+            //string result2 = ((TimeSpan)(time_end - time_start)).TotalMilliseconds.ToString();
+
+
+            //Console.WriteLine("time: " + result2);
+
+            //Parallel.For(0, 2, i =>
+            //{
+            //    _are[i].Set();
+            //});
+
+
+        }
         /// <summary>
         /// 相機拍攝的所觸發的事件函數
         /// </summary>  
         private void icImagingControl1_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
         {
-                       
-            _displayBuffer[0] = icImagingControl[0].ImageBuffers[e.bufferIndex];
-   
-            unsafe
+            if (testToggle1)
             {
+                testToggle1 = false;
+                _displayBuffer[0] = icImagingControl[0].ImageBuffers[e.bufferIndex];
 
-                Console.WriteLine("\n\n1: " + DateTime.Now.ToString("ss.ffff"));
+                unsafe
+                {
 
-                byte* data = _displayBuffer[0].Ptr;
+                    byte* data = _displayBuffer[0].Ptr;
 
-                OutputMarker[0] = _corPtFltr[0].GetCornerPoint(_width, _height, data);
+                    OutputMarker[0] = _corPtFltr[0].GetCornerPoint(_width, _height, data);
 
-                _count.Signal();
+                    _count.Signal();
 
-                _are.WaitOne();
+                    //_are[0].WaitOne();
 
+                }
             }
           
         }
@@ -252,42 +284,46 @@ namespace Nart
         /// </summary>
         private void icImagingControl2_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
         {
-           
-            _displayBuffer[1] = icImagingControl[1].ImageBuffers[e.bufferIndex];
-
-            unsafe
+            if (testToggle2)
             {
-                Console.WriteLine("\n\n2: " + DateTime.Now.ToString("ss.ffff"));
+                testToggle2 = false;
+                _displayBuffer[1] = icImagingControl[1].ImageBuffers[e.bufferIndex];
 
-                byte* data = _displayBuffer[1].Ptr;
+                unsafe
+                {
 
-                OutputMarker[1] = _corPtFltr[1].GetCornerPoint(_width, _height, data);
-               
-                _count.Signal();
+                    byte* data = _displayBuffer[1].Ptr;
 
-                _are.WaitOne();
-              
+                    OutputMarker[1] = _corPtFltr[1].GetCornerPoint(_width, _height, data);
+                 
+                    _count.Signal();
+
+                   // _are[1].WaitOne();
+
+                }
             }
         }
+       
         /// <summary>
         /// 在此顯示區域無限循環         
         /// </summary>
         private void DisplayLoop()
         {            
             while (true)
-            {
+            {               
                 _count.Wait();            //等到兩個擷取畫面各執行一次Signal()後才通過  
                 _count.Reset(2);          //重設定count為兩次
-
-                Console.WriteLine("\n\n333333333");
+                
                 Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer));
-
-
             }
         }
 
         static DateTime time_start;
         static DateTime time_end;
+        static DateTime time_start1;
+        static DateTime time_end1;
+        static DateTime time_start2;
+        static DateTime time_end2;
 
     }
 }

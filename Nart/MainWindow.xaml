@@ -1,4 +1,4 @@
-﻿<Window x:Name="load" x:Class="Nart.MainWindow"
+﻿<Window x:Class="Nart.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"  
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +9,7 @@
         
         xmlns:helix="http://helix-toolkit.org/wpf"
         Foreground="White"
-        Title="Nart" Height="768" Width="1366" Loaded="Window_Loaded" WindowState="Maximized" Background="#FF474747">
+        Title="Nart" Height="768" Width="1366" Loaded="Window_Loaded" WindowState="Maximized" Background="#FF474747" Closed="load_Closed">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCmdExecuted"/>
         <CommandBinding Command="ApplicationCommands.New" Executed="NewCmdExecuted"/>

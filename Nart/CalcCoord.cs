@@ -294,7 +294,7 @@ namespace Nart
 
             for (int i = 0; i < WorldPoints.Count; i++) //左相機Marker尋訪
             {
-                Console.WriteLine("\n\n排序後第" + (i + 1) + "組三邊長度");
+                //Console.WriteLine("\n\n排序後第" + (i + 1) + "組三邊長度");
 
                 Vector3D a = new Vector3D(WorldPoints[i].ThreePoints[0].X - WorldPoints[i].ThreePoints[1].X, WorldPoints[i].ThreePoints[0].Y - WorldPoints[i].ThreePoints[1].Y, WorldPoints[i].ThreePoints[0].Z - WorldPoints[i].ThreePoints[1].Z);
 
@@ -302,11 +302,11 @@ namespace Nart
 
                 Vector3D c = new Vector3D(WorldPoints[i].ThreePoints[0].X - WorldPoints[i].ThreePoints[2].X, WorldPoints[i].ThreePoints[0].Y - WorldPoints[i].ThreePoints[2].Y, WorldPoints[i].ThreePoints[0].Z - WorldPoints[i].ThreePoints[2].Z);
 
-                Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
+                //Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
 
-                Console.WriteLine("\nIndex:" + WorldPoints[i].DatabaseIndex);
+                //Console.WriteLine("\nIndex:" + WorldPoints[i].DatabaseIndex);
 
-                Console.WriteLine("    ");
+                //Console.WriteLine("    ");
             }
 
         }
@@ -559,11 +559,11 @@ namespace Nart
         {
             int index = -1;
             for (int i=0;i<WorldPoints.Count ;i++)
-            {
-                Console.WriteLine("\n\n第" + (i + 1) + "組點");
+            {                
                 if (WorldPoints[i].CompareLength(MarkerDB[0]))
                 {
                     index = i;
+                    Console.WriteLine("\n\n第" + (i + 1) + "組點是咬板");
                     break;
                 }
             }
@@ -588,30 +588,29 @@ namespace Nart
                     MSWorldPoints.Add(MSWorldPoint);
                 }
 
-
+                
                 for (int i = 0; i < OriWorldPoints.Count; i++)
                 {
-                    Console.WriteLine("第" + (i + 1) + "組");
+                    Console.WriteLine("\n第" + (i + 1) + "組 世界座標");
                     Console.WriteLine(OriWorldPoints[i].ThreePoints[0]);
                     Console.WriteLine(OriWorldPoints[i].ThreePoints[1]);
                     Console.WriteLine(OriWorldPoints[i].ThreePoints[2]);
                     Console.WriteLine(OriWorldPoints[i].DatabaseIndex);
                 }
-
+                Console.WriteLine("\n\n\n");
                 for (int i = 0; i < MSWorldPoints.Count; i++)
                 {
-                    Console.WriteLine("第" + (i + 1) + "組");
+                    Console.WriteLine("\n第" + (i + 1) + "組 MS座標");
                     Console.WriteLine(MSWorldPoints[i].ThreePoints[0]);
                     Console.WriteLine(MSWorldPoints[i].ThreePoints[1]);
                     Console.WriteLine(MSWorldPoints[i].ThreePoints[2]);
-                    Console.WriteLine(MSWorldPoints[i].DatabaseIndex);
+                    Console.WriteLine("引數:"+MSWorldPoints[i].DatabaseIndex);
                 }
 
             }
             else
             {
                 MessageBox.Show("找不到咬板Marker");
-
             }
             CameraControl.RegToggle = false;
         }
