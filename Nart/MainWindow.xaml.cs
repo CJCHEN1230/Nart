@@ -20,6 +20,7 @@ using System.Windows.Threading;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
 using System.Threading;
+using NartControl;
 
 namespace Nart
 {
@@ -33,8 +34,7 @@ namespace Nart
         private Environment _envSetting;
 
         private CameraControl CamCtrl;
-
-
+        
         
         public MainWindow()
         {
@@ -42,6 +42,7 @@ namespace Nart
             InitializeComponent();
 
             AllocConsole();
+
             _envSetting = new Environment(this);
 
             displaytest();
@@ -57,44 +58,10 @@ namespace Nart
         
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            //Console.WriteLine("\nActualWidth:" + (int)CamHost1.ActualWidth + "\nActualHeight:" + (int)CamHost1.ActualHeight);
-
-            //CamCtrl.icImagingControl[0].Size = new System.Drawing.Size((int)CamHost1.ActualWidth, (int)CamHost1.ActualHeight);
-            //CamCtrl.icImagingControl[1].Size = new System.Drawing.Size((int)CamHost2.ActualWidth, (int)CamHost2.ActualHeight);
-
-            //CamCtrl.icImagingControl[0].LiveDisplayHeight = CamCtrl.icImagingControl[0].Height;
-            //CamCtrl.icImagingControl[0].LiveDisplayWidth = CamCtrl.icImagingControl[0].Width;
-            //CamCtrl.icImagingControl[1].LiveDisplayHeight = CamCtrl.icImagingControl[1].Height;
-            //CamCtrl.icImagingControl[1].LiveDisplayWidth = CamCtrl.icImagingControl[1].Width;
-
-
-            CamCtrl.CameraStart();
-            
+        {        
+            CamCtrl.CameraStart();            
         }
         
-        private Model3DGroup Display3d(string model)
-        {
-            Model3DGroup device = null;
-            try
-            {
-                //Adding a gesture here
-                //helixViewport.RotateGesture = new MouseGesture(MouseAction.LeftClick);
-
-                //Import 3D model file
-                ModelImporter import = new ModelImporter();
-
-                //Load the 3D model file
-                device = import.Load(model);
-            }
-            catch (Exception e)
-            {
-                // Handle exception in case can not find the 3D model file
-                System.Windows.MessageBox.Show("Exception Error : " + e.StackTrace);
-            }
-            return device;
-        }
-
         private void OpenCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
@@ -219,10 +186,11 @@ namespace Nart
 
         private void RegButton_Click(object sender, RoutedEventArgs e)
         {
-          
+
             CameraControl.RegToggle = !CameraControl.RegToggle; 
+
         }
-      
+
         private void load_Closed(object sender, EventArgs e)
         {
             //Console.WriteLine("load_Closed Thread ID:" + Thread.CurrentThread.ManagedThreadId);

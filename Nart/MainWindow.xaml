@@ -29,13 +29,19 @@
         <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="312,9,0,0" VerticalAlignment="Top" Width="56" Height="55"/>
         <Button x:Name="button3" Click="allRotate_Click" Content="AllRotateBtn" HorizontalAlignment="Left" Margin="385,10,0,0" VerticalAlignment="Top" Width="56" Height="55"/>
         <Button x:Name="button4" Click="TrackingButton_Click" Content="Tracking" HorizontalAlignment="Left" Margin="454,8,0,0" VerticalAlignment="Top" Width="58" Height="55" />
-        <TabControl x:Name="tabControl" Margin="-10,78,0,43" Grid.RowSpan="2" Background="#FF474747" OpacityMask="Black">
+        <TabControl x:Name="tabControl" SelectedIndex="0" Margin="-10,78,0,43" Grid.RowSpan="2" Background="#FF474747" OpacityMask="Black">
             <TabItem Header="Camera" FontSize="15">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FF7B7B7B" Offset="0"/>
+                        <GradientStop Color="#FF343333" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition/>
                         <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <WindowsFormsHost x:Name="CamHost1" Grid.Column="0"  Margin="1,1,0,1"/>
                     <WindowsFormsHost x:Name="CamHost2" Grid.Column="2"  Margin="0,1,1,1" />
@@ -43,6 +49,12 @@
                 </Grid>
             </TabItem>
             <TabItem Header="3D View" FontSize="15">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FF7B7B7B" Offset="0"/>
+                        <GradientStop Color="#FF343333" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
                 <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
@@ -75,7 +87,7 @@
                             <MouseGesture MouseAction="MiddleClick" />
                         </helix:HelixViewport3D.ZoomGesture>
 
-                        <helix:SphereVisual3D Center="0,0,0" Radius="1" Fill="White"/>
+                        <helix:SphereVisual3D Center="0,0,0" Radius="100" Fill="White"/>
 
                         <ModelVisual3D x:Name="mainModelVisual"/>
 
@@ -85,7 +97,6 @@
         </TabControl>
         <Label x:Name="PointLabel" Content="Label!!!!!!!!!" HorizontalAlignment="Left" Margin="1116,20,0,0" VerticalAlignment="Top" Height="46" Width="164" FontSize="20"/>
         <Button x:Name="RegButton" Content="Registration" HorizontalAlignment="Left" Margin="523,8,0,0" VerticalAlignment="Top" Width="58" Height="55" Click="RegButton_Click"/>
-
         <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
 
 
