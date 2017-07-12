@@ -9,13 +9,17 @@ using System.Windows.Media.Media3D;
 
 namespace Nart
 {
-    class ModelData
+    public class ModelData
     {
         private String _filename;
 
         private ModelVisual3D _modelVisual = new ModelVisual3D();
 
         private Model3DGroup _modleGroup;
+
+        private Matrix3D ModelTransform;
+
+        public int DatabaseIndex = -1;
 
         public ModelData(String filename)
         {

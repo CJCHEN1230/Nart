@@ -35,7 +35,8 @@ namespace Nart
 
         private CameraControl CamCtrl;
         
-        
+        public static List<ModelData> AllModelData =new List<ModelData>(5);
+
         public MainWindow()
         {
 
@@ -43,10 +44,10 @@ namespace Nart
 
             AllocConsole();
 
-            _envSetting = new Environment(this);
-
             displaytest();
 
+            _envSetting = new Environment(this);
+           
             CamCtrl = new CameraControl(951, 852, this);
 
             CamHost1.Child = CamCtrl.icImagingControl[0];
@@ -149,13 +150,20 @@ namespace Nart
 
         private ModelVisual3D MV1 = new ModelVisual3D();
         private ModelVisual3D MV2 = new ModelVisual3D();
-        private ModelData mData1 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\Ramus L-fine.stl");
-        private ModelData mData2 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\Ramus R-fine.stl");
-        private ModelData mData3 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\maxilla cut-teeth4-fine-combine.stl");
+        private ModelData mData1 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla.stl");
+        private ModelData mData2 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible digital segment BVRO.stl");
+        private ModelData mData3 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull wo maxilla w ramus BVRO.stl");
+        private ModelData mData4 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\下顎球1.stl");
 
         private void displaytest() {
 
+            mData1.DatabaseIndex = 0;
+            mData2.DatabaseIndex = 2;
+            mData2.DatabaseIndex = 3;
 
+            AllModelData.Add(mData1);
+            AllModelData.Add(mData2);
+            AllModelData.Add(mData3);
 
             mainModelVisual.Children.Add(mData1.ModelVisual);
             mainModelVisual.Children.Add(mData2.ModelVisual);
@@ -188,7 +196,7 @@ namespace Nart
         {
 
             CameraControl.RegToggle = !CameraControl.RegToggle; 
-
+           
         }
 
         private void load_Closed(object sender, EventArgs e)

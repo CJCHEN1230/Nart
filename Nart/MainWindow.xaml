@@ -39,13 +39,15 @@
                 </TabItem.Background>
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="14*"/>
+                        <ColumnDefinition Width="35*"/>
+                        <ColumnDefinition Width="622*"/>
                         <ColumnDefinition Width="10"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="671*"/>
                     </Grid.ColumnDefinitions>
-                    <WindowsFormsHost x:Name="CamHost1" Grid.Column="0"  Margin="1,1,0,1"/>
-                    <WindowsFormsHost x:Name="CamHost2" Grid.Column="2"  Margin="0,1,1,1" />
-                    <Rectangle Fill="#FF474747" HorizontalAlignment="Center" Grid.Column="1" Margin="0" Stroke="Black" Width="10" RadiusY="61" RadiusX="61" Grid.ColumnSpan="1"/>
+                    <WindowsFormsHost x:Name="CamHost1" Grid.Column="0"  Margin="1,1,0,1" Grid.ColumnSpan="3"/>
+                    <WindowsFormsHost x:Name="CamHost2" Grid.Column="4"  Margin="0,1,1,1" />
+                    <Rectangle Fill="#FF474747" HorizontalAlignment="Center" Grid.Column="3" Margin="0" Stroke="Black" Width="10" RadiusY="61" RadiusX="61" Grid.ColumnSpan="1"/>
                 </Grid>
             </TabItem>
             <TabItem Header="3D View" FontSize="15">
@@ -87,7 +89,7 @@
                             <MouseGesture MouseAction="MiddleClick" />
                         </helix:HelixViewport3D.ZoomGesture>
 
-                        <helix:SphereVisual3D Center="0,0,0" Radius="100" Fill="White"/>
+                        <!--helix:SphereVisual3D Center="0,0,0" Radius="100" Fill="White"/-->
 
                         <ModelVisual3D x:Name="mainModelVisual"/>
 

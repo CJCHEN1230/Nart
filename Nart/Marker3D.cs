@@ -20,6 +20,7 @@ namespace Nart
 
         public int DatabaseIndex = -1;
 
+
         
         public Marker3D()
         {
