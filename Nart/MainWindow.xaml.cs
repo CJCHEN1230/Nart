@@ -222,12 +222,7 @@ namespace Nart
           
             CameraControl.RegToggle = !CameraControl.RegToggle; 
         }
-
-        private void load_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {            
-            
-        }
-
+      
         private void load_Closed(object sender, EventArgs e)
         {
             //Console.WriteLine("load_Closed Thread ID:" + Thread.CurrentThread.ManagedThreadId);
@@ -237,6 +232,11 @@ namespace Nart
             System.Windows.Application.Current.Shutdown();
             //System.Environment.Exit(System.Environment.ExitCode);
 
-        }      
+        }
+
+        private void TrackingButton_Click(object sender, RoutedEventArgs e)
+        {
+            CameraControl.TrackToggle = !CameraControl.TrackToggle;
+        }
     }
 }

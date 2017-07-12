@@ -63,6 +63,8 @@ namespace Nart
         /// </summary>
         public static bool RegToggle = false;
 
+        public static bool TrackToggle = false;
+
         public bool testToggle1 = true;
         public bool testToggle2 = true;
 
@@ -232,9 +234,17 @@ namespace Nart
             ////////////Console.WriteLine("\nMatch時間:" + ((TimeSpan)(time_start - time_end)).TotalMilliseconds.ToString());
 
             //Console.WriteLine("\n\n\n");
+
+            _calcCoord.MatchRealMarker();
+
             if (CameraControl.RegToggle)
             {
                 _calcCoord.Registraion();
+            }
+
+            if (CameraControl.TrackToggle)
+            {
+                _calcCoord.CalcModelTransform();
             }
 
 

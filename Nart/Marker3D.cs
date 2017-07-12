@@ -16,6 +16,8 @@ namespace Nart
 
         public double[] ThreeLength;
 
+        public Matrix3D ModelTransform;
+
         public int DatabaseIndex = -1;
 
         
@@ -119,7 +121,7 @@ namespace Nart
         }
 
         /// <summary>
-        /// 比較資料庫裡面的長度
+        /// 輸入資料庫，並存下對應的索引值到DatabaseIndex
         /// </summary>
         public void CompareDatabase(List<double[]> MarkerDB)
         {

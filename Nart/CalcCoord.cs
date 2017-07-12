@@ -27,11 +27,11 @@ namespace Nart
         /// </summary>
         public Matrix3D epipolarCoord;
 
-        private const double MatchError= 3;
+        private const double MatchError = 3;
 
         private List<Marker3D> WorldPoints = new List<Marker3D>(10);
 
-        public static int PointsNumber = 0;
+        //public static int PointsNumber = 0;
 
         private MainWindow _window = null;
 
@@ -43,13 +43,34 @@ namespace Nart
 
         private Point3D[] MSMarker; //MS點的Marker中心座標
 
-        List<Marker3D> OriWorldPoints = new List<Marker3D>(10);
+        private List<Marker3D> OriWorldPoints = new List<Marker3D>(10);
 
-        List<Marker3D> MSWorldPoints = new List<Marker3D>(10);
+        private List<Marker3D> MSWorldPoints = new List<Marker3D>(10);
 
-        public Matrix3D CTtoMS;
+        private Matrix3D CTtoMS;
 
-        public Matrix3D OriWorldtoMS;
+        private Matrix3D MStoCT;
+
+        private Matrix3D OriWorldtoMS;
+
+        public int CurrentHeadIndex = -1;
+
+        public int RegHeadIndex = -1;
+        // <summary>
+        ///頭在Database中引數
+        /// </summary>
+        public int RegSplintIndex = -1;
+        /// <summary>
+        ///頭在Database中引數
+        /// </summary>
+        private readonly int HeadInDatabase ;
+        /// <summary>
+        ///咬板在Database中引數
+        /// </summary>
+        private readonly int SplintInDatabase ;
+
+
+        //public List<Matrix3D> ModelTransform = new List<Matrix3D>;
 
         public CalcCoord(MainWindow window)
         {
@@ -59,9 +80,9 @@ namespace Nart
             CalcLensCenter();
             CalcEpipolarGeometry();
             LoadNartReg("../../../data/reg.txt");
-            CreateDatabase();
+            CreateDatabase(out HeadInDatabase,out SplintInDatabase);
             CTtoMS = TransformCoordinate(CTBall, MSBall);
-
+            MStoCT = TransformCoordinate(MSBall, CTBall);
 
         }
         /// <summary>
@@ -170,7 +191,8 @@ namespace Nart
                     OutputMarker[i][j].AvgRectifyY = accumRecY / 3.0;
                     OutputMarker[i][j].AvgX = accumX / 3.0;
 
-                    OutputMarker[i][j].CornerPoint.Sort(delegate (NartPoint point1, NartPoint point2)
+                    OutputMarker[i][j].CornerPoint.Sort(
+                    delegate (NartPoint point1, NartPoint point2)
                     {
                         double diff = point1.RectifyY - point2.RectifyY;
                         if (diff > 2)
@@ -278,23 +300,33 @@ namespace Nart
             }
 
 
-            //對計算到的3D點排序並比對資料庫
+            //對計算到的3D點排序
             for (int i =0; i< WorldPoints.Count; i++)
             {
                 WorldPoints[i].SortedByLength();
+            }
 
-                //Console.WriteLine("a:" + WorldPoints[i].ThreeLength[0] + "b:" + WorldPoints[i].ThreeLength[1] + "c:" + WorldPoints[i].ThreeLength[2]);
 
+
+            _window.PointLabel.Content = (WorldPoints.Count * 3).ToString() + "個點";
+
+            
+
+        }
+        /// <summary>
+        /// 將計算出的3D座標點與資料庫比對並存下引數
+        /// </summary>
+        public void MatchRealMarker()
+        {
+            for (int i = 0; i < WorldPoints.Count; i++)
+            {               
                 WorldPoints[i].CompareDatabase(MarkerDB);
             }
 
-            PointsNumber = WorldPoints.Count * 3;
-
-            _window.PointLabel.Content = PointsNumber.ToString() + "個點";
 
             for (int i = 0; i < WorldPoints.Count; i++) //左相機Marker尋訪
             {
-                //Console.WriteLine("\n\n排序後第" + (i + 1) + "組三邊長度");
+                Console.WriteLine("\n\n排序後第" + (i + 1) + "組三邊長度");
 
                 Vector3D a = new Vector3D(WorldPoints[i].ThreePoints[0].X - WorldPoints[i].ThreePoints[1].X, WorldPoints[i].ThreePoints[0].Y - WorldPoints[i].ThreePoints[1].Y, WorldPoints[i].ThreePoints[0].Z - WorldPoints[i].ThreePoints[1].Z);
 
@@ -302,13 +334,12 @@ namespace Nart
 
                 Vector3D c = new Vector3D(WorldPoints[i].ThreePoints[0].X - WorldPoints[i].ThreePoints[2].X, WorldPoints[i].ThreePoints[0].Y - WorldPoints[i].ThreePoints[2].Y, WorldPoints[i].ThreePoints[0].Z - WorldPoints[i].ThreePoints[2].Z);
 
-                //Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
+                Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
 
-                //Console.WriteLine("\nIndex:" + WorldPoints[i].DatabaseIndex);
+                Console.WriteLine("\nIndex:" + WorldPoints[i].DatabaseIndex);
 
-                //Console.WriteLine("    ");
+                Console.WriteLine("    ");
             }
-
         }
         /// <summary>
         /// 以長度排序點大小
@@ -480,7 +511,9 @@ namespace Nart
 
             return finalTransform;
         }
-
+        /// <summary>
+        /// 匯入原N-Art的註冊檔
+        /// </summary>
         private void LoadNartReg(string path)
         {
             try
@@ -536,13 +569,13 @@ namespace Nart
         /// <summary>
         /// 輸入Marker的data
         /// </summary>
-        private void CreateDatabase()
+        private void CreateDatabase(out int splintInDatabase, out int headInDatabase)
         {
-            double[] data1 = new double[3] { 21.36, 15.64, 11.8 }; //咬片
-            double[] data2 = new double[3] { 24.64, 20.58, 13.79 };
-            double[] data3 = new double[3] { 24.6, 22.597, 9.96 };
-            double[] data4 = new double[3] { 23.06, 17.753, 14.886 };
-            double[] data5 = new double[3] { 22.82, 19.59, 11.88 };
+            double[] data1 = new double[3] { 22.82, 19.59, 11.88 }; //上顎           
+            double[] data2 = new double[3] { 24.64, 20.58, 13.79 }; 
+            double[] data3 = new double[3] { 24.6, 22.597, 9.96 }; //下顎
+            double[] data4 = new double[3] { 23.06, 17.753, 14.886 }; //頭
+            double[] data5 = new double[3] { 21.36, 15.64, 11.8 }; //咬片
 
             MarkerDB.Add(data1);
             MarkerDB.Add(data2);
@@ -550,27 +583,42 @@ namespace Nart
             MarkerDB.Add(data4);
             MarkerDB.Add(data5);
 
-            
+            splintInDatabase = 4;
+            headInDatabase = 3;
         }
+
+        private int GetSpecIndex(List<Marker3D> Markerdata,int specIndex)
+        {
+            for (int i = 0; i < Markerdata.Count; i++)
+            {
+                if (Markerdata[i].DatabaseIndex == specIndex)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         /// <summary>
         /// 註冊當前狀態的值
         /// </summary>
         public void Registraion()
         {
-            int index = -1;
-            for (int i=0;i<WorldPoints.Count ;i++)
-            {                
-                if (WorldPoints[i].CompareLength(MarkerDB[0]))
-                {
-                    index = i;
-                    Console.WriteLine("\n\n第" + (i + 1) + "組點是咬板");
-                    break;
-                }
-            }
+            OriWorldPoints.Clear();
+            MSWorldPoints.Clear();
+            RegSplintIndex = GetSpecIndex(WorldPoints, SplintInDatabase);
+            
+            Console.WriteLine("\n\n第" + (RegSplintIndex + 1) + "組點是咬板");
 
-            if (index != -1)
+
+            RegHeadIndex = GetSpecIndex(WorldPoints, HeadInDatabase);
+            
+            Console.WriteLine("\n\n第" + (RegHeadIndex + 1) + "組點是頭部");
+         
+
+            if (RegSplintIndex != -1 && RegHeadIndex != -1)
             {
-                OriWorldtoMS = TransformCoordinate(WorldPoints[index].ThreePoints, MSMarker);
+                OriWorldtoMS = TransformCoordinate(WorldPoints[RegSplintIndex].ThreePoints, MSMarker);
 
                 for (int i = 0; i < WorldPoints.Count; i++)
                 {
@@ -588,7 +636,8 @@ namespace Nart
                     MSWorldPoints.Add(MSWorldPoint);
                 }
 
-                
+                MessageBox.Show("註冊了" + WorldPoints.Count + "組Marker");
+
                 for (int i = 0; i < OriWorldPoints.Count; i++)
                 {
                     Console.WriteLine("\n第" + (i + 1) + "組 世界座標");
@@ -610,9 +659,48 @@ namespace Nart
             }
             else
             {
-                MessageBox.Show("找不到咬板Marker");
+                MessageBox.Show("找不到咬板或頭部Marker");
             }
             CameraControl.RegToggle = false;
+        }
+
+        public void CalcModelTransform()
+        {
+
+            CurrentHeadIndex = GetSpecIndex(WorldPoints, HeadInDatabase);
+
+            //沒有找到頭的Marker
+            if (CurrentHeadIndex != -1) 
+            {
+
+                for (int i = 0; i < WorldPoints.Count; i++)
+                {
+                    int currentIndex = WorldPoints[i].DatabaseIndex;
+                    if (currentIndex == RegSplintIndex || currentIndex == RegHeadIndex) //篩選出可動部位
+                    {
+                        continue;
+                    }
+
+
+                    int MSIndex = GetSpecIndex(MSWorldPoints, currentIndex);
+
+                    if (MSIndex != -1)
+                    {
+                        Matrix3D level1 = CTtoMS; //CT轉MS
+                        Matrix3D level2 = TransformCoordinate(MSWorldPoints[MSIndex].ThreePoints, WorldPoints[i].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"
+                        Matrix3D level3 = TransformCoordinate(WorldPoints[CurrentHeadIndex].ThreePoints, OriWorldPoints[RegHeadIndex].ThreePoints);
+                        Matrix3D level4 = TransformCoordinate(OriWorldPoints[RegSplintIndex].ThreePoints, MSMarker);
+                        Matrix3D level5 = MStoCT;
+
+                        WorldPoints[i].ModelTransform = level1 * level2 * level3 * level4 * level5;
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
         }
     }
 
