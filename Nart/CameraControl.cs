@@ -128,6 +128,7 @@ namespace Nart
             icImagingControl.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
             icImagingControl.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
             icImagingControl.ImageRingBufferSize = 8;
+            icImagingControl.LiveDisplayPosition =new Point(0,0);
             icImagingControl.BackColor = System.Drawing.Color.Black;
             icImagingControl.LiveDisplayDefault = false; //如果設定為true，將無法改變顯示視窗大小，所以下面的icImagingControl.Height將無法使用
             icImagingControl.LiveCaptureContinuous = true; //LiveCaptureContinuous = True means that every frame is copied to the ring buffer.

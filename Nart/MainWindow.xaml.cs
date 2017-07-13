@@ -48,7 +48,7 @@ namespace Nart
 
             _envSetting = new Environment(this);
            
-            CamCtrl = new CameraControl(951, 852, this);
+            CamCtrl = new CameraControl(873, 815, this);
 
             CamHost1.Child = CamCtrl.icImagingControl[0];
             CamHost2.Child = CamCtrl.icImagingControl[1];
@@ -196,6 +196,8 @@ namespace Nart
         {
 
             CameraControl.RegToggle = !CameraControl.RegToggle; 
+            Console.WriteLine("Width:" + CamHost1.ActualWidth + "   Height:" + CamHost1.ActualHeight);
+               
            
         }
 

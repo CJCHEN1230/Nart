@@ -56,21 +56,29 @@ namespace Nart
         public int CurrentHeadIndex = -1;
 
         public int RegHeadIndex = -1;
-        // <summary>
+        ///<summary>
         ///頭在Database中引數
         /// </summary>
         public int RegSplintIndex = -1;
         /// <summary>
         ///頭在Database中引數
         /// </summary>
-        private readonly int HeadInDatabase ;
+        private readonly int HeadInDatabase;
         /// <summary>
         ///咬板在Database中引數
         /// </summary>
-        private readonly int SplintInDatabase ;
+        private readonly int SplintInDatabase;
+        /// <summary>
+        ///上顎在Database中引數
+        /// </summary>
+        private readonly int MaxillaInDatabase;
+        /// <summary>
+        ///下顎在Database中引數
+        /// </summary>
+        private readonly int MandibleInDatabase;
 
 
-        //public List<Matrix3D> ModelTransform = new List<Matrix3D>;
+        private List<int> DatabaseIndex = new List<int>();
 
         public CalcCoord(MainWindow window)
         {
@@ -80,7 +88,7 @@ namespace Nart
             CalcLensCenter();
             CalcEpipolarGeometry();
             LoadNartReg("../../../data/reg.txt");
-            CreateDatabase(out HeadInDatabase,out SplintInDatabase);
+            CreateDatabase(out HeadInDatabase,out SplintInDatabase, out MaxillaInDatabase, out MandibleInDatabase);
             CTtoMS = TransformCoordinate(CTBall, MSBall);
             MStoCT = TransformCoordinate(MSBall, CTBall);
 
@@ -569,7 +577,7 @@ namespace Nart
         /// <summary>
         /// 輸入Marker的data
         /// </summary>
-        private void CreateDatabase(out int splintInDatabase, out int headInDatabase)
+        private void CreateDatabase(out int splintInDatabase, out int headInDatabase , out int maxillaInDatabase, out int mandibleInDatabase)
         {
             double[] data1 = new double[3] { 22.82, 19.59, 11.88 }; //上顎           
             double[] data2 = new double[3] { 24.64, 20.58, 13.79 }; 
@@ -585,6 +593,13 @@ namespace Nart
 
             splintInDatabase = 4;
             headInDatabase = 3;
+            maxillaInDatabase = 0;
+            mandibleInDatabase = 2;
+
+            DatabaseIndex.Add(splintInDatabase);
+            DatabaseIndex.Add(headInDatabase);
+            DatabaseIndex.Add(maxillaInDatabase);
+            DatabaseIndex.Add(mandibleInDatabase);
         }
 
         private int GetSpecIndex(List<Marker3D> Markerdata,int specIndex)
@@ -672,34 +687,24 @@ namespace Nart
             //沒有找到頭的Marker
             if (CurrentHeadIndex != -1) 
             {
-
-                for (int i = 0; i < WorldPoints.Count; i++)
+                Parallel.For(0, DatabaseIndex.Count-2, i =>
                 {
-                    int currentIndex = WorldPoints[i].DatabaseIndex;
-                    if (currentIndex == RegSplintIndex || currentIndex == RegHeadIndex) //篩選出可動部位
+                    int CurrentIndex = GetSpecIndex(WorldPoints, DatabaseIndex[i]); //當前處理的可動部位(上、下顎)索引
+
+                    int MSandOriIndex = GetSpecIndex(MSWorldPoints, DatabaseIndex[i]); //當前處理的上下顎對應到的MS跟Original World索引值
+
+                    if (CurrentIndex != -1) 
                     {
-                        continue;
-                    }
 
-
-                    int MSIndex = GetSpecIndex(MSWorldPoints, currentIndex);
-
-                    if (MSIndex != -1)
-                    {
                         Matrix3D level1 = CTtoMS; //CT轉MS
-                        Matrix3D level2 = TransformCoordinate(MSWorldPoints[MSIndex].ThreePoints, WorldPoints[i].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"
+                        Matrix3D level2 = TransformCoordinate(MSWorldPoints[MSandOriIndex].ThreePoints, WorldPoints[CurrentIndex].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"
                         Matrix3D level3 = TransformCoordinate(WorldPoints[CurrentHeadIndex].ThreePoints, OriWorldPoints[RegHeadIndex].ThreePoints);
                         Matrix3D level4 = TransformCoordinate(OriWorldPoints[RegSplintIndex].ThreePoints, MSMarker);
                         Matrix3D level5 = MStoCT;
 
-                        WorldPoints[i].ModelTransform = level1 * level2 * level3 * level4 * level5;
-
+                        Matrix3D Final = level1 * level2 * level3 * level4 * level5;
                     }
-                    else
-                    {
-
-                    }
-                }
+                });                
             }
         }
     }
