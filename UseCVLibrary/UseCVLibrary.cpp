@@ -58,10 +58,15 @@ void UseCVLibrary::BWMarker::sort()
 
 int UseCVLibrary::BWMarker::CompareTo(BWMarker^ other)
 {
+	
 	if (this->AvgRectifyY - other->AvgRectifyY > 2)
-		return 1;
-	else if (this->AvgRectifyY - other->AvgRectifyY < -2)
+	{
 		return -1;
+	}
+	else if (this->AvgRectifyY - other->AvgRectifyY < -2)
+	{
+		return 1;
+	}
 	else
 	{
 		double diff2 = this->AvgX - other->AvgX;

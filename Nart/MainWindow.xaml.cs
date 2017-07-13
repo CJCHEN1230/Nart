@@ -90,17 +90,19 @@ namespace Nart
        
         private void Rotate_Click(object sender, RoutedEventArgs e)
         {
-            
-            
-            var axis = new Vector3D(0, 0, 1);
-            var angle = 10;
 
-            var matrix = MV2.Transform.Value;
-            matrix.Rotate(new Quaternion(axis, angle));
 
-            MV2.Transform = new MatrixTransform3D(matrix);
+            //var axis = new Vector3D(0, 0, 1);
+            //var angle = 10;
 
-            //Console.WriteLine("執行緒:  " + Thread.CurrentThread.ManagedThreadId);
+            //var matrix = MV2.Transform.Value;
+            //matrix.Rotate(new Quaternion(axis, angle));
+
+            //MV2.Transform = new MatrixTransform3D(matrix);
+
+            Matrix3D test = new Matrix3D();
+            test.SetIdentity();
+            AllModelData[0]._modelVisual.Transform = new MatrixTransform3D(test);
         }
 
         private void Translate_Click(object sender, RoutedEventArgs e)
@@ -143,6 +145,7 @@ namespace Nart
             var angle = 30;
 
             var matrix = mainModelVisual.Transform.Value;
+            
             matrix.Rotate(new Quaternion(axis, angle));
 
             mainModelVisual.Transform = new MatrixTransform3D(matrix);
@@ -155,11 +158,12 @@ namespace Nart
         private ModelData mData3 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull wo maxilla w ramus BVRO.stl");
         private ModelData mData4 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\下顎球1.stl");
 
-        private void displaytest() {
+        private void displaytest()
+        {
 
             mData1.DatabaseIndex = 0;
+            mData2.DatabaseIndex = 1;
             mData2.DatabaseIndex = 2;
-            mData2.DatabaseIndex = 3;
 
             AllModelData.Add(mData1);
             AllModelData.Add(mData2);
@@ -169,8 +173,6 @@ namespace Nart
             mainModelVisual.Children.Add(mData2.ModelVisual);
             mainModelVisual.Children.Add(mData3.ModelVisual);
 
-
-
         }
 
 
@@ -179,9 +181,6 @@ namespace Nart
         {
 
         }
-
-
-
 
 
         [DllImport("kernel32.dll", SetLastError = true)]

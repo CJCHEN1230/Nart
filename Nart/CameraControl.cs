@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media.Media3D;
 using System.Windows.Threading;
 using TIS.Imaging;
 using UseCVLibrary;
@@ -62,11 +63,14 @@ namespace Nart
         /// 開啟Registration Button的功能
         /// </summary>
         public static bool RegToggle = false;
-
+        /// <summary>
+        /// 開啟Tracking Button的功能
+        /// </summary>
         public static bool TrackToggle = false;
-
-        public bool testToggle1 = true;
-        public bool testToggle2 = true;
+        /// <summary>
+        /// 管理相機通過與否
+        /// </summary>
+        private bool[] CameraToggle = new bool[2] {true,true};
 
         private MainWindow _window = null;
 
@@ -211,24 +215,41 @@ namespace Nart
             }
             
         }
+
+        private void MoveModel()
+        {
+            for (int i=0;i< MainWindow.AllModelData.Count-1; i++)
+            {
+                Matrix3D TEMP = MainWindow.AllModelData[i].ModelTransform;
+
+                //Console.WriteLine("\n\nMatrix" + (i + 1) + "組:");
+                //Console.WriteLine("  " + TEMP.M11+ "  " + TEMP.M12+ "  " + TEMP.M13+ "  " + TEMP.M14);
+                //Console.WriteLine("  " + TEMP.M21 + "  " + TEMP.M22 + "  " + TEMP.M23 + "  " + TEMP.M24);
+                //Console.WriteLine("  " + TEMP.M31 + "  " + TEMP.M32 + "  " + TEMP.M33 + "  " + TEMP.M34);
+                //Console.WriteLine("  " + TEMP.OffsetX + "  " + TEMP.OffsetY + "  " + TEMP.OffsetZ + "  " + TEMP.M44);
+
+                MainWindow.AllModelData[i].SetTransformMatrix();
+            }
+        }
         /// <summary>
         /// 實體化委派的顯示函數
         /// </summary>
         private void ShowImageBuffer()
         {
 
-
-            Parallel.For(0, 2, i =>
+            if (_window.tabControl.SelectedIndex == 0)
             {
-                //Console.WriteLine("顯示Thread" + i + ":" + Thread.CurrentThread.ManagedThreadId);
-                icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
-            });
+                Parallel.For(0, 2, i =>
+                {                    
+                    icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
+                });
+            }
 
-           
-          
+
+
             //Console.WriteLine("\n顯示時間:" + ((TimeSpan)(time_start - time_end)).TotalMilliseconds.ToString());
 
-            _calcCoord.Rectificaion(OutputMarker);
+            _calcCoord.Rectify(OutputMarker);
             ////////////time_end = DateTime.Now;
             ////////////Console.WriteLine("\n扭正時間:" + ((TimeSpan)(time_end - time_start)).TotalMilliseconds.ToString());
 
@@ -236,9 +257,8 @@ namespace Nart
             ////////////time_start = DateTime.Now;
             ////////////Console.WriteLine("\nMatch時間:" + ((TimeSpan)(time_start - time_end)).TotalMilliseconds.ToString());
 
-            //Console.WriteLine("\n\n\n");
-
             _calcCoord.MatchRealMarker();
+
 
             if (CameraControl.RegToggle)
             {
@@ -248,33 +268,24 @@ namespace Nart
             if (CameraControl.TrackToggle)
             {
                 _calcCoord.CalcModelTransform();
+                MoveModel();
             }
 
 
-            testToggle1 = true;
-            testToggle2 = true;
-
-            //time_end = DateTime.Now;
-            //string result2 = ((TimeSpan)(time_end - time_start)).TotalMilliseconds.ToString();
 
 
-            //Console.WriteLine("time: " + result2);
 
-            //Parallel.For(0, 2, i =>
-            //{
-            //    _are[i].Set();
-            //});
-
-
+            CameraToggle[0] = true;
+            CameraToggle[1] = true;           
         }
         /// <summary>
         /// 相機拍攝的所觸發的事件函數
         /// </summary>  
         private void icImagingControl1_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
         {
-            if (testToggle1)
+            if (CameraToggle[0])
             {
-                testToggle1 = false;
+                CameraToggle[0] = false;
                 _displayBuffer[0] = icImagingControl[0].ImageBuffers[e.bufferIndex];
 
                 unsafe
@@ -297,9 +308,9 @@ namespace Nart
         /// </summary>
         private void icImagingControl2_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
         {
-            if (testToggle2)
+            if (CameraToggle[1])
             {
-                testToggle2 = false;
+                CameraToggle[1] = false;
                 _displayBuffer[1] = icImagingControl[1].ImageBuffers[e.bufferIndex];
 
                 unsafe

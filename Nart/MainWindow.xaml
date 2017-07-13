@@ -22,12 +22,12 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Controls:ImgButton2 ButtonLabel="1234567"  ButtonImageSource="/Icon/test.ico" Margin="0,462,0,121"/>
+        <Controls:ImgButton2 ButtonLabel="1234567"  ButtonImageSource="/Icon/test.ico" Margin="4,452,1442,219" Grid.ColumnSpan="2"/>
         <Button x:Name="button" Command="ApplicationCommands.Open" Content="Open" HorizontalAlignment="Left" Margin="21,24,0,0" VerticalAlignment="Top" Width="56" Height="56" />
         <Button x:Name="button1" Click="Rotate_Click" Content="RotateBtn" HorizontalAlignment="Left" Margin="18,90,0,0" VerticalAlignment="Top" Width="58" Height="54"/>
         <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="22,153,0,0" VerticalAlignment="Top" Width="56" Height="56"/>
         <Button x:Name="button3" Click="allRotate_Click" Content="AllRotateBtn" HorizontalAlignment="Left" Margin="22,224,0,0" VerticalAlignment="Top" Width="56" Height="56"/>
-        <Button x:Name="button4" Click="TrackingButton_Click" Content="Tracking" HorizontalAlignment="Left" Margin="12,374,0,0" VerticalAlignment="Top" Width="58" Height="54" />
+        <Button x:Name="button4" Click="TrackingButton_Click" Content="Tracking" HorizontalAlignment="Left" Margin="22,374,0,0" VerticalAlignment="Top" Width="58" Height="54" />
         <TabControl x:Name="tabControl" SelectedIndex="0" Margin="0,0,0,0" Background="#FF474747" OpacityMask="Black" Grid.Column="1">
             <TabItem Header="Camera" FontSize="15">
                 <TabItem.Background>
@@ -94,7 +94,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Label x:Name="PointLabel" Content="Label!!!!!!!!!" HorizontalAlignment="Left" Margin="1026,20,0,0" VerticalAlignment="Top" Height="46" Width="164" FontSize="20" Grid.Column="1"/>
+        <Label x:Name="PointLabel" Content="Label!!!!!!!!!" HorizontalAlignment="Left" Margin="6,520,0,0" VerticalAlignment="Top" Height="46" Width="106" FontSize="20"/>
         <Button x:Name="RegButton" Content="Registration" HorizontalAlignment="Left" Margin="22,294,0,0" VerticalAlignment="Top" Width="58" Height="56" Click="RegButton_Click"/>
         <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
 

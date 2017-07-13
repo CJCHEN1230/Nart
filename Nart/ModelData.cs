@@ -13,17 +13,19 @@ namespace Nart
     {
         private String _filename;
 
-        private ModelVisual3D _modelVisual = new ModelVisual3D();
+        public ModelVisual3D _modelVisual = new ModelVisual3D();
 
         private Model3DGroup _modleGroup;
 
-        private Matrix3D ModelTransform;
+        public Matrix3D ModelTransform = new Matrix3D();
 
         public int DatabaseIndex = -1;
 
         public ModelData(String filename)
         {
             _filename = filename;
+
+            ModelTransform.SetIdentity();
 
             Display3d(_filename);
 
@@ -48,6 +50,11 @@ namespace Nart
             set;
         }
 
+        public void SetTransformMatrix()
+        {
+            _modelVisual.Transform = new MatrixTransform3D(ModelTransform);
+            //ModelTransform.SetIdentity();
+        }
         public ModelVisual3D ModelVisual
         {
             get

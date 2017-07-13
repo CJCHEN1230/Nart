@@ -87,10 +87,9 @@ namespace Nart
             _camParam[1] = new CamParam("../../../data/CaliR_R.txt");
             CalcLensCenter();
             CalcEpipolarGeometry();
-            LoadNartReg("../../../data/reg.txt");
+            LoadNartReg("../../../data/reg20170713.txt");
             CreateDatabase(out HeadInDatabase,out SplintInDatabase, out MaxillaInDatabase, out MandibleInDatabase);
-            CTtoMS = TransformCoordinate(CTBall, MSBall);
-            MStoCT = TransformCoordinate(MSBall, CTBall);
+            
 
         }
         /// <summary>
@@ -136,7 +135,8 @@ namespace Nart
             PlainCenter = _camParam[0].invExtParam.Transform(PlainCenter);
 
             //Base line
-            Vector3D vec_x = new Vector3D(LensCenter[0].X - LensCenter[1].X, LensCenter[0].Y - LensCenter[1].Y, LensCenter[0].Z - LensCenter[1].Z);
+            //Vector3D vec_x = new Vector3D(LensCenter[0].X - LensCenter[1].X, LensCenter[0].Y - LensCenter[1].Y, LensCenter[0].Z - LensCenter[1].Z);
+            Vector3D vec_x = new Vector3D(LensCenter[1].X - LensCenter[0].X, LensCenter[1].Y - LensCenter[0].Y, LensCenter[1].Z - LensCenter[0].Z);
 
             vec_x.Normalize();
           
@@ -157,7 +157,7 @@ namespace Nart
         /// <summary>
         /// 扭正左右兩邊拍攝到的像素座標點
         /// </summary>
-        public void Rectificaion(List<BWMarker>[] OutputMarker)
+        public void Rectify(List<BWMarker>[] OutputMarker)
         {
 
             Parallel.For(0, 2, i =>
@@ -182,7 +182,7 @@ namespace Nart
                         double xu = xd * (1 + _camParam[i].Kappa1 * r * r);
                         double yu = yd * (1 + _camParam[i].Kappa1 * r * r);
 
-                        
+                        //儲存計算出來的相機座標系的點
                         OutputMarker[i][j].CornerPoint[k].CameraPoint = new Point4D(xu, yu, _camParam[i].FocalLength, 1);
 
                         Point4D WorldPoint = _camParam[i].RotationInvert.Transform(OutputMarker[i][j].CornerPoint[k].CameraPoint);
@@ -190,7 +190,7 @@ namespace Nart
                         Point4D rectify_Point = epipolarCoord.Transform(WorldPoint);
 
                         double Rectify_Y = _camParam[i].FocalLength * rectify_Point.Y / rectify_Point.Z / _camParam[i].dy;
-
+                        //儲存此點扭正後的值
                         OutputMarker[i][j].CornerPoint[k].RectifyY = Rectify_Y;
                         
                         accumX += imagePoint.X;
@@ -218,8 +218,9 @@ namespace Nart
                     });
 
                 }
-
+                
                 OutputMarker[i].Sort();
+                
             });
 
             //for (int i = 0; i < OutputMarker.Length; i++)
@@ -332,22 +333,24 @@ namespace Nart
             }
 
 
-            for (int i = 0; i < WorldPoints.Count; i++) //左相機Marker尋訪
-            {
-                Console.WriteLine("\n\n排序後第" + (i + 1) + "組三邊長度");
+            //for (int i = 0; i < WorldPoints.Count; i++) //左相機Marker尋訪
+            //{
+            //    Console.WriteLine("\n\n排序後第" + (i + 1) + "組三邊長度");
 
-                Vector3D a = new Vector3D(WorldPoints[i].ThreePoints[0].X - WorldPoints[i].ThreePoints[1].X, WorldPoints[i].ThreePoints[0].Y - WorldPoints[i].ThreePoints[1].Y, WorldPoints[i].ThreePoints[0].Z - WorldPoints[i].ThreePoints[1].Z);
+            //    Vector3D a = new Vector3D(WorldPoints[i].ThreePoints[0].X - WorldPoints[i].ThreePoints[1].X, WorldPoints[i].ThreePoints[0].Y - WorldPoints[i].ThreePoints[1].Y, WorldPoints[i].ThreePoints[0].Z - WorldPoints[i].ThreePoints[1].Z);
 
-                Vector3D b = new Vector3D(WorldPoints[i].ThreePoints[2].X - WorldPoints[i].ThreePoints[1].X, WorldPoints[i].ThreePoints[2].Y - WorldPoints[i].ThreePoints[1].Y, WorldPoints[i].ThreePoints[2].Z - WorldPoints[i].ThreePoints[1].Z);
+            //    Vector3D b = new Vector3D(WorldPoints[i].ThreePoints[2].X - WorldPoints[i].ThreePoints[1].X, WorldPoints[i].ThreePoints[2].Y - WorldPoints[i].ThreePoints[1].Y, WorldPoints[i].ThreePoints[2].Z - WorldPoints[i].ThreePoints[1].Z);
 
-                Vector3D c = new Vector3D(WorldPoints[i].ThreePoints[0].X - WorldPoints[i].ThreePoints[2].X, WorldPoints[i].ThreePoints[0].Y - WorldPoints[i].ThreePoints[2].Y, WorldPoints[i].ThreePoints[0].Z - WorldPoints[i].ThreePoints[2].Z);
+            //    Vector3D c = new Vector3D(WorldPoints[i].ThreePoints[0].X - WorldPoints[i].ThreePoints[2].X, WorldPoints[i].ThreePoints[0].Y - WorldPoints[i].ThreePoints[2].Y, WorldPoints[i].ThreePoints[0].Z - WorldPoints[i].ThreePoints[2].Z);
 
-                Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
+            //    Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
 
-                Console.WriteLine("\nIndex:" + WorldPoints[i].DatabaseIndex);
+            //    Console.WriteLine("\nIndex:" + WorldPoints[i].DatabaseIndex);
 
-                Console.WriteLine("    ");
-            }
+            //    //Console.WriteLine("\nIndex:" + WorldPoints[i]. );
+
+            //    Console.WriteLine("    ");
+            //}
         }
         /// <summary>
         /// 以長度排序點大小
@@ -473,13 +476,13 @@ namespace Nart
         /// <summary>
         /// 傳入兩組三個點所組成的座標系，回傳轉換矩陣
         /// </summary>
-        private Matrix3D TransformCoordinate(Point3D[] A,Point3D[] B)
+        private Matrix3D TransformCoordinate(Point3D[] A,Point3D[] B)/////////////////////////////記得改平行運算
         {
             Point3D AvgA = new Point3D((A[0].X + A[1].X + A[2].X) / 3.0, (A[0].Y + A[1].Y + A[2].Y) / 3.0, (A[0].Z + A[1].Z + A[2].Z) / 3.0);
-            
-            Vector3D u1 = AvgA - A[0];
 
-            Vector3D AC = AvgA - A[2];
+            Vector3D u1 = A[0] - AvgA;
+
+            Vector3D AC = A[2] - AvgA;
 
             Vector3D v1 = Vector3D.CrossProduct(u1, AC);
 
@@ -491,9 +494,9 @@ namespace Nart
 
             Point3D AvgB = new Point3D((B[0].X + B[1].X + B[2].X) / 3.0, (B[0].Y + B[1].Y + B[2].Y) / 3.0, (B[0].Z + B[1].Z + B[2].Z) / 3.0);
 
-            Vector3D u2 = AvgB - B[0];
+            Vector3D u2 = B[0] - AvgB;
 
-            Vector3D AC2 = AvgB - B[2];
+            Vector3D AC2 = B[2] - AvgB;
 
             Vector3D v2 = Vector3D.CrossProduct(u2, AC2);
 
@@ -546,9 +549,16 @@ namespace Nart
                 MSMarker = new Point3D[3] { new Point3D(regData[18], regData[19], regData[20]),
                                             new Point3D(regData[21], regData[22], regData[23]),
                                             new Point3D(regData[24], regData[25], regData[26])};
-                SortedByLength(CTBall);
-                SortedByLength(MSBall);
-                SortedByLength(MSMarker);
+                //SortedByLength(CTBall);
+                //SortedByLength(MSBall);
+                //SortedByLength(MSMarker);
+
+                CTtoMS = TransformCoordinate(CTBall, MSBall);
+
+
+                MStoCT = TransformCoordinate(MSBall, CTBall);
+
+
                 Console.WriteLine("\nCTBall");
                 for (int i =0;i< CTBall.Length ;i++)
                 {
@@ -577,29 +587,30 @@ namespace Nart
         /// <summary>
         /// 輸入Marker的data
         /// </summary>
-        private void CreateDatabase(out int splintInDatabase, out int headInDatabase , out int maxillaInDatabase, out int mandibleInDatabase)
+        private void CreateDatabase(out int headInDatabase , out int splintInDatabase, out int maxillaInDatabase, out int mandibleInDatabase)
         {
             double[] data1 = new double[3] { 22.82, 19.59, 11.88 }; //上顎           
-            double[] data2 = new double[3] { 24.64, 20.58, 13.79 }; 
+            //double[] data2 = new double[3] { 24.64, 20.58, 13.79 }; 
             double[] data3 = new double[3] { 24.6, 22.597, 9.96 }; //下顎
             double[] data4 = new double[3] { 23.06, 17.753, 14.886 }; //頭
             double[] data5 = new double[3] { 21.36, 15.64, 11.8 }; //咬片
 
             MarkerDB.Add(data1);
-            MarkerDB.Add(data2);
+            //MarkerDB.Add(data2);
             MarkerDB.Add(data3);
             MarkerDB.Add(data4);
             MarkerDB.Add(data5);
 
-            splintInDatabase = 4;
-            headInDatabase = 3;
             maxillaInDatabase = 0;
-            mandibleInDatabase = 2;
+            mandibleInDatabase = 1;
+            headInDatabase = 2;
+            splintInDatabase = 3;
 
-            DatabaseIndex.Add(splintInDatabase);
-            DatabaseIndex.Add(headInDatabase);
+
             DatabaseIndex.Add(maxillaInDatabase);
-            DatabaseIndex.Add(mandibleInDatabase);
+            DatabaseIndex.Add(mandibleInDatabase);            
+            DatabaseIndex.Add(headInDatabase);
+            DatabaseIndex.Add(splintInDatabase);
         }
 
         private int GetSpecIndex(List<Marker3D> Markerdata,int specIndex)
@@ -613,7 +624,6 @@ namespace Nart
             }
             return -1;
         }
-
         /// <summary>
         /// 註冊當前狀態的值
         /// </summary>
@@ -621,8 +631,11 @@ namespace Nart
         {
             OriWorldPoints.Clear();
             MSWorldPoints.Clear();
+ 
+
             RegSplintIndex = GetSpecIndex(WorldPoints, SplintInDatabase);
-            
+           
+
             Console.WriteLine("\n\n第" + (RegSplintIndex + 1) + "組點是咬板");
 
 
@@ -633,14 +646,47 @@ namespace Nart
 
             if (RegSplintIndex != -1 && RegHeadIndex != -1)
             {
+                Console.WriteLine("\n\n第" + (RegSplintIndex + 1) + "組點是咬板");
                 OriWorldtoMS = TransformCoordinate(WorldPoints[RegSplintIndex].ThreePoints, MSMarker);
+
+                {
+                    Console.WriteLine("\n\nWorldPoints[RegSplintIndex].ThreePoints");
+
+                    Vector3D a = new Vector3D(WorldPoints[RegSplintIndex].ThreePoints[0].X - WorldPoints[RegSplintIndex].ThreePoints[1].X, WorldPoints[RegSplintIndex].ThreePoints[0].Y - WorldPoints[RegSplintIndex].ThreePoints[1].Y, WorldPoints[RegSplintIndex].ThreePoints[0].Z - WorldPoints[RegSplintIndex].ThreePoints[1].Z);
+
+                    Vector3D b = new Vector3D(WorldPoints[RegSplintIndex].ThreePoints[2].X - WorldPoints[RegSplintIndex].ThreePoints[1].X, WorldPoints[RegSplintIndex].ThreePoints[2].Y - WorldPoints[RegSplintIndex].ThreePoints[1].Y, WorldPoints[RegSplintIndex].ThreePoints[2].Z - WorldPoints[RegSplintIndex].ThreePoints[1].Z);
+
+                    Vector3D c = new Vector3D(WorldPoints[RegSplintIndex].ThreePoints[0].X - WorldPoints[RegSplintIndex].ThreePoints[2].X, WorldPoints[RegSplintIndex].ThreePoints[0].Y - WorldPoints[RegSplintIndex].ThreePoints[2].Y, WorldPoints[RegSplintIndex].ThreePoints[0].Z - WorldPoints[RegSplintIndex].ThreePoints[2].Z);
+
+                    Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
+
+
+
+                    Console.WriteLine("\n\nMSMarker");
+
+                    Vector3D d = new Vector3D(MSMarker[0].X - MSMarker[1].X, MSMarker[0].Y - MSMarker[1].Y, MSMarker[0].Z - MSMarker[1].Z);
+
+                    Vector3D e = new Vector3D(MSMarker[2].X - MSMarker[1].X, MSMarker[2].Y - MSMarker[1].Y, MSMarker[2].Z - MSMarker[1].Z);
+
+                    Vector3D f = new Vector3D(MSMarker[0].X - MSMarker[2].X, MSMarker[0].Y - MSMarker[2].Y, MSMarker[0].Z - MSMarker[2].Z);
+
+                    Console.WriteLine("\nd:" + d.Length + "\ne:" + e.Length + "\nf:" + f.Length);
+
+                    Console.WriteLine("    ");
+                }
+
+
+
+
+
 
                 for (int i = 0; i < WorldPoints.Count; i++)
                 {
                     //創建註冊時的世界座標點
                     Marker3D OriWorldPoint = new Marker3D();
-                    WorldPoints[i].ThreePoints.CopyTo(OriWorldPoint.ThreePoints, 0); //將當前世界座標點存進OriWorldPoint當作註冊時的狀態
                     OriWorldPoint.DatabaseIndex = WorldPoints[i].DatabaseIndex;
+                    WorldPoints[i].ThreePoints.CopyTo(OriWorldPoint.ThreePoints, 0); //將當前世界座標點存進OriWorldPoint當作註冊時的狀態
+                   
                     //創建轉成MS座標系的世界座標點
                     Marker3D MSWorldPoint = new Marker3D();
                     MSWorldPoint.DatabaseIndex = WorldPoints[i].DatabaseIndex;
@@ -687,22 +733,195 @@ namespace Nart
             //沒有找到頭的Marker
             if (CurrentHeadIndex != -1) 
             {
-                Parallel.For(0, DatabaseIndex.Count-2, i =>
+                Parallel.For(0, DatabaseIndex.Count-3, i =>
                 {
                     int CurrentIndex = GetSpecIndex(WorldPoints, DatabaseIndex[i]); //當前處理的可動部位(上、下顎)索引
-
+                    
                     int MSandOriIndex = GetSpecIndex(MSWorldPoints, DatabaseIndex[i]); //當前處理的上下顎對應到的MS跟Original World索引值
-
+                    Console.WriteLine("\n\n\n\n\ni:" + i + "\nMSandOriIndex: " + MSandOriIndex);
                     if (CurrentIndex != -1) 
                     {
 
-                        Matrix3D level1 = CTtoMS; //CT轉MS
-                        Matrix3D level2 = TransformCoordinate(MSWorldPoints[MSandOriIndex].ThreePoints, WorldPoints[CurrentIndex].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"
-                        Matrix3D level3 = TransformCoordinate(WorldPoints[CurrentHeadIndex].ThreePoints, OriWorldPoints[RegHeadIndex].ThreePoints);
-                        Matrix3D level4 = TransformCoordinate(OriWorldPoints[RegSplintIndex].ThreePoints, MSMarker);
-                        Matrix3D level5 = MStoCT;
+                        //Matrix3D level1 = CTtoMS; //CT轉MS
+                        Matrix3D level1 = TransformCoordinate(CTBall, MSBall);
 
+                            {
+
+                            Console.WriteLine("\n\nlevel1:");
+                            Console.WriteLine("  " + level1.M11 + "  " + level1.M12 + "  " + level1.M13 + "  " + level1.M14);
+                            Console.WriteLine("  " + level1.M21 + "  " + level1.M22 + "  " + level1.M23 + "  " + level1.M24);
+                            Console.WriteLine("  " + level1.M31 + "  " + level1.M32 + "  " + level1.M33 + "  " + level1.M34);
+                            Console.WriteLine("  " + level1.OffsetX + "  " + level1.OffsetY + "  " + level1.OffsetZ + "  " + level1.M44);
+
+
+
+
+                            //Console.WriteLine("\n\nCTBall");
+
+                            //Vector3D a = new Vector3D(CTBall[0].X - CTBall[1].X, CTBall[0].Y - CTBall[1].Y, CTBall[0].Z - CTBall[1].Z);
+
+                            //Vector3D b = new Vector3D(CTBall[2].X - CTBall[1].X, CTBall[2].Y - CTBall[1].Y, CTBall[2].Z - CTBall[1].Z);
+
+                            //Vector3D c = new Vector3D(CTBall[0].X - CTBall[2].X, CTBall[0].Y - CTBall[2].Y, CTBall[0].Z - CTBall[2].Z);
+
+                            //Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
+
+
+
+                            //Console.WriteLine("\n\nMSBall");
+
+                            //Vector3D d = new Vector3D(MSBall[0].X - MSBall[1].X, MSBall[0].Y - MSBall[1].Y, MSBall[0].Z - MSBall[1].Z);
+
+                            //Vector3D e = new Vector3D(MSBall[2].X - MSBall[1].X, MSBall[2].Y - MSBall[1].Y, MSBall[2].Z - MSBall[1].Z);
+
+                            //Vector3D f = new Vector3D(MSBall[0].X - MSBall[2].X, MSBall[0].Y - MSBall[2].Y, MSBall[0].Z - MSBall[2].Z);
+
+                            //Console.WriteLine("\nd:" + d.Length + "\ne:" + e.Length + "\nf:" + f.Length);
+
+                            Console.WriteLine("    ");
+                        }
+
+
+                        Matrix3D level2 = TransformCoordinate(MSWorldPoints[MSandOriIndex].ThreePoints, WorldPoints[CurrentIndex].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"
+
+
+                        {
+                            Console.WriteLine("\n\nlevel2:");
+                            Console.WriteLine("  " + level2.M11 + "  " + level2.M12 + "  " + level2.M13 + "  " + level2.M14);
+                            Console.WriteLine("  " + level2.M21 + "  " + level2.M22 + "  " + level2.M23 + "  " + level2.M24);
+                            Console.WriteLine("  " + level2.M31 + "  " + level2.M32 + "  " + level2.M33 + "  " + level2.M34);
+                            Console.WriteLine("  " + level2.OffsetX + "  " + level2.OffsetY + "  " + level2.OffsetZ + "  " + level2.M44);
+
+                            //Console.WriteLine("\n\nMSWorldPoints[MSandOriIndex].ThreePoints");
+
+                            //Vector3D a = new Vector3D(MSWorldPoints[MSandOriIndex].ThreePoints[0].X - MSWorldPoints[MSandOriIndex].ThreePoints[1].X, MSWorldPoints[MSandOriIndex].ThreePoints[0].Y - MSWorldPoints[MSandOriIndex].ThreePoints[1].Y, MSWorldPoints[MSandOriIndex].ThreePoints[0].Z - MSWorldPoints[MSandOriIndex].ThreePoints[1].Z);
+
+                            //Vector3D b = new Vector3D(MSWorldPoints[MSandOriIndex].ThreePoints[2].X - MSWorldPoints[MSandOriIndex].ThreePoints[1].X, MSWorldPoints[MSandOriIndex].ThreePoints[2].Y - MSWorldPoints[MSandOriIndex].ThreePoints[1].Y, MSWorldPoints[MSandOriIndex].ThreePoints[2].Z - MSWorldPoints[MSandOriIndex].ThreePoints[1].Z);
+
+                            //Vector3D c = new Vector3D(MSWorldPoints[MSandOriIndex].ThreePoints[0].X - MSWorldPoints[MSandOriIndex].ThreePoints[2].X, MSWorldPoints[MSandOriIndex].ThreePoints[0].Y - MSWorldPoints[MSandOriIndex].ThreePoints[2].Y, MSWorldPoints[MSandOriIndex].ThreePoints[0].Z - MSWorldPoints[MSandOriIndex].ThreePoints[2].Z);
+
+                            //Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
+
+
+
+                            //Console.WriteLine("\n\nWorldPoints[CurrentIndex].ThreePoints");
+
+                            //Vector3D d = new Vector3D(WorldPoints[CurrentIndex].ThreePoints[0].X - WorldPoints[CurrentIndex].ThreePoints[1].X, WorldPoints[CurrentIndex].ThreePoints[0].Y - WorldPoints[CurrentIndex].ThreePoints[1].Y, WorldPoints[CurrentIndex].ThreePoints[0].Z - WorldPoints[CurrentIndex].ThreePoints[1].Z);
+
+                            //Vector3D e = new Vector3D(WorldPoints[CurrentIndex].ThreePoints[2].X - WorldPoints[CurrentIndex].ThreePoints[1].X, WorldPoints[CurrentIndex].ThreePoints[2].Y - WorldPoints[CurrentIndex].ThreePoints[1].Y, WorldPoints[CurrentIndex].ThreePoints[2].Z - WorldPoints[CurrentIndex].ThreePoints[1].Z);
+
+                            //Vector3D f = new Vector3D(WorldPoints[CurrentIndex].ThreePoints[0].X - WorldPoints[CurrentIndex].ThreePoints[2].X, WorldPoints[CurrentIndex].ThreePoints[0].Y - WorldPoints[CurrentIndex].ThreePoints[2].Y, WorldPoints[CurrentIndex].ThreePoints[0].Z - WorldPoints[CurrentIndex].ThreePoints[2].Z);
+
+                            //Console.WriteLine("\nd:" + d.Length + "\ne:" + e.Length + "\nf:" + f.Length);
+
+                            Console.WriteLine("    ");
+                        }
+
+                        Matrix3D level3 = TransformCoordinate(WorldPoints[CurrentHeadIndex].ThreePoints, OriWorldPoints[RegHeadIndex].ThreePoints);
+
+                        {
+                            Console.WriteLine("\n\nlevel3:");
+                            Console.WriteLine("  " + level3.M11 + "  " + level3.M12 + "  " + level3.M13 + "  " + level3.M14);
+                            Console.WriteLine("  " + level3.M21 + "  " + level3.M22 + "  " + level3.M23 + "  " + level3.M24);
+                            Console.WriteLine("  " + level3.M31 + "  " + level3.M32 + "  " + level3.M33 + "  " + level3.M34);
+                            Console.WriteLine("  " + level3.OffsetX + "  " + level3.OffsetY + "  " + level3.OffsetZ + "  " + level3.M44);
+
+
+                            //Console.WriteLine("\n\nWorldPoints[CurrentHeadIndex].ThreePoints");
+
+                            //Vector3D a = new Vector3D(WorldPoints[CurrentHeadIndex].ThreePoints[0].X - WorldPoints[CurrentHeadIndex].ThreePoints[1].X, WorldPoints[CurrentHeadIndex].ThreePoints[0].Y - WorldPoints[CurrentHeadIndex].ThreePoints[1].Y, WorldPoints[CurrentHeadIndex].ThreePoints[0].Z - WorldPoints[CurrentHeadIndex].ThreePoints[1].Z);
+
+                            //Vector3D b = new Vector3D(WorldPoints[CurrentHeadIndex].ThreePoints[2].X - WorldPoints[CurrentHeadIndex].ThreePoints[1].X, WorldPoints[CurrentHeadIndex].ThreePoints[2].Y - WorldPoints[CurrentHeadIndex].ThreePoints[1].Y, WorldPoints[CurrentHeadIndex].ThreePoints[2].Z - WorldPoints[CurrentHeadIndex].ThreePoints[1].Z);
+
+                            //Vector3D c = new Vector3D(WorldPoints[CurrentHeadIndex].ThreePoints[0].X - WorldPoints[CurrentHeadIndex].ThreePoints[2].X, WorldPoints[CurrentHeadIndex].ThreePoints[0].Y - WorldPoints[CurrentHeadIndex].ThreePoints[2].Y, WorldPoints[CurrentHeadIndex].ThreePoints[0].Z - WorldPoints[CurrentHeadIndex].ThreePoints[2].Z);
+
+                            //Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
+
+
+
+                            //Console.WriteLine("\n\nOriWorldPoints[RegHeadIndex].ThreePoints");
+
+                            //Vector3D d = new Vector3D(OriWorldPoints[RegHeadIndex].ThreePoints[0].X - OriWorldPoints[RegHeadIndex].ThreePoints[1].X, OriWorldPoints[RegHeadIndex].ThreePoints[0].Y - OriWorldPoints[RegHeadIndex].ThreePoints[1].Y, OriWorldPoints[RegHeadIndex].ThreePoints[0].Z - OriWorldPoints[RegHeadIndex].ThreePoints[1].Z);
+
+                            //Vector3D e = new Vector3D(OriWorldPoints[RegHeadIndex].ThreePoints[2].X - OriWorldPoints[RegHeadIndex].ThreePoints[1].X, OriWorldPoints[RegHeadIndex].ThreePoints[2].Y - OriWorldPoints[RegHeadIndex].ThreePoints[1].Y, OriWorldPoints[RegHeadIndex].ThreePoints[2].Z - OriWorldPoints[RegHeadIndex].ThreePoints[1].Z);
+
+                            //Vector3D f = new Vector3D(OriWorldPoints[RegHeadIndex].ThreePoints[0].X - OriWorldPoints[RegHeadIndex].ThreePoints[2].X, OriWorldPoints[RegHeadIndex].ThreePoints[0].Y - OriWorldPoints[RegHeadIndex].ThreePoints[2].Y, OriWorldPoints[RegHeadIndex].ThreePoints[0].Z - OriWorldPoints[RegHeadIndex].ThreePoints[2].Z);
+
+                            //Console.WriteLine("\nd:" + d.Length + "\ne:" + e.Length + "\nf:" + f.Length);
+
+                            Console.WriteLine("    ");
+                        }
+                        Matrix3D level4 = TransformCoordinate(OriWorldPoints[RegSplintIndex].ThreePoints, MSMarker);
+                        //Matrix3D level5 = MStoCT;
+                        //TransformCoordinate(WorldPoints[RegSplintIndex].ThreePoints, MSMarker);
+                        {
+                            Console.WriteLine("\n\nlevel4:");
+                            Console.WriteLine("  " + level4.M11 + "  " + level4.M12 + "  " + level4.M13 + "  " + level4.M14);
+                            Console.WriteLine("  " + level4.M21 + "  " + level4.M22 + "  " + level4.M23 + "  " + level4.M24);
+                            Console.WriteLine("  " + level4.M31 + "  " + level4.M32 + "  " + level4.M33 + "  " + level4.M34);
+                            Console.WriteLine("  " + level4.OffsetX + "  " + level4.OffsetY + "  " + level4.OffsetZ + "  " + level4.M44);
+
+                            //Console.WriteLine("\n\nOriWorldPoints[RegSplintIndex].ThreePoints");
+
+                            //Vector3D a = new Vector3D(OriWorldPoints[RegSplintIndex].ThreePoints[0].X - OriWorldPoints[RegSplintIndex].ThreePoints[1].X, OriWorldPoints[RegSplintIndex].ThreePoints[0].Y - OriWorldPoints[RegSplintIndex].ThreePoints[1].Y, OriWorldPoints[RegSplintIndex].ThreePoints[0].Z - OriWorldPoints[RegSplintIndex].ThreePoints[1].Z);
+
+                            //Vector3D b = new Vector3D(OriWorldPoints[RegSplintIndex].ThreePoints[2].X - OriWorldPoints[RegSplintIndex].ThreePoints[1].X, OriWorldPoints[RegSplintIndex].ThreePoints[2].Y - OriWorldPoints[RegSplintIndex].ThreePoints[1].Y, OriWorldPoints[RegSplintIndex].ThreePoints[2].Z - OriWorldPoints[RegSplintIndex].ThreePoints[1].Z);
+
+                            //Vector3D c = new Vector3D(OriWorldPoints[RegSplintIndex].ThreePoints[0].X - OriWorldPoints[RegSplintIndex].ThreePoints[2].X, OriWorldPoints[RegSplintIndex].ThreePoints[0].Y - OriWorldPoints[RegSplintIndex].ThreePoints[2].Y, OriWorldPoints[RegSplintIndex].ThreePoints[0].Z - OriWorldPoints[RegSplintIndex].ThreePoints[2].Z);
+
+                            //Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
+
+
+
+                            //Console.WriteLine("\n\nMSMarker");
+
+                            //Vector3D d = new Vector3D(MSMarker[0].X - MSMarker[1].X, MSMarker[0].Y - MSMarker[1].Y, MSMarker[0].Z - MSMarker[1].Z);
+
+                            //Vector3D e = new Vector3D(MSMarker[2].X - MSMarker[1].X, MSMarker[2].Y - MSMarker[1].Y, MSMarker[2].Z - MSMarker[1].Z);
+
+                            //Vector3D f = new Vector3D(MSMarker[0].X - MSMarker[2].X, MSMarker[0].Y - MSMarker[2].Y, MSMarker[0].Z - MSMarker[2].Z);
+
+                            //Console.WriteLine("\nd:" + d.Length + "\ne:" + e.Length + "\nf:" + f.Length);
+
+                            Console.WriteLine("    ");
+                        }
+                        Matrix3D level5 = TransformCoordinate(MSBall, CTBall);
+
+                        {
+                            Console.WriteLine("\n\nlevel5:");
+                            Console.WriteLine("  " + level5.M11 + "  " + level5.M12 + "  " + level5.M13 + "  " + level5.M14);
+                            Console.WriteLine("  " + level5.M21 + "  " + level5.M22 + "  " + level5.M23 + "  " + level5.M24);
+                            Console.WriteLine("  " + level5.M31 + "  " + level5.M32 + "  " + level5.M33 + "  " + level5.M34);
+                            Console.WriteLine("  " + level5.OffsetX + "  " + level5.OffsetY + "  " + level5.OffsetZ + "  " + level5.M44);
+
+                            //Console.WriteLine("\n\nMSBall");
+
+                            //Vector3D a = new Vector3D(MSBall[0].X - MSBall[1].X, MSBall[0].Y - MSBall[1].Y, MSBall[0].Z - MSBall[1].Z);
+
+                            //Vector3D b = new Vector3D(MSBall[2].X - MSBall[1].X, MSBall[2].Y - MSBall[1].Y, MSBall[2].Z - MSBall[1].Z);
+
+                            //Vector3D c = new Vector3D(MSBall[0].X - MSBall[2].X, MSBall[0].Y - MSBall[2].Y, MSBall[0].Z - MSBall[2].Z);
+
+                            //Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
+
+
+
+                            //Console.WriteLine("\n\nCTBall");
+
+                            //Vector3D d = new Vector3D(CTBall[0].X - CTBall[1].X, CTBall[0].Y - CTBall[1].Y, CTBall[0].Z - CTBall[1].Z);
+
+                            //Vector3D e = new Vector3D(CTBall[2].X - CTBall[1].X, CTBall[2].Y - CTBall[1].Y, CTBall[2].Z - CTBall[1].Z);
+
+                            //Vector3D f = new Vector3D(CTBall[0].X - CTBall[2].X, CTBall[0].Y - CTBall[2].Y, CTBall[0].Z - CTBall[2].Z);
+
+                            //Console.WriteLine("\nd:" + d.Length + "\ne:" + e.Length + "\nf:" + f.Length);
+
+                            Console.WriteLine("    ");
+                        }
                         Matrix3D Final = level1 * level2 * level3 * level4 * level5;
+
+
+                        MainWindow.AllModelData[i].ModelTransform = Final;
                     }
                 });                
             }
