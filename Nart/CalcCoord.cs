@@ -476,49 +476,54 @@ namespace Nart
         /// <summary>
         /// 傳入兩組三個點所組成的座標系，回傳轉換矩陣
         /// </summary>
-        private Matrix3D TransformCoordinate(Point3D[] A,Point3D[] B)/////////////////////////////記得改平行運算
+        private Matrix3D TransformCoordinate(Point3D[] A,Point3D[] B)
         {
-            Point3D AvgA = new Point3D((A[0].X + A[1].X + A[2].X) / 3.0, (A[0].Y + A[1].Y + A[2].Y) / 3.0, (A[0].Z + A[1].Z + A[2].Z) / 3.0);
+          
+            List<Point3D[]> twoPoints = new List<Point3D[]>(2) { A, B };
+            Point3D[] Avg = new Point3D[2];
+            Vector3D[] u = new Vector3D[2];
+            Vector3D[] v = new Vector3D[2];
+            Vector3D[] w = new Vector3D[2];
 
-            Vector3D u1 = A[0] - AvgA;
+            Parallel.For(0, twoPoints.Count , i =>
+            {
+                Avg[i] = new Point3D((twoPoints[i][0].X + twoPoints[i][1].X + twoPoints[i][2].X) / 3.0, (twoPoints[i][0].Y + twoPoints[i][1].Y + twoPoints[i][2].Y) / 3.0, (twoPoints[i][0].Z + twoPoints[i][1].Z + twoPoints[i][2].Z) / 3.0);
 
-            Vector3D AC = A[2] - AvgA;
+                u[i] = twoPoints[i][0] - Avg[i];
 
-            Vector3D v1 = Vector3D.CrossProduct(u1, AC);
+                Vector3D temp = twoPoints[i][2] - Avg[i];
 
-            Vector3D w1 = Vector3D.CrossProduct(u1, v1);
-            u1.Normalize();
-            v1.Normalize();
-            w1.Normalize();
+                v[i] = Vector3D.CrossProduct(u[i], temp);
 
+                w[i] = Vector3D.CrossProduct(u[i], v[i]);
 
-            Point3D AvgB = new Point3D((B[0].X + B[1].X + B[2].X) / 3.0, (B[0].Y + B[1].Y + B[2].Y) / 3.0, (B[0].Z + B[1].Z + B[2].Z) / 3.0);
+                u[i].Normalize();
+                v[i].Normalize();
+                w[i].Normalize();
 
-            Vector3D u2 = B[0] - AvgB;
+            });
 
-            Vector3D AC2 = B[2] - AvgB;
+            Matrix3D translate1 = new Matrix3D(1, 0, 0, 0,
+                                              0, 1, 0, 0,
+                                              0, 0, 1, 0,
+                                             -Avg[0].X, -Avg[0].Y, -Avg[0].Z, 1);
 
-            Vector3D v2 = Vector3D.CrossProduct(u2, AC2);
+            Matrix3D rotate1 = new Matrix3D(u[0].X, v[0].X, w[0].X, 0,
+                                              u[0].Y, v[0].Y, w[0].Y, 0,
+                                              u[0].Z, v[0].Z, w[0].Z, 0,
+                                             0, 0, 0, 1);
 
-            Vector3D w2 = Vector3D.CrossProduct(u2, v2);
-            u2.Normalize();
-            v2.Normalize();
-            w2.Normalize();
-
-            Matrix3D transform1 =new Matrix3D(u1.X, v1.X, w1.X, 0,
-                                              u1.Y, v1.Y, w1.Y, 0,
-                                              u1.Z, v1.Z, w1.Z, 0,
-                                             AvgA.X, AvgA.Y, AvgA.Z, 1);
-
-            transform1.Invert();
+            Matrix3D transform1= translate1 * rotate1;
 
 
-            Matrix3D transform2 = new Matrix3D(u2.X, v2.X, w2.X, 0,
-                                              u2.Y, v2.Y, w2.Y, 0,
-                                              u2.Z, v2.Z, w2.Z, 0,
-                                             AvgB.X, AvgB.Y, AvgB.Z, 1);
+         
+            Matrix3D transform2 = new Matrix3D(u[1].X, u[1].Y, u[1].Z, 0,
+                                               v[1].X, v[1].Y, v[1].Z, 0,
+                                               w[1].X, w[1].Y, w[1].Z, 0,
+                                             Avg[1].X, Avg[1].Y, Avg[1].Z, 1);
 
             Matrix3D finalTransform = transform1 * transform2;
+
 
             return finalTransform;
         }
@@ -612,7 +617,9 @@ namespace Nart
             DatabaseIndex.Add(headInDatabase);
             DatabaseIndex.Add(splintInDatabase);
         }
-
+        /// <summary>
+        /// 輸入點群資料跟指定的Marker(上、下顎)索引，回傳資料庫的索引位置
+        /// </summary>
         private int GetSpecIndex(List<Marker3D> Markerdata,int specIndex)
         {
             for (int i = 0; i < Markerdata.Count; i++)
@@ -738,7 +745,7 @@ namespace Nart
                     int CurrentIndex = GetSpecIndex(WorldPoints, DatabaseIndex[i]); //當前處理的可動部位(上、下顎)索引
                     
                     int MSandOriIndex = GetSpecIndex(MSWorldPoints, DatabaseIndex[i]); //當前處理的上下顎對應到的MS跟Original World索引值
-                    Console.WriteLine("\n\n\n\n\ni:" + i + "\nMSandOriIndex: " + MSandOriIndex);
+                    //Console.WriteLine("\n\n\n\n\ni:" + i + "\nMSandOriIndex: " + MSandOriIndex);
                     if (CurrentIndex != -1) 
                     {
 
@@ -747,11 +754,11 @@ namespace Nart
 
                             {
 
-                            Console.WriteLine("\n\nlevel1:");
-                            Console.WriteLine("  " + level1.M11 + "  " + level1.M12 + "  " + level1.M13 + "  " + level1.M14);
-                            Console.WriteLine("  " + level1.M21 + "  " + level1.M22 + "  " + level1.M23 + "  " + level1.M24);
-                            Console.WriteLine("  " + level1.M31 + "  " + level1.M32 + "  " + level1.M33 + "  " + level1.M34);
-                            Console.WriteLine("  " + level1.OffsetX + "  " + level1.OffsetY + "  " + level1.OffsetZ + "  " + level1.M44);
+                            //Console.WriteLine("\n\nlevel1:");
+                            //Console.WriteLine("  " + level1.M11 + "  " + level1.M12 + "  " + level1.M13 + "  " + level1.M14);
+                            //Console.WriteLine("  " + level1.M21 + "  " + level1.M22 + "  " + level1.M23 + "  " + level1.M24);
+                            //Console.WriteLine("  " + level1.M31 + "  " + level1.M32 + "  " + level1.M33 + "  " + level1.M34);
+                            //Console.WriteLine("  " + level1.OffsetX + "  " + level1.OffsetY + "  " + level1.OffsetZ + "  " + level1.M44);
 
 
 
@@ -786,11 +793,11 @@ namespace Nart
 
 
                         {
-                            Console.WriteLine("\n\nlevel2:");
-                            Console.WriteLine("  " + level2.M11 + "  " + level2.M12 + "  " + level2.M13 + "  " + level2.M14);
-                            Console.WriteLine("  " + level2.M21 + "  " + level2.M22 + "  " + level2.M23 + "  " + level2.M24);
-                            Console.WriteLine("  " + level2.M31 + "  " + level2.M32 + "  " + level2.M33 + "  " + level2.M34);
-                            Console.WriteLine("  " + level2.OffsetX + "  " + level2.OffsetY + "  " + level2.OffsetZ + "  " + level2.M44);
+                            //Console.WriteLine("\n\nlevel2:");
+                            //Console.WriteLine("  " + level2.M11 + "  " + level2.M12 + "  " + level2.M13 + "  " + level2.M14);
+                            //Console.WriteLine("  " + level2.M21 + "  " + level2.M22 + "  " + level2.M23 + "  " + level2.M24);
+                            //Console.WriteLine("  " + level2.M31 + "  " + level2.M32 + "  " + level2.M33 + "  " + level2.M34);
+                            //Console.WriteLine("  " + level2.OffsetX + "  " + level2.OffsetY + "  " + level2.OffsetZ + "  " + level2.M44);
 
                             //Console.WriteLine("\n\nMSWorldPoints[MSandOriIndex].ThreePoints");
 
@@ -820,13 +827,16 @@ namespace Nart
                         Matrix3D level3 = TransformCoordinate(WorldPoints[CurrentHeadIndex].ThreePoints, OriWorldPoints[RegHeadIndex].ThreePoints);
 
                         {
-                            Console.WriteLine("\n\nlevel3:");
-                            Console.WriteLine("  " + level3.M11 + "  " + level3.M12 + "  " + level3.M13 + "  " + level3.M14);
-                            Console.WriteLine("  " + level3.M21 + "  " + level3.M22 + "  " + level3.M23 + "  " + level3.M24);
-                            Console.WriteLine("  " + level3.M31 + "  " + level3.M32 + "  " + level3.M33 + "  " + level3.M34);
-                            Console.WriteLine("  " + level3.OffsetX + "  " + level3.OffsetY + "  " + level3.OffsetZ + "  " + level3.M44);
+                            //Console.WriteLine("\n\nlevel3:");
+                            //Console.WriteLine("  " + level3.M11 + "  " + level3.M12 + "  " + level3.M13 + "  " + level3.M14);
+                            //Console.WriteLine("  " + level3.M21 + "  " + level3.M22 + "  " + level3.M23 + "  " + level3.M24);
+                            //Console.WriteLine("  " + level3.M31 + "  " + level3.M32 + "  " + level3.M33 + "  " + level3.M34);
+                            //Console.WriteLine("  " + level3.OffsetX + "  " + level3.OffsetY + "  " + level3.OffsetZ + "  " + level3.M44);
 
-
+                            //Console.WriteLine("  " + level3.M11 + "  " + level3.M12 + "  " + level3.M13 + "  " + level3.M14);
+                            //Console.WriteLine("  " + level3.M21 + "  " + level3.M22 + "  " + level3.M23 + "  " + level3.M24);
+                            //Console.WriteLine("  " + level3.M31 + "  " + level3.M32 + "  " + level3.M33 + "  " + level3.M34);
+                            //Console.WriteLine("  " + level3.OffsetX + "  " + level3.OffsetY + "  " + level3.OffsetZ + "  " + level3.M44);
                             //Console.WriteLine("\n\nWorldPoints[CurrentHeadIndex].ThreePoints");
 
                             //Vector3D a = new Vector3D(WorldPoints[CurrentHeadIndex].ThreePoints[0].X - WorldPoints[CurrentHeadIndex].ThreePoints[1].X, WorldPoints[CurrentHeadIndex].ThreePoints[0].Y - WorldPoints[CurrentHeadIndex].ThreePoints[1].Y, WorldPoints[CurrentHeadIndex].ThreePoints[0].Z - WorldPoints[CurrentHeadIndex].ThreePoints[1].Z);
@@ -855,11 +865,11 @@ namespace Nart
                         //Matrix3D level5 = MStoCT;
                         //TransformCoordinate(WorldPoints[RegSplintIndex].ThreePoints, MSMarker);
                         {
-                            Console.WriteLine("\n\nlevel4:");
-                            Console.WriteLine("  " + level4.M11 + "  " + level4.M12 + "  " + level4.M13 + "  " + level4.M14);
-                            Console.WriteLine("  " + level4.M21 + "  " + level4.M22 + "  " + level4.M23 + "  " + level4.M24);
-                            Console.WriteLine("  " + level4.M31 + "  " + level4.M32 + "  " + level4.M33 + "  " + level4.M34);
-                            Console.WriteLine("  " + level4.OffsetX + "  " + level4.OffsetY + "  " + level4.OffsetZ + "  " + level4.M44);
+                            //Console.WriteLine("\n\nlevel4:");
+                            //Console.WriteLine("  " + level4.M11 + "  " + level4.M12 + "  " + level4.M13 + "  " + level4.M14);
+                            //Console.WriteLine("  " + level4.M21 + "  " + level4.M22 + "  " + level4.M23 + "  " + level4.M24);
+                            //Console.WriteLine("  " + level4.M31 + "  " + level4.M32 + "  " + level4.M33 + "  " + level4.M34);
+                            //Console.WriteLine("  " + level4.OffsetX + "  " + level4.OffsetY + "  " + level4.OffsetZ + "  " + level4.M44);
 
                             //Console.WriteLine("\n\nOriWorldPoints[RegSplintIndex].ThreePoints");
 
@@ -888,11 +898,11 @@ namespace Nart
                         Matrix3D level5 = TransformCoordinate(MSBall, CTBall);
 
                         {
-                            Console.WriteLine("\n\nlevel5:");
-                            Console.WriteLine("  " + level5.M11 + "  " + level5.M12 + "  " + level5.M13 + "  " + level5.M14);
-                            Console.WriteLine("  " + level5.M21 + "  " + level5.M22 + "  " + level5.M23 + "  " + level5.M24);
-                            Console.WriteLine("  " + level5.M31 + "  " + level5.M32 + "  " + level5.M33 + "  " + level5.M34);
-                            Console.WriteLine("  " + level5.OffsetX + "  " + level5.OffsetY + "  " + level5.OffsetZ + "  " + level5.M44);
+                            //Console.WriteLine("\n\nlevel5:");
+                            //Console.WriteLine("  " + level5.M11 + "  " + level5.M12 + "  " + level5.M13 + "  " + level5.M14);
+                            //Console.WriteLine("  " + level5.M21 + "  " + level5.M22 + "  " + level5.M23 + "  " + level5.M24);
+                            //Console.WriteLine("  " + level5.M31 + "  " + level5.M32 + "  " + level5.M33 + "  " + level5.M34);
+                            //Console.WriteLine("  " + level5.OffsetX + "  " + level5.OffsetY + "  " + level5.OffsetZ + "  " + level5.M44);
 
                             //Console.WriteLine("\n\nMSBall");
 
