@@ -168,6 +168,7 @@ namespace Nart
             DirectionalLight myDirectionalLight2 = new DirectionalLight();
             myDirectionalLight2.Color = DirectionalLightColor2;
             myDirectionalLight2.Direction = new Vector3D(1.0, -0.5, 0.6);
+           
 
             DirectionalLight myDirectionalLight3 = new DirectionalLight();
             myDirectionalLight3.Color = DirectionalLightColor3;

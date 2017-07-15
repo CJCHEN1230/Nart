@@ -19,7 +19,15 @@ namespace Nart
 
         public Matrix3D ModelTransform = new Matrix3D();
 
+        private Matrix3D TotalModelTransform = new Matrix3D();
+
+        public Matrix3D[] ModelTransformSet = new Matrix3D[10];
+
+        private int CurrenIndex = 0;
+
         public int DatabaseIndex = -1;
+
+        private int Count=0;
 
         public ModelData(String filename)
         {
@@ -42,12 +50,71 @@ namespace Nart
             Geomodel.BackMaterial = material;
 
             _modelVisual.Content = _modleGroup;
+
+            TotalModelTransform = new Matrix3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
         public Point3D BoundingCenter
         {
             get;
             set;
+        }
+
+        public void AddItem(Matrix3D item)
+        {
+            
+
+            if (Count < ModelTransformSet.Length)
+            {
+                Count++;
+
+                TotalModelTransform = AddMatrix3D(TotalModelTransform, item);
+
+                ModelTransform  = DivideMatrix3D(TotalModelTransform, Count);
+            }
+            else
+            {
+                TotalModelTransform = SubtractMatrix3D(TotalModelTransform, ModelTransformSet[CurrenIndex]);
+
+                TotalModelTransform = AddMatrix3D(TotalModelTransform, item);
+
+                ModelTransform = DivideMatrix3D(TotalModelTransform, ModelTransformSet.Length);
+
+            }
+            
+            ModelTransformSet[CurrenIndex] = item;
+            
+            CurrenIndex++;
+            CurrenIndex = CurrenIndex % ModelTransformSet.Length;          
+        }
+        private Matrix3D CalcAvg()
+        {
+            Matrix3D AvgMatrix = new Matrix3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+            return AvgMatrix;
+        }
+
+        private  Matrix3D AddMatrix3D(Matrix3D A, Matrix3D B)
+        {
+            return new Matrix3D(A.M11 + B.M11, A.M12 + B.M12, A.M13 + B.M13, A.M14 + B.M14,
+                                A.M21 + B.M21, A.M22 + B.M22, A.M23 + B.M23, A.M24 + B.M24,
+                                A.M31 + B.M31, A.M32 + B.M32, A.M33 + B.M33, A.M34 + B.M34,
+                                A.OffsetX + B.OffsetX, A.OffsetY + B.OffsetY, A.OffsetZ + B.OffsetZ, A.M44 + B.M44);
+        }
+        private Matrix3D SubtractMatrix3D(Matrix3D A, Matrix3D B)
+        {
+            return new Matrix3D(A.M11 - B.M11, A.M12 - B.M12, A.M13 - B.M13, A.M14 - B.M14,
+                                A.M21 - B.M21, A.M22 - B.M22, A.M23 - B.M23, A.M24 - B.M24,
+                                A.M31 - B.M31, A.M32 - B.M32, A.M33 - B.M33, A.M34 - B.M34,
+                                A.OffsetX - B.OffsetX, A.OffsetY - B.OffsetY, A.OffsetZ - B.OffsetZ, A.M44 - B.M44);
+        }
+
+        private Matrix3D DivideMatrix3D(Matrix3D A, double Divisor)
+        {
+            return new Matrix3D(A.M11 / Divisor, A.M12 / Divisor, A.M13 / Divisor, A.M14 / Divisor,
+                                A.M21 / Divisor, A.M22 / Divisor, A.M23 / Divisor, A.M24 / Divisor,
+                                A.M31 / Divisor, A.M32 / Divisor, A.M33 / Divisor, A.M34 / Divisor,
+                                A.OffsetX / Divisor, A.OffsetY / Divisor, A.OffsetZ / Divisor, A.M44 / Divisor);
         }
 
         public void SetTransformMatrix()

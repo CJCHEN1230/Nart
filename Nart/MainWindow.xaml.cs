@@ -39,7 +39,7 @@ namespace Nart
 
         public MainWindow()
         {
-
+            
             InitializeComponent();
 
             AllocConsole();
@@ -107,34 +107,21 @@ namespace Nart
 
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
-            //CamCtrl.count.Signal();
-            //Console.WriteLine("TRANSLATE: "+CamCtrl.count.CurrentCount);
-            var dev = new Vector3D(0, 10, 0);
+            string path = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla.stl";
+            StLReader stlRed = new HelixToolkit.Wpf.StLReader();
+            var model =stlRed.Read(path);
 
-            var matrix = MV1.Transform.Value;
-            matrix.Translate(dev);
-            //matrix.Rotate(new Quaternion(axis, angle));
-
-            MV1.Transform = new MatrixTransform3D(matrix);
-
-            //Model3DGroup triangle = new Model3DGroup();
-            //Point3D p0 = new Point3D(0, 0, 0);
-            //Point3D p1 = new Point3D(5, 0, 0);
-            //Point3D p2 = new Point3D(5, 0, 5);
-            //Point3D p3 = new Point3D(0, 0, 5);
-            //Point3D p4 = new Point3D(0, 5, 0);
-            //Point3D p5 = new Point3D(5, 5, 0);
-            //Point3D p6 = new Point3D(5, 5, 5);
-
-            //triangle.Children.Add(CreateTriangleModel(p1, p4, p3));
-            //triangle.Children.Add(CreateTriangleModel(p1, p4, p6));
-            //triangle.Children.Add(CreateTriangleModel(p3, p1, p6));
-            //ModelVisual3D Model = new ModelVisual3D();
-            //Model.Content = triangle;
-            //this.helixViewport.Children.Add(Model);
-
-
-           
+            //foreach (var models in model)
+            //{
+            //    //var sharpModel = new MeshGeometryModel3D()
+            //    //{
+            //    //    Geometry = model.Geometry,
+            //    //    Material = model.Material,
+            //    //    Name = model.Name,
+            //    //    Transform = new MatrixTransform3D(model.Transform.ToMatrix3D()),
+            //    //};
+            //    //loadedModels.Children.Add(sharpModel);
+            //}
         }
 
         private void allRotate_Click(object sender, RoutedEventArgs e)
@@ -153,9 +140,9 @@ namespace Nart
 
         private ModelVisual3D MV1 = new ModelVisual3D();
         private ModelVisual3D MV2 = new ModelVisual3D();
-        private ModelData mData1 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla.stl");
-        private ModelData mData2 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible digital segment BVRO.stl");
-        private ModelData mData3 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull wo maxilla w ramus BVRO.stl");
+        private ModelData mData1 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl");
+        private ModelData mData2 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible digital segment BVRO_0.4.stl");
+        private ModelData mData3 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull wo maxilla w ramus BVRO_4.stl");
         private ModelData mData4 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\下顎球1.stl");
 
         private void displaytest()

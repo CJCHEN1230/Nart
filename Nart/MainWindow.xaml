@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:Nart"
         mc:Ignorable="d"        
         xmlns:helix="http://helix-toolkit.org/wpf"
+        xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
         Foreground="White"
         Title="Nart" Height="762" Width="1583.5" Loaded="Window_Loaded" WindowState="Maximized" Background="#FF474747" Closed="load_Closed">
     <Window.CommandBindings>
@@ -28,7 +29,7 @@
         <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="22,153,0,0" VerticalAlignment="Top" Width="56" Height="56"/>
         <Button x:Name="button3" Click="allRotate_Click" Content="AllRotateBtn" HorizontalAlignment="Left" Margin="22,224,0,0" VerticalAlignment="Top" Width="56" Height="56"/>
         <Button x:Name="button4" Click="TrackingButton_Click" Content="Tracking" HorizontalAlignment="Left" Margin="22,374,0,0" VerticalAlignment="Top" Width="58" Height="54" />
-        <TabControl x:Name="tabControl" SelectedIndex="0" Margin="0,0,0,0" Background="#FF474747" OpacityMask="Black" Grid.Column="1">
+        <TabControl x:Name="tabControl" SelectedIndex="1" Margin="0,0,0,0" Background="#FF474747" OpacityMask="Black" Grid.Column="1">
             <TabItem Header="Camera" FontSize="15">
                 <TabItem.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -64,6 +65,17 @@
                         <ColumnDefinition Width="118*"/>
                         <ColumnDefinition Width="51*"/>
                     </Grid.ColumnDefinitions>
+
+
+                    <hx:Viewport3DX x:Name="view" Grid.Column="1" Grid.RowSpan="2">
+                        <hx:AmbientLight3D />
+                        <hx:DirectionalLight3D Direction = "-2,-5,-2"/>
+                        <hx:GroupModel3D x:Name="group"/>
+                    </hx:Viewport3DX>
+
+
+
+
                     <helix:HelixViewport3D x:Name="helixViewport" ShowViewCube="True" ShowCoordinateSystem="True" ZoomExtentsWhenLoaded="False" 
                                Background="Black" Margin="0,0,8,0" 
                                CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"
@@ -89,6 +101,7 @@
                         <!--helix:SphereVisual3D Center="0,0,0" Radius="100" Fill="White"/-->
 
                         <ModelVisual3D x:Name="mainModelVisual"/>
+                        
 
                     </helix:HelixViewport3D>
                 </Grid>

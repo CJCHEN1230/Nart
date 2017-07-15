@@ -218,16 +218,18 @@ namespace Nart
 
         private void MoveModel()
         {
-            for (int i=0;i< MainWindow.AllModelData.Count-1; i++)
+            for (int i=0;i< MainWindow.AllModelData.Count-1; i++)////
             {
-                Matrix3D TEMP = MainWindow.AllModelData[i].ModelTransform;
+                if (i==1)
+                {
+                    Matrix3D TEMP = MainWindow.AllModelData[i].ModelTransform;
 
-                //Console.WriteLine("\n\nMatrix" + (i + 1) + "組:");
-                //Console.WriteLine("  " + TEMP.M11+ "  " + TEMP.M12+ "  " + TEMP.M13+ "  " + TEMP.M14);
-                //Console.WriteLine("  " + TEMP.M21 + "  " + TEMP.M22 + "  " + TEMP.M23 + "  " + TEMP.M24);
-                //Console.WriteLine("  " + TEMP.M31 + "  " + TEMP.M32 + "  " + TEMP.M33 + "  " + TEMP.M34);
-                //Console.WriteLine("  " + TEMP.OffsetX + "  " + TEMP.OffsetY + "  " + TEMP.OffsetZ + "  " + TEMP.M44);
-
+                    //Console.WriteLine("\n\nMatrix" + (i + 1) + "組:");
+                    //Console.WriteLine("  " + TEMP.M11 + "  " + TEMP.M12 + "  " + TEMP.M13 + "  " + TEMP.M14);
+                    //Console.WriteLine("  " + TEMP.M21 + "  " + TEMP.M22 + "  " + TEMP.M23 + "  " + TEMP.M24);
+                    //Console.WriteLine("  " + TEMP.M31 + "  " + TEMP.M32 + "  " + TEMP.M33 + "  " + TEMP.M34);
+                    //Console.WriteLine("  " + TEMP.OffsetX + "  " + TEMP.OffsetY + "  " + TEMP.OffsetZ + "  " + TEMP.M44);
+                }
                 MainWindow.AllModelData[i].SetTransformMatrix();
             }
         }

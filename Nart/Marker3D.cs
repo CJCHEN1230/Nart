@@ -12,6 +12,9 @@ namespace Nart
     //     
     class Marker3D
     {
+        /// <summary>
+        /// 儲存該Marker的三個世界座標點
+        /// </summary>
         public Point3D[] ThreePoints;
 
         public double[] ThreeLength;
