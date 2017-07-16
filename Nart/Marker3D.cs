@@ -16,11 +16,14 @@ namespace Nart
         /// 儲存該Marker的三個世界座標點
         /// </summary>
         public Point3D[] ThreePoints;
-
+        /// <summary>
+        /// 儲存該Marker的三個長度
+        /// </summary>
         public double[] ThreeLength;
 
-        public Matrix3D ModelTransform;
-
+        /// <summary>
+        /// 記錄在資料庫中對應的Marker索引
+        /// </summary>
         public int DatabaseIndex = -1;
 
 
@@ -147,23 +150,5 @@ namespace Nart
                      
         }
 
-        public bool CompareLength(double[] OtherThreeLength)
-        {          
-            double diff1 = ThreeLength[0] - OtherThreeLength[0];
-            double diff2 = ThreeLength[1] - OtherThreeLength[1];
-            double diff3 = ThreeLength[2] - OtherThreeLength[2];
-
-            //Console.WriteLine("\n\n比較結果:");
-            //Console.WriteLine("\n原本長度:" + ThreeLength[0] + "   比較長:" + OtherThreeLength[0]);
-            //Console.WriteLine("\n原本長度:" + ThreeLength[1] + "   比較長:" + OtherThreeLength[1]);
-            //Console.WriteLine("\n原本長度:" + ThreeLength[2] + "   比較長:" + OtherThreeLength[2]);
-
-            if (Math.Abs(diff1) < 1 && Math.Abs(diff2) < 1 && Math.Abs(diff3) < 1)
-                return true;
-
-            else
-                return false;
-
-        }
     }
 }

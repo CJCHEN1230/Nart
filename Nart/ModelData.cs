@@ -19,23 +19,32 @@ namespace Nart
 
         public Matrix3D ModelTransform = new Matrix3D();
 
-        private Matrix3D TotalModelTransform = new Matrix3D();
-
+        private Matrix3D TotalModelTransform = new Matrix3D();       
+        /// <summary>
+        /// 防止抖動，用來存放的累加矩陣，10是累積總數量
+        /// </summary>
         public Matrix3D[] ModelTransformSet = new Matrix3D[10];
-
+        /// <summary>
+        /// CurrenIndex是當前處要儲存在ModelTransformSet裡面位置的索引
+        /// </summary>
         private int CurrenIndex = 0;
-
+        /// <summary>
+        /// 此模型對應資料庫中的索引
+        /// </summary>
         public int DatabaseIndex = -1;
-
+        /// <summary>
+        /// 累加矩陣的數目超過10個就不加了
+        /// </summary>
         private int Count=0;
 
         public ModelData(String filename)
         {
-            _filename = filename;
+            
+            Filename = filename;
 
             ModelTransform.SetIdentity();
 
-            Display3d(_filename);
+            Display3d(Filename);
 
             Rect3D rect3d = _modleGroup.Bounds;
 
@@ -43,7 +52,12 @@ namespace Nart
 
             GeometryModel3D Geomodel = _modleGroup.Children[0] as GeometryModel3D;
 
-            DiffuseMaterial material = new DiffuseMaterial(new SolidColorBrush(Color.FromRgb(40, 181, 187)));
+            //DiffuseMaterial material = new DiffuseMaterial(new SolidColorBrush(Color.FromRgb(40, 181, 187)));
+
+
+            Material material=MaterialHelper.CreateMaterial( new SolidColorBrush(Color.FromRgb(40, 181, 187)),40, 50);
+            //Material material = MaterialHelper.CreateMaterial(new SolidColorBrush(Color.FromRgb(60, 231, 123)), 40, 50);
+
 
             Geomodel.Material = material;
 
@@ -139,8 +153,10 @@ namespace Nart
             get;
             set;
         }
-             
 
+        /// <summary>
+        /// 輸入路徑位置，將load好的模型存進_modleGroup
+        /// </summary>
         private void Display3d(string model)
         {            
             try

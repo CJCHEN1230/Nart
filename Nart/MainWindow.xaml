@@ -97,7 +97,7 @@
                         <helix:HelixViewport3D.ZoomGesture>
                             <MouseGesture MouseAction="MiddleClick" />
                         </helix:HelixViewport3D.ZoomGesture>
-
+                        
                         <!--helix:SphereVisual3D Center="0,0,0" Radius="100" Fill="White"/-->
 
                         <ModelVisual3D x:Name="mainModelVisual"/>

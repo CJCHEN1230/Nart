@@ -15,16 +15,20 @@ namespace Nart
         private MainWindow _window = null;
         
 
+        
+
+
+
         public Environment(MainWindow window)
         {
             _window = window;
             //backgroundColor = Colors.Black;
             SetCamera();
 
-            ambientLightColor = Color.FromScRgb(1.0f, 0.4f, 0.4f, 0.4f);
-            directionalLightColor1 = Color.FromScRgb(1.0f, 0.1f, 0.1f, 0.1f);
-            directionalLightColor2 = Color.FromScRgb(1.0f, 0.1f, 0.1f, 0.1f);
-            directionalLightColor3 = Color.FromScRgb(1.0f, 0.1f, 0.1f, 0.1f);
+            ambientLightColor = Color.FromScRgb(1.0f, 0.9f, 0.9f, 0.9f);
+            directionalLightColor1 = Color.FromScRgb(1.0f, 0.7f, 0.7f, 0.7f);
+            directionalLightColor2 = Color.FromScRgb(1.0f, 0.7f, 0.7f, 0.7f);
+            directionalLightColor3 = Color.FromScRgb(1.0f, 0.7f, 0.7f, 0.7f);
 
             LightSetting();
         }
@@ -172,18 +176,30 @@ namespace Nart
 
             DirectionalLight myDirectionalLight3 = new DirectionalLight();
             myDirectionalLight3.Color = DirectionalLightColor3;
-            myDirectionalLight3.Direction = new Vector3D(1.0, -0.5, -0.6);
+            myDirectionalLight3.Direction = new Vector3D(-0.5, -0.5, -0.6);
 
 
+            DirectionalHeadLight headlight1 = new DirectionalHeadLight();
+            headlight1.Brightness = 20;
+            headlight1.Position = new Point3D(80, 0, 80);
 
-            Model3DGroup myLightGroup = new Model3DGroup();
-            myLightGroup.Children.Add(myAmbientLight);
-            myLightGroup.Children.Add(myDirectionalLight1);
-            myLightGroup.Children.Add(myDirectionalLight2);
 
-            _window.LightModel.Content = myLightGroup;
+            DirectionalHeadLight headlight2 = new DirectionalHeadLight();
+            headlight1.Brightness =20;
+            headlight1.Position = new Point3D(30, 0, 10);
 
-            _window.helixViewport.Children.Add(_window.LightModel);
+
+            _window.helixViewport.Children.Add(headlight1);
+            //_window.helixViewport.Children.Add(headlight2);
+
+            //Model3DGroup myLightGroup = new Model3DGroup();
+            //myLightGroup.Children.Add(myAmbientLight);
+            //myLightGroup.Children.Add(myDirectionalLight1);
+            //myLightGroup.Children.Add(myDirectionalLight2);
+            ////myLightGroup.Children.Add(myDirectionalLight3);
+            //_window.LightModel.Content = myLightGroup;
+
+            //_window.helixViewport.Children.Add(_window.LightModel);
         }
 
 
