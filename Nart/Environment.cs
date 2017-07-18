@@ -15,17 +15,13 @@ namespace Nart
         private MainWindow _window = null;
         
 
-        
-
-
-
         public Environment(MainWindow window)
         {
             _window = window;
             //backgroundColor = Colors.Black;
             SetCamera();
 
-            ambientLightColor = Color.FromScRgb(1.0f, 0.9f, 0.9f, 0.9f);
+            ambientLightColor = Color.FromScRgb(1.0f, 0.3f, 0.3f, 0.3f);
             directionalLightColor1 = Color.FromScRgb(1.0f, 0.7f, 0.7f, 0.7f);
             directionalLightColor2 = Color.FromScRgb(1.0f, 0.7f, 0.7f, 0.7f);
             directionalLightColor3 = Color.FromScRgb(1.0f, 0.7f, 0.7f, 0.7f);
@@ -43,7 +39,7 @@ namespace Nart
             _window.OrthographicCam.UpDirection = new Vector3D(0, 0, 1);
             _window.OrthographicCam.LookDirection= new Vector3D(0, rect3d.SizeY, 0);
             _window.OrthographicCam.NearPlaneDistance = -500;
-            _window.OrthographicCam.Width = rect3d.SizeX + 150;
+            _window.OrthographicCam.Width = rect3d.SizeX + 110;
             
         }
 

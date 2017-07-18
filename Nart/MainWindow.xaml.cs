@@ -21,13 +21,14 @@ using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
 using System.Threading;
 using NartControl;
+using System.ComponentModel;
 
 namespace Nart
 {
     /// <summary>
     /// MainWindow.xaml 的互動邏輯
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window , INotifyPropertyChanged
     {
         internal ModelVisual3D LightModel = new ModelVisual3D();
         
@@ -37,10 +38,26 @@ namespace Nart
         
         public static List<ModelData> AllModelData =new List<ModelData>(5);
 
+        private string _pointNumber;
+
+        public string PointNumber
+        {
+            get { return this._pointNumber; }
+            set
+            {
+                if (this._pointNumber != value)
+                {
+                    this._pointNumber = value;
+                    this.NotifyPropertyChanged("PointNumber");
+                }
+            }
+        }
+
         public MainWindow()
         {
             
             InitializeComponent();
+            this.DataContext = this;
 
             AllocConsole();
 
@@ -102,7 +119,7 @@ namespace Nart
 
             Matrix3D test = new Matrix3D();
             test.SetIdentity();
-            AllModelData[0]._modelVisual.Transform = new MatrixTransform3D(test);
+            AllModelData[0].ModelVisual.Transform = new MatrixTransform3D(test);
         }
 
         private void Translate_Click(object sender, RoutedEventArgs e)
@@ -144,6 +161,14 @@ namespace Nart
         private ModelData mData2 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible digital segment BVRO_0.4.stl");
         private ModelData mData3 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull wo maxilla w ramus BVRO_4.stl");
         private ModelData mData4 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\下顎球1.stl");
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void NotifyPropertyChanged(string propName)
+        {
+            if (this.PropertyChanged != null)
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+        }
 
         private void displaytest()
         {

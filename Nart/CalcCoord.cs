@@ -272,7 +272,7 @@ namespace Nart
             //Console.WriteLine("左相機真實解:" + LeftPoint);
             //Console.WriteLine("右相機真實解:" + RightPoint);
             //Console.WriteLine("真實解:" + new Point3D((LeftPoint.X + RightPoint.X) / 2.0, (LeftPoint.Y + RightPoint.Y) / 2.0, (LeftPoint.Z + RightPoint.Z) / 2.0));
-            return new Point3D((LeftPoint.X + RightPoint.X) / 2.0, (LeftPoint.Y + RightPoint.Y) / 2.0, (LeftPoint.Z + RightPoint.Z) / 2.0);
+            return new Point3D((LeftPoint.X + RightPoint.X) / 2.0, (LeftPoint.Y + RightPoint.Y) / 2.0, -(LeftPoint.Z + RightPoint.Z) / 2.0);
 
 
         }
@@ -316,8 +316,8 @@ namespace Nart
             }
 
 
-
-            _window.PointLabel.Content = (WorldPoints.Count * 3).ToString() + "個點";
+            _window.PointNumber = (WorldPoints.Count * 3).ToString() + "個點";
+           // _window.PointLabel.Content = (WorldPoints.Count * 3).ToString() + "個點";
 
             
 
@@ -753,13 +753,20 @@ namespace Nart
 
                         Matrix3D level2 = TransformCoordinate(MSWorldPoints[MSandOriIndex].ThreePoints, WorldPoints[CurrentIndex].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"
 
-                        Matrix3D level3 = TransformCoordinate(WorldPoints[CurrentHeadIndex].ThreePoints, OriWorldPoints[RegHeadIndex].ThreePoints);
+                        //Matrix3D level3 = TransformCoordinate(WorldPoints[CurrentHeadIndex].ThreePoints, OriWorldPoints[RegHeadIndex].ThreePoints);
 
-                        Matrix3D level4 = TransformCoordinate(OriWorldPoints[RegSplintIndex].ThreePoints, MSMarker);
-                  
+                        //Matrix3D level4 = TransformCoordinate(OriWorldPoints[RegSplintIndex].ThreePoints, MSMarker);
+
+                        //Matrix3D level5 = TransformCoordinate(MSBall, CTBall);
+
+                        Matrix3D level3 = TransformCoordinate(WorldPoints[CurrentHeadIndex].ThreePoints, MSWorldPoints[RegHeadIndex].ThreePoints);
+
+                        //Matrix3D level4 = TransformCoordinate(OriWorldPoints[RegSplintIndex].ThreePoints, MSMarker);
+
                         Matrix3D level5 = TransformCoordinate(MSBall, CTBall);
 
-                        Matrix3D Final = level1 * level2 * level3 * level4 * level5;
+
+                        Matrix3D Final = level1 * level2 * level3 * /*level4 **/ level5;
 
                         MainWindow.AllModelData[i].AddItem(Final);
                         //MainWindow.AllModelData[i].ModelTransform = Final;

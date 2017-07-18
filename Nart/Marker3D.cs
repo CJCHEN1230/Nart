@@ -35,7 +35,9 @@ namespace Nart
             ThreeLength = new double[3];
         }
 
-
+        /// <summary>
+        /// 依照邊長排序點
+        /// </summary>
         public void SortedByLength()
         {
             //第幾組點

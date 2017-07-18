@@ -67,11 +67,7 @@
                     </Grid.ColumnDefinitions>
 
 
-                    <hx:Viewport3DX x:Name="view" Grid.Column="1" Grid.RowSpan="2">
-                        <hx:AmbientLight3D />
-                        <hx:DirectionalLight3D Direction = "-2,-5,-2"/>
-                        <hx:GroupModel3D x:Name="group"/>
-                    </hx:Viewport3DX>
+                    
 
 
 
@@ -107,7 +103,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Label x:Name="PointLabel" Content="Label!!!!!!!!!" HorizontalAlignment="Left" Margin="6,520,0,0" VerticalAlignment="Top" Height="46" Width="106" FontSize="20"/>
+        <Label x:Name="PointLabel" Content="{Binding Path=PointNumber}" HorizontalAlignment="Left" Margin="6,520,0,0" VerticalAlignment="Top" Height="46" Width="106" FontSize="20"/>
         <Button x:Name="RegButton" Content="Registration" HorizontalAlignment="Left" Margin="22,294,0,0" VerticalAlignment="Top" Width="58" Height="56" Click="RegButton_Click"/>
         <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
 

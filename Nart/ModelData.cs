@@ -13,12 +13,16 @@ namespace Nart
     {
         private String _filename;
 
-        public ModelVisual3D _modelVisual = new ModelVisual3D();
+        private ModelVisual3D _modelVisual = new ModelVisual3D();
 
         private Model3DGroup _modleGroup;
-
+        /// <summary>
+        /// 此Model的最終轉換矩陣
+        /// </summary>
         public Matrix3D ModelTransform = new Matrix3D();
-
+        /// <summary>
+        /// 用來累加的矩陣
+        /// </summary>
         private Matrix3D TotalModelTransform = new Matrix3D();       
         /// <summary>
         /// 防止抖動，用來存放的累加矩陣，10是累積總數量
@@ -31,16 +35,52 @@ namespace Nart
         /// <summary>
         /// 此模型對應資料庫中的索引
         /// </summary>
-        public int DatabaseIndex = -1;
+        public int DatabaseIndex
+        {
+            get;
+
+            set;
+        }
         /// <summary>
         /// 累加矩陣的數目超過10個就不加了
-        /// </summary>
-        private int Count=0;
+        /// </summary>       
+        public int Count
+        {
+            get;
 
+            set;
+        }
+        public ModelVisual3D ModelVisual
+        {
+            get
+            {
+                return _modelVisual;
+            }
+            set
+            {
+                _modelVisual = value;
+            }
+        }
+
+        public String Filename
+        {
+            get
+            {
+                return _filename;
+            }
+            set
+            {
+                _filename = value;
+            }
+        }
         public ModelData(String filename)
         {
             
             Filename = filename;
+
+            Count = 0;
+
+            DatabaseIndex = -1;
 
             ModelTransform.SetIdentity();
 
@@ -55,9 +95,10 @@ namespace Nart
             //DiffuseMaterial material = new DiffuseMaterial(new SolidColorBrush(Color.FromRgb(40, 181, 187)));
 
 
-            Material material=MaterialHelper.CreateMaterial( new SolidColorBrush(Color.FromRgb(40, 181, 187)),40, 50);
+            Material material=MaterialHelper.CreateMaterial( new SolidColorBrush(Color.FromRgb(40, 181, 187)),0.3, 50 ,100);//, double specularPower = 100, byte ambient = 255, bool freeze = true);
+            //Material material = MaterialHelper.CreateMaterial(new SolidColorBrush(Color.FromRgb(40, 181, 187)), 200, 100,255,true);
             //Material material = MaterialHelper.CreateMaterial(new SolidColorBrush(Color.FromRgb(60, 231, 123)), 40, 50);
-
+            //Material material = MaterialHelper.CreateMaterial(new SolidColorBrush(Color.FromRgb(200, 120, 90)), 40, 50);
 
             Geomodel.Material = material;
 
@@ -100,14 +141,7 @@ namespace Nart
             
             CurrenIndex++;
             CurrenIndex = CurrenIndex % ModelTransformSet.Length;          
-        }
-        private Matrix3D CalcAvg()
-        {
-            Matrix3D AvgMatrix = new Matrix3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
-            return AvgMatrix;
-        }
-
+        }   
         private  Matrix3D AddMatrix3D(Matrix3D A, Matrix3D B)
         {
             return new Matrix3D(A.M11 + B.M11, A.M12 + B.M12, A.M13 + B.M13, A.M14 + B.M14,
@@ -122,7 +156,6 @@ namespace Nart
                                 A.M31 - B.M31, A.M32 - B.M32, A.M33 - B.M33, A.M34 - B.M34,
                                 A.OffsetX - B.OffsetX, A.OffsetY - B.OffsetY, A.OffsetZ - B.OffsetZ, A.M44 - B.M44);
         }
-
         private Matrix3D DivideMatrix3D(Matrix3D A, double Divisor)
         {
             return new Matrix3D(A.M11 / Divisor, A.M12 / Divisor, A.M13 / Divisor, A.M14 / Divisor,
@@ -134,42 +167,20 @@ namespace Nart
         public void SetTransformMatrix()
         {
             _modelVisual.Transform = new MatrixTransform3D(ModelTransform);
-            //ModelTransform.SetIdentity();
-        }
-        public ModelVisual3D ModelVisual
-        {
-            get
-            {
-                return _modelVisual;
-            }
-            set
-            {
-                _modelVisual = value;
-            }
-        }
-
-        public String Filename
-        {
-            get;
-            set;
-        }
-
+        }       
         /// <summary>
         /// 輸入路徑位置，將load好的模型存進_modleGroup
         /// </summary>
         private void Display3d(string model)
         {            
             try
-            {                
-                //Import 3D model file
+            {                                
                 ModelImporter import = new ModelImporter();
-
-                //Load the 3D model file
+            
                 _modleGroup = import.Load(model);
             }
             catch (Exception e)
-            {
-                // Handle exception in case can not find the 3D model file
+            {               
                 System.Windows.MessageBox.Show("Exception Error : " + e.StackTrace);
             }
             
