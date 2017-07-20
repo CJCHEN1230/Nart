@@ -11,23 +11,20 @@ namespace Nart
 {
     public class ModelData
     {
-        private String _filename;
-
-        private ModelVisual3D _modelVisual = new ModelVisual3D();
-
+                
         private Model3DGroup _modleGroup;
         /// <summary>
         /// 此Model的最終轉換矩陣
         /// </summary>
-        public Matrix3D ModelTransform = new Matrix3D();
+        private Matrix3D ModelTransform = new Matrix3D();
         /// <summary>
         /// 用來累加的矩陣
         /// </summary>
-        private Matrix3D TotalModelTransform = new Matrix3D();       
+        private Matrix3D TotalModelTransform = new Matrix3D();
         /// <summary>
         /// 防止抖動，用來存放的累加矩陣，10是累積總數量
         /// </summary>
-        public Matrix3D[] ModelTransformSet = new Matrix3D[10];
+        private Matrix3D[] ModelTransformSet = new Matrix3D[7];
         /// <summary>
         /// CurrenIndex是當前處要儲存在ModelTransformSet裡面位置的索引
         /// </summary>
@@ -50,28 +47,11 @@ namespace Nart
 
             set;
         }
-        public ModelVisual3D ModelVisual
-        {
-            get
-            {
-                return _modelVisual;
-            }
-            set
-            {
-                _modelVisual = value;
-            }
-        }
-
+        
         public String Filename
         {
-            get
-            {
-                return _filename;
-            }
-            set
-            {
-                _filename = value;
-            }
+            get;            
+            set;           
         }
         public ModelData(String filename)
         {
@@ -82,6 +62,8 @@ namespace Nart
 
             DatabaseIndex = -1;
 
+            TotalModelTransform = new Matrix3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
             ModelTransform.SetIdentity();
 
             Display3d(Filename);
@@ -91,10 +73,7 @@ namespace Nart
             BoundingCenter = new Point3D(rect3d.X + rect3d.SizeX / 2.0, rect3d.Y + rect3d.SizeY / 2.0, rect3d.Z + rect3d.SizeZ / 2.0);
 
             GeometryModel3D Geomodel = _modleGroup.Children[0] as GeometryModel3D;
-
-            //DiffuseMaterial material = new DiffuseMaterial(new SolidColorBrush(Color.FromRgb(40, 181, 187)));
-
-
+            
             Material material=MaterialHelper.CreateMaterial( new SolidColorBrush(Color.FromRgb(40, 181, 187)),0.3, 50 ,100);//, double specularPower = 100, byte ambient = 255, bool freeze = true);
             //Material material = MaterialHelper.CreateMaterial(new SolidColorBrush(Color.FromRgb(40, 181, 187)), 200, 100,255,true);
             //Material material = MaterialHelper.CreateMaterial(new SolidColorBrush(Color.FromRgb(60, 231, 123)), 40, 50);
@@ -104,9 +83,10 @@ namespace Nart
 
             Geomodel.BackMaterial = material;
 
-            _modelVisual.Content = _modleGroup;
+            
+            MainWindow._model3dgroup.Children.Add(_modleGroup);
 
-            TotalModelTransform = new Matrix3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         }
 
         public Point3D BoundingCenter
@@ -140,9 +120,34 @@ namespace Nart
             ModelTransformSet[CurrenIndex] = item;
             
             CurrenIndex++;
-            CurrenIndex = CurrenIndex % ModelTransformSet.Length;          
+            CurrenIndex = CurrenIndex % ModelTransformSet.Length;
+            
         }   
-        private  Matrix3D AddMatrix3D(Matrix3D A, Matrix3D B)
+       
+        public void SetTransformMatrix()
+        {
+            _modleGroup.Transform = new MatrixTransform3D(ModelTransform);
+        }       
+        /// <summary>
+        /// 輸入路徑位置，將load好的模型存進_modleGroup
+        /// </summary>
+        private void Display3d(string model)
+        {            
+            try
+            {                                
+                ModelImporter import = new ModelImporter();
+            
+                _modleGroup = import.Load(model);
+
+            }
+            catch (Exception e)
+            {               
+                System.Windows.MessageBox.Show("Exception Error : " + e.StackTrace);
+            }
+            
+        }
+
+        private Matrix3D AddMatrix3D(Matrix3D A, Matrix3D B)
         {
             return new Matrix3D(A.M11 + B.M11, A.M12 + B.M12, A.M13 + B.M13, A.M14 + B.M14,
                                 A.M21 + B.M21, A.M22 + B.M22, A.M23 + B.M23, A.M24 + B.M24,
@@ -164,26 +169,5 @@ namespace Nart
                                 A.OffsetX / Divisor, A.OffsetY / Divisor, A.OffsetZ / Divisor, A.M44 / Divisor);
         }
 
-        public void SetTransformMatrix()
-        {
-            _modelVisual.Transform = new MatrixTransform3D(ModelTransform);
-        }       
-        /// <summary>
-        /// 輸入路徑位置，將load好的模型存進_modleGroup
-        /// </summary>
-        private void Display3d(string model)
-        {            
-            try
-            {                                
-                ModelImporter import = new ModelImporter();
-            
-                _modleGroup = import.Load(model);
-            }
-            catch (Exception e)
-            {               
-                System.Windows.MessageBox.Show("Exception Error : " + e.StackTrace);
-            }
-            
-        }
     }
 }

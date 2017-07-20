@@ -59,27 +59,19 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="118*"/>
-                        <ColumnDefinition Width="51*"/>
+                        <ColumnDefinition Width="173*"/>
+                        <ColumnDefinition Width="115*"/>
                     </Grid.ColumnDefinitions>
 
 
-                    
-
-
-
-
-                    <helix:HelixViewport3D x:Name="helixViewport" ShowViewCube="True" ShowCoordinateSystem="True" ZoomExtentsWhenLoaded="False" 
-                               Background="Black" Margin="0,0,8,0" 
+                    <helix:HelixViewport3D x:Name="helixViewport" ShowViewCube="True" ZoomExtentsWhenLoaded="False" Margin="0,0,8,0" 
                                CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"
-                               ShowFrameRate="True" Grid.ColumnSpan="1" Grid.RowSpan="3">
+                               ShowFrameRate="True"
+                               Grid.ColumnSpan="1" Grid.RowSpan="2" Background="Black">
                         <helix:HelixViewport3D.Camera>
-                            <!--OrthographicCamera Position="200,200,200" LookDirection="-200,-200,-200" UpDirection="0,0,1" NearPlaneDistance="1090"/-->
-                            <!--OrthographicCamera Position="200,200,200"  LookDirection="-100,-100,-100" UpDirection="0,0,1" NearPlaneDistance="0.1"/-->
-                            <OrthographicCamera x:Name="OrthographicCam" Width="200" Position="0,0,150"  LookDirection="0,0,-150" UpDirection="0,1,0" NearPlaneDistance="0.1"/>
+                            <OrthographicCamera x:Name="OrthographicCam1"/>
                         </helix:HelixViewport3D.Camera>
 
                         <helix:HelixViewport3D.RotateGesture>
@@ -93,11 +85,61 @@
                         <helix:HelixViewport3D.ZoomGesture>
                             <MouseGesture MouseAction="MiddleClick" />
                         </helix:HelixViewport3D.ZoomGesture>
-                        
+
                         <!--helix:SphereVisual3D Center="0,0,0" Radius="100" Fill="White"/-->
 
-                        <ModelVisual3D x:Name="mainModelVisual"/>
-                        
+                        <ModelVisual3D x:Name="mainModelVisual" Content="{Binding Model}"/>
+
+
+                    </helix:HelixViewport3D>
+                    <helix:HelixViewport3D x:Name="helixViewport2" ShowViewCube="True" ZoomExtentsWhenLoaded="False" 
+                        Background="Black" Margin="1,1,1,1" 
+                        CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"
+                        ShowFrameRate="True" Grid.Column="1">
+                        <helix:HelixViewport3D.Camera>
+                            <OrthographicCamera x:Name="OrthographicCam2"/>
+                        </helix:HelixViewport3D.Camera>
+
+                        <helix:HelixViewport3D.RotateGesture>
+                            <MouseGesture MouseAction="LeftClick" />
+                        </helix:HelixViewport3D.RotateGesture>
+
+                        <helix:HelixViewport3D.PanGesture>
+                            <MouseGesture MouseAction="RightClick" />
+                        </helix:HelixViewport3D.PanGesture>
+
+                        <helix:HelixViewport3D.ZoomGesture>
+                            <MouseGesture MouseAction="MiddleClick" />
+                        </helix:HelixViewport3D.ZoomGesture>
+
+                        <ModelVisual3D x:Name="mainModelVisual1" Content="{Binding Model}"/>
+
+
+                    </helix:HelixViewport3D>
+                    <helix:HelixViewport3D x:Name="helixViewport3" ShowViewCube="True" ZoomExtentsWhenLoaded="False" 
+                        Background="Black" Margin="1,1,1,1" 
+                        CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"
+                        ShowFrameRate="True" Grid.Column="1" Grid.Row="1">
+                        <helix:HelixViewport3D.Camera>
+                            <!--OrthographicCamera Position="200,200,200" LookDirection="-200,-200,-200" UpDirection="0,0,1" NearPlaneDistance="1090"/-->
+                            <!--OrthographicCamera Position="200,200,200"  LookDirection="-100,-100,-100" UpDirection="0,0,1" NearPlaneDistance="0.1"/-->
+                            <OrthographicCamera x:Name="OrthographicCam3"/>
+                        </helix:HelixViewport3D.Camera>
+
+                        <helix:HelixViewport3D.RotateGesture>
+                            <MouseGesture MouseAction="LeftClick" />
+                        </helix:HelixViewport3D.RotateGesture>
+
+                        <helix:HelixViewport3D.PanGesture>
+                            <MouseGesture MouseAction="RightClick" />
+                        </helix:HelixViewport3D.PanGesture>
+
+                        <helix:HelixViewport3D.ZoomGesture>
+                            <MouseGesture MouseAction="MiddleClick" />
+                        </helix:HelixViewport3D.ZoomGesture>
+
+                        <ModelVisual3D x:Name="mainModelVisual2" Content="{Binding Model}"/>
+
 
                     </helix:HelixViewport3D>
                 </Grid>

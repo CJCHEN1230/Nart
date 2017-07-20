@@ -30,15 +30,20 @@ namespace Nart
     /// </summary>
     public partial class MainWindow : Window , INotifyPropertyChanged
     {
-        internal ModelVisual3D LightModel = new ModelVisual3D();
+        
         
         private Environment _envSetting;
 
         private CameraControl CamCtrl;
-        
+
+        public static Model3DGroup _model3dgroup = new Model3DGroup();
+
         public static List<ModelData> AllModelData =new List<ModelData>(5);
 
         private string _pointNumber;
+
+        public Model3D Model { get; set; }
+
 
         public string PointNumber
         {
@@ -59,6 +64,8 @@ namespace Nart
             InitializeComponent();
             this.DataContext = this;
 
+            Model = _model3dgroup;
+
             AllocConsole();
 
             displaytest();
@@ -69,6 +76,8 @@ namespace Nart
 
             CamHost1.Child = CamCtrl.icImagingControl[0];
             CamHost2.Child = CamCtrl.icImagingControl[1];
+         
+
         }
 
         
@@ -98,7 +107,7 @@ namespace Nart
                 {
                     ModelData mData = new ModelData(filename);
 
-                    mainModelVisual.Children.Add(mData.ModelVisual);
+                    //mainModelVisual.Children.Add(mData.ModelVisual);
                 }
                 _envSetting.SetCamera();
             }
@@ -119,7 +128,7 @@ namespace Nart
 
             Matrix3D test = new Matrix3D();
             test.SetIdentity();
-            AllModelData[0].ModelVisual.Transform = new MatrixTransform3D(test);
+            //AllModelData[0].ModelVisual.Transform = new MatrixTransform3D(test);
         }
 
         private void Translate_Click(object sender, RoutedEventArgs e)
@@ -172,19 +181,31 @@ namespace Nart
 
         private void displaytest()
         {
-
+            
             mData1.DatabaseIndex = 0;
             mData2.DatabaseIndex = 1;
-            mData2.DatabaseIndex = 2;
+            mData3.DatabaseIndex = 2;
 
             AllModelData.Add(mData1);
             AllModelData.Add(mData2);
             AllModelData.Add(mData3);
 
-            mainModelVisual.Children.Add(mData1.ModelVisual);
-            mainModelVisual.Children.Add(mData2.ModelVisual);
-            mainModelVisual.Children.Add(mData3.ModelVisual);
+            
+            mainModelVisual.Content = _model3dgroup;
+            mainModelVisual1.Content = _model3dgroup;
+            mainModelVisual2.Content = _model3dgroup;
+            //mainModelVisual1.Content = mainModelVisual.Content;
 
+            //Console.WriteLine("\n幾個:" + mainModelVisual.Children.Count);
+            ////mainModelVisual1.Children.Add(mData4.ModelVisual);
+
+            ////this.Model = mainModelVisual.Content;
+
+            //Console.WriteLine("\n幾個:"+ mainModelVisual1.Children.Count);
+
+            //mainModelVisual2.Content = mainModelVisual.Content;
+            //helixViewport2.Children.Add(mainModelVisual);
+            //helixViewport3.Children.Add(mainModelVisual);
         }
 
 

@@ -50,7 +50,7 @@ namespace Nart
         /// <summary>
         /// 管理Thread通行
         /// </summary>
-        private AutoResetEvent[] _are = new AutoResetEvent[2];        
+        private AutoResetEvent[] _are = new AutoResetEvent[2];//目前暫時沒有用到        
         /// <summary>
         /// 管理Thread記數
         /// </summary>
@@ -217,19 +217,9 @@ namespace Nart
         }
 
         private void MoveModel()
-        {
-            for (int i=0;i< MainWindow.AllModelData.Count-1; i++)////
+        {           
+            for (int i = 0; i < MainWindow.AllModelData.Count - 1; i++)
             {
-                if (i==1)
-                {
-                    Matrix3D TEMP = MainWindow.AllModelData[i].ModelTransform;
-
-                    //Console.WriteLine("\n\nMatrix" + (i + 1) + "組:");
-                    //Console.WriteLine("  " + TEMP.M11 + "  " + TEMP.M12 + "  " + TEMP.M13 + "  " + TEMP.M14);
-                    //Console.WriteLine("  " + TEMP.M21 + "  " + TEMP.M22 + "  " + TEMP.M23 + "  " + TEMP.M24);
-                    //Console.WriteLine("  " + TEMP.M31 + "  " + TEMP.M32 + "  " + TEMP.M33 + "  " + TEMP.M34);
-                    //Console.WriteLine("  " + TEMP.OffsetX + "  " + TEMP.OffsetY + "  " + TEMP.OffsetZ + "  " + TEMP.M44);
-                }
                 MainWindow.AllModelData[i].SetTransformMatrix();
             }
         }
@@ -247,18 +237,11 @@ namespace Nart
                 });
             }
 
-
-
-            //Console.WriteLine("\n顯示時間:" + ((TimeSpan)(time_start - time_end)).TotalMilliseconds.ToString());
-
+            
             _calcCoord.Rectify(OutputMarker);
-            ////////////time_end = DateTime.Now;
-            ////////////Console.WriteLine("\n扭正時間:" + ((TimeSpan)(time_end - time_start)).TotalMilliseconds.ToString());
-
+          
             _calcCoord.MatchAndCalc3D(OutputMarker);
-            ////////////time_start = DateTime.Now;
-            ////////////Console.WriteLine("\nMatch時間:" + ((TimeSpan)(time_start - time_end)).TotalMilliseconds.ToString());
-
+            
             _calcCoord.MatchRealMarker();
 
 
@@ -272,9 +255,6 @@ namespace Nart
                 _calcCoord.CalcModelTransform();
                 MoveModel();
             }
-
-
-
 
 
             CameraToggle[0] = true;
@@ -344,12 +324,12 @@ namespace Nart
             }
         }
 
-        static DateTime time_start;
-        static DateTime time_end;
-        static DateTime time_start1;
-        static DateTime time_end1;
-        static DateTime time_start2;
-        static DateTime time_end2;
+        //static DateTime time_start;
+        //static DateTime time_end;
+        //static DateTime time_start1;
+        //static DateTime time_end1;
+        //static DateTime time_start2;
+        //static DateTime time_end2;
 
     }
 }
