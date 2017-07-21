@@ -36,15 +36,12 @@ namespace Nart
 
         private CameraControl CamCtrl;
 
-        public static Model3DGroup _model3dgroup = new Model3DGroup();
-
-        public static List<ModelData> AllModelData =new List<ModelData>(5);
-
         private string _pointNumber;
 
-        public Model3D Model { get; set; }
+        public static Model3DGroup _model3dgroup = new Model3DGroup();
 
-
+        public static List<ModelData> AllModelData = new List<ModelData>(5);
+      
         public string PointNumber
         {
             get { return this._pointNumber; }
@@ -63,8 +60,6 @@ namespace Nart
             
             InitializeComponent();
             this.DataContext = this;
-
-            Model = _model3dgroup;
 
             AllocConsole();
 
@@ -164,8 +159,7 @@ namespace Nart
             mainModelVisual.Transform = new MatrixTransform3D(matrix);
         }
 
-        private ModelVisual3D MV1 = new ModelVisual3D();
-        private ModelVisual3D MV2 = new ModelVisual3D();
+       
         private ModelData mData1 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl");
         private ModelData mData2 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible digital segment BVRO_0.4.stl");
         private ModelData mData3 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull wo maxilla w ramus BVRO_4.stl");
@@ -190,22 +184,11 @@ namespace Nart
             AllModelData.Add(mData2);
             AllModelData.Add(mData3);
 
-            
+
             mainModelVisual.Content = _model3dgroup;
             mainModelVisual1.Content = _model3dgroup;
             mainModelVisual2.Content = _model3dgroup;
-            //mainModelVisual1.Content = mainModelVisual.Content;
 
-            //Console.WriteLine("\n幾個:" + mainModelVisual.Children.Count);
-            ////mainModelVisual1.Children.Add(mData4.ModelVisual);
-
-            ////this.Model = mainModelVisual.Content;
-
-            //Console.WriteLine("\n幾個:"+ mainModelVisual1.Children.Count);
-
-            //mainModelVisual2.Content = mainModelVisual.Content;
-            //helixViewport2.Children.Add(mainModelVisual);
-            //helixViewport3.Children.Add(mainModelVisual);
         }
 
 

@@ -204,14 +204,12 @@ namespace Nart
 
             if (icImagingControl[0].LiveVideoRunning)
             {
-                Console.WriteLine("load_Closed Thread ID1:" + Thread.CurrentThread.ManagedThreadId);
+                
                 icImagingControl[0].LiveStop();
-                Console.WriteLine("load_Closed Thread ID2:" + Thread.CurrentThread.ManagedThreadId);
             }
             if (icImagingControl[1].LiveVideoRunning)
             {
                 icImagingControl[1].LiveStop();
-                Console.WriteLine("load_Closed Thread ID3:" + Thread.CurrentThread.ManagedThreadId);
             }
             
         }

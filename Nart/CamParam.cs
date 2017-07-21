@@ -78,9 +78,8 @@ namespace Nart
                 Sx = cameraData[19];
 
             }
-            catch (Exception ex)
+            catch
             {
-
                 MessageBox.Show("校正檔案路徑錯誤");
             }
 

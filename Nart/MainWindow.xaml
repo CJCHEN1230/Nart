@@ -23,7 +23,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Controls:ImgButton2 ButtonLabel="1234567"  ButtonImageSource="/Icon/test.ico" Margin="4,452,1442,219" Grid.ColumnSpan="2"/>
+        <Controls:ImgButton2 ButtonLabel="1234567"  ButtonImageSource="/Icon/test.ico" Margin="0,572,0,99"/>
         <Button x:Name="button" Command="ApplicationCommands.Open" Content="Open" HorizontalAlignment="Left" Margin="21,24,0,0" VerticalAlignment="Top" Width="56" Height="56" />
         <Button x:Name="button1" Click="Rotate_Click" Content="RotateBtn" HorizontalAlignment="Left" Margin="18,90,0,0" VerticalAlignment="Top" Width="58" Height="54"/>
         <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="22,153,0,0" VerticalAlignment="Top" Width="56" Height="56"/>
@@ -61,12 +61,12 @@
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="173*"/>
-                        <ColumnDefinition Width="115*"/>
+                        <ColumnDefinition Width="26*"/>
+                        <ColumnDefinition Width="19*"/>
                     </Grid.ColumnDefinitions>
 
 
-                    <helix:HelixViewport3D x:Name="helixViewport" ShowViewCube="True" ZoomExtentsWhenLoaded="False" Margin="0,0,8,0" 
+                    <helix:HelixViewport3D x:Name="helixViewport" ShowViewCube="True" ZoomExtentsWhenLoaded="False" Margin="1,1,1,1" 
                                CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"
                                ShowFrameRate="True"
                                Grid.ColumnSpan="1" Grid.RowSpan="2" Background="Black">
@@ -74,6 +74,9 @@
                             <OrthographicCamera x:Name="OrthographicCam1"/>
                         </helix:HelixViewport3D.Camera>
 
+                        
+                        
+                        
                         <helix:HelixViewport3D.RotateGesture>
                             <MouseGesture MouseAction="LeftClick" />
                         </helix:HelixViewport3D.RotateGesture>
@@ -88,8 +91,9 @@
 
                         <!--helix:SphereVisual3D Center="0,0,0" Radius="100" Fill="White"/-->
 
-                        <ModelVisual3D x:Name="mainModelVisual" Content="{Binding Model}"/>
+                        <ModelVisual3D x:Name="mainModelVisual"/>
 
+                        
 
                     </helix:HelixViewport3D>
                     <helix:HelixViewport3D x:Name="helixViewport2" ShowViewCube="True" ZoomExtentsWhenLoaded="False" 
@@ -121,8 +125,6 @@
                         CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"
                         ShowFrameRate="True" Grid.Column="1" Grid.Row="1">
                         <helix:HelixViewport3D.Camera>
-                            <!--OrthographicCamera Position="200,200,200" LookDirection="-200,-200,-200" UpDirection="0,0,1" NearPlaneDistance="1090"/-->
-                            <!--OrthographicCamera Position="200,200,200"  LookDirection="-100,-100,-100" UpDirection="0,0,1" NearPlaneDistance="0.1"/-->
                             <OrthographicCamera x:Name="OrthographicCam3"/>
                         </helix:HelixViewport3D.Camera>
 
@@ -139,14 +141,15 @@
                         </helix:HelixViewport3D.ZoomGesture>
 
                         <ModelVisual3D x:Name="mainModelVisual2" Content="{Binding Model}"/>
-
+                            
 
                     </helix:HelixViewport3D>
                 </Grid>
             </TabItem>
         </TabControl>
-        <Label x:Name="PointLabel" Content="{Binding Path=PointNumber}" HorizontalAlignment="Left" Margin="6,520,0,0" VerticalAlignment="Top" Height="46" Width="106" FontSize="20"/>
+        <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" HorizontalAlignment="Left" Margin="6,522,0,0" VerticalAlignment="Top" Height="46" Width="106" FontSize="20"/>
         <Button x:Name="RegButton" Content="Registration" HorizontalAlignment="Left" Margin="22,294,0,0" VerticalAlignment="Top" Width="58" Height="56" Click="RegButton_Click"/>
+        <Button x:Name="button4_Copy" Click="TrackingButton_Click" Content="Set Model" HorizontalAlignment="Left" Margin="20,443,0,0" VerticalAlignment="Top" Width="58" Height="54" />
         <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
 
 

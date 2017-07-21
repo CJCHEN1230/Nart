@@ -22,11 +22,11 @@ namespace Nart
         /// </summary>
         private Matrix3D TotalModelTransform = new Matrix3D();
         /// <summary>
-        /// 防止抖動，用來存放的累加矩陣，10是累積總數量
+        /// 防止抖動，用來存放所有矩陣，7是累積總數量
         /// </summary>
         private Matrix3D[] ModelTransformSet = new Matrix3D[7];
         /// <summary>
-        /// CurrenIndex是當前處要儲存在ModelTransformSet裡面位置的索引
+        /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
         /// </summary>
         private int CurrenIndex = 0;
         /// <summary>
@@ -74,7 +74,7 @@ namespace Nart
 
             GeometryModel3D Geomodel = _modleGroup.Children[0] as GeometryModel3D;
             
-            Material material=MaterialHelper.CreateMaterial( new SolidColorBrush(Color.FromRgb(40, 181, 187)),0.3, 50 ,100);//, double specularPower = 100, byte ambient = 255, bool freeze = true);
+            Material material=MaterialHelper.CreateMaterial( new SolidColorBrush(Color.FromRgb(40, 181, 187)),0.3, 50 ,100);
             //Material material = MaterialHelper.CreateMaterial(new SolidColorBrush(Color.FromRgb(40, 181, 187)), 200, 100,255,true);
             //Material material = MaterialHelper.CreateMaterial(new SolidColorBrush(Color.FromRgb(60, 231, 123)), 40, 50);
             //Material material = MaterialHelper.CreateMaterial(new SolidColorBrush(Color.FromRgb(200, 120, 90)), 40, 50);

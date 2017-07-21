@@ -143,7 +143,8 @@ namespace Nart
 
                 
                 if (Math.Abs(diff1) < 1 && Math.Abs(diff2) < 1 && Math.Abs(diff3) < 1) 
-                {                   
+                {
+                   
                     DatabaseIndex = i;
                     return;
                 }
