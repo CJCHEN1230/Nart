@@ -399,7 +399,7 @@ namespace Nart
 
         }
         /// <summary>
-        /// 清除註冊時不需要的Database資料
+        /// 清除註冊時不需要的Marker資料
         /// </summary>
         private void SimplifyDatabase()
         {
@@ -742,10 +742,8 @@ namespace Nart
             //沒有找到頭的Marker
             if (CurrentHeadIndex != -1) 
             {
-                //Parallel.For(0, WorldPoints.Count , i =>
-                //{
-                for (int i = 0; i < WorldPoints.Count; i++)
-                {
+                Parallel.For(0, WorldPoints.Count, i =>
+               {                   
                     if (WorldPoints[i].DatabaseIndex != -1 && WorldPoints[i].DatabaseIndex != SplintIndex && WorldPoints[i].DatabaseIndex != HeadIndex)
                     {
                         int MSandOriIndex = GetSpecIndex(MSWorldPoints, WorldPoints[i].DatabaseIndex);//取得當前世界座標在註冊時的座標索引值是多少
@@ -767,20 +765,19 @@ namespace Nart
                                 MainWindow.AllModelData[j].AddItem(Final);
                             }
                         }
-                    }
-                }
-                //});
+                    }                
+               });
 
                 //Parallel.For(0, WorldPoints.Count-2, i =>
                 //{
                 //    int CurrentIndex = GetSpecIndex(WorldPoints, Database[i]); //當前處理的可動部位(上、下顎)索引
-                    
+
                 //    int MSandOriIndex = GetSpecIndex(MSWorldPoints, Database[i]); //當前處理的上下顎對應到的MS跟Original World索引值
                 //    //Console.WriteLine("\n\n\n\n\ni:" + i + "\nMSandOriIndex: " + MSandOriIndex);
                 //    if (CurrentIndex != -1) 
                 //    {
 
-                      
+
                 //        Matrix3D level1 = TransformCoordinate(CTBall, MSBall);
 
                 //        Matrix3D level2 = TransformCoordinate(MSWorldPoints[MSandOriIndex].ThreePoints, WorldPoints[CurrentIndex].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"

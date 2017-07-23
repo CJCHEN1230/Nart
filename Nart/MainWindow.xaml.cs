@@ -22,6 +22,7 @@ using HelixToolkit.Wpf;
 using System.Threading;
 using NartControl;
 using System.ComponentModel;
+using HelixToolkit.Wpf.SharpDX;
 
 namespace Nart
 {
@@ -30,8 +31,9 @@ namespace Nart
     /// </summary>
     public partial class MainWindow : Window , INotifyPropertyChanged
     {
+
         
-        
+
         private Environment _envSetting;
 
         private CameraControl CamCtrl;
@@ -41,7 +43,8 @@ namespace Nart
         public static Model3DGroup _model3dgroup = new Model3DGroup();
 
         public static List<ModelData> AllModelData = new List<ModelData>(5);
-      
+        public Element3DCollection ModelGeometry { get; private set; }
+
         public string PointNumber
         {
             get { return this._pointNumber; }
@@ -81,7 +84,7 @@ namespace Nart
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {        
-            CamCtrl.CameraStart();            
+           // CamCtrl.CameraStart();            
         }
         
         private void OpenCmdExecuted(object sender, ExecutedRoutedEventArgs e)
@@ -184,10 +187,10 @@ namespace Nart
             AllModelData.Add(mData2);
             AllModelData.Add(mData3);
 
-
-            mainModelVisual.Content = _model3dgroup;
-            mainModelVisual1.Content = _model3dgroup;
-            mainModelVisual2.Content = _model3dgroup;
+            
+            //mainModelVisual.Content = _model3dgroup;
+            //mainModelVisual1.Content = _model3dgroup;
+            //mainModelVisual2.Content = _model3dgroup;
 
         }
 
@@ -209,16 +212,11 @@ namespace Nart
 
         private void RegButton_Click(object sender, RoutedEventArgs e)
         {
-
-            CameraControl.RegToggle = !CameraControl.RegToggle; 
-            Console.WriteLine("Width:" + CamHost1.ActualWidth + "   Height:" + CamHost1.ActualHeight);
-               
-           
+            CameraControl.RegToggle = !CameraControl.RegToggle;             
         }
 
         private void load_Closed(object sender, EventArgs e)
         {
-            //Console.WriteLine("load_Closed Thread ID:" + Thread.CurrentThread.ManagedThreadId);
             
             CamCtrl.CameraClose();
             

@@ -11,7 +11,9 @@ namespace Nart
 {
     public class ModelData
     {
-                
+        /// <summary>
+        /// 儲存模型資料
+        /// </summary>        
         private Model3DGroup _modleGroup;
         /// <summary>
         /// 此Model的最終轉換矩陣
@@ -24,7 +26,7 @@ namespace Nart
         /// <summary>
         /// 防止抖動，用來存放所有矩陣，7是累積總數量
         /// </summary>
-        private Matrix3D[] ModelTransformSet = new Matrix3D[7];
+        private Matrix3D[] ModelTransformSet = new Matrix3D[10];
         /// <summary>
         /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
         /// </summary>
@@ -35,7 +37,6 @@ namespace Nart
         public int DatabaseIndex
         {
             get;
-
             set;
         }
         /// <summary>
@@ -44,7 +45,6 @@ namespace Nart
         public int Count
         {
             get;
-
             set;
         }
         

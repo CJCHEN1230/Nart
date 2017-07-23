@@ -74,9 +74,9 @@
                             <OrthographicCamera x:Name="OrthographicCam1"/>
                         </helix:HelixViewport3D.Camera>
 
-                        
-                        
-                        
+
+
+
                         <helix:HelixViewport3D.RotateGesture>
                             <MouseGesture MouseAction="LeftClick" />
                         </helix:HelixViewport3D.RotateGesture>
@@ -93,7 +93,7 @@
 
                         <ModelVisual3D x:Name="mainModelVisual"/>
 
-                        
+
 
                     </helix:HelixViewport3D>
                     <helix:HelixViewport3D x:Name="helixViewport2" ShowViewCube="True" ZoomExtentsWhenLoaded="False" 
@@ -120,10 +120,44 @@
 
 
                     </helix:HelixViewport3D>
-                    <helix:HelixViewport3D x:Name="helixViewport3" ShowViewCube="True" ZoomExtentsWhenLoaded="False" 
+                    <hx:Viewport3DX  x:Name="helix"  Grid.Column="1" Grid.Row="1"
+                        ShowViewCube="True" ZoomExtentsWhenLoaded="False" 
                         Background="Black" Margin="1,1,1,1" 
+                        CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"                            
+                        UseDefaultGestures="True"
+                        ShowFrameRate="True">
+                        <hx:Viewport3DX.InputBindings>
+                            <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
+                            <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
+                            <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
+                            <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
+                            <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
+                            <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
+                            <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
+                            <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="RightClick" />
+                            <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
+                            <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
+                        </hx:Viewport3DX.InputBindings>
+                        <!--
+                        <hx:Viewport3DX.RotateGesture>
+                            <MouseGesture MouseAction="LeftClick" />
+                        </hx:Viewport3DX.RotateGesture>
+
+                        <hx:HelixViewport3D.PanGesture>
+                            <MouseGesture MouseAction="RightClick" />
+                        </hx:HelixViewport3D.PanGesture>
+
+                        <hx:HelixViewport3D.ZoomGesture>
+                            <MouseGesture MouseAction="MiddleClick" />
+                        </hx:HelixViewport3D.ZoomGesture>
+                -->
+
+                    </hx:Viewport3DX>
+
+                    <helix:HelixViewport3D x:Name="helixViewport3" ShowViewCube="True" ZoomExtentsWhenLoaded="False" 
+                        Background="Black" Margin="1,1,0,0" 
                         CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"
-                        ShowFrameRate="True" Grid.Column="1" Grid.Row="1">
+                        ShowFrameRate="True" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Width="84" Height="81" VerticalAlignment="Top">
                         <helix:HelixViewport3D.Camera>
                             <OrthographicCamera x:Name="OrthographicCam3"/>
                         </helix:HelixViewport3D.Camera>
@@ -141,9 +175,10 @@
                         </helix:HelixViewport3D.ZoomGesture>
 
                         <ModelVisual3D x:Name="mainModelVisual2" Content="{Binding Model}"/>
-                            
+
 
                     </helix:HelixViewport3D>
+
                 </Grid>
             </TabItem>
         </TabControl>
