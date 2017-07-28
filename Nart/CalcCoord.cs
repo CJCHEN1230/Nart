@@ -34,7 +34,7 @@ namespace Nart
 
         //public static int PointsNumber = 0;
 
-        private MainWindow _window = null;
+        private MainView _window = null;
 
         public List<double[]> MarkerDB = new List<double[]>(10);
 
@@ -81,7 +81,7 @@ namespace Nart
 
         private List<int> Database = new List<int>();
 
-        public CalcCoord(MainWindow window)
+        public CalcCoord(MainView window)
         {
             _window = window;
             _camParam[0] = new CamParam("../../../data/CaliR_L.txt");
@@ -758,11 +758,11 @@ namespace Nart
                         
                         Matrix3D Final = level1 * level2 * level3 * level4;
 
-                        for (int j = 0; j < MainWindow.AllModelData.Count; j++)
+                        for (int j = 0; j < MainView.AllModelData.Count; j++)
                         {
-                            if (MainWindow.AllModelData[j].DatabaseIndex == WorldPoints[i].DatabaseIndex)
+                            if (MainView.AllModelData[j].DatabaseIndex == WorldPoints[i].DatabaseIndex)
                             {
-                                MainWindow.AllModelData[j].AddItem(Final);
+                                MainView.AllModelData[j].AddItem(Final);
                             }
                         }
                     }                

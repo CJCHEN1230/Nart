@@ -12,10 +12,10 @@ namespace Nart
     class Environment
     {
 
-        private MainWindow _window = null;
+        private MainView _window = null;
 
         private ModelVisual3D LightModel = new ModelVisual3D();
-        public Environment(MainWindow window)
+        public Environment(MainView window)
         {
             _window = window;
             //backgroundColor = Colors.Black;

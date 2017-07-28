@@ -84,7 +84,7 @@ namespace Nart
             Geomodel.BackMaterial = material;
 
             
-            MainWindow._model3dgroup.Children.Add(_modleGroup);
+            MainView._model3dgroup.Children.Add(_modleGroup);
 
 
         }

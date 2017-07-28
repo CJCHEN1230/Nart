@@ -72,12 +72,12 @@ namespace Nart
         /// </summary>
         private bool[] CameraToggle = new bool[2] {true,true};
 
-        private MainWindow _window = null;
+        private MainView _window = null;
 
         /// <summary>
         /// 傳進來的width跟height決定inImageControl的長寬
         /// </summary>
-        public CameraControl(int width, int height , MainWindow window)
+        public CameraControl(int width, int height , MainView window)
         {
             _window = window;
 
@@ -216,9 +216,9 @@ namespace Nart
 
         private void MoveModel()
         {           
-            for (int i = 0; i < MainWindow.AllModelData.Count - 1; i++)
+            for (int i = 0; i < MainView.AllModelData.Count - 1; i++)
             {
-                MainWindow.AllModelData[i].SetTransformMatrix();
+                MainView.AllModelData[i].SetTransformMatrix();
             }
         }
         /// <summary>

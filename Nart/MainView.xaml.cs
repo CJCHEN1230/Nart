@@ -29,7 +29,7 @@ namespace Nart
     /// <summary>
     /// MainWindow.xaml 的互動邏輯
     /// </summary>
-    public partial class MainWindow : Window , INotifyPropertyChanged
+    public partial class MainView : Window , INotifyPropertyChanged
     {
 
         
@@ -58,7 +58,7 @@ namespace Nart
             }
         }
 
-        public MainWindow()
+        public MainView()
         {
             
             InitializeComponent();
