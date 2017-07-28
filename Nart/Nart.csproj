@@ -130,6 +130,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MainViewModel.cs" />
     <Compile Include="Marker3D.cs" />
     <Compile Include="ModelData.cs" />
     <Compile Include="ModelData2.cs" />

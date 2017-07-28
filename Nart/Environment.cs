@@ -9,7 +9,7 @@ using System.Windows.Media.Media3D;
 
 namespace Nart
 {
-    class Environment
+    public class Environment
     {
 
         private MainView _window = null;
