@@ -69,16 +69,16 @@ namespace Nart
 
         public Color AmbientLightColor
         {
-            get
-            {
-                return ambientLightColor;
-            }
             set
-            {                
+            {
                 ambientLightColor = value;
                 AmbientLight light = ((Model3DGroup)LightModel.Content).Children[0] as AmbientLight;
                 light.Color = ambientLightColor;
             }
+            get
+            {
+                return ambientLightColor;
+            }            
         }
 
         /// <summary>

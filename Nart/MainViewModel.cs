@@ -10,21 +10,26 @@ namespace Nart
     public class MainViewModel : INotifyPropertyChanged
     {
 
-
-
-
         public Environment EnvironmentSetting
         {
             get;
             set;
         }
-
-        public CameraControl _camCtrl
+        public CameraControl CamCtrl
         {
             get;
             set;
         }
-
+        private MainView _window;
+        public MainView MainWindow
+        {
+            get { return this._window; }
+            set { this._window = value; }
+        }
+        public MainViewModel(MainView window)
+        {
+            MainWindow = window;
+        }
 
         private string _pointNumber;
 

@@ -58,10 +58,17 @@ namespace Nart
             }
         }
 
+
+        private MainViewModel _mainViewModel = null;
         public MainView()
         {
             
             InitializeComponent();
+
+            _mainViewModel = new MainViewModel(this);
+
+            this.DataContext = _mainViewModel;
+
             this.DataContext = this;
 
             AllocConsole();
