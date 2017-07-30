@@ -5,15 +5,43 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NartControl"
              xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <hx:Viewport3DX  x:Name="helix2"  Grid.Column="1" Grid.Row="1"
-                        ShowViewCube="True" ZoomExtentsWhenLoaded="False" 
-                        Background="Black" Margin="1,1,1,1" 
-                        CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"                            
+             mc:Ignorable="d" Height="309.473" Width="637.895">
+    <!--<UserControl.DataContext>
+        <local:MultiAngleViewModel/>
+    </UserControl.DataContext>-->
+    <Grid Background="#FFE5E5E5" Margin="1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="26*"/>
+            <ColumnDefinition Width="20*"/>
+        </Grid.ColumnDefinitions>
+
+
+
+
+        <!--<hx:ModelContainer3DX x:Name="sharedContainer2"  RenderTechnique="{Binding RenderTechnique}">
+            <hx:ShadowMap3D />
+            <hx:MeshGeometryModel3D
+                Geometry="{Binding Sphere}"
+                IsRendering="{Binding RenderLight1}"
+                Material="{Binding LightModelMaterial}"
+                Transform="{Binding Light1Transform}" />
+        </hx:ModelContainer3DX>-->
+        <hx:Viewport3DX  x:Name="viewport1"
+                        ShowViewCube="True" 
+                        ZoomExtentsWhenLoaded="False" 
+                        Background="Black" Margin="1" 
+                        Camera="{Binding Camera1}"
+                        CameraRotationMode="Trackball" 
+                        Orthographic="True" 
+                        CameraMode="Inspect"                            
                         UseDefaultGestures="True"
-                        ShowFrameRate="True">
+                        EnableSharedModelMode="True"
+                        ShowFrameRate="True"
+                        Grid.RowSpan="2">
             <hx:Viewport3DX.InputBindings>
                 <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
                 <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
@@ -26,20 +54,69 @@
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
             </hx:Viewport3DX.InputBindings>
-            <!--
-                        <hx:Viewport3DX.RotateGesture>
-                            <MouseGesture MouseAction="LeftClick" />
-                        </hx:Viewport3DX.RotateGesture>
 
-                        <hx:HelixViewport3D.PanGesture>
-                            <MouseGesture MouseAction="RightClick" />
-                        </hx:HelixViewport3D.PanGesture>
 
-                        <hx:HelixViewport3D.ZoomGesture>
-                            <MouseGesture MouseAction="MiddleClick" />
-                        </hx:HelixViewport3D.ZoomGesture>
-                -->
+            <hx:AmbientLight3D />
+            <hx:DirectionalLight3D Direction = "-2,-5,-2"/>
+            <hx:GroupModel3D x:Name="group"   ItemsSource="{Binding ModelGeometry}"   Transform = "{Binding ModelTransform}" />
+
 
         </hx:Viewport3DX>
+        <hx:Viewport3DX  x:Name="viewport2"
+                        ShowViewCube="True" 
+                        ZoomExtentsWhenLoaded="False" 
+                        Background="Black" Margin="1" 
+                        Camera="{Binding Camera2}"
+                        CameraRotationMode="Trackball"
+                        Orthographic="True" 
+                        CameraMode="Inspect"                            
+                        UseDefaultGestures="True"
+                        EnableSharedModelMode="True"
+                        ShowFrameRate="True" 
+                        Grid.RowSpan="1" Grid.Column="1">
+            <hx:Viewport3DX.InputBindings>
+                <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
+                <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
+                <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
+                <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
+                <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
+                <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
+                <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
+                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="RightClick" />
+                <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
+                <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
+            </hx:Viewport3DX.InputBindings>
+
+
+        </hx:Viewport3DX>
+        <hx:Viewport3DX  x:Name="viewport3"
+                        ShowViewCube="True" 
+                        ZoomExtentsWhenLoaded="False" 
+                        Background="Black" Margin="1" 
+                        Camera="{Binding Camera3}"
+                        CameraRotationMode="Trackball"
+                        Orthographic="True"
+                        CameraMode="Inspect"                            
+                        UseDefaultGestures="True"
+                        EnableSharedModelMode="True"
+                        ShowFrameRate="True"
+                        Grid.Column="1" Grid.Row="1">
+            <hx:Viewport3DX.InputBindings>
+                <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
+                <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
+                <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
+                <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
+                <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
+                <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
+                <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
+                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="RightClick" />
+                <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
+                <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
+            </hx:Viewport3DX.InputBindings>
+
+
+        </hx:Viewport3DX>
+
+
     </Grid>
 </UserControl>
