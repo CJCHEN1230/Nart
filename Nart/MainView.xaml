@@ -201,6 +201,7 @@
 
                     </hx:Viewport3DX>
 
+                    <Controls:MultiAngleView />
 
                 </Grid>
             </TabItem>
