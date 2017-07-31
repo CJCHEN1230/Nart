@@ -120,7 +120,6 @@
 
 
                     </helix:HelixViewport3D>
-
                     <helix:HelixViewport3D x:Name="helixViewport3" ShowViewCube="True" ZoomExtentsWhenLoaded="False" 
                         Background="Black" Margin="1" 
                         CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"
