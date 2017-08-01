@@ -19,10 +19,12 @@ namespace NartControl
 
     public class MultiAngleViewModel : INotifyPropertyChanged
     {
-        public RenderTechnique RenderTechnique { get; private set; }
+
         public Element3DCollection ModelGeometry { get; private set; } = new Element3DCollection();
-        public DefaultEffectsManager EffectsManager { get; private set; }
+       
         public Transform3D ModelTransform { get; private set; } = new TranslateTransform3D(0, 0, 0);
+        public RenderTechnique RenderTechnique { get; private set; }
+        public DefaultEffectsManager EffectsManager { get; private set; }
         public DefaultRenderTechniquesManager RenderTechniquesManager { get; private set; }
         public ModelContainer3DX ModelContainer { get; private set; } = new ModelContainer3DX();
         public Camera Camera1 { get; } = new OrthographicCamera { Position = new Point3D(8, 9, 7), LookDirection = new Vector3D(-5, -12, -5), UpDirection = new Vector3D(0, 1, 0) };
@@ -38,11 +40,11 @@ namespace NartControl
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
             RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Blinn];
 
-            EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
+            //EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
 
-            multiview.sharedContainer2.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull wo maxilla w ramus BVRO.stl"));
-            multiview.sharedContainer2.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla.stl"));
-            multiview.sharedContainer2.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible digital segment BVRO.stl"));
+            //multiview.sharedContainer2.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull wo maxilla w ramus BVRO.stl"));
+            //multiview.sharedContainer2.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla.stl"));
+            //multiview.sharedContainer2.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible digital segment BVRO.stl"));
             
             //ModelContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"));
             //ModelContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible digital segment BVRO_0.4.stl"));

@@ -33,7 +33,9 @@ namespace NartControl
         {
             InitializeComponent();
             _multiAngleViewModel = new MultiAngleViewModel(this); 
-            this.DataContext = _multiAngleViewModel;
+            //this.DataContext = _multiAngleViewModel;
+
+
             //_multiAngleViewModel = (MultiAngleViewModel)base.DataContext;
         }
 

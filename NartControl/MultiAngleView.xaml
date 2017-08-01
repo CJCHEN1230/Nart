@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NartControl"
+             xmlns:sdx="clr-namespace:SharpDX;assembly=SharpDX.Mathematics"
              xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
              mc:Ignorable="d" Height="309.473" Width="637.895">
     <!--<UserControl.DataContext>
@@ -20,15 +21,10 @@
         </Grid.ColumnDefinitions>
 
 
+        <!--RenderTechnique="{Binding RenderTechnique}"-->
 
-
-        <hx:ModelContainer3DX x:Name="sharedContainer2"  RenderTechnique="{Binding RenderTechnique}">
+        <hx:ModelContainer3DX x:Name="sharedContainer2"  >
             <hx:ShadowMap3D />
-            <!--<hx:MeshGeometryModel3D
-                Geometry="{Binding Sphere}"
-                IsRendering="{Binding RenderLight1}"
-                Material="{Binding LightModelMaterial}"
-                Transform="{Binding Light1Transform}" />-->
         </hx:ModelContainer3DX>
         <hx:Viewport3DX  x:Name="viewport1"
                         ShowViewCube="True" 
@@ -41,6 +37,7 @@
                         UseDefaultGestures="True"
                         EnableSharedModelMode="True"
                         
+                        BackgroundColor="{x:Static sdx:Color4.Black}"
                         ShowFrameRate="True"
                         Grid.RowSpan="2">
             <hx:Viewport3DX.InputBindings>
@@ -74,6 +71,7 @@
                         UseDefaultGestures="True"
                         EnableSharedModelMode="True"
                        
+                        BackgroundColor="{x:Static sdx:Color4.Black}"
                         ShowFrameRate="True" 
                         Grid.RowSpan="1" Grid.Column="1">
             <hx:Viewport3DX.InputBindings>
@@ -102,6 +100,7 @@
                         UseDefaultGestures="True"
                         EnableSharedModelMode="True"
                         
+                        BackgroundColor="{x:Static sdx:Color4.Black}"
                         ShowFrameRate="True"
                         Grid.Column="1" Grid.Row="1">
             <hx:Viewport3DX.InputBindings>
