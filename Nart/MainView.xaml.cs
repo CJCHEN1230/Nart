@@ -194,10 +194,10 @@ namespace Nart
             AllModelData.Add(mData2);
             AllModelData.Add(mData3);
 
-            
-            //mainModelVisual.Content = _model3dgroup;
-            //mainModelVisual1.Content = _model3dgroup;
-            //mainModelVisual2.Content = _model3dgroup;
+
+            mainModelVisual.Content = _model3dgroup;
+            mainModelVisual1.Content = _model3dgroup;
+            mainModelVisual2.Content = _model3dgroup;
 
         }
 

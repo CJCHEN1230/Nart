@@ -21,23 +21,28 @@
         </Grid.ColumnDefinitions>
 
 
-        <!--RenderTechnique="{Binding RenderTechnique}"-->
 
-        <hx:ModelContainer3DX x:Name="sharedContainer2"  >
-            <hx:ShadowMap3D />
+        <hx:ModelContainer3DX x:Name="sharedContainer"  RenderTechnique="{Binding RenderTechnique}">
+            <hx:MeshGeometryModel3D
+                x:Name="model"
+                Geometry="{Binding Model}"
+                Material="{Binding ModelMaterial}"
+                Transform="{Binding ModelTransform}" />
         </hx:ModelContainer3DX>
         <hx:Viewport3DX  x:Name="viewport1"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" 
-                        Background="Black" Margin="1" 
-                      
+                        Background="Black" Margin="1"              
+                        Camera="{Binding Camera1}"
                         CameraRotationMode="Trackball" 
                         Orthographic="True" 
                         CameraMode="Inspect"                            
                         UseDefaultGestures="True"
-                        EnableSharedModelMode="True"
-                        
+                        EnableSharedModelMode="True"                        
+                        SharedModelContainer="{Binding ElementName=sharedContainer}"
                         BackgroundColor="{x:Static sdx:Color4.Black}"
+                        ShowCoordinateSystem="True"
+                         CoordinateSystemLabelForeground="White"
                         ShowFrameRate="True"
                         Grid.RowSpan="2">
             <hx:Viewport3DX.InputBindings>
@@ -52,11 +57,22 @@
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
             </hx:Viewport3DX.InputBindings>
-            <!--SharedModelContainer="{Binding ModelContainer}"-->
-           
-            <hx:AmbientLight3D />
-            <hx:DirectionalLight3D Direction = "-2,-5,-2"/>
-            <!--<hx:GroupModel3D x:Name="group"   ItemsSource="{Binding ModelGeometry}"   Transform = "{Binding ModelTransform}" />-->
+            <hx:AmbientLight3D Color="{Binding AmbientLightColor}" />
+            <hx:DirectionalLight3D
+                Direction="{Binding Light1Direction}"
+                DirectionTransform="{Binding Light1DirectionTransform}"
+                IsRendering="{Binding IsRenderLight}"
+                Color="{Binding Light1Color}" />
+            <hx:DirectionalLight3D
+                Direction="{Binding Light2Direction}"
+                DirectionTransform="{Binding Light1DirectionTransform}"
+                IsRendering="{Binding IsRenderLight}"
+                Color="{Binding Light1Color}" />
+            <hx:DirectionalLight3D
+                Direction="{Binding Light3Direction}"
+                DirectionTransform="{Binding Light1DirectionTransform}"
+                IsRendering="{Binding IsRenderLight}"
+                Color="{Binding Light1Color}" />
 
 
         </hx:Viewport3DX>
@@ -70,7 +86,7 @@
                         CameraMode="Inspect"                            
                         UseDefaultGestures="True"
                         EnableSharedModelMode="True"
-                       
+                        SharedModelContainer="{Binding ElementName=sharedContainer}"
                         BackgroundColor="{x:Static sdx:Color4.Black}"
                         ShowFrameRate="True" 
                         Grid.RowSpan="1" Grid.Column="1">
@@ -86,8 +102,22 @@
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
             </hx:Viewport3DX.InputBindings>
-
-
+            <hx:AmbientLight3D Color="{Binding AmbientLightColor}" />
+            <hx:DirectionalLight3D
+                Direction="{Binding Light1Direction}"
+                DirectionTransform="{Binding Light1DirectionTransform}"
+                IsRendering="{Binding IsRenderLight}"
+                Color="{Binding Light1Color}" />
+            <hx:DirectionalLight3D
+                Direction="{Binding Light2Direction}"
+                DirectionTransform="{Binding Light1DirectionTransform}"
+                IsRendering="{Binding IsRenderLight}"
+                Color="{Binding Light1Color}" />
+            <hx:DirectionalLight3D
+                Direction="{Binding Light3Direction}"
+                DirectionTransform="{Binding Light1DirectionTransform}"
+                IsRendering="{Binding IsRenderLight}"
+                Color="{Binding Light1Color}" />
         </hx:Viewport3DX>
         <hx:Viewport3DX  x:Name="viewport3"
                         ShowViewCube="True" 
@@ -99,7 +129,7 @@
                         CameraMode="Inspect"                            
                         UseDefaultGestures="True"
                         EnableSharedModelMode="True"
-                        
+                        SharedModelContainer="{Binding ElementName=sharedContainer}"
                         BackgroundColor="{x:Static sdx:Color4.Black}"
                         ShowFrameRate="True"
                         Grid.Column="1" Grid.Row="1">
@@ -115,8 +145,23 @@
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
             </hx:Viewport3DX.InputBindings>
-
-
+            <hx:AmbientLight3D Color="{Binding AmbientLightColor}" />
+          
+            <hx:DirectionalLight3D
+                Direction="{Binding Light1Direction}"
+                DirectionTransform="{Binding Light1DirectionTransform}"
+                IsRendering="{Binding IsRenderLight}"
+                Color="{Binding Light1Color}" />
+            <hx:DirectionalLight3D
+                Direction="{Binding Light2Direction}"
+                DirectionTransform="{Binding Light1DirectionTransform}"
+                IsRendering="{Binding IsRenderLight}"
+                Color="{Binding Light1Color}" />
+            <hx:DirectionalLight3D
+                Direction="{Binding Light3Direction}"
+                DirectionTransform="{Binding Light1DirectionTransform}"
+                IsRendering="{Binding IsRenderLight}"
+                Color="{Binding Light1Color}" />
         </hx:Viewport3DX>
 
 
