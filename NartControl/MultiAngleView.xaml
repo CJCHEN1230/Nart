@@ -53,28 +53,15 @@
                 <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
                 <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
                 <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
-                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="RightClick" />
+                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
-                <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
+                <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
             <hx:AmbientLight3D Color="{Binding AmbientLightColor}" />
             <hx:DirectionalLight3D
                 Direction="{Binding Light1Direction}"
-                DirectionTransform="{Binding Light1DirectionTransform}"
                 IsRendering="{Binding IsRenderLight}"
-                Color="{Binding Light1Color}" />
-            <hx:DirectionalLight3D
-                Direction="{Binding Light2Direction}"
-                DirectionTransform="{Binding Light1DirectionTransform}"
-                IsRendering="{Binding IsRenderLight}"
-                Color="{Binding Light1Color}" />
-            <hx:DirectionalLight3D
-                Direction="{Binding Light3Direction}"
-                DirectionTransform="{Binding Light1DirectionTransform}"
-                IsRendering="{Binding IsRenderLight}"
-                Color="{Binding Light1Color}" />
-
-
+                Color="{Binding LightColor}" />
         </hx:Viewport3DX>
         <hx:Viewport3DX  x:Name="viewport2"
                         ShowViewCube="True" 
@@ -98,26 +85,15 @@
                 <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
                 <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
                 <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
-                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="RightClick" />
+                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
-                <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
+                <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
             <hx:AmbientLight3D Color="{Binding AmbientLightColor}" />
             <hx:DirectionalLight3D
-                Direction="{Binding Light1Direction}"
-                DirectionTransform="{Binding Light1DirectionTransform}"
-                IsRendering="{Binding IsRenderLight}"
-                Color="{Binding Light1Color}" />
-            <hx:DirectionalLight3D
                 Direction="{Binding Light2Direction}"
-                DirectionTransform="{Binding Light1DirectionTransform}"
                 IsRendering="{Binding IsRenderLight}"
-                Color="{Binding Light1Color}" />
-            <hx:DirectionalLight3D
-                Direction="{Binding Light3Direction}"
-                DirectionTransform="{Binding Light1DirectionTransform}"
-                IsRendering="{Binding IsRenderLight}"
-                Color="{Binding Light1Color}" />
+                Color="{Binding LightColor}" />
         </hx:Viewport3DX>
         <hx:Viewport3DX  x:Name="viewport3"
                         ShowViewCube="True" 
@@ -141,27 +117,15 @@
                 <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
                 <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
                 <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
-                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="RightClick" />
+                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
-                <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
+                <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
             <hx:AmbientLight3D Color="{Binding AmbientLightColor}" />
-          
-            <hx:DirectionalLight3D
-                Direction="{Binding Light1Direction}"
-                DirectionTransform="{Binding Light1DirectionTransform}"
-                IsRendering="{Binding IsRenderLight}"
-                Color="{Binding Light1Color}" />
-            <hx:DirectionalLight3D
-                Direction="{Binding Light2Direction}"
-                DirectionTransform="{Binding Light1DirectionTransform}"
-                IsRendering="{Binding IsRenderLight}"
-                Color="{Binding Light1Color}" />
             <hx:DirectionalLight3D
                 Direction="{Binding Light3Direction}"
-                DirectionTransform="{Binding Light1DirectionTransform}"
                 IsRendering="{Binding IsRenderLight}"
-                Color="{Binding Light1Color}" />
+                Color="{Binding LightColor}" />
         </hx:Viewport3DX>
 
 
