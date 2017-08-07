@@ -240,18 +240,25 @@ namespace NartControl
             System.Windows.Media.Media3D.MeshGeometry3D mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
 
             //設定模型材質
-            //PhongMaterial material = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
+          PhongMaterial material = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
 
-            PhongMaterial material = PhongMaterials.Chrome;
+             //PhongMaterial material = PhongMaterials.Chrome;
 
             //Material material=MaterialHelper.CreateMaterial( new SolidColorBrush(Color.FromRgb(40, 181, 187)),0.3, 50 ,100);
 
-            material.AmbientColor = new Color4(0.1568F, 0.709F, 0.733F, 1);
-            //material.DiffuseColor = Color.Gray;
-            material.SpecularColor = new Color4(0.1568F, 0.709F, 0.733F, 1);
-            material.SpecularShininess = 12.8F;
-           // material.ReflectiveColor = new Color4(0.1568F, 0.709F, 0.733F, 1);
-
+            //Color.White
+            material.ReflectiveColor = Color.Black;
+            material.AmbientColor = Color.Black;
+            //material.AmbientColor = new Color(10, 10, 10, 255);
+            material.DiffuseColor = new Color(40, 181, 187, 255);
+            material.EmissiveColor = Color.Black;
+            material.SpecularColor = new Color(50, 50, 50, 255);
+            //material.SpecularColor = new Color(100, 100, 100, 255);
+            // material.SpecularColor = new Color(90, 90, 90, 255);
+            //material.SpecularColor = Color.White;
+            material.SpecularShininess = 200;
+            //material.ReflectiveColor = new Color(20, 20, 20, 255);
+            
 
             //設定模型幾何形狀
             HelixToolkit.Wpf.SharpDX.MeshGeometry3D geometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
@@ -298,12 +305,11 @@ namespace NartControl
 
         internal void SetLight()
         {
-            AmbientLightColor = new Color4(0.2f, 0.2f, 0.2f, 1.0f);
+            AmbientLightColor = new Color4(0.1f, 0.1f, 0.1f, 1.0f);
+
+
             this.LightColor = (Color4)Color.White;
             this.IsRenderLight = true;
-            this.Light1Direction = new Vector3(-10, 5, 6);
-            //this.Light2Direction = new Vector3(10, -5, 6);
-            //this.Light3Direction = new Vector3(-5, -5, -6);
 
 
             //this.Light3Attenuation = new Vector3(100,-50, 60);
@@ -352,9 +358,15 @@ namespace NartControl
             orthoCam1.Width = BoundingBox.SizeX + 110;
 
             OrthographicCamera orthoCam2 = Camera2 as OrthographicCamera;
-            orthoCam2.Position = new Point3D(ModelCenter.X, ModelCenter.Y, ModelCenter.Z + (BoundingBox.SizeZ));
-            orthoCam2.UpDirection = new Vector3D(0, 1, 0);
-            orthoCam2.LookDirection = new Vector3D(0, 0, -BoundingBox.SizeZ);
+            //orthoCam2.Position = new Point3D(ModelCenter.X, ModelCenter.Y, ModelCenter.Z + (BoundingBox.SizeZ));
+            //orthoCam2.UpDirection = new Vector3D(0, 1, 0);
+            //orthoCam2.LookDirection = new Vector3D(0, 0, -BoundingBox.SizeZ);
+            //orthoCam2.NearPlaneDistance = -1000;
+            //orthoCam2.FarPlaneDistance = 1e15;
+            //orthoCam2.Width = BoundingBox.SizeX + 110;
+            orthoCam2.Position = new Point3D(ModelCenter.X, ModelCenter.Y - (BoundingBox.SizeY), ModelCenter.Z);
+            orthoCam2.UpDirection = new Vector3D(0, 0, 1);
+            orthoCam2.LookDirection = new Vector3D(0, BoundingBox.SizeY, 0);
             orthoCam2.NearPlaneDistance = -1000;
             orthoCam2.FarPlaneDistance = 1e15;
             orthoCam2.Width = BoundingBox.SizeX + 110;
