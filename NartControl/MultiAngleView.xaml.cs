@@ -25,8 +25,6 @@ namespace NartControl
     /// </summary>
     public partial class MultiAngleView : UserControl
     {
-
-
         MultiAngleViewModel _multiAngleViewModel ;
        
         public MultiAngleView()
@@ -37,8 +35,6 @@ namespace NartControl
 
 
             //_multiAngleViewModel = (MultiAngleViewModel)base.DataContext;
-        }
-
-      
+        }      
     }
 }

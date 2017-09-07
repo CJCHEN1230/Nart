@@ -31,12 +31,12 @@ namespace Nart
     /// </summary>
     public partial class MainView : Window , INotifyPropertyChanged
     {
-
         
-
         private Environment _envSetting;
 
         private CameraControl CamCtrl;
+
+        private NartServer nartserver = new NartServer();
 
         private string _pointNumber;
 
@@ -81,8 +81,8 @@ namespace Nart
 
             CamHost1.Child = CamCtrl.icImagingControl[0];
             CamHost2.Child = CamCtrl.icImagingControl[1];
-         
 
+            
         }
 
         
@@ -138,21 +138,7 @@ namespace Nart
 
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
-            string path = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla.stl";
-            StLReader stlRed = new HelixToolkit.Wpf.StLReader();
-            var model =stlRed.Read(path);
-
-            //foreach (var models in model)
-            //{
-            //    //var sharpModel = new MeshGeometryModel3D()
-            //    //{
-            //    //    Geometry = model.Geometry,
-            //    //    Material = model.Material,
-            //    //    Name = model.Name,
-            //    //    Transform = new MatrixTransform3D(model.Transform.ToMatrix3D()),
-            //    //};
-            //    //loadedModels.Children.Add(sharpModel);
-            //}
+            nartserver.SendMessage();
         }
 
         private void allRotate_Click(object sender, RoutedEventArgs e)
@@ -171,8 +157,8 @@ namespace Nart
 
        
         private ModelData mData1 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl");
-        private ModelData mData2 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible digital segment BVRO_0.4.stl");
-        private ModelData mData3 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull wo maxilla w ramus BVRO_4.stl");
+        private ModelData mData2 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl");
+        private ModelData mData3 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl");
         private ModelData mData4 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\下顎球1.stl");
 
         public event PropertyChangedEventHandler PropertyChanged;

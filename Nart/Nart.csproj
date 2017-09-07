@@ -139,6 +139,7 @@
     <Compile Include="Marker3D.cs" />
     <Compile Include="ModelData.cs" />
     <Compile Include="ModelData2.cs" />
+    <Compile Include="NartServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

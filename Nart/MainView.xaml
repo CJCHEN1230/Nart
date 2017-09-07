@@ -48,7 +48,7 @@
                     <Rectangle Fill="#FF474747" HorizontalAlignment="Center" Grid.Column="1" Margin="0" Stroke="Black" Width="10" RadiusY="61" RadiusX="61" Grid.ColumnSpan="1"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="3D View" FontSize="15">
+            <TabItem Header="3D View" FontSize="15" HorizontalAlignment="Left" Width="74">
                 <TabItem.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FF7B7B7B" Offset="0"/>
