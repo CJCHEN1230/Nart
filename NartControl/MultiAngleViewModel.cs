@@ -22,9 +22,7 @@ namespace NartControl
     using ProjectionCamera = HelixToolkit.Wpf.SharpDX.ProjectionCamera;
 
     public class MultiAngleViewModel : BaseViewModel
-    {
-
-     
+    {     
         public Model3DGroup ModelGroup { get; private set; } = new Model3DGroup();
         public Transform3D ModelTransform { get; private set; } = new TranslateTransform3D(0, 0, 0);
         public ModelContainer3DX ModelContainer { get; private set; } = new ModelContainer3DX();
@@ -188,7 +186,7 @@ namespace NartControl
 
 
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
-            RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Blinn];
+            RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Phong];
             EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
             
            
@@ -215,17 +213,9 @@ namespace NartControl
             this.ModelTransform = new System.Windows.Media.Media3D.TranslateTransform3D(0, 0, 0);
             this.ModelMaterial = PhongMaterials.Chrome;
 
-
-
-            
-
             SetLight();
             SetCamera();
 
-
-
-
-           
         }
         public MeshGeometryModel3D LoadSTL(string path)
         {
@@ -240,24 +230,18 @@ namespace NartControl
             System.Windows.Media.Media3D.MeshGeometry3D mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
 
             //設定模型材質
-          PhongMaterial material = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
+            PhongMaterial material = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
 
-             //PhongMaterial material = PhongMaterials.Chrome;
-
-            //Material material=MaterialHelper.CreateMaterial( new SolidColorBrush(Color.FromRgb(40, 181, 187)),0.3, 50 ,100);
-
-            //Color.White
             material.ReflectiveColor = Color.Black;
-            material.AmbientColor = Color.Black;
-            //material.AmbientColor = new Color(10, 10, 10, 255);
+            float ambient = 0.0f;
+            material.AmbientColor = new Color(ambient, ambient, ambient, 1.0f);
             material.DiffuseColor = new Color(40, 181, 187, 255);
-            material.EmissiveColor = Color.Black;
-            material.SpecularColor = new Color(50, 50, 50, 255);
-            //material.SpecularColor = new Color(100, 100, 100, 255);
-            // material.SpecularColor = new Color(90, 90, 90, 255);
-            //material.SpecularColor = Color.White;
-            material.SpecularShininess = 200;
-            //material.ReflectiveColor = new Color(20, 20, 20, 255);
+            material.EmissiveColor = Color.Black; //這是自己發光的顏色
+            material.SpecularColor = Color.LightGray;
+            float Specular = 0.5f;
+            material.SpecularColor = new Color(Specular, Specular, Specular, 255);       
+            material.SpecularShininess = 80;
+
             
 
             //設定模型幾何形狀
@@ -302,7 +286,6 @@ namespace NartControl
 
 
         }
-
         internal void SetLight()
         {
             AmbientLightColor = new Color4(0.1f, 0.1f, 0.1f, 1.0f);
@@ -331,9 +314,6 @@ namespace NartControl
 
             ResetCameraPosition();
 
-
-
-
             b1.AddSphere(new Vector3(Convert.ToSingle(ModelCenter.X + 100), Convert.ToSingle(ModelCenter.Y - 50), Convert.ToSingle(ModelCenter.Z - 60)), 5, 64, 64);
             b1.AddSphere(new Vector3(0, 0, 0), 10, 64, 64);
 
@@ -343,7 +323,6 @@ namespace NartControl
 
 
         }
-
         internal void ResetCameraPosition()
         {
             BoundingBox = ModelGroup.Bounds;
@@ -358,15 +337,9 @@ namespace NartControl
             orthoCam1.Width = BoundingBox.SizeX + 110;
 
             OrthographicCamera orthoCam2 = Camera2 as OrthographicCamera;
-            //orthoCam2.Position = new Point3D(ModelCenter.X, ModelCenter.Y, ModelCenter.Z + (BoundingBox.SizeZ));
-            //orthoCam2.UpDirection = new Vector3D(0, 1, 0);
-            //orthoCam2.LookDirection = new Vector3D(0, 0, -BoundingBox.SizeZ);
-            //orthoCam2.NearPlaneDistance = -1000;
-            //orthoCam2.FarPlaneDistance = 1e15;
-            //orthoCam2.Width = BoundingBox.SizeX + 110;
-            orthoCam2.Position = new Point3D(ModelCenter.X, ModelCenter.Y - (BoundingBox.SizeY), ModelCenter.Z);
-            orthoCam2.UpDirection = new Vector3D(0, 0, 1);
-            orthoCam2.LookDirection = new Vector3D(0, BoundingBox.SizeY, 0);
+            orthoCam2.Position = new Point3D(ModelCenter.X, ModelCenter.Y, ModelCenter.Z - (BoundingBox.SizeZ));
+            orthoCam2.UpDirection = new Vector3D(0, 1, 0);
+            orthoCam2.LookDirection = new Vector3D(0, 0, BoundingBox.SizeZ);
             orthoCam2.NearPlaneDistance = -1000;
             orthoCam2.FarPlaneDistance = 1e15;
             orthoCam2.Width = BoundingBox.SizeX + 110;
@@ -387,7 +360,6 @@ namespace NartControl
                 SetBinding(camLookDir, camera, ProjectionCamera.LookDirectionProperty, this);
             }
         }
-
         private static void SetBinding(string path, DependencyObject dobj, DependencyProperty property, object viewModel, BindingMode mode = BindingMode.TwoWay)
         {
             var binding = new Binding(path);

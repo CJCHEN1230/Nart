@@ -19,9 +19,6 @@
             <ColumnDefinition Width="26*"/>
             <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
-
-
-
         <hx:ModelContainer3DX x:Name="sharedContainer"  RenderTechnique="{Binding RenderTechnique}">
             <hx:MeshGeometryModel3D
                 x:Name="model"
@@ -75,8 +72,7 @@
                         EnableSharedModelMode="True"
                         SharedModelContainer="{Binding ElementName=sharedContainer}"
                         BackgroundColor="{x:Static sdx:Color4.Black}"
-                        ShowFrameRate="True" 
-                        Grid.RowSpan="2" Grid.Column="1">
+                        ShowFrameRate="True" Grid.Column="1">
             <hx:Viewport3DX.InputBindings>
                 <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
                 <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
@@ -95,7 +91,7 @@
                 IsRendering="{Binding IsRenderLight}"
                 Color="{Binding LightColor}" />
         </hx:Viewport3DX>
-        <!--<hx:Viewport3DX  x:Name="viewport3"
+        <hx:Viewport3DX  x:Name="viewport3"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" 
                         Background="Black" Margin="1" 
@@ -126,7 +122,7 @@
                 Direction="{Binding Light3Direction}"
                 IsRendering="{Binding IsRenderLight}"
                 Color="{Binding LightColor}" />
-        </hx:Viewport3DX>-->
+        </hx:Viewport3DX>
 
 
     </Grid>
