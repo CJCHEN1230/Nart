@@ -85,9 +85,7 @@ namespace Nart
 
             icImagingControl[0] = new TIS.Imaging.ICImagingControl();
             icImagingControl[1] = new TIS.Imaging.ICImagingControl();
-
             
-
             _are[0] = new AutoResetEvent(false);
             _are[1] = new AutoResetEvent(false);
 

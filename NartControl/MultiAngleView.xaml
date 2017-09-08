@@ -39,7 +39,7 @@
                         SharedModelContainer="{Binding ElementName=sharedContainer}"
                         BackgroundColor="{x:Static sdx:Color4.Black}"
                         ShowCoordinateSystem="True"
-                         CoordinateSystemLabelForeground="White"
+                        CoordinateSystemLabelForeground="White"
                         ShowFrameRate="True"
                         Grid.RowSpan="2">
             <hx:Viewport3DX.InputBindings>
@@ -85,7 +85,7 @@
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
-            <!--<hx:AmbientLight3D Color="{Binding AmbientLightColor}" />-->
+            <hx:AmbientLight3D Color="{Binding AmbientLightColor}" />
             <hx:DirectionalLight3D
                 Direction="{Binding Light2Direction}"
                 IsRendering="{Binding IsRenderLight}"

@@ -10,6 +10,7 @@ using SharpDX;
 using HelixToolkit.Wpf.SharpDX.Core;
 using DemoCore;
 
+
 namespace NartControl
 {
     using System.ComponentModel;
@@ -22,11 +23,19 @@ namespace NartControl
     using ProjectionCamera = HelixToolkit.Wpf.SharpDX.ProjectionCamera;
 
     public class MultiAngleViewModel : BaseViewModel
-    {     
-        public Model3DGroup ModelGroup { get; private set; } = new Model3DGroup();
-        public Transform3D ModelTransform { get; private set; } = new TranslateTransform3D(0, 0, 0);
-        public ModelContainer3DX ModelContainer { get; private set; } = new ModelContainer3DX();
+    {
+
+
+
+        public static int test = 0;
+        /// <summary>
+        /// 將load好的Model3DGroup加進去
+        /// </summary>
+        public static Model3DGroup AllModelGroup { get; private set; } = new Model3DGroup();
+        public HelixToolkit.Wpf.SharpDX.MeshGeometry3D Model { get; private set; }
         public PhongMaterial ModelMaterial { get; set; }
+        public Transform3D ModelTransform { get; private set; } = new TranslateTransform3D(0, 0, 0);
+        public ModelContainer3DX ModelContainer { get; private set; } = new ModelContainer3DX();        
         private Camera cam1;
         public Camera Camera1
         {
@@ -75,7 +84,6 @@ namespace NartControl
                                        : value is OrthographicCamera ? Orthographic : null;
             }
         }
-        public HelixToolkit.Wpf.SharpDX.MeshGeometry3D Model { get; private set; }
         private Vector3 light1Direction = new Vector3();
         public Vector3 Light1Direction
         {
@@ -183,109 +191,34 @@ namespace NartControl
         public HelixToolkit.Wpf.SharpDX.MeshBuilder b1 { get; set; } = new HelixToolkit.Wpf.SharpDX.MeshBuilder(true, true, true);
         public MultiAngleViewModel(MultiAngleView multiview)
         {
-
-
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
             RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Phong];
             EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
-            
-           
-
-            //multiview.sharedContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla.stl"));
-            //multiview.sharedContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible digital segment BVRO.stl"));
-            //multiview.sharedContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull wo maxilla w ramus BVRO.stl"));
 
 
 
-            multiview.sharedContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"));
-            multiview.sharedContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl"));
-            multiview.sharedContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"));
+            //multiview.sharedContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"));
+          //  multiview.sharedContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl"));
+            //multiview.sharedContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"));
 
 
 
-            //b1.AddSphere(new Vector3(0.25f, 0.25f, 0.25f), 0.75, 64, 64);
-            //b1.AddBox(-new Vector3(0.25f, 0.25f, 0.25f), 1, 1, 1, HelixToolkit.Wpf.SharpDX.BoxFaces.All);
-            //b1.AddBox(-new Vector3(5.0f, 0.0f, 0.0f), 1, 1, 1, HelixToolkit.Wpf.SharpDX.BoxFaces.All);
-            //b1.AddSphere(new Vector3(5f, 0f, 0f), 0.75, 64, 64);
-            //b1.AddCylinder(new Vector3(0f, -3f, -5f), new Vector3(0f, 3f, -5f), 1.2, 64);
+
+
+            b1.AddSphere(new Vector3(Convert.ToSingle(ModelCenter.X + 100), Convert.ToSingle(ModelCenter.Y - 50), Convert.ToSingle(ModelCenter.Z - 60)), 5, 64, 64);
+            b1.AddSphere(new Vector3(0, 0, 0), 10, 64, 64);
 
             this.Model = b1.ToMeshGeometry3D();
             this.ModelTransform = new System.Windows.Media.Media3D.TranslateTransform3D(0, 0, 0);
             this.ModelMaterial = PhongMaterials.Chrome;
 
+
+
+
             SetLight();
             SetCamera();
 
-        }
-        public MeshGeometryModel3D LoadSTL(string path)
-        {
-            //利用helixtoolkit.wpf裡面提供的StlReader讀檔案，後續要轉成wpf.sharpdx可用的格式
-            StLReader reader = new HelixToolkit.Wpf.StLReader();
-            Model3DGroup model3dgroup = reader.Read(path);
-
-            ModelGroup.Children.Add(model3dgroup);
-
-            System.Windows.Media.Media3D.GeometryModel3D geometryModel = model3dgroup.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
-
-            System.Windows.Media.Media3D.MeshGeometry3D mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
-
-            //設定模型材質
-            PhongMaterial material = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
-
-            material.ReflectiveColor = Color.Black;
-            float ambient = 0.0f;
-            material.AmbientColor = new Color(ambient, ambient, ambient, 1.0f);
-            material.DiffuseColor = new Color(40, 181, 187, 255);
-            material.EmissiveColor = Color.Black; //這是自己發光的顏色
-            material.SpecularColor = Color.LightGray;
-            float Specular = 0.5f;
-            material.SpecularColor = new Color(Specular, Specular, Specular, 255);       
-            material.SpecularShininess = 80;
-
-            
-
-            //設定模型幾何形狀
-            HelixToolkit.Wpf.SharpDX.MeshGeometry3D geometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
-
-            geometry.Normals = new Vector3Collection();
-            geometry.Positions = new Vector3Collection();
-            geometry.Indices = new IntCollection();
-         
-            //將從stlreader讀到的資料轉入
-            foreach (Point3D position in mesh.Positions)
-            {
-                geometry.Positions.Add(new Vector3(
-                      Convert.ToSingle(position.X)
-                    , Convert.ToSingle(position.Y)
-                    , Convert.ToSingle(position.Z)));
-            }
-
-            foreach (Vector3D normal in mesh.Normals)
-            {
-                geometry.Normals.Add(new Vector3(
-                      Convert.ToSingle(normal.X)
-                    , Convert.ToSingle(normal.Y)
-                    , Convert.ToSingle(normal.Z)));
-            }
-
-            foreach (Int32 triangleindice in mesh.TriangleIndices)
-            {
-                geometry.Indices.Add(triangleindice);
-            }
-
-            MeshGeometryModel3D meshGeometry = new MeshGeometryModel3D();
-
-            //將建立好的指派進helix.sharp格式
-            meshGeometry = new MeshGeometryModel3D();
-            meshGeometry.Material = material;
-            meshGeometry.Geometry = geometry;
-            meshGeometry.Transform = new TranslateTransform3D(0, 0, 0);
-
-
-            return meshGeometry;
-
-
-        }
+        }               
         internal void SetLight()
         {
             AmbientLightColor = new Color4(0.1f, 0.1f, 0.1f, 1.0f);
@@ -314,18 +247,13 @@ namespace NartControl
 
             ResetCameraPosition();
 
-            b1.AddSphere(new Vector3(Convert.ToSingle(ModelCenter.X + 100), Convert.ToSingle(ModelCenter.Y - 50), Convert.ToSingle(ModelCenter.Z - 60)), 5, 64, 64);
-            b1.AddSphere(new Vector3(0, 0, 0), 10, 64, 64);
-
-            this.Model = b1.ToMeshGeometry3D();
-            this.ModelTransform = new System.Windows.Media.Media3D.TranslateTransform3D(0, 0, 0);
-            this.ModelMaterial = PhongMaterials.Chrome;
+           
 
 
         }
         internal void ResetCameraPosition()
         {
-            BoundingBox = ModelGroup.Bounds;
+            BoundingBox = AllModelGroup.Bounds;
             ModelCenter = new Point3D(BoundingBox.X + BoundingBox.SizeX / 2.0, BoundingBox.Y + BoundingBox.SizeY / 2.0, BoundingBox.Z + BoundingBox.SizeZ / 2.0);
 
             OrthographicCamera orthoCam1 = Camera1 as OrthographicCamera;

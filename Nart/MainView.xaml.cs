@@ -20,31 +20,20 @@ using System.Windows.Threading;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
 using System.Threading;
-using NartControl;
 using System.ComponentModel;
 using HelixToolkit.Wpf.SharpDX;
 
 namespace Nart
 {
     /// <summary>
-    /// MainWindow.xaml 的互動邏輯
+    /// MainView主視窗介面
     /// </summary>
     public partial class MainView : Window , INotifyPropertyChanged
     {
         
-        private Environment _envSetting;
-
-        private CameraControl CamCtrl;
-
-        private NartServer nartserver = new NartServer();
+        public static List<ModelData> AllModelData = new List<ModelData>(5);        
 
         private string _pointNumber;
-
-        public static Model3DGroup _model3dgroup = new Model3DGroup();
-
-        public static List<ModelData> AllModelData = new List<ModelData>(5);
-        public Element3DCollection ModelGeometry { get; private set; }
-
         public string PointNumber
         {
             get { return this._pointNumber; }
@@ -57,43 +46,21 @@ namespace Nart
                 }
             }
         }
-
-
         private MainViewModel _mainViewModel = null;
         public MainView()
-        {
-            
+        {            
             InitializeComponent();
 
             _mainViewModel = new MainViewModel(this);
 
             this.DataContext = _mainViewModel;
 
-            this.DataContext = this;
-
             AllocConsole();
-
-            displaytest();
-
-            _envSetting = new Environment(this);
-           
-            CamCtrl = new CameraControl(873, 815, this);
-
-            CamHost1.Child = CamCtrl.icImagingControl[0];
-            CamHost2.Child = CamCtrl.icImagingControl[1];
-
-            
         }
-
-        
-
-        
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {        
            // CamCtrl.CameraStart();            
-        }
-        
+        }        
         private void OpenCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
@@ -114,11 +81,9 @@ namespace Nart
 
                     //mainModelVisual.Children.Add(mData.ModelVisual);
                 }
-                _envSetting.SetCamera();
-            }
-        }
 
-       
+            }
+        }       
         private void Rotate_Click(object sender, RoutedEventArgs e)
         {
 
@@ -135,60 +100,30 @@ namespace Nart
             test.SetIdentity();
             //AllModelData[0].ModelVisual.Transform = new MatrixTransform3D(test);
         }
-
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
-            nartserver.SendMessage();
-        }
-
-        private void allRotate_Click(object sender, RoutedEventArgs e)
-        {
-
-            //Console.WriteLine("allRotate_Click: " + CamCtrl.count.CurrentCount);
-            var axis = new Vector3D(0, 0, 1);
-            var angle = 30;
-
-            var matrix = mainModelVisual.Transform.Value;
+            MainViewModel.AllModelData2[0].meshGeometry.PushMatrix(new SharpDX.Matrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1));
             
-            matrix.Rotate(new Quaternion(axis, angle));
-
-            mainModelVisual.Transform = new MatrixTransform3D(matrix);
+        }        
+        private void RegButton_Click(object sender, RoutedEventArgs e)
+        {
+            CameraControl.RegToggle = !CameraControl.RegToggle;             
         }
-
-       
-        private ModelData mData1 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl");
-        private ModelData mData2 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl");
-        private ModelData mData3 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl");
-        private ModelData mData4 = new ModelData("D:\\Desktop\\研究資料\\蔡慧君完整頭顱模型\\下顎球1.stl");
-
+        private void TrackingButton_Click(object sender, RoutedEventArgs e)
+        {
+            CameraControl.TrackToggle = !CameraControl.TrackToggle;
+        }
+        private void load_Closed(object sender, EventArgs e)
+        {            
+            //CamCtrl.CameraClose();            
+            System.Windows.Application.Current.Shutdown();            
+        }
         public event PropertyChangedEventHandler PropertyChanged;
-
         public void NotifyPropertyChanged(string propName)
         {
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
         }
-
-        private void displaytest()
-        {
-            
-            mData1.DatabaseIndex = 0;
-            mData2.DatabaseIndex = 1;
-            mData3.DatabaseIndex = 2;
-
-            AllModelData.Add(mData1);
-            AllModelData.Add(mData2);
-            AllModelData.Add(mData3);
-
-
-            mainModelVisual.Content = _model3dgroup;
-            mainModelVisual1.Content = _model3dgroup;
-            mainModelVisual2.Content = _model3dgroup;
-
-        }
-
-
-
         private void NewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
 
@@ -202,25 +137,5 @@ namespace Nart
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
-
-        private void RegButton_Click(object sender, RoutedEventArgs e)
-        {
-            CameraControl.RegToggle = !CameraControl.RegToggle;             
-        }
-
-        private void load_Closed(object sender, EventArgs e)
-        {
-            
-            CamCtrl.CameraClose();
-            
-            System.Windows.Application.Current.Shutdown();
-            //System.Environment.Exit(System.Environment.ExitCode);
-
-        }
-
-        private void TrackingButton_Click(object sender, RoutedEventArgs e)
-        {
-            CameraControl.TrackToggle = !CameraControl.TrackToggle;
-        }
     }
 }

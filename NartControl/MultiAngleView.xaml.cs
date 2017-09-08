@@ -30,11 +30,18 @@ namespace NartControl
         public MultiAngleView()
         {
             InitializeComponent();
-            _multiAngleViewModel = new MultiAngleViewModel(this); 
+            _multiAngleViewModel = new MultiAngleViewModel(this);
             this.DataContext = _multiAngleViewModel; //將_multiAngleViewModel的資料環境傳給此DataContext
-
-
+           
             //_multiAngleViewModel = (MultiAngleViewModel)base.DataContext;
-        }      
+        }
+        /// <summary>
+        /// 增加模型進去Container當中，並重設相機位置
+        /// </summary>
+        public void AddModel(MeshGeometryModel3D Model)
+        {
+            sharedContainer.Items.Add(Model);
+            _multiAngleViewModel.ResetCameraPosition();
+        }       
     }
 }

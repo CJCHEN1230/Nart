@@ -1,6 +1,7 @@
 ﻿using HelixToolkit.Wpf;
 using HelixToolkit.Wpf.SharpDX;
 using HelixToolkit.Wpf.SharpDX.Core;
+using NartControl;
 using SharpDX;
 using System;
 using System.Collections.Generic;
@@ -11,111 +12,87 @@ using System.Windows.Media.Media3D;
 
 namespace Nart
 {
-    class ModelData2
+    public class ModelData2
     {
+        public MeshGeometryModel3D meshGeometry { get; private set; }
+        public String Filename{get;set;}
 
-        public Element3DCollection ModelGeometry { get; private set; }
-
-
-        public void LoadSTL(string path)
+        public ModelData2(String filename)
         {
-            StLReader r = new HelixToolkit.Wpf.StLReader();
-            Model3DGroup model3dgroup = r.Read(path);
-
-
-
-
-
-
-            Console.WriteLine("\n\n模型幾個:" + model3dgroup.Children.Count);
-            for (int i = 0; i < model3dgroup.Children.Count; i++)
-            {
-
-                System.Windows.Media.Media3D.GeometryModel3D temp = model3dgroup.Children[i] as System.Windows.Media.Media3D.GeometryModel3D;
-
-                System.Windows.Media.Media3D.MeshGeometry3D wpfmesh = temp.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
-
-                
-
-                var s = new MeshGeometryModel3D();
-                
-                PhongMaterial pm = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
-                pm.AmbientColor = new Color4(Convert.ToSingle(0.349), Convert.ToSingle(0.349), Convert.ToSingle(0.349), 1);
-                pm.DiffuseColor = new Color4(Convert.ToSingle(0), Convert.ToSingle(0.5019), Convert.ToSingle(0), 1);
-                pm.SpecularColor = new Color4(Convert.ToSingle(0.1607), Convert.ToSingle(0.1607), Convert.ToSingle(0.1607), 1);
-                pm.SpecularShininess = 12.8F;
-                pm.ReflectiveColor = new Color4(Convert.ToSingle(0.1607), Convert.ToSingle(0.1607), Convert.ToSingle(0.1607), 1);
-
-
-
-                HelixToolkit.Wpf.SharpDX.MeshGeometry3D meshgeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
-
-                meshgeometry.Normals = new Vector3Collection();
-                Console.WriteLine("\n\n個數:" + wpfmesh.Normals.Count);
-                for (int j = 0; j < wpfmesh.Normals.Count; j++)
-                {
-                    meshgeometry.Normals.Add(new Vector3(Convert.ToSingle(wpfmesh.Normals[j].X)
-                        , Convert.ToSingle(wpfmesh.Normals[j].Y)
-                        , Convert.ToSingle(wpfmesh.Normals[j].Z)));
-                }
-
-
-
-                meshgeometry.Positions = new Vector3Collection();
-                Console.WriteLine("\n\n個數:" + wpfmesh.Positions.Count);
-                for (int j = 0; j < wpfmesh.Positions.Count; j++)
-                {
-                    meshgeometry.Positions.Add(new Vector3(Convert.ToSingle(wpfmesh.Positions[j].X)
-                        , Convert.ToSingle(wpfmesh.Positions[j].Y)
-                        , Convert.ToSingle(wpfmesh.Positions[j].Z)));
-                }
-
-
-                meshgeometry.Indices = new IntCollection();
-                Console.WriteLine("\n\n個數:" + wpfmesh.TriangleIndices.Count);
-                for (int j = 0; j < wpfmesh.TriangleIndices.Count; j++)
-                {
-                    meshgeometry.Indices.Add(wpfmesh.TriangleIndices[j]);
-                }
-
-
-                //HelixToolkit.Wpf.SharpDX.Geometry test = new HelixToolkit.Wpf.SharpDX.Geometry();
-
-                s.Material = pm;
-                s.Geometry = meshgeometry;
-
-               //s.Geometry.UpdateBounds();
-
-                //Console.WriteLine("\nx:" + -(s.Bounds.Minimum.X + s.Bounds.Maximum.X) / 2.0 + "\ny:" + -(s.Bounds.Minimum.Y + s.Bounds.Maximum.Y) / 2.0 + "\nz:" + -(s.Bounds.Minimum.Z + s.Bounds.Maximum.Z) / 2.0);
-                //float a = s.BoundsSphere.Center.X;
-                //float b = s.BoundsSphere.Center.Y;
-                //float c = s.BoundsSphere.Center.Z;
-
-
-
-
-
-                //this.ModelTransform = new TranslateTransform3D(-(s.Geometry.BoundingSphere.Center.X), -(s.Geometry.BoundingSphere.Center.Y), -(s.Geometry.BoundingSphere.Center.Z));
-
-                //this.ModelTransform = new TranslateTransform3D(5000, 5000, 5000);
-
-                //s.Transform = new TranslateTransform3D(-(s.Geometry.BoundingSphere.Center.X), -(s.Geometry.BoundingSphere.Center.Y), -(s.Geometry.BoundingSphere.Center.Z));
-
-                s.Transform = new TranslateTransform3D(0, 140, 180);
-
-
-                this.ModelGeometry.Add(s);
-
-
-
-
-
-
-
-                
-            }
+            Filename = filename;
+            meshGeometry = LoadSTL(Filename);
             
+            //Console.WriteLine("0");
+        }        
+        public MeshGeometryModel3D LoadSTL(string path)
+        {
+            //利用helixtoolkit.wpf裡面提供的StlReader讀檔案，後續要轉成wpf.sharpdx可用的格式
+            StLReader reader = new HelixToolkit.Wpf.StLReader();
+            Model3DGroup model3dgroup = reader.Read(path);
+
+            MultiAngleViewModel.AllModelGroup.Children.Add(model3dgroup);
+
+            System.Windows.Media.Media3D.GeometryModel3D geometryModel = model3dgroup.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
+
+            System.Windows.Media.Media3D.MeshGeometry3D mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
+
+            //設定模型材質
+            PhongMaterial material = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
+
+            material.ReflectiveColor = Color.Black;
+            float ambient = 0.0f;
+            material.AmbientColor = new Color(ambient, ambient, ambient, 1.0f);
+            material.DiffuseColor = new Color(40, 181, 187, 255);
+            material.EmissiveColor = Color.Black; //這是自己發光的顏色
+            material.SpecularColor = Color.LightGray;
+            float Specular = 0.5f;
+            material.SpecularColor = new Color(Specular, Specular, Specular, 255);
+            material.SpecularShininess = 80;
+
+
+
+            //設定模型幾何形狀
+            HelixToolkit.Wpf.SharpDX.MeshGeometry3D geometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
+
+            geometry.Normals = new Vector3Collection();
+            geometry.Positions = new Vector3Collection();
+            geometry.Indices = new IntCollection();
+
+            //將從stlreader讀到的資料轉入
+            foreach (Point3D position in mesh.Positions)
+            {
+                geometry.Positions.Add(new Vector3(
+                      Convert.ToSingle(position.X)
+                    , Convert.ToSingle(position.Y)
+                    , Convert.ToSingle(position.Z)));
+            }
+
+            foreach (Vector3D normal in mesh.Normals)
+            {
+                geometry.Normals.Add(new Vector3(
+                      Convert.ToSingle(normal.X)
+                    , Convert.ToSingle(normal.Y)
+                    , Convert.ToSingle(normal.Z)));
+            }
+
+            foreach (Int32 triangleindice in mesh.TriangleIndices)
+            {
+                geometry.Indices.Add(triangleindice);
+            }
+
+            MeshGeometryModel3D tempMeshGeometry = new MeshGeometryModel3D();
+            //將建立好的指派進helix.sharp格式的MeshGeometryModel3D
+            tempMeshGeometry.Material = material;
+            tempMeshGeometry.Geometry = geometry;
+            tempMeshGeometry.Transform = new TranslateTransform3D(0, 0, 0);
+
+            //meshGeometry.PushMatrix(new Matrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1));
+
+            return tempMeshGeometry;
+
         }
+
+   
 
     }
 }
