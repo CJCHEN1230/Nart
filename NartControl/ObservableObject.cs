@@ -1,8 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ObservableObject.cs" company="Helix Toolkit">
-//   Copyright (c) 2014 Helix Toolkit contributors
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
+﻿
 
 namespace DemoCore
 {
@@ -21,14 +17,14 @@ namespace DemoCore
             }
         }
 
-        protected bool SetValue<T>(ref T backingField, T value, [CallerMemberName]string propertyName = "")
+        protected bool SetValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")//CallerMemberName主要是.net4.5後定義好的caller訊息，能將訊息傳給後者的變數，目的在使用時不用特地傳入"Property"名稱
         {
-            if (object.Equals(backingField, value))
+            if (object.Equals(oldValue, newValue))
             {
                 return false;
             }
 
-            backingField = value;
+            oldValue = newValue;
             this.OnPropertyChanged(propertyName);
             return true;
         }

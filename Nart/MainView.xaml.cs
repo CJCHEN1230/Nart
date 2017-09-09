@@ -22,6 +22,7 @@ using HelixToolkit.Wpf;
 using System.Threading;
 using System.ComponentModel;
 using HelixToolkit.Wpf.SharpDX;
+using System.Diagnostics;
 
 namespace Nart
 {
@@ -31,7 +32,7 @@ namespace Nart
     public partial class MainView : Window , INotifyPropertyChanged
     {
         
-        public static List<ModelData> AllModelData = new List<ModelData>(5);        
+        public static List<ModelData> AllModelData = new List<ModelData>(5);
 
         private string _pointNumber;
         public string PointNumber
@@ -104,7 +105,10 @@ namespace Nart
         {
             MainViewModel.AllModelData2[0].meshGeometry.PushMatrix(new SharpDX.Matrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1));
             
-        }        
+        }
+
+     
+
         private void RegButton_Click(object sender, RoutedEventArgs e)
         {
             CameraControl.RegToggle = !CameraControl.RegToggle;             
@@ -118,7 +122,7 @@ namespace Nart
             //CamCtrl.CameraClose();            
             System.Windows.Application.Current.Shutdown();            
         }
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;//對PropertyChangedEventHandler的封裝
         public void NotifyPropertyChanged(string propName)
         {
             if (this.PropertyChanged != null)

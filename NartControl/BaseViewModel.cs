@@ -1,12 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BaseViewModel.cs" company="Helix Toolkit">
-//   Copyright (c) 2014 Helix Toolkit contributors
-// </copyright>
-// <summary>
-//   Base ViewModel for Demo Applications?
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
+﻿
 namespace DemoCore
 {
     using System;
@@ -42,7 +34,7 @@ namespace DemoCore
             }
             set
             {
-                SetValue(ref title, value, "Title");
+                SetValue(ref title, value);
             }
         }
 
@@ -54,7 +46,7 @@ namespace DemoCore
             }
             set
             {
-                SetValue(ref subTitle, value, "SubTitle");
+                SetValue(ref subTitle, value);
             }
         }
 
@@ -66,7 +58,7 @@ namespace DemoCore
             }
             set
             {
-                SetValue(ref renderTechnique, value, "RenderTechnique");
+                SetValue(ref renderTechnique, value);
             }
         }
 
@@ -172,11 +164,10 @@ namespace DemoCore
         }
 
         protected virtual void OnCameraModelChanged()
-        {
-            var eh = CameraModelChanged;
-            if (eh != null)
+        {           
+            if (this.CameraModelChanged != null)
             {
-                eh(this, new EventArgs());
+                this.CameraModelChanged(this, new EventArgs());
             }
         }
 

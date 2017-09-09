@@ -21,10 +21,7 @@
         </Grid.ColumnDefinitions>
         <hx:ModelContainer3DX x:Name="sharedContainer"  RenderTechnique="{Binding RenderTechnique}">
             <hx:MeshGeometryModel3D
-                x:Name="model"
-                Geometry="{Binding Model}"
-                Material="{Binding ModelMaterial}"
-                Transform="{Binding ModelTransform}" />
+                x:Name="model"/>
         </hx:ModelContainer3DX>
         <hx:Viewport3DX  x:Name="viewport1"
                         ShowViewCube="True" 
@@ -54,7 +51,7 @@
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
-            <hx:AmbientLight3D Color="{Binding AmbientLightColor}" />
+            <hx:AmbientLight3D x:Name="test" Color="{Binding AmbientLightColor}" />
             <hx:DirectionalLight3D
                 Direction="{Binding Light1Direction}"
                 IsRendering="{Binding IsRenderLight}"

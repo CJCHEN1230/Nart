@@ -24,18 +24,10 @@ namespace NartControl
 
     public class MultiAngleViewModel : BaseViewModel
     {
-
-
-
-        public static int test = 0;
         /// <summary>
-        /// 將load好的Model3DGroup加進去
+        /// 將load好的Model3DGroup加進去方便計算BoundingBox，因為setCamera會使用到，但在其他類別Load進模型檔所以設定成static
         /// </summary>
-        public static Model3DGroup AllModelGroup { get; private set; } = new Model3DGroup();
-        public HelixToolkit.Wpf.SharpDX.MeshGeometry3D Model { get; private set; }
-        public PhongMaterial ModelMaterial { get; set; }
-        public Transform3D ModelTransform { get; private set; } = new TranslateTransform3D(0, 0, 0);
-        public ModelContainer3DX ModelContainer { get; private set; } = new ModelContainer3DX();        
+        public static Model3DGroup AllModelGroup { get; private set; } = new Model3DGroup();             
         private Camera cam1;
         public Camera Camera1
         {
@@ -46,7 +38,7 @@ namespace NartControl
 
             private set
             {
-                SetValue(ref cam1, value, "Camera1");
+                SetValue(ref cam1, value);
                 CameraModel = value is PerspectiveCamera
                                        ? Perspective
                                        : value is OrthographicCamera ? Orthographic : null;
@@ -62,7 +54,7 @@ namespace NartControl
 
             private set
             {
-                SetValue(ref cam2, value, "Camera2");
+                SetValue(ref cam2, value);
                 CameraModel = value is PerspectiveCamera
                                        ? Perspective
                                        : value is OrthographicCamera ? Orthographic : null;
@@ -78,7 +70,7 @@ namespace NartControl
 
             private set
             {
-                SetValue(ref cam3, value, "Camera3");
+                SetValue(ref cam3, value);
                 CameraModel = value is PerspectiveCamera
                                        ? Perspective
                                        : value is OrthographicCamera ? Orthographic : null;
@@ -87,52 +79,40 @@ namespace NartControl
         private Vector3 light1Direction = new Vector3();
         public Vector3 Light1Direction
         {
-            set
-            {
-                if (light1Direction != value)
-                {
-                    light1Direction = value;
-                    OnPropertyChanged();
-                }
-            }
             get
             {
                 return light1Direction;
             }
+            set
+            {
+                SetValue(ref light1Direction, value);
+            }            
         }
         private Vector3 light2Direction = new Vector3();
         public Vector3 Light2Direction
         {
-            set
-            {
-                if (light2Direction != value)
-                {
-                    light2Direction = value;
-                    OnPropertyChanged();
-                }
-            }
             get
             {
                 return light2Direction;
+            }
+            set
+            {
+                SetValue(ref light2Direction, value);
             }
         }
         private Vector3 light3Direction = new Vector3();
         public Vector3 Light3Direction
         {
-            set
-            {
-                if (light3Direction != value)
-                {
-                    light3Direction = value;
-                    OnPropertyChanged();
-                }
-            }
             get
             {
                 return light3Direction;
             }
+            set
+            {
+                SetValue(ref light3Direction, value);
+            }
         }
-        private Vector3D cam1LookDir = new Vector3D(-10, -10, -10);
+        private Vector3D cam1LookDir = new Vector3D();
         public Vector3D Cam1LookDir
         {
             set
@@ -149,7 +129,7 @@ namespace NartControl
                 return cam1LookDir;
             }
         }
-        private Vector3D cam2LookDir = new Vector3D(-20, -20, -20);
+        private Vector3D cam2LookDir = new Vector3D();
         public Vector3D Cam2LookDir
         {
             set
@@ -166,7 +146,7 @@ namespace NartControl
                 return cam2LookDir;
             }
         }
-        private Vector3D cam3LookDir = new Vector3D(-30, -30, -30);
+        private Vector3D cam3LookDir = new Vector3D();
         public Vector3D Cam3LookDir
         {
             set
@@ -184,7 +164,19 @@ namespace NartControl
             }
         }
         public Color4 LightColor { get; set; }
-        public Color4 AmbientLightColor { get; set; }
+
+        private Color4 ambientLightColor;
+        public Color4 AmbientLightColor
+        {
+            get
+            {
+                return ambientLightColor;
+            }
+            set
+            {
+                SetValue(ref ambientLightColor, value);
+            }
+        }
         public bool IsRenderLight { get; set; }
         Rect3D  BoundingBox { get; set; }
         Point3D ModelCenter { get; set; }
@@ -194,63 +186,42 @@ namespace NartControl
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
             RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Phong];
             EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
-
-
-
-            //multiview.sharedContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"));
-          //  multiview.sharedContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl"));
-            //multiview.sharedContainer.Items.Add(LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"));
-
-
-
-
-
-            b1.AddSphere(new Vector3(Convert.ToSingle(ModelCenter.X + 100), Convert.ToSingle(ModelCenter.Y - 50), Convert.ToSingle(ModelCenter.Z - 60)), 5, 64, 64);
-            b1.AddSphere(new Vector3(0, 0, 0), 10, 64, 64);
-
-            this.Model = b1.ToMeshGeometry3D();
-            this.ModelTransform = new System.Windows.Media.Media3D.TranslateTransform3D(0, 0, 0);
-            this.ModelMaterial = PhongMaterials.Chrome;
-
-
-
-
+            
             SetLight();
             SetCamera();
 
-        }               
+        }
+        /// <summary>
+        /// 設定光源Ambientlight顏色、DirectionaLlight顏色        
+        /// </summary>
         internal void SetLight()
-        {
+        {         
             AmbientLightColor = new Color4(0.1f, 0.1f, 0.1f, 1.0f);
-
+            AmbientLightColor = Color.White;
 
             this.LightColor = (Color4)Color.White;
             this.IsRenderLight = true;
-
-
-            //this.Light3Attenuation = new Vector3(100,-50, 60);
-            // this.Light3Transform = new TranslateTransform3D(100, -50, 60);
-            //CreateAnimatedTransform1(new Vector3D(0, 0, 4), new Vector3D(0, 1, 0), 5);
-
         }
+        /// <summary>
+        /// 初始化相機參數，並綁定相機觀看方向
+        /// </summary>
         private void SetCamera()
         {
-
-
             this.Camera1 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
             this.Camera2 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
             this.Camera3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+
+
             SetupCameraBindings(this.Camera1, "Cam1LookDir");
             SetupCameraBindings(this.Camera2, "Cam2LookDir");
             SetupCameraBindings(this.Camera3, "Cam3LookDir");
+            
 
-
-            ResetCameraPosition();
-
-           
-
-
+            ResetCameraPosition();           
         }
+        /// <summary>
+        /// 重設相機觀向位置
+        /// </summary>
         internal void ResetCameraPosition()
         {
             BoundingBox = AllModelGroup.Bounds;
@@ -281,13 +252,22 @@ namespace NartControl
             orthoCam3.Width = BoundingBox.SizeX + 110;
 
         }
-        public void SetupCameraBindings(Camera camera, string camLookDir)
+        /// <summary>
+        /// 將自訂義的cam1LookDir綁到相機實際的觀看方向
+        /// </summary>
+        public void SetupCameraBindings(Camera camera, string propertyName)
         {
             if (camera is ProjectionCamera)
             {
-                SetBinding(camLookDir, camera, ProjectionCamera.LookDirectionProperty, this);
+                SetBinding(propertyName, camera, ProjectionCamera.LookDirectionProperty, this);
             }
         }
+        /// <summary>
+        /// path:目標屬性
+        /// dobj:來源屬性
+        /// viewModel
+        /// mode:綁定方向
+        /// </summary>
         private static void SetBinding(string path, DependencyObject dobj, DependencyProperty property, object viewModel, BindingMode mode = BindingMode.TwoWay)
         {
             var binding = new Binding(path);
