@@ -43,16 +43,16 @@ namespace Nart
 
             ModelData2 mdata1 = new ModelData2("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl");
             MainWindow.multiAngleView.AddModel(mdata1.meshGeometry);
-
-            ModelData2 mdata2 = new ModelData2("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl");
-            MainWindow.multiAngleView.AddModel(mdata2.meshGeometry);
-
-            ModelData2 mdata3 = new ModelData2("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl");
-            MainWindow.multiAngleView.AddModel(mdata3.meshGeometry);
-
             AllModelData2.Add(mdata1);
-            AllModelData2.Add(mdata2);
-            AllModelData2.Add(mdata3);
+
+
+            //ModelData2 mdata2 = new ModelData2("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl");
+            //MainWindow.multiAngleView.AddModel(mdata2.meshGeometry);
+            //AllModelData2.Add(mdata2);
+
+            //ModelData2 mdata3 = new ModelData2("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl");
+            //MainWindow.multiAngleView.AddModel(mdata3.meshGeometry);
+            //AllModelData2.Add(mdata3);
 
 
         }

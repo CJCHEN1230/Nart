@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nart", "Nart\Nart.csproj", "{EC9BD2EE-49CE-44B3-BAC2-A7EC3D2245AE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UseCVLibrary", "UseCVLibrary\UseCVLibrary.vcxproj", "{29F503A7-B9E8-4C31-A9EB-87CCE6F88863}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A146381-8723-4BB3-856C-C19C435B9827} = {2A146381-8723-4BB3-856C-C19C435B9827}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GetCornerPoint", "GetCornerPoint\GetCornerPoint.vcxproj", "{2A146381-8723-4BB3-856C-C19C435B9827}"
 EndProject

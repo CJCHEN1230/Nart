@@ -12,7 +12,7 @@ namespace Nart
     class CamParam
     {
         public Matrix3D extParam; //exteranl parameters
-        public Matrix3D invExtParam; //exteranl parameters
+        public Matrix3D invExtParam; //exteranl parameters inverse
         public Matrix3D RotationInvert;
         
 
@@ -89,10 +89,7 @@ namespace Nart
             Console.WriteLine(Cx);
             Console.WriteLine(Cy);
             Console.WriteLine(Sx);
-            Console.WriteLine("\n\n\n");
-            //Console.Read();
-
-
+            Console.WriteLine("\n\n\n");           
         }
 
         

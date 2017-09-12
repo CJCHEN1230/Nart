@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NartControl
+namespace NartControl.Control
 {
     /// <summary>
     /// ImageButton.xaml 的互動邏輯

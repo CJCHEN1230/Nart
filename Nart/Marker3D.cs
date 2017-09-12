@@ -20,21 +20,16 @@ namespace Nart
         /// 儲存該Marker的三個長度
         /// </summary>
         public double[] ThreeLength;
-
         /// <summary>
         /// 記錄在資料庫中對應的Marker索引
         /// </summary>
-        public int DatabaseIndex = -1;
-
-
-        
+        public int DatabaseIndex = -1;        
         public Marker3D()
         {
             ThreePoints = new Point3D[3];
 
             ThreeLength = new double[3];
         }
-
         /// <summary>
         /// 依照邊長排序點
         /// </summary>
@@ -128,7 +123,6 @@ namespace Nart
             ThreePoints[2] = tempC;
 
         }
-
         /// <summary>
         /// 輸入資料庫，並存下對應的索引值到DatabaseIndex
         /// </summary>

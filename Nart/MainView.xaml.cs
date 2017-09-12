@@ -104,7 +104,9 @@ namespace Nart
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
             MainViewModel.AllModelData2[0].meshGeometry.PushMatrix(new SharpDX.Matrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1));
-            
+
+            Matrix3D  TEST= new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
+            MainViewModel.AllModelData2[0].meshGeometry.Transform = new MatrixTransform3D(TEST);
         }
 
      

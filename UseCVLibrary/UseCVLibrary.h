@@ -16,9 +16,9 @@ namespace UseCVLibrary {
 	public ref class NartPoint
 	{
 		public: 
-			PointF^ ImagePoint;
+			PointF^ ImagePoint;	//儲存計算出來的影像座標系的點
 
-			Point4D CameraPoint;
+			Point4D CameraPoint; //儲存計算出來的相機座標系的點
 
 			double RectifyY;
 
@@ -31,9 +31,6 @@ namespace UseCVLibrary {
 	public ref class BWMarker : public IComparable<BWMarker^>
 	{
 	public:
-
-		//List<Point3D>^ CornerPoint/* = gcnew List<Point3D>(3)*/;
-
 		List<NartPoint^>^ CornerPoint;
 
 		double AvgRectifyY = 0;

@@ -122,8 +122,10 @@ namespace Nart
             CurrenIndex++;
             CurrenIndex = CurrenIndex % ModelTransformSet.Length;
             
-        }   
-       
+        }
+        /// <summary>
+        /// 每個ModelData當中都會儲存最終轉換的轉移矩陣ModelTransform
+        /// </summary>
         public void SetTransformMatrix()
         {
             _modleGroup.Transform = new MatrixTransform3D(ModelTransform);

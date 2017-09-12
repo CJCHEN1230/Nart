@@ -34,22 +34,6 @@ UseCVLibrary::BWMarker::BWMarker()
 	CornerPoint->Add(c);
 
 }
-//
-//UseCVLibrary::BWMarker::BWMarker(List<Point3D>^ markerPoint) 
-//{
-//	CornerPoint = markerPoint;
-//}
-//
-//UseCVLibrary::BWMarker::BWMarker(Point3D A, Point3D B, Point3D C)
-//{
-//	CornerPoint = gcnew List<Point3D>(3);
-//	CornerPoint->Add(A);
-//	CornerPoint->Add(B);
-//	CornerPoint->Add(C);
-//
-//	AvgRectifyY = (A.Z + B.Z + C.Z) / 3.0;
-//	AvgX = (A.X + B.X + C.X) / 3.0;
-//}
 
 void UseCVLibrary::BWMarker::sort()
 {

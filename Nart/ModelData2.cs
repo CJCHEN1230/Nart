@@ -2,6 +2,7 @@
 using HelixToolkit.Wpf.SharpDX;
 using HelixToolkit.Wpf.SharpDX.Core;
 using NartControl;
+using NartControl.Control;
 using SharpDX;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,46 @@ namespace Nart
 {
     public class ModelData2
     {
+        /// <summary>
+        /// 儲存模型資料，包括矩陣轉移、材質、網格
+        /// </summary>        
         public MeshGeometryModel3D meshGeometry { get; private set; }
+        /// <summary>
+        /// 模型名稱
+        /// </summary>
         public String Filename{get;set;}
-
+        /// <summary>
+        /// 此Model的最終轉換矩陣
+        /// </summary>
+        private SharpDX.Matrix ModelTransform = new SharpDX.Matrix();
+        /// <summary>
+        /// 用來累加的矩陣
+        /// </summary>
+        private SharpDX.Matrix TotalModelTransform = new SharpDX.Matrix();
+        /// <summary>
+        /// 防止抖動，用來存放所有矩陣，10是累積總數量
+        /// </summary>
+        private SharpDX.Matrix[] ModelTransformSet = new SharpDX.Matrix[10];
+        /// <summary>
+        /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
+        /// </summary>
+        private int CurrenIndex = 0;
+        public int DatabaseIndex{ get;set;}
+        public int Count {get;set;}                                 
         public ModelData2(String filename)
         {
             Filename = filename;
+
+            Count = 0;
+
+            DatabaseIndex = -1;
+
+            TotalModelTransform = new Matrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            ModelTransform = new Matrix(1, 0, 0, 0
+                                                                     , 0, 1, 0, 0
+                                                                     , 0, 0, 1, 0
+                                                                     , 0, 0, 0, 1); //單位矩陣
+
             meshGeometry = LoadSTL(Filename);
             
             //Console.WriteLine("0");
@@ -42,14 +77,13 @@ namespace Nart
             material.ReflectiveColor = Color.Black;
             float ambient = 0.0f;
             material.AmbientColor = new Color(ambient, ambient, ambient, 1.0f);
-            material.DiffuseColor = new Color(40, 181, 187, 255);
+            material.DiffuseColor = new Color(40, 181, 187, 100);
             material.EmissiveColor = Color.Black; //這是自己發光的顏色
-            material.SpecularColor = Color.LightGray;
             float Specular = 0.5f;
             material.SpecularColor = new Color(Specular, Specular, Specular, 255);
             material.SpecularShininess = 80;
 
-
+            
 
             //設定模型幾何形狀
             HelixToolkit.Wpf.SharpDX.MeshGeometry3D geometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();

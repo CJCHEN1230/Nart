@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
-        xmlns:Controls="clr-namespace:NartControl;assembly=NartControl"
+        xmlns:Controls="clr-namespace:NartControl.Control;assembly=NartControl"
         xmlns:local="clr-namespace:Nart"
         mc:Ignorable="d"        
         xmlns:helix="http://helix-toolkit.org/wpf"
@@ -47,108 +47,6 @@
                     <Rectangle Fill="#FF474747" HorizontalAlignment="Center" Grid.Column="1" Margin="0" Stroke="Black" Width="10" RadiusY="61" RadiusX="61" Grid.ColumnSpan="1"/>
                 </Grid>
             </TabItem>
-            <!--<TabItem Header="3D View" FontSize="15" HorizontalAlignment="Left" Width="74">
-                <TabItem.Background>
-                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                        <GradientStop Color="#FF7B7B7B" Offset="0"/>
-                        <GradientStop Color="#FF343333" Offset="1"/>
-                    </LinearGradientBrush>
-                </TabItem.Background>
-                <Grid Background="#FFE5E5E5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="26*"/>
-                        <ColumnDefinition Width="126*"/>
-                        <ColumnDefinition Width="16*"/>
-                        <ColumnDefinition Width="651*"/>
-                        <ColumnDefinition Width="630*"/>
-                    </Grid.ColumnDefinitions>
-
-
-                    <helix:HelixViewport3D x:Name="helixViewport" ShowViewCube="True" ZoomExtentsWhenLoaded="False" Margin="1,1,1,1" 
-                               CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"
-                               ShowFrameRate="True"
-                               Grid.ColumnSpan="4" Grid.RowSpan="2" Background="Black">
-                        <helix:HelixViewport3D.Camera>
-                            <OrthographicCamera x:Name="OrthographicCam1"/>
-                        </helix:HelixViewport3D.Camera>
-
-
-
-
-                        <helix:HelixViewport3D.RotateGesture>
-                            <MouseGesture MouseAction="LeftClick" />
-                        </helix:HelixViewport3D.RotateGesture>
-
-                        <helix:HelixViewport3D.PanGesture>
-                            <MouseGesture MouseAction="RightClick" />
-                        </helix:HelixViewport3D.PanGesture>
-
-                        <helix:HelixViewport3D.ZoomGesture>
-                            <MouseGesture MouseAction="MiddleClick" />
-                        </helix:HelixViewport3D.ZoomGesture>
-
-                        --><!--helix:SphereVisual3D Center="0,0,0" Radius="100" Fill="White"/--><!--
-
-                        <ModelVisual3D x:Name="mainModelVisual"/>
-
-
-
-                    </helix:HelixViewport3D>
-                    <helix:HelixViewport3D x:Name="helixViewport2" ShowViewCube="True" ZoomExtentsWhenLoaded="False" 
-                        Background="Black" Margin="1,1,1,1" 
-                        CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"
-                        ShowFrameRate="True" Grid.Column="4">
-                        <helix:HelixViewport3D.Camera>
-                            <OrthographicCamera x:Name="OrthographicCam2"/>
-                        </helix:HelixViewport3D.Camera>
-
-                        <helix:HelixViewport3D.RotateGesture>
-                            <MouseGesture MouseAction="LeftClick" />
-                        </helix:HelixViewport3D.RotateGesture>
-
-                        <helix:HelixViewport3D.PanGesture>
-                            <MouseGesture MouseAction="RightClick" />
-                        </helix:HelixViewport3D.PanGesture>
-
-                        <helix:HelixViewport3D.ZoomGesture>
-                            <MouseGesture MouseAction="MiddleClick" />
-                        </helix:HelixViewport3D.ZoomGesture>
-
-                        <ModelVisual3D x:Name="mainModelVisual1" Content="{Binding Model}"/>
-
-
-                    </helix:HelixViewport3D>
-                    <helix:HelixViewport3D x:Name="helixViewport3" ShowViewCube="True" ZoomExtentsWhenLoaded="False" 
-                        Background="Black" Margin="1" 
-                        CameraRotationMode="Trackball" Orthographic="True" CameraMode="Inspect"
-                        ShowFrameRate="True" Grid.Column="4" Grid.Row="1">
-                        <helix:HelixViewport3D.Camera>
-                            <OrthographicCamera x:Name="OrthographicCam3"/>
-                        </helix:HelixViewport3D.Camera>
-
-                        <helix:HelixViewport3D.RotateGesture>
-                            <MouseGesture MouseAction="LeftClick" />
-                        </helix:HelixViewport3D.RotateGesture>
-
-                        <helix:HelixViewport3D.PanGesture>
-                            <MouseGesture MouseAction="RightClick" />
-                        </helix:HelixViewport3D.PanGesture>
-
-                        <helix:HelixViewport3D.ZoomGesture>
-                            <MouseGesture MouseAction="MiddleClick" />
-                        </helix:HelixViewport3D.ZoomGesture>
-
-                        <ModelVisual3D x:Name="mainModelVisual2" Content="{Binding Model}"/>
-
-
-                    </helix:HelixViewport3D>
-
-                </Grid>
-            </TabItem>-->
             <TabItem Header="3D View" FontSize="15" HorizontalAlignment="Left" Width="74">
                 <TabItem.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -158,7 +56,6 @@
                 </TabItem.Background>
 
                 <Controls:MultiAngleView x:Name="multiAngleView" Margin="1" Width="Auto" Height="Auto"  />
-
 
             </TabItem>
         </TabControl>

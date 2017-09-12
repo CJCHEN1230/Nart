@@ -1,5 +1,5 @@
 ﻿
-namespace DemoCore
+namespace NartControl
 {
     using System;
     using System.Collections.Generic;

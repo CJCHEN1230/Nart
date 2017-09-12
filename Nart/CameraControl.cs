@@ -112,9 +112,8 @@ namespace Nart
 
             ((System.ComponentModel.ISupportInitialize)(icImagingControl[0])).EndInit();
             ((System.ComponentModel.ISupportInitialize)(icImagingControl[1])).EndInit();
-            //icImagingControl[0] = _window.Camtest1.icImagingControl;
+           
             LoadCamSetting();
-
 
             _displayThread = new Thread(DisplayLoop);
             _displayThread.IsBackground = true;
@@ -319,13 +318,5 @@ namespace Nart
                 Dispatcher.BeginInvoke(new ShowBufferDelegate(ShowImageBuffer));
             }
         }
-
-        //static DateTime time_start;
-        //static DateTime time_end;
-        //static DateTime time_start1;
-        //static DateTime time_end1;
-        //static DateTime time_start2;
-        //static DateTime time_end2;
-
     }
 }

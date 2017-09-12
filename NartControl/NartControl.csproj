@@ -50,6 +50,14 @@
       <HintPath>..\packages\HelixToolkit.Wpf.SharpDX.1.0.0-unstable1767\lib\net45\HelixToolkit.Wpf.SharpDX.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PropertyTools, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyTools.Wpf.2.0.1\lib\net45\PropertyTools.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PropertyTools.Wpf, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyTools.Wpf.2.0.1\lib\net45\PropertyTools.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.4.0.1\lib\net45\SharpDX.dll</HintPath>
       <Private>True</Private>
@@ -106,39 +114,47 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="CameraWrapper.xaml">
+    <Compile Include="Control\RegistrationView.xaml.cs">
+      <DependentUpon>RegistrationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\RegistrationViewModel.cs" />
+    <Page Include="Control\CameraWrapper.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ImgButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Compile Include="BaseViewModel.cs" />
-    <Compile Include="CameraWrapper.xaml.cs">
+    <Compile Include="Control\CameraWrapper.xaml.cs">
       <DependentUpon>CameraWrapper.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ImgButton.xaml.cs">
-      <DependentUpon>ImgButton.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="ImgButton2.xaml">
+    <Page Include="Control\ImgButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\ImgButton2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\MultiAngleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MultiAngleView.xaml">
+    <Page Include="Control\RegistrationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ImgButton2.xaml.cs">
+    <Compile Include="Control\ImgButton.xaml.cs">
+      <DependentUpon>ImgButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\ImgButton2.xaml.cs">
       <DependentUpon>ImgButton2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MultiAngleView.xaml.cs">
+    <Compile Include="Control\MultiAngleView.xaml.cs">
       <DependentUpon>MultiAngleView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MultiAngleViewModel.cs" />
+    <Compile Include="Control\MultiAngleViewModel.cs" />
+    <Compile Include="Converter\NartConverter.cs" />
     <Compile Include="ObservableObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

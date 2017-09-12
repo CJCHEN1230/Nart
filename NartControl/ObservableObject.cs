@@ -1,6 +1,6 @@
 ﻿
 
-namespace DemoCore
+namespace NartControl
 {
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
