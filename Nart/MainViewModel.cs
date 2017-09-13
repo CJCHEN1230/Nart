@@ -29,7 +29,7 @@ namespace Nart
         public static List<ModelInfo> AllModelData2 = new List<ModelInfo>(5);
         public static List<MeshGeometryModel3D> AllModelData3 = new List<MeshGeometryModel3D>(5);
 
-        public static ObservableCollection<ModelInfo> allModelInfo;
+        public static ObservableCollection<ModelInfo> ModelInfoCollection = new ObservableCollection<ModelInfo>();
 
         private MainView _window;
         public MainView MainWindow
@@ -45,54 +45,23 @@ namespace Nart
             CamCtrl = new CameraControl(873, 815, MainWindow);
             MainWindow.CamHost1.Child = CamCtrl.icImagingControl[0];
             MainWindow.CamHost2.Child = CamCtrl.icImagingControl[1];
-            CamCtrl.CameraStart();
-
-            //ModelInfo mdata1 = new ModelInfo();
-            //mdata1.LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl");
-            //MainWindow.multiAngleView.PutModellnView(mdata1.MeshGeometryData);
-
-
-            //ModelData2 mdata2 = new ModelData2("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl");
-            //MainWindow.multiAngleView.AddModel(mdata2.meshGeometry);
-            //AllModelData2.Add(mdata2);
-
-            //ModelData2 mdata3 = new ModelData2("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl");
-            //MainWindow.multiAngleView.AddModel(mdata3.meshGeometry);
-            //AllModelData2.Add(mdata3);
-
-
+            CamCtrl.CameraStart();            
         }
+
+
+        /// <summary>
+        /// 顯示設置好的各項模型資訊
+        /// </summary>
         public void LoadSettingModel()
         {
-            //for (int i=0; i< allModelInfo.Count; i++)
-            //{
-            //    allModelInfo[i].LoadSTL(allModelInfo[i].ModelFilePath);
-            //    MainWindow.multiAngleView.PutModellnView(allModelInfo[i].MeshGeometryData);
-            //}
+            //確保所有模型資訊都有set進去ModelInfo的資料
+            for (int i = 0; i < MainViewModel.ModelInfoCollection.Count; i++) 
+            {
+                MainViewModel.ModelInfoCollection[i].LoadSTL();
+            }
 
-
-
-            ModelInfo mdata1 = new ModelInfo();
-            mdata1.LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl");
-            MainWindow.multiAngleView.PutModellnView(mdata1.MeshGeometryData);
-
-
-
-            //ModelInfo mdata1 = new ModelInfo("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl");
-
-
-            //MainWindow.multiAngleView.AddModel(mdata1.meshGeometry);
-            //AllModelData2.Add(mdata1);
-
-            //ModelData2 mdata2 = new ModelData2("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl");
-            //MainWindow.multiAngleView.AddModel(mdata2.meshGeometry);
-            //AllModelData2.Add(mdata2);
-
-            //ModelData2 mdata3 = new ModelData2("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl");
-            //MainWindow.multiAngleView.AddModel(mdata3.meshGeometry);
-            //AllModelData2.Add(mdata3);
-
-
+            MainWindow.multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
+            
         }
 
 

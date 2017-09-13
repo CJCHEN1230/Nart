@@ -19,7 +19,7 @@
 
 
         <hx:ModelContainer3DX x:Name="sharedContainer"  RenderTechnique="{Binding RenderTechnique}">
-            <hx:ItemsModel3D IsRendering="{Binding Visibility}" ItemsSource="{Binding ModelInfoCollection}">
+            <hx:ItemsModel3D ItemsSource="{Binding ModelInfoCollection}">
                 <hx:ItemsModel3D.ItemTemplate>
                     <DataTemplate>
                         <hx:MeshGeometryModel3D
@@ -67,7 +67,7 @@
                 IsRendering="{Binding IsRenderLight}"
                 Color="{Binding LightColor}" />
         </hx:Viewport3DX>
-        <!--<hx:Viewport3DX  x:Name="viewport2"
+        <hx:Viewport3DX  x:Name="viewport2"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" 
                         Background="Black" Margin="1,1,1,1" 
@@ -97,7 +97,7 @@
                 Direction="{Binding Light2Direction}"
                 IsRendering="{Binding IsRenderLight}"
                 Color="{Binding LightColor}" />
-        </hx:Viewport3DX>-->
+        </hx:Viewport3DX>
         <hx:Viewport3DX  x:Name="viewport3"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" 
@@ -130,7 +130,6 @@
                 IsRendering="{Binding IsRenderLight}"
                 Color="{Binding LightColor}" />
         </hx:Viewport3DX>
-        <Button x:Name="button" Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="152,75,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
 
 
 

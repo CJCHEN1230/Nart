@@ -32,11 +32,16 @@ namespace Nart
             this.DataContext = _modelSettingViewModel;
         }
 
+        /// <summary>
+        /// 增加清單中的Model項目
+        /// </summary>
         private void AddItemClick(object sender, RoutedEventArgs e)
         {
             _modelSettingViewModel.AddItem();
         }
-
+        /// <summary>
+        /// 減少清單中的Model項目
+        /// </summary>
         private void ReomoveItemClick(object sender, RoutedEventArgs e)
         {
             _modelSettingViewModel.RemoveItem();

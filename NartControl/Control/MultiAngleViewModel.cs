@@ -166,7 +166,6 @@ namespace NartControl.Control
             }
         }
         public Color4 LightColor { get; set; }
-
         private Color4 ambientLightColor;
         public Color4 AmbientLightColor
         {
@@ -182,8 +181,6 @@ namespace NartControl.Control
         public bool IsRenderLight { get; set; }
         Rect3D BoundingBox { get; set; }
         Point3D ModelCenter { get; set; }
-
-
         private ObservableCollection<Nart.ModelInfo> modelInfoCollection;
         public ObservableCollection<Nart.ModelInfo> ModelInfoCollection
         {
@@ -194,24 +191,10 @@ namespace NartControl.Control
             set
             {
                 SetValue(ref modelInfoCollection, value);
+
+                ResetCameraPosition();
             }
         }
-
-
-
-        public Nart.ModelInfo mdata1 = new Nart.ModelInfo
-        {
-            ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
-                                                                                ,
-            BSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
-                                                                                ,
-            ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
-                                                                                ,
-            BSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
-        };
-
-
-
         public HelixToolkit.Wpf.SharpDX.MeshBuilder b1 { get; set; } = new HelixToolkit.Wpf.SharpDX.MeshBuilder(true, true, true);
         public MultiAngleViewModel(MultiAngleView multiview)
         {
@@ -219,27 +202,9 @@ namespace NartControl.Control
             RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Phong];
             EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
 
-            ModelInfoCollection = new ObservableCollection<Nart.ModelInfo>();
-
-
-            mdata1.LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl");
-
-            ModelInfoCollection.Add(mdata1);
 
             SetLight();
             SetCamera();
-
-        }
-        public void addmodel()
-        {
-            if (ModelInfoCollection.Count == 0)
-            {
-                ModelInfoCollection.Add(mdata1);
-            }
-            else
-            {
-                ModelInfoCollection.RemoveAt(ModelInfoCollection.Count - 1);
-            }
         }
         /// <summary>
         /// 設定光源Ambientlight顏色、DirectionaLlight顏色        
@@ -274,9 +239,13 @@ namespace NartControl.Control
         /// </summary>
         internal void ResetCameraPosition()
         {
+
+            //ModelGroup裡面有模型之後才調整相機位置
+            if (AllModelGroup.Children.Count == 0)
+                return;
+
             BoundingBox = AllModelGroup.Bounds;
             ModelCenter = new Point3D(BoundingBox.X + BoundingBox.SizeX / 2.0, BoundingBox.Y + BoundingBox.SizeY / 2.0, BoundingBox.Z + BoundingBox.SizeZ / 2.0);
-
             OrthographicCamera orthoCam1 = Camera1 as OrthographicCamera;
             orthoCam1.Position = new Point3D(ModelCenter.X, ModelCenter.Y - (BoundingBox.SizeY), ModelCenter.Z);
             orthoCam1.UpDirection = new Vector3D(0, 0, 1);

@@ -33,7 +33,6 @@ namespace Nart
     {
 
         public static List<ModelData> AllModelData = new List<ModelData>(5);
-
         private string _pointNumber;
         public string PointNumber
         {
@@ -47,6 +46,8 @@ namespace Nart
                 }
             }
         }
+
+
         private MainViewModel _mainViewModel = null;
         public MainView()
         {
@@ -88,22 +89,11 @@ namespace Nart
         private void Rotate_Click(object sender, RoutedEventArgs e)
         {
 
+            ModelSettingView modelSettingdlg = new ModelSettingView();
 
+            modelSettingdlg.Owner = this;
 
-            ModelInfo mdata1 = new ModelInfo();
-            mdata1.LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl");
-            this.multiAngleView.PutModellnView(mdata1.MeshGeometryData);
-
-
-
-
-
-
-
-
-            ModelSettingView dlg = new ModelSettingView();
-            dlg.Owner = this;
-            bool? dialogResult = dlg.ShowDialog();
+            bool? dialogResult = modelSettingdlg.ShowDialog();
 
             if (dialogResult != null && (bool)dialogResult == true)
             {

@@ -44,12 +44,9 @@ namespace Nart
             {
                 SetValue(ref modelMaterial, value);
             }
-        }
-        /// <summary>
-        /// 模型轉換設定
-        /// </summary>
-        private System.Windows.Media.Media3D.Transform3DGroup modelTransform;
-        public System.Windows.Media.Media3D.Transform3DGroup ModelTransform
+        }       
+        private MatrixTransform3D modelTransform;
+        public MatrixTransform3D ModelTransform
         {
             get
             {
@@ -60,27 +57,6 @@ namespace Nart
                 SetValue(ref modelTransform, value);
             }
         }
-        private MatrixTransform3D modelTransform2;
-        public MatrixTransform3D ModelTransform2
-        {
-            get
-            {
-                return modelTransform2;
-            }
-            set
-            {
-                SetValue(ref modelTransform2, value);
-            }
-        }
-
-
-
-
-
-
-
-
-
         /// <summary>
         /// 模型名稱
         /// </summary>
@@ -164,10 +140,9 @@ namespace Nart
         private int CurrenIndex = 0;
         public int DatabaseIndex { get; set; }
         public int Count { get; set; }
-        public ModelInfo(/*String _modelFilePath*/)
+        public ModelInfo()
         {
-            //ModelFilePath = _modelFilePath;
-
+   
             Count = 0;
 
             DatabaseIndex = -1;
@@ -177,16 +152,23 @@ namespace Nart
                                                                      , 0, 1, 0, 0
                                                                      , 0, 0, 1, 0
                                                                      , 0, 0, 0, 1); //單位矩陣
-
-            //meshGeometry = LoadSTL(ModelFilePath);
-
-            //Console.WriteLine("0");
+       
         }
-        public void LoadSTL(string path)
+        /// <summary>
+        /// 設定好模型之後Load進去模型資料所用
+        /// </summary>
+        public void LoadSTL()
         {
             //利用helixtoolkit.wpf裡面提供的StlReader讀檔案，後續要轉成wpf.sharpdx可用的格式
             StLReader reader = new HelixToolkit.Wpf.StLReader();
-            Model3DGroup model3dgroup = reader.Read(path);
+
+            //阻擋檔案不存在的情況
+            if (!System.IO.File.Exists(ModelFilePath))
+            {
+                return;
+            }
+           
+            Model3DGroup model3dgroup = reader.Read(ModelFilePath);
 
             MultiAngleViewModel.AllModelGroup.Children.Add(model3dgroup);
 
@@ -195,20 +177,19 @@ namespace Nart
             System.Windows.Media.Media3D.MeshGeometry3D mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
 
             //設定模型材質
-            PhongMaterial material = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
+            ModelMaterial = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
 
-            material.ReflectiveColor = Color.Black;
+            ModelMaterial.ReflectiveColor = Color.Black;
             float ambient = 0.0f;
-            material.AmbientColor = new Color(ambient, ambient, ambient, 1.0f);
-            material.DiffuseColor = new Color(40, 181, 187, 255);
-            //material.DiffuseColor = ModelDiffuseColor.ToColor4();
+            ModelMaterial.AmbientColor = new Color(ambient, ambient, ambient, 1.0f);
+            ModelMaterial.DiffuseColor = new Color(40, 181, 187, 255);
+            ModelMaterial.DiffuseColor = ModelDiffuseColor.ToColor4();
 
-            material.EmissiveColor = Color.Black; //這是自己發光的顏色
+            ModelMaterial.EmissiveColor = Color.Black; //這是自己發光的顏色
             float Specular = 0.5f;
-            material.SpecularColor = new Color(Specular, Specular, Specular, 255);
-            material.SpecularShininess = 80;
+            ModelMaterial.SpecularColor = new Color(Specular, Specular, Specular, 255);
+            ModelMaterial.SpecularShininess = 80;
 
-            ModelMaterial = material;
 
             //設定模型幾何形狀
             ModelGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
@@ -241,7 +222,7 @@ namespace Nart
 
             MeshGeometryData = new MeshGeometryModel3D();
             //將建立好的指派進helix.sharp格式的MeshGeometryModel3D
-            MeshGeometryData.Material = ModelMaterial;
+            MeshGeometryData.Material = this.ModelMaterial;
             MeshGeometryData.Geometry = ModelGeometry;
             MeshGeometryData.Transform = new TranslateTransform3D(0, 0, 0);
 

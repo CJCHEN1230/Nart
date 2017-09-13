@@ -10,7 +10,7 @@ using System.Windows.Media;
 namespace Nart
 {
     class ModelSettingViewModel : ObservableObject
-    {
+    {     
         /// <summary>
         /// 每個列中的Model資料集合
         /// </summary>
@@ -24,8 +24,6 @@ namespace Nart
             set
             {
                 SetValue(ref modelInfoCollection, value);
-
-                MainViewModel.allModelInfo = modelInfoCollection;
             }
         }
         /// <summary>
@@ -42,11 +40,14 @@ namespace Nart
         public ModelSettingViewModel(ModelSettingView _modelSettingView)
         {
             ModelSetView = _modelSettingView;
-            if (MainViewModel.allModelInfo == null)
-            {
-                ObservableCollection<ModelInfo> allModelInfo = new ObservableCollection<ModelInfo>();
 
-                allModelInfo.Add(new ModelInfo
+            if (MainViewModel.ModelInfoCollection == null|| MainViewModel.ModelInfoCollection.Count==0)
+            {
+                MainViewModel.ModelInfoCollection = new ObservableCollection<ModelInfo>();
+
+                ModelInfoCollection = MainViewModel.ModelInfoCollection;
+
+                ModelInfoCollection.Add(new ModelInfo
                 {
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
                                                                                 ,
@@ -56,7 +57,7 @@ namespace Nart
                                                                                 ,
                     BSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
                 });
-                allModelInfo.Add(new ModelInfo
+                ModelInfoCollection.Add(new ModelInfo
                 {
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl"
                                                                                 ,
@@ -66,7 +67,7 @@ namespace Nart
                                                                                 ,
                     BSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
                 });
-                allModelInfo.Add(new ModelInfo
+                ModelInfoCollection.Add(new ModelInfo
                 {
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"
                                                                                 ,
@@ -75,7 +76,10 @@ namespace Nart
                     ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
                 });
 
-                ModelInfoCollection = allModelInfo;
+            }
+            else
+            {
+                ModelInfoCollection = MainViewModel.ModelInfoCollection;
             }
 
         }
@@ -98,6 +102,6 @@ namespace Nart
                 ModelSetView.ModelListView.SelectedIndex = ModelInfoCollection.Count - 1;
             }
         }
-
+        
     }
 }
