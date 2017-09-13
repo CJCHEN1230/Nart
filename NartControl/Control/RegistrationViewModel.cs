@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NartControl.Control
 {/// <summary>
-/// //////////////hellotest
+/// //////////////hellotestasdf
 /// 
 /// </summary>
     class RegistrationViewModel : BaseViewModel
