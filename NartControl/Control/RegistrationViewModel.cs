@@ -6,7 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NartControl.Control
-{
+{/// <summary>
+/// //////////////hellotest
+/// 
+/// </summary>
     class RegistrationViewModel : BaseViewModel
     {
         //private ObservableCollection<ModelData> userObservable;
