@@ -2,6 +2,7 @@
 using HelixToolkit.Wpf.SharpDX;
 using HelixToolkit.Wpf.SharpDX.Core;
 using NartControl;
+using NartControl.Control;
 using SharpDX;
 using System;
 using System.Collections.Generic;

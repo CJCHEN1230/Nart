@@ -58,14 +58,6 @@
       <HintPath>..\packages\HelixToolkit.Wpf.SharpDX.1.0.0-unstable1767\lib\net45\HelixToolkit.Wpf.SharpDX.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PropertyTools, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
-      <HintPath>..\packages\PropertyTools.Wpf.2.0.1\lib\net45\PropertyTools.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="PropertyTools.Wpf, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
-      <HintPath>..\packages\PropertyTools.Wpf.2.0.1\lib\net45\PropertyTools.Wpf.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.4.0.1\lib\net45\SharpDX.dll</HintPath>
       <Private>True</Private>
@@ -125,26 +117,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="NartControl\CameraWrapper.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NartControl\ImgButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NartControl\ImgButton2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NartControl\MultiAngleView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NartControl\RegistrationView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -153,28 +125,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BaseViewModel.cs" />
     <Compile Include="CameraControl.cs" />
     <Compile Include="CalcCoord.cs" />
     <Compile Include="CamParam.cs" />
-    <Compile Include="NartControl\CameraWrapper.xaml.cs">
-      <DependentUpon>CameraWrapper.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="NartControl\ImgButton.xaml.cs">
-      <DependentUpon>ImgButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="NartControl\ImgButton2.xaml.cs">
-      <DependentUpon>ImgButton2.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="NartControl\MultiAngleView.xaml.cs">
-      <DependentUpon>MultiAngleView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="NartControl\MultiAngleViewModel.cs" />
-    <Compile Include="NartControl\RegistrationView.xaml.cs">
-      <DependentUpon>RegistrationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="NartControl\RegistrationViewModel.cs" />
-    <Compile Include="Converter\NartConverter.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
@@ -187,7 +140,6 @@
     <Compile Include="ModelData.cs" />
     <Compile Include="ModelData2.cs" />
     <Compile Include="NartServer.cs" />
-    <Compile Include="ObservableObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -216,6 +168,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NartControl\NartControl.csproj">
+      <Project>{485d41ef-60c0-412c-b28f-4f64c27c07d0}</Project>
+      <Name>NartControl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UseCVLibrary\UseCVLibrary.vcxproj">
       <Project>{29f503a7-b9e8-4c31-a9eb-87cce6f88863}</Project>
       <Name>UseCVLibrary</Name>
