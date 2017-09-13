@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,32 +13,38 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace NartControl.Control
+namespace Nart
 {
     /// <summary>
     /// RegistrationView.xaml 的互動邏輯
     /// </summary>
-    public partial class RegistrationView : Window
+    public partial class ModelSettingView : Window
     {
+        /// <summary>
+        /// ModelSettingView的ViewModel
+        /// </summary>
+        private ModelSettingViewModel _modelSettingViewModel;
 
-        RegistrationViewModel _registrationViewModel;
-
-        public RegistrationView()
+        public ModelSettingView()
         {
             InitializeComponent();
-            //_registrationViewModel = new RegistrationViewModel(this);
-            //this.DataContext = _registrationViewModel;
-
+            _modelSettingViewModel = new ModelSettingViewModel(this);
+            this.DataContext = _modelSettingViewModel;
         }
 
         private void AddItemClick(object sender, RoutedEventArgs e)
         {
-
+            _modelSettingViewModel.AddItem();
         }
 
         private void ReomoveItemClick(object sender, RoutedEventArgs e)
         {
+            _modelSettingViewModel.RemoveItem();
+        }
 
+        private void OKClick(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
         }
     }
 }

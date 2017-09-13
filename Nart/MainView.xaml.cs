@@ -29,9 +29,9 @@ namespace Nart
     /// <summary>
     /// MainView主視窗介面
     /// </summary>
-    public partial class MainView : Window , INotifyPropertyChanged
+    public partial class MainView : Window, INotifyPropertyChanged
     {
-        
+
         public static List<ModelData> AllModelData = new List<ModelData>(5);
 
         private string _pointNumber;
@@ -49,7 +49,7 @@ namespace Nart
         }
         private MainViewModel _mainViewModel = null;
         public MainView()
-        {            
+        {
             InitializeComponent();
 
             _mainViewModel = new MainViewModel(this);
@@ -59,9 +59,9 @@ namespace Nart
             AllocConsole();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
-        {        
-           // CamCtrl.CameraStart();            
-        }        
+        {
+            // CamCtrl.CameraStart();            
+        }
         private void OpenCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
@@ -84,45 +84,55 @@ namespace Nart
                 }
 
             }
-        }       
+        }
         private void Rotate_Click(object sender, RoutedEventArgs e)
         {
 
 
-            //var axis = new Vector3D(0, 0, 1);
-            //var angle = 10;
 
-            //var matrix = MV2.Transform.Value;
-            //matrix.Rotate(new Quaternion(axis, angle));
+            ModelInfo mdata1 = new ModelInfo();
+            mdata1.LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl");
+            this.multiAngleView.PutModellnView(mdata1.MeshGeometryData);
 
-            //MV2.Transform = new MatrixTransform3D(matrix);
 
-            Matrix3D test = new Matrix3D();
-            test.SetIdentity();
-            //AllModelData[0].ModelVisual.Transform = new MatrixTransform3D(test);
+
+
+
+
+
+
+            ModelSettingView dlg = new ModelSettingView();
+            dlg.Owner = this;
+            bool? dialogResult = dlg.ShowDialog();
+
+            if (dialogResult != null && (bool)dialogResult == true)
+            {
+                _mainViewModel.LoadSettingModel();
+            }
+
         }
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
-            MainViewModel.AllModelData2[0].meshGeometry.PushMatrix(new SharpDX.Matrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1));
+            MainViewModel.AllModelData2[0].MeshGeometryData.PushMatrix(new SharpDX.Matrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1));
 
-            Matrix3D  TEST= new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
-            MainViewModel.AllModelData2[0].meshGeometry.Transform = new MatrixTransform3D(TEST);
+            Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
+            MainViewModel.AllModelData2[0].MeshGeometryData.Transform = new MatrixTransform3D(TEST);
         }
 
-     
+
 
         private void RegButton_Click(object sender, RoutedEventArgs e)
         {
-            CameraControl.RegToggle = !CameraControl.RegToggle;             
+            CameraControl.RegToggle = !CameraControl.RegToggle;
         }
         private void TrackingButton_Click(object sender, RoutedEventArgs e)
         {
             CameraControl.TrackToggle = !CameraControl.TrackToggle;
         }
         private void load_Closed(object sender, EventArgs e)
-        {            
+        {
             //CamCtrl.CameraClose();            
-            System.Windows.Application.Current.Shutdown();            
+            System.Windows.Application.Current.Shutdown();
         }
         public event PropertyChangedEventHandler PropertyChanged;//對PropertyChangedEventHandler的封裝
         public void NotifyPropertyChanged(string propName)

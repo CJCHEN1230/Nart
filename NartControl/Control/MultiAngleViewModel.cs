@@ -14,6 +14,7 @@ using HelixToolkit.Wpf.SharpDX.Core;
 
 namespace NartControl.Control
 {
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
@@ -28,7 +29,7 @@ namespace NartControl.Control
         /// <summary>
         /// 將load好的Model3DGroup加進去方便計算BoundingBox，因為setCamera會使用到，但在其他類別Load進模型檔所以設定成static
         /// </summary>
-        public static Model3DGroup AllModelGroup { get; private set; } = new Model3DGroup();             
+        public static Model3DGroup AllModelGroup { get; private set; } = new Model3DGroup();
         private Camera cam1;
         public Camera Camera1
         {
@@ -87,7 +88,7 @@ namespace NartControl.Control
             set
             {
                 SetValue(ref light1Direction, value);
-            }            
+            }
         }
         private Vector3 light2Direction = new Vector3();
         public Vector3 Light2Direction
@@ -179,24 +180,72 @@ namespace NartControl.Control
             }
         }
         public bool IsRenderLight { get; set; }
-        Rect3D  BoundingBox { get; set; }
+        Rect3D BoundingBox { get; set; }
         Point3D ModelCenter { get; set; }
+
+
+        private ObservableCollection<Nart.ModelInfo> modelInfoCollection;
+        public ObservableCollection<Nart.ModelInfo> ModelInfoCollection
+        {
+            get
+            {
+                return modelInfoCollection;
+            }
+            set
+            {
+                SetValue(ref modelInfoCollection, value);
+            }
+        }
+
+
+
+        public Nart.ModelInfo mdata1 = new Nart.ModelInfo
+        {
+            ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
+                                                                                ,
+            BSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
+                                                                                ,
+            ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
+                                                                                ,
+            BSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
+        };
+
+
+
         public HelixToolkit.Wpf.SharpDX.MeshBuilder b1 { get; set; } = new HelixToolkit.Wpf.SharpDX.MeshBuilder(true, true, true);
         public MultiAngleViewModel(MultiAngleView multiview)
         {
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
             RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Phong];
             EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
-            
+
+            ModelInfoCollection = new ObservableCollection<Nart.ModelInfo>();
+
+
+            mdata1.LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl");
+
+            ModelInfoCollection.Add(mdata1);
+
             SetLight();
             SetCamera();
 
+        }
+        public void addmodel()
+        {
+            if (ModelInfoCollection.Count == 0)
+            {
+                ModelInfoCollection.Add(mdata1);
+            }
+            else
+            {
+                ModelInfoCollection.RemoveAt(ModelInfoCollection.Count - 1);
+            }
         }
         /// <summary>
         /// 設定光源Ambientlight顏色、DirectionaLlight顏色        
         /// </summary>
         internal void SetLight()
-        {         
+        {
             AmbientLightColor = new Color4(0.1f, 0.1f, 0.1f, 1.0f);
             AmbientLightColor = Color.White;
 
@@ -216,9 +265,9 @@ namespace NartControl.Control
             SetupCameraBindings(this.Camera1, "Cam1LookDir");
             SetupCameraBindings(this.Camera2, "Cam2LookDir");
             SetupCameraBindings(this.Camera3, "Cam3LookDir");
-            
 
-            ResetCameraPosition();           
+
+            ResetCameraPosition();
         }
         /// <summary>
         /// 重設相機觀向位置

@@ -58,6 +58,14 @@
       <HintPath>..\packages\HelixToolkit.Wpf.SharpDX.1.0.0-unstable1767\lib\net45\HelixToolkit.Wpf.SharpDX.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PropertyTools, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyTools.Wpf.2.0.1\lib\net45\PropertyTools.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PropertyTools.Wpf, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyTools.Wpf.2.0.1\lib\net45\PropertyTools.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.4.0.1\lib\net45\SharpDX.dll</HintPath>
       <Private>True</Private>
@@ -133,12 +141,19 @@
       <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ModelSettingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Marker3D.cs" />
     <Compile Include="ModelData.cs" />
-    <Compile Include="ModelData2.cs" />
+    <Compile Include="ModelSettingView.xaml.cs">
+      <DependentUpon>ModelSettingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ModelSettingViewModel.cs" />
     <Compile Include="NartServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

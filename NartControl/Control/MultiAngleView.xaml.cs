@@ -25,21 +25,51 @@ namespace NartControl.Control
     /// </summary>
     public partial class MultiAngleView : UserControl
     {
-        MultiAngleViewModel _multiAngleViewModel ;
-       
+        MultiAngleViewModel _multiAngleViewModel;
+
         public MultiAngleView()
         {
             InitializeComponent();
             _multiAngleViewModel = new MultiAngleViewModel(this);
-            this.DataContext = _multiAngleViewModel; //將_multiAngleViewModel的資料環境傳給此DataContext           
+            this.DataContext = _multiAngleViewModel; //將_multiAngleViewModel的資料環境傳給此DataContext      
+
+
+            //test2.LoadSTL("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl");
+            //_multiAngleViewModel.ModelInfoCollection.Add(test2);
         }
         /// <summary>
         /// 增加模型進去Container當中，並重設相機位置
         /// </summary>
-        public void AddModel(MeshGeometryModel3D Model)
+        public void PutModellnView(MeshGeometryModel3D Model)
         {
             sharedContainer.Items.Add(Model);
             _multiAngleViewModel.ResetCameraPosition();
-        }       
+        }
+
+
+        public Nart.ModelInfo test2 = new Nart.ModelInfo
+        {
+            ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
+                                                                                ,
+            BSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
+                                                                                ,
+            ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
+                                                                                ,
+            BSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
+        };
+
+        public System.Windows.Media.Media3D.Transform3DGroup MA = new System.Windows.Media.Media3D.Transform3DGroup();
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            ////////////////模型累加移動
+            Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
+            MatrixTransform3D tr = new MatrixTransform3D(TEST);
+
+
+            MA.Children.Add(tr);
+
+            _multiAngleViewModel.mdata1.ModelTransform = MA;
+
+        }
     }
 }
