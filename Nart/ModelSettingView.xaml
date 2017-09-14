@@ -86,7 +86,7 @@
                               HorizontalContentAlignment="Left"
                               VerticalContentAlignment="Center"
                               FontSize="20" Grid.ColumnSpan="1" Grid.Row="2"/>
-                    <Label x:Name="label_Copy4" Content="Microscribe Reg File" Margin="1,1,1,1" Padding="0,0,0,0"
+                    <Label x:Name="label_Copy4" Content="Registration File" Margin="1,1,1,1" Padding="0,0,0,0"
                              VerticalAlignment="Stretch"
                              HorizontalContentAlignment="Left"
                              VerticalContentAlignment="Center"
@@ -94,7 +94,7 @@
                     <TextBox  x:Name="NameTB" FontSize="20"  BorderThickness="1" Background="#FFFFFF" VerticalContentAlignment="Center" Margin="3,3,3,3" TextWrapping="Wrap"  Grid.Column="1"/>
                     <TextBox  x:Name="IDTB" FontSize="20"   BorderThickness="1" Background="#FFFFFF" VerticalContentAlignment="Center" Margin="3,3,3,3" TextWrapping="Wrap"  Grid.Column="1" Grid.Row="1"/>
                     <TextBox  x:Name="HospitalTB" FontSize="20"   BorderThickness="1" Background="#FFFFFF" VerticalContentAlignment="Center" Margin="3,3,3,3" TextWrapping="Wrap" Grid.Column="1"  Grid.Row="2" Grid.ColumnSpan="1" Grid.RowSpan="1"/>
-                    <pt:FilePicker Filter="Text File (.txt)|*.txt" Background="#FF474747" Grid.Column="1" Grid.Row="3" Margin="3,3,3,3" BrowseButtonContent="Load MS Registration" FontSize="20"/>
+                    <pt:FilePicker Filter="Text File (.txt)|*.txt" Background="#FF474747" Grid.Column="1" Grid.Row="3" Margin="3,3,3,3" BrowseButtonContent="Load Registration File" FontSize="20"/>
                 </Grid>
             </StackPanel>
         </Border>

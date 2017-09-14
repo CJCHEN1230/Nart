@@ -226,7 +226,6 @@ namespace Nart
             MeshGeometryData.Geometry = ModelGeometry;
             MeshGeometryData.Transform = new TranslateTransform3D(0, 0, 0);
 
-
         }
     }
 }
