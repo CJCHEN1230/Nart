@@ -31,7 +31,6 @@ namespace Nart
             _modelSettingViewModel = new ModelSettingViewModel(this);
             this.DataContext = _modelSettingViewModel;
         }
-
         /// <summary>
         /// 增加清單中的Model項目
         /// </summary>
@@ -46,7 +45,9 @@ namespace Nart
         {
             _modelSettingViewModel.RemoveItem();
         }
-
+        /// <summary>
+        /// 設定頁面按下ok
+        /// </summary>
         private void OKClick(object sender, RoutedEventArgs e)
         {
             DialogResult = true;

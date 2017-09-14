@@ -14,7 +14,7 @@ namespace Nart
     /// <summary>
     /// 此類別用來記錄各種MainView的屬性
     /// </summary>
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : ObservableObject
     {
         public CameraControl CamCtrl
         {
@@ -57,11 +57,13 @@ namespace Nart
             //確保所有模型資訊都有set進去ModelInfo的資料
             for (int i = 0; i < MainViewModel.ModelInfoCollection.Count; i++) 
             {
-                MainViewModel.ModelInfoCollection[i].LoadSTL();
+                //檢查模型有無load
+                if (!MainViewModel.ModelInfoCollection[i].IsLoaded)
+                {
+                    MainViewModel.ModelInfoCollection[i].LoadSTL();
+                }                
             }
-
-            MainWindow.multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
-            
+            MainWindow.multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;            
         }
 
 

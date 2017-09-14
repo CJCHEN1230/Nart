@@ -13,8 +13,10 @@ using System.Windows.Media.Media3D;
 
 namespace Nart
 {
+    using Color = System.Windows.Media.Color;
     public class ModelInfo : ObservableObject
     {
+
         /// <summary>
         /// 模型幾何形狀
         /// </summary>
@@ -70,6 +72,7 @@ namespace Nart
             set
             {
                 SetValue(ref modelFilePath, value);
+                IsLoaded = false;
             }
         }
         /// <summary>
@@ -90,8 +93,8 @@ namespace Nart
         /// <summary>
         /// Model 顏色
         /// </summary>
-        private System.Windows.Media.Color modelDiffuseColor;
-        public System.Windows.Media.Color ModelDiffuseColor
+        private Color modelDiffuseColor;
+        public Color ModelDiffuseColor
         {
             get
             {
@@ -100,14 +103,14 @@ namespace Nart
             set
             {
                 SetValue(ref modelDiffuseColor, value);
+                SetModelMaterial();
             }
-
         }
         /// <summary>
         /// BSP 顏色
         /// </summary>
-        private System.Windows.Media.Color bspDiffuseColor;
-        public System.Windows.Media.Color BSPDiffuseColor
+        private Color bspDiffuseColor;
+        public Color BSPDiffuseColor
         {
             get
             {
@@ -135,9 +138,26 @@ namespace Nart
         /// </summary>
         private SharpDX.Matrix[] ModelTransformSet = new SharpDX.Matrix[10];
         /// <summary>
+        /// 設定模型材質
+        /// </summary>
+        private void SetModelMaterial()
+        {
+            ModelMaterial = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
+            ModelMaterial.ReflectiveColor =SharpDX.Color.Black;
+            float ambient = 0.0f;
+            ModelMaterial.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
+            ModelMaterial.DiffuseColor = ModelDiffuseColor.ToColor4();
+            ModelMaterial.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
+            float Specular = 0.5f;
+            ModelMaterial.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
+            ModelMaterial.SpecularShininess = 80;
+        }
+        /// <summary>
         /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
         /// </summary>
+
         private int CurrenIndex = 0;
+        public bool IsLoaded = false;
         public int DatabaseIndex { get; set; }
         public int Count { get; set; }
         public ModelInfo()
@@ -159,15 +179,14 @@ namespace Nart
         /// </summary>
         public void LoadSTL()
         {
-            //利用helixtoolkit.wpf裡面提供的StlReader讀檔案，後續要轉成wpf.sharpdx可用的格式
-            StLReader reader = new HelixToolkit.Wpf.StLReader();
-
-            //阻擋檔案不存在的情況
-            if (!System.IO.File.Exists(ModelFilePath))
+            //ModelGeometry已經有幾何模型存在內部 及 阻擋檔案不存在的情況
+            if (IsLoaded || !System.IO.File.Exists(ModelFilePath)) 
             {
                 return;
             }
-           
+            //利用helixtoolkit.wpf裡面提供的StlReader讀檔案，後續要轉成wpf.sharpdx可用的格式
+            StLReader reader = new HelixToolkit.Wpf.StLReader();
+
             Model3DGroup model3dgroup = reader.Read(ModelFilePath);
 
             MultiAngleViewModel.AllModelGroup.Children.Add(model3dgroup);
@@ -177,18 +196,7 @@ namespace Nart
             System.Windows.Media.Media3D.MeshGeometry3D mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
 
             //設定模型材質
-            ModelMaterial = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
-
-            ModelMaterial.ReflectiveColor = Color.Black;
-            float ambient = 0.0f;
-            ModelMaterial.AmbientColor = new Color(ambient, ambient, ambient, 1.0f);
-            ModelMaterial.DiffuseColor = new Color(40, 181, 187, 255);
-            ModelMaterial.DiffuseColor = ModelDiffuseColor.ToColor4();
-
-            ModelMaterial.EmissiveColor = Color.Black; //這是自己發光的顏色
-            float Specular = 0.5f;
-            ModelMaterial.SpecularColor = new Color(Specular, Specular, Specular, 255);
-            ModelMaterial.SpecularShininess = 80;
+            SetModelMaterial();
 
 
             //設定模型幾何形狀
@@ -219,13 +227,13 @@ namespace Nart
             {
                 ModelGeometry.Indices.Add(triangleindice);
             }
-
+           
             MeshGeometryData = new MeshGeometryModel3D();
             //將建立好的指派進helix.sharp格式的MeshGeometryModel3D
             MeshGeometryData.Material = this.ModelMaterial;
-            MeshGeometryData.Geometry = ModelGeometry;
+            MeshGeometryData.Geometry = this.ModelGeometry;
             MeshGeometryData.Transform = new TranslateTransform3D(0, 0, 0);
-
+            IsLoaded = true;
         }
     }
 }

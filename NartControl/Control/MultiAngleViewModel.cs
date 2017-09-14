@@ -191,11 +191,9 @@ namespace NartControl.Control
             set
             {
                 SetValue(ref modelInfoCollection, value);
-
                 ResetCameraPosition();
             }
         }
-        public HelixToolkit.Wpf.SharpDX.MeshBuilder b1 { get; set; } = new HelixToolkit.Wpf.SharpDX.MeshBuilder(true, true, true);
         public MultiAngleViewModel(MultiAngleView multiview)
         {
             RenderTechniquesManager = new DefaultRenderTechniquesManager();

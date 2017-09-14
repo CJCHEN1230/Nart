@@ -16,8 +16,6 @@
             <ColumnDefinition Width="26*"/>
             <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
-
-
         <hx:ModelContainer3DX x:Name="sharedContainer"  RenderTechnique="{Binding RenderTechnique}">
             <hx:ItemsModel3D ItemsSource="{Binding ModelInfoCollection}">
                 <hx:ItemsModel3D.ItemTemplate>

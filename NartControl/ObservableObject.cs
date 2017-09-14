@@ -23,7 +23,6 @@ namespace NartControl
             {
                 return false;
             }
-
             oldValue = newValue;
             this.OnPropertyChanged(propertyName);
             return true;
