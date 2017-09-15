@@ -86,7 +86,7 @@ namespace Nart
 
             }
         }
-        private void Rotate_Click(object sender, RoutedEventArgs e)
+        private void SettingViewClick(object sender, RoutedEventArgs e)
         {
 
             ModelSettingView modelSettingdlg = new ModelSettingView();

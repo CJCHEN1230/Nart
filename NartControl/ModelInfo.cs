@@ -121,6 +121,11 @@ namespace Nart
                 SetValue(ref bspDiffuseColor, value);
             }
         }
+        public Model3DGroup SingleModel
+        {
+            get;
+            set;
+        }
         /// <summary>
         /// 儲存模型資料，包括矩陣轉移、材質、網格
         /// </summary>        
@@ -155,7 +160,6 @@ namespace Nart
         /// <summary>
         /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
         /// </summary>
-
         private int CurrenIndex = 0;
         public bool IsLoaded = false;
         public int DatabaseIndex { get; set; }
@@ -187,21 +191,17 @@ namespace Nart
             //利用helixtoolkit.wpf裡面提供的StlReader讀檔案，後續要轉成wpf.sharpdx可用的格式
             StLReader reader = new HelixToolkit.Wpf.StLReader();
 
-            Model3DGroup model3dgroup = reader.Read(ModelFilePath);
+            SingleModel = reader.Read(ModelFilePath);            
 
-            MultiAngleViewModel.AllModelGroup.Children.Add(model3dgroup);
-
-            System.Windows.Media.Media3D.GeometryModel3D geometryModel = model3dgroup.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
+            System.Windows.Media.Media3D.GeometryModel3D geometryModel = SingleModel.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
 
             System.Windows.Media.Media3D.MeshGeometry3D mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
 
             //設定模型材質
             SetModelMaterial();
-
-
             //設定模型幾何形狀
             ModelGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
-
+            
             ModelGeometry.Normals = new Vector3Collection();
             ModelGeometry.Positions = new Vector3Collection();
             ModelGeometry.Indices = new IntCollection();

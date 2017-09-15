@@ -29,7 +29,6 @@ namespace NartControl.Control
         /// <summary>
         /// 將load好的Model3DGroup加進去方便計算BoundingBox，因為setCamera會使用到，但在其他類別Load進模型檔所以設定成static
         /// </summary>
-        public static Model3DGroup AllModelGroup { get; private set; } = new Model3DGroup();
         private Camera cam1;
         public Camera Camera1
         {
@@ -178,6 +177,7 @@ namespace NartControl.Control
                 SetValue(ref ambientLightColor, value);
             }
         }
+        private Model3DGroup ModelGroup { get; set; }
         public bool IsRenderLight { get; set; }
         Rect3D BoundingBox { get; set; }
         Point3D ModelCenter { get; set; }
@@ -194,12 +194,13 @@ namespace NartControl.Control
                 ResetCameraPosition();
             }
         }
-        public MultiAngleViewModel(MultiAngleView multiview)
+        private MultiAngleView Multiview;
+        public MultiAngleViewModel(MultiAngleView _multiview)
         {
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
             RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Phong];
             EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
-
+            Multiview = _multiview;
 
             SetLight();
             SetCamera();
@@ -239,11 +240,25 @@ namespace NartControl.Control
         {
 
             //ModelGroup裡面有模型之後才調整相機位置
-            if (AllModelGroup.Children.Count == 0)
+            if (ModelInfoCollection == null || ModelInfoCollection.Count == 0) 
                 return;
 
-            BoundingBox = AllModelGroup.Bounds;
+            //重新調整模型中心
+            ModelGroup = new Model3DGroup();
+            for (int i = 0; i < ModelInfoCollection.Count; i++) 
+            {   //如果選擇多模型但檔名是空或不存在則進不去
+                if (ModelInfoCollection[i].SingleModel != null)
+                {
+                    ModelGroup.Children.Add(ModelInfoCollection[i].SingleModel);
+                }
+            }
+            
+
+            BoundingBox = ModelGroup.Bounds;
+
             ModelCenter = new Point3D(BoundingBox.X + BoundingBox.SizeX / 2.0, BoundingBox.Y + BoundingBox.SizeY / 2.0, BoundingBox.Z + BoundingBox.SizeZ / 2.0);
+
+            
             OrthographicCamera orthoCam1 = Camera1 as OrthographicCamera;
             orthoCam1.Position = new Point3D(ModelCenter.X, ModelCenter.Y - (BoundingBox.SizeY), ModelCenter.Z);
             orthoCam1.UpDirection = new Vector3D(0, 0, 1);

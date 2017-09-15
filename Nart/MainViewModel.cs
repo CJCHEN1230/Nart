@@ -57,11 +57,16 @@ namespace Nart
             //確保所有模型資訊都有set進去ModelInfo的資料
             for (int i = 0; i < MainViewModel.ModelInfoCollection.Count; i++) 
             {
-                //檢查模型有無load
+                //檢查模型有無load，有換過檔名就變成沒有Load
                 if (!MainViewModel.ModelInfoCollection[i].IsLoaded)
                 {
+                    MainViewModel.ModelInfoCollection[i] = new ModelInfo {
+                        ModelFilePath = MainViewModel.ModelInfoCollection[i].ModelFilePath,
+                        ModelDiffuseColor = MainViewModel.ModelInfoCollection[i].ModelDiffuseColor,
+                        BSPFilePath = MainViewModel.ModelInfoCollection[i].BSPFilePath,
+                        BSPDiffuseColor = MainViewModel.ModelInfoCollection[i].BSPDiffuseColor  };
                     MainViewModel.ModelInfoCollection[i].LoadSTL();
-                }                
+                }
             }
             MainWindow.multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;            
         }
