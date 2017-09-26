@@ -21,7 +21,7 @@
                 <hx:ItemsModel3D.ItemTemplate>
                     <DataTemplate>
                         <hx:MeshGeometryModel3D
-                            CullMode="Back" ReuseVertexArrayBuffer="True"
+                            CullMode="{Binding CMode}" ReuseVertexArrayBuffer="True"
                             Geometry="{Binding ModelGeometry}"
                             Material="{Binding ModelMaterial}"
                             Transform="{Binding ModelTransform}"/>

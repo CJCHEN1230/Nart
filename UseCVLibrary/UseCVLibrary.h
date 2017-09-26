@@ -13,6 +13,9 @@ namespace UseCVLibrary {
 	using namespace System::Collections::Generic;
 	using namespace System::Windows::Media::Media3D;
 
+	/// <summary>
+	/// 定義Nart系統當中的點，每個點包含像素座標、相機座標、扭正高度
+	/// </summary>
 	public ref class NartPoint
 	{
 		public: 
@@ -27,11 +30,13 @@ namespace UseCVLibrary {
 			NartPoint(PointF imagePoints);
 			
 	};
-
+	/// <summary>
+	/// 每一組Marker
+	/// </summary>
 	public ref class BWMarker : public IComparable<BWMarker^>
 	{
 	public:
-		List<NartPoint^>^ CornerPoint;
+		List<NartPoint^>^ CornerPoint; //每個Marker必包含3個NartPoint
 
 		double AvgRectifyY = 0;
 
@@ -51,12 +56,12 @@ namespace UseCVLibrary {
 	private:
 		int CameraNumber = -1;
 
-		List<BWMarker^>^ AllMarker; //儲存單張照片的所有Marker
+		List<BWMarker^>^ SingalImgMarker; //儲存"單"張照片的所有Marker
 
 	public:
 		CornerPointFilter(int CameraNumber);
 
-		List<BWMarker^>^ GetCornerPoint(int width, int height, System::Byte* imageHeadPointer);
+		List<BWMarker^>^ GetCornerPoint(int width, int height, System::Byte* imageHeadPointer); //純算出像素座標存進ImagePoint
 	};
 
 	

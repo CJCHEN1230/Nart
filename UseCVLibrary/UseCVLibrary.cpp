@@ -23,7 +23,7 @@ UseCVLibrary::NartPoint::NartPoint(PointF imagePoints)
 
 UseCVLibrary::BWMarker::BWMarker()
 {
-	CornerPoint = gcnew List<NartPoint^>(4);
+	CornerPoint = gcnew List<NartPoint^>(4); //理論3個純粹多留空間
 
 	NartPoint^ a = gcnew NartPoint();
 	NartPoint^ b = gcnew NartPoint();
@@ -70,7 +70,7 @@ int UseCVLibrary::BWMarker::CompareTo(BWMarker^ other)
 
 UseCVLibrary::CornerPointFilter::CornerPointFilter(int number) : CameraNumber(number)
 {
-	AllMarker = gcnew List<BWMarker^>();
+	SingalImgMarker = gcnew List<BWMarker^>();
 }
 
 List<UseCVLibrary::BWMarker^>^ UseCVLibrary::CornerPointFilter::GetCornerPoint(int width, int height, System::Byte* imageHeadPointer)
@@ -82,7 +82,7 @@ List<UseCVLibrary::BWMarker^>^ UseCVLibrary::CornerPointFilter::GetCornerPoint(i
 
 	CalcPoint(pby1, height, width, OutputCornerPoint);
 
-	AllMarker->Clear();
+	SingalImgMarker->Clear();
 	for (int i = 0; i < OutputCornerPoint.size(); i++)
 	{
 		BWMarker^ marker = gcnew BWMarker();
@@ -93,11 +93,11 @@ List<UseCVLibrary::BWMarker^>^ UseCVLibrary::CornerPointFilter::GetCornerPoint(i
 			marker->CornerPoint[j]->ImagePoint->Y = height - OutputCornerPoint.at(i).at(j).y;
 		}
 
-		AllMarker->Add(marker);
+		SingalImgMarker->Add(marker);
 	}
 
 	OutputCornerPoint.clear();
 
-	return AllMarker;
+	return SingalImgMarker;
 }
 

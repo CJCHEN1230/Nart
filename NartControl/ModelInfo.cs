@@ -13,6 +13,7 @@ using System.Windows.Media.Media3D;
 
 namespace Nart
 {
+    using SharpDX.Direct3D11;
     using Color = System.Windows.Media.Color;
     public class ModelInfo : ObservableObject
     {
@@ -76,18 +77,18 @@ namespace Nart
             }
         }
         /// <summary>
-        /// BSP名稱
+        /// OSP名稱
         /// </summary>
-        private String bspFilePath;
-        public String BSPFilePath
+        private String ospFilePath;
+        public String OSPFilePath
         {
             get
             {
-                return bspFilePath;
+                return ospFilePath;
             }
             set
             {
-                SetValue(ref bspFilePath, value);
+                SetValue(ref ospFilePath, value);
             }
         }
         /// <summary>
@@ -107,20 +108,35 @@ namespace Nart
             }
         }
         /// <summary>
-        /// BSP 顏色
+        /// OSP 顏色
         /// </summary>
-        private Color bspDiffuseColor;
-        public Color BSPDiffuseColor
+        private Color ospDiffuseColor;
+        public Color OSPDiffuseColor
         {
             get
             {
-                return bspDiffuseColor;
+                return ospDiffuseColor;
             }
             set
             {
-                SetValue(ref bspDiffuseColor, value);
+                SetValue(ref ospDiffuseColor, value);
+            }
+        }    
+        private CullMode cMode;
+        public CullMode CMode
+        {
+            get
+            {
+                return cMode;
+            }
+            set
+            {
+                SetValue(ref cMode, value);
             }
         }
+        /// <summary>
+        /// 讀檔時特別存下Model3DGroup的
+        /// </summary>
         public Model3DGroup SingleModel
         {
             get;
@@ -129,7 +145,7 @@ namespace Nart
         /// <summary>
         /// 儲存模型資料，包括矩陣轉移、材質、網格
         /// </summary>        
-        public MeshGeometryModel3D MeshGeometryData { get; private set; }
+        public MeshGeometryModel3D MeshGeometryData { get; private set; } = new MeshGeometryModel3D();
         /// <summary>
         /// 此Model的最終轉換矩陣
         /// </summary>
@@ -227,8 +243,9 @@ namespace Nart
             {
                 ModelGeometry.Indices.Add(triangleindice);
             }
-           
-            MeshGeometryData = new MeshGeometryModel3D();
+            OnPropertyChanged("ModelGeometry");
+
+            //MeshGeometryData = new MeshGeometryModel3D();
             //將建立好的指派進helix.sharp格式的MeshGeometryModel3D
             MeshGeometryData.Material = this.ModelMaterial;
             MeshGeometryData.Geometry = this.ModelGeometry;

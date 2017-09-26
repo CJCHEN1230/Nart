@@ -29,66 +29,23 @@ namespace Nart
     /// <summary>
     /// MainView主視窗介面
     /// </summary>
-    public partial class MainView : Window, INotifyPropertyChanged
+    public partial class MainView : Window
     {
-
+        
         public static List<ModelData> AllModelData = new List<ModelData>(5);
-        private string _pointNumber;
-        public string PointNumber
-        {
-            get { return this._pointNumber; }
-            set
-            {
-                if (this._pointNumber != value)
-                {
-                    this._pointNumber = value;
-                    this.NotifyPropertyChanged("PointNumber");
-                }
-            }
-        }
-
-
         private MainViewModel _mainViewModel = null;
         public MainView()
         {
             InitializeComponent();
-
+            
             _mainViewModel = new MainViewModel(this);
 
             this.DataContext = _mainViewModel;
 
             AllocConsole();
-        }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            // CamCtrl.CameraStart();            
-        }
-        private void OpenCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-
-            dlg.Title = "New Project";
-            dlg.DefaultExt = ".stl";
-            dlg.Multiselect = true;
-            dlg.Filter = "STL File (.stl)|*.stl";
-
-
-            Nullable<bool> result = dlg.ShowDialog();
-
-            if (result == true)
-            {
-                foreach (String filename in dlg.FileNames)
-                {
-                    ModelData mData = new ModelData(filename);
-
-                    //mainModelVisual.Children.Add(mData.ModelVisual);
-                }
-
-            }
-        }
+        }        
         private void SettingViewClick(object sender, RoutedEventArgs e)
         {
-
             ModelSettingView modelSettingdlg = new ModelSettingView();
 
             modelSettingdlg.Owner = this;
@@ -113,9 +70,6 @@ namespace Nart
             }
             multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
         }
-
-
-
         private void RegButton_Click(object sender, RoutedEventArgs e)
         {
             CameraControl.RegToggle = !CameraControl.RegToggle;
@@ -129,24 +83,45 @@ namespace Nart
             //CamCtrl.CameraClose();            
             System.Windows.Application.Current.Shutdown();
         }
-        public event PropertyChangedEventHandler PropertyChanged;//對PropertyChangedEventHandler的封裝
-        public void NotifyPropertyChanged(string propName)
+        private void OpenCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            dlg.Title = "New Project";
+            dlg.DefaultExt = ".stl";
+            dlg.Multiselect = true;
+            dlg.Filter = "STL File (.stl)|*.stl";
+
+
+            Nullable<bool> result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                foreach (String filename in dlg.FileNames)
+                {
+                    ModelData mData = new ModelData(filename);
+
+                    //mainModelVisual.Children.Add(mData.ModelVisual);
+                }
+
+            }
         }
         private void NewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
 
         }
-
+        private void CamHost1_Loaded(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("\nHeight:" + CamHost1.ActualHeight
+                + "\nWidth:" + CamHost1.ActualWidth);
+        }
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
-
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
+        
     }
 }

@@ -42,15 +42,43 @@ namespace Nart
             MainWindow = window;
 
 
-            CamCtrl = new CameraControl(873, 815, MainWindow);
+
+            CamCtrl = new CameraControl(873, 815, this);
             MainWindow.CamHost1.Child = CamCtrl.icImagingControl[0];
             MainWindow.CamHost2.Child = CamCtrl.icImagingControl[1];
-            CamCtrl.CameraStart();            
+            CamCtrl.CameraStart();
+
+           
+
+
+
+
+
+
+            //ObservableCollection < ModelInfo > temp = new ObservableCollection<ModelInfo>();
+            //ModelInfo TEST = new ModelInfo
+            //{
+            //    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
+            //                                                                    ,
+            //    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
+            //                                                                    ,
+            //    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
+            //                                                                    ,
+            //    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
+            //};
+            //TEST.LoadSTL();
+            //temp.Add(TEST);
+            //MainWindow.multiAngleView._multiAngleViewModel.ModelInfoCollection = temp;
+
+
+
+
+
         }
 
 
         /// <summary>
-        /// 顯示設置好的各項模型資訊
+        /// 顯示設置好的各項模型資訊，按下Set Model 之後並且按ok後會走到這
         /// </summary>
         public void LoadSettingModel()
         {
@@ -60,16 +88,33 @@ namespace Nart
                 //檢查模型有無load，有換過檔名就變成沒有Load
                 if (!MainViewModel.ModelInfoCollection[i].IsLoaded)
                 {
-                    MainViewModel.ModelInfoCollection[i] = new ModelInfo {
+                    //不知道為什麼整個ModelInfo一定要重建，理論上應該只要LoatSTL有走過就好
+                    MainViewModel.ModelInfoCollection[i] = new ModelInfo
+                    {
+                        CMode = MainViewModel.ModelInfoCollection[i].CMode,
                         ModelFilePath = MainViewModel.ModelInfoCollection[i].ModelFilePath,
                         ModelDiffuseColor = MainViewModel.ModelInfoCollection[i].ModelDiffuseColor,
-                        BSPFilePath = MainViewModel.ModelInfoCollection[i].BSPFilePath,
-                        BSPDiffuseColor = MainViewModel.ModelInfoCollection[i].BSPDiffuseColor  };
+                        OSPFilePath = MainViewModel.ModelInfoCollection[i].OSPFilePath,
+                        OSPDiffuseColor = MainViewModel.ModelInfoCollection[i].OSPDiffuseColor
+                    };
                     MainViewModel.ModelInfoCollection[i].LoadSTL();
                 }
             }
-            MainWindow.multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;            
+            MainWindow.multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
+
         }
+
+
+        private int _tabIndex = 1; //預設tab頁面索引值
+        public int TabIndex
+        {
+            get { return this._tabIndex; }
+            set
+            {
+                SetValue(ref _tabIndex, value);
+            }
+        }
+
 
 
 
@@ -79,27 +124,15 @@ namespace Nart
             get { return this._pointNumber; }
             set
             {
-                if (this._pointNumber != value)
-                {
-                    this._pointNumber = value;
-                    this.NotifyPropertyChanged("PointNumber");
-                }
+                SetValue(ref _pointNumber, value);
             }
         }
 
-        //public static Model3DGroup _model3dgroup = new Model3DGroup();
 
-        //public static List<ModelData> AllModelData = new List<ModelData>(5);
-        //public Element3DCollection ModelGeometry { get; private set; }
 
-        //public GroupModel3D GroupModel { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        public void NotifyPropertyChanged(string propName)
-        {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
-        }
+
+
     }
 }

@@ -34,7 +34,7 @@ namespace Nart
 
         //public static int PointsNumber = 0;
 
-        private MainView _window = null;
+        private MainViewModel _mainViewModel = null;
 
         public List<double[]> MarkerDB = new List<double[]>(10);
 
@@ -85,9 +85,9 @@ namespace Nart
 
         private List<int> Database = new List<int>();
 
-        public CalcCoord(MainView window)
+        public CalcCoord(MainViewModel window)
         {
-            _window = window;
+            _mainViewModel = window;
             _camParam[0] = new CamParam("../../../data/CaliR_L.txt");
             _camParam[1] = new CamParam("../../../data/CaliR_R.txt");
             CalcLensCenter();
@@ -139,11 +139,11 @@ namespace Nart
             
         }
         /// <summary>
-        /// 扭正左右兩邊拍攝到的像素座標點
+        /// 輸入兩張照片的Marker資料，扭正左右兩邊拍攝到的像素座標點並存進RectifyY，並儲存相機坐標系的點進CameraPoint，並算出AvgRectifyY、AvgX
         /// </summary>
         public void Rectify(List<BWMarker>[] OutputMarker)
         {
-
+            //計算出平均x跟平均y
             Parallel.For(0, 2, i =>
             {
 
@@ -276,7 +276,7 @@ namespace Nart
                        && Math.Abs(OutputMarker[0][i].CornerPoint[1].RectifyY - OutputMarker[1][j].CornerPoint[1].RectifyY) < MatchError
                        && Math.Abs(OutputMarker[0][i].CornerPoint[2].RectifyY - OutputMarker[1][j].CornerPoint[2].RectifyY) < MatchError)
                     {
-                        Marker3D threeWorldPoints = new Marker3D(); 
+                        Marker3D threeWorldPoints = new Marker3D(); //Marker上面的三點世界座標
                         for (int k = 0; k < OutputMarker[0][i].CornerPoint.Count; k++)
                         {                           
                             Point3D point3D = CalcWorldPoint(OutputMarker[0][i].CornerPoint[k].CameraPoint, OutputMarker[1][j].CornerPoint[k].CameraPoint);
@@ -292,19 +292,13 @@ namespace Nart
                 }
             }
 
-
             //對計算到的3D點排序
             for (int i =0; i< WorldPoints.Count; i++)
             {
                 WorldPoints[i].SortedByLength();
             }
 
-
-            _window.PointNumber = (WorldPoints.Count * 3).ToString() + "個點";
-           // _window.PointLabel.Content = (WorldPoints.Count * 3).ToString() + "個點";
-
-            
-
+            _mainViewModel.PointNumber = (WorldPoints.Count * 3).ToString() + "個點";      
         }
         /// <summary>
         /// 將計算出的3D座標點與資料庫比對並存下引數

@@ -9,7 +9,7 @@
         xmlns:helix="http://helix-toolkit.org/wpf"
         xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
         Foreground="White"
-        Title="Nart" Height="762" Width="1583.5" Loaded="Window_Loaded" WindowState="Maximized" Background="#FF474747" Closed="load_Closed">
+        Title="Nart" Height="762" Width="1583.5" WindowState="Maximized" Background="#FF474747" Closed="load_Closed">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCmdExecuted"/>
         <CommandBinding Command="ApplicationCommands.New" Executed="NewCmdExecuted"/>
@@ -28,7 +28,7 @@
         <Button x:Name="button1" Click="SettingViewClick" Content="Set Model" HorizontalAlignment="Left" Margin="18,90,0,0" VerticalAlignment="Top" Width="58" Height="54"/>
         <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="16,153,0,0" VerticalAlignment="Top" Width="56" Height="56"/>
         <Button x:Name="button4" Click="TrackingButton_Click" Content="Tracking" HorizontalAlignment="Left" Margin="22,374,0,0" VerticalAlignment="Top" Width="58" Height="54" />
-        <TabControl x:Name="tabControl" SelectedIndex="1" Margin="0,0,0,0" Background="#FF474747" OpacityMask="Black" Grid.Column="1">
+        <TabControl x:Name="tabControl" SelectedIndex="{Binding Path = TabIndex}" Margin="0,0,0,0" Background="#FF474747" OpacityMask="Black" Grid.Column="1">
             <TabItem Header="Camera" FontSize="15" >
                 <TabItem.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -42,7 +42,7 @@
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <WindowsFormsHost x:Name="CamHost1" Grid.Column="0"  Margin="0,80,0,80" Background="#FF666666"/>
+                    <WindowsFormsHost x:Name="CamHost1" Grid.Column="0"  Margin="0,80,0,80" Background="#FF666666" Loaded="CamHost1_Loaded"/>
                     <WindowsFormsHost x:Name="CamHost2" Grid.Column="2"  Margin="0,80,0,80" Background="#FF666666" />
                     <Rectangle Fill="#FF474747" HorizontalAlignment="Center" Grid.Column="1" Margin="0" Stroke="Black" Width="10" RadiusY="61" RadiusX="61" Grid.ColumnSpan="1"/>
                 </Grid>

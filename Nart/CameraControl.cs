@@ -71,17 +71,15 @@ namespace Nart
         /// 管理相機通過與否
         /// </summary>
         private bool[] CameraToggle = new bool[2] {true,true};
-
-        private MainView _window = null;
-
+        private MainViewModel _mainViewModel = null;
         /// <summary>
         /// 傳進來的width跟height決定inImageControl的長寬
         /// </summary>
-        public CameraControl(int width, int height , MainView window)
+        public CameraControl(int width, int height , MainViewModel mainViewModel)
         {
-            _window = window;
+            _mainViewModel = mainViewModel;
 
-            _calcCoord = new CalcCoord(_window);
+            _calcCoord = new CalcCoord(_mainViewModel);
 
             icImagingControl[0] = new TIS.Imaging.ICImagingControl();
             icImagingControl[1] = new TIS.Imaging.ICImagingControl();
@@ -118,8 +116,7 @@ namespace Nart
             _displayThread = new Thread(DisplayLoop);
             _displayThread.IsBackground = true;
 
-        }
-       
+        }       
         /// <summary>
         /// 雙相機控制項的初始化設定
         /// </summary>
@@ -160,6 +157,7 @@ namespace Nart
         /// </summary>
         public void CameraStart()
         {
+            //確認裝置有沒有效
             if (!icImagingControl[0].DeviceValid)
             {
                 icImagingControl[0].ShowDeviceSettingsDialog();
@@ -210,7 +208,6 @@ namespace Nart
             }
             
         }
-
         private void MoveModel()
         {           
             for (int i = 0; i < MainView.AllModelData.Count - 1; i++)
@@ -224,7 +221,7 @@ namespace Nart
         private void ShowImageBuffer()
         {
 
-            if (_window.tabControl.SelectedIndex == 0)
+            if (_mainViewModel.TabIndex == 0)
             {
                 Parallel.For(0, 2, i =>
                 {                    
@@ -303,8 +300,7 @@ namespace Nart
 
                 }
             }
-        }
-       
+        }       
         /// <summary>
         /// 在此顯示區域無限循環         
         /// </summary>
