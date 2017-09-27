@@ -32,11 +32,9 @@ namespace Nart
 
         private List<Marker3D> WorldPoints = new List<Marker3D>(10);
 
-        //public static int PointsNumber = 0;
-
         private MainViewModel _mainViewModel = null;
 
-        public List<double[]> MarkerDB = new List<double[]>(10);
+        //public List<double[]> MarkerDB = new List<double[]>(10);
 
         private Point3D[] CTBall; //CT珠子中心座標
 
@@ -52,6 +50,8 @@ namespace Nart
         /// </summary>
         private List<Marker3D> MSWorldPoints = new List<Marker3D>(10);
 
+        public  Database database = new Database();
+        
         private Matrix3D CTtoMS;
 
         private Matrix3D MStoCT;
@@ -59,28 +59,14 @@ namespace Nart
         private Matrix3D OriWorldtoMS;
 
         public int CurrentHeadIndex = -1;
-
+        ///<summary>
+        ///頭在註冊資料中引數
+        /// </summary>
         public int RegHeadIndex = -1;
         ///<summary>
-        ///頭在Database中引數
+        ///咬板在註冊資料中引數
         /// </summary>
         public int RegSplintIndex = -1;
-        /// <summary>
-        ///頭在Database中引數，定義在CreateDatabase
-        /// </summary>
-        private int HeadIndex = -1;
-        /// <summary>
-        ///咬板在Database中引數，定義在CreateDatabase
-        /// </summary>
-        private int SplintIndex = -1;
-        /// <summary>
-        ///上顎在Database中引數
-        /// </summary>
-        private int MaxillaIndex = -1;
-        /// <summary>
-        ///下顎在Database中引數
-        /// </summary>
-        private int MandibleIndex = -1;
 
 
         private List<int> Database = new List<int>();
@@ -93,9 +79,7 @@ namespace Nart
             CalcLensCenter();
             CalcEpipolarGeometry();
             LoadNartReg("../../../data/reg20170713.txt");
-            CreateDatabase(HeadIndex, SplintIndex, MaxillaIndex, MandibleIndex);
-            
-
+            //CreateDatabase();
         }
         /// <summary>
         /// 計算鏡心在世界座標
@@ -305,30 +289,14 @@ namespace Nart
         /// </summary>
         public void MatchRealMarker()
         {
+
+
+
             for (int i = 0; i < WorldPoints.Count; i++)
             {               
-                WorldPoints[i].CompareDatabase(MarkerDB);
+
+                WorldPoints[i].CompareDatabase(database.MarkerInfo);
             }
-
-
-            //for (int i = 0; i < WorldPoints.Count; i++) //左相機Marker尋訪
-            //{
-            //    Console.WriteLine("\n\n排序後第" + (i + 1) + "組三邊長度");
-
-            //    Vector3D a = new Vector3D(WorldPoints[i].ThreePoints[0].X - WorldPoints[i].ThreePoints[1].X, WorldPoints[i].ThreePoints[0].Y - WorldPoints[i].ThreePoints[1].Y, WorldPoints[i].ThreePoints[0].Z - WorldPoints[i].ThreePoints[1].Z);
-
-            //    Vector3D b = new Vector3D(WorldPoints[i].ThreePoints[2].X - WorldPoints[i].ThreePoints[1].X, WorldPoints[i].ThreePoints[2].Y - WorldPoints[i].ThreePoints[1].Y, WorldPoints[i].ThreePoints[2].Z - WorldPoints[i].ThreePoints[1].Z);
-
-            //    Vector3D c = new Vector3D(WorldPoints[i].ThreePoints[0].X - WorldPoints[i].ThreePoints[2].X, WorldPoints[i].ThreePoints[0].Y - WorldPoints[i].ThreePoints[2].Y, WorldPoints[i].ThreePoints[0].Z - WorldPoints[i].ThreePoints[2].Z);
-
-            //    Console.WriteLine("\na:" + a.Length + "\nb:" + b.Length + "\nc:" + c.Length);
-
-            //    Console.WriteLine("\nIndex:" + WorldPoints[i].DatabaseIndex);
-
-            //    //Console.WriteLine("\nIndex:" + WorldPoints[i]. );
-
-            //    Console.WriteLine("    ");
-            //}
         }        
         private void SortMarker(List<BWMarker>[] OutputMarker)
         {
@@ -379,30 +347,26 @@ namespace Nart
         /// 在註冊時使用，比對當前WorldPoints並清除MarkerDB中不需要的資料
         /// </summary>
         private void SimplifyDatabase()
-        {
+        {            
             //尋訪資料庫中的Marker
-            for (int i = 0, j = 0; i < MarkerDB.Count; i++)
+            for (int i = 0, j = 0; i < database.MarkerInfo.Count; i++)
             {   //尋訪世界座標中的Marker
-                for (j = 0; j < WorldPoints.Count; j++) 
+                for (j = 0; j < WorldPoints.Count; j++)
                 {
-                    double diff1 = WorldPoints[j].ThreeLength[0] - MarkerDB[i][0];
-                    double diff2 = WorldPoints[j].ThreeLength[1] - MarkerDB[i][1];
-                    double diff3 = WorldPoints[j].ThreeLength[2] - MarkerDB[i][2];
-
-                    if (Math.Abs(diff1) < 1 && Math.Abs(diff2) < 1 && Math.Abs(diff3) < 1)
+                    //如果資料庫中的MarkerID存在當前資料庫就檢查下一個
+                    if (database.MarkerInfo[i].ID.Equals(WorldPoints[j].MarkerID))
                     {
-                        break;
+                        break; //換下一個資料庫中的Marker
                     }
                 }
                 //資料庫中的Marker在WorldPoint中都找不到時
                 if (j == WorldPoints.Count)
                 {
-                    MarkerDB.RemoveAt(i);
+                    database.MarkerInfo.RemoveAt(i);
                     i--;
-                    HeadIndex -= 1; //-1是因為頭跟咬板一定會存在，如果不存在根本不會進來這
-                    SplintIndex -= 1;
                 }
-            }           
+            }
+            database.ResetIndex();
         }        
         /// <summary>
         /// 傳入兩組三個點所組成的座標系，回傳轉換矩陣
@@ -520,68 +484,72 @@ namespace Nart
         /// <summary>
         /// 輸入Marker的data並將資料存進MarkerDB裡面
         /// </summary>
-        private void CreateDatabase(int headIndex ,int splintIndex,int maxillaIndex,int mandibleIndex)
-        {         
-            try
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.Load("../../../data/MarkerDatabase.xml");
+        //private void CreateDatabase()
+        //{
+        //    try
+        //    {
+        //        XmlDocument doc = new XmlDocument();
+        //        doc.Load("../../../data/MarkerDatabase.xml");
 
-                //挑出Maxilla下面的Marker element
-                XmlNodeList maxillaList = doc.SelectNodes("BWMarker/Maxilla/Marker");
-                foreach (XmlNode OneNode in maxillaList)
-                {
-                    XmlNodeList markerLength1 = OneNode.ChildNodes;
-
-                    double[] data1 = new double[3] { Convert.ToDouble(markerLength1[0].InnerText)
-                                                  , Convert.ToDouble(markerLength1[1].InnerText)
-                                                  , Convert.ToDouble(markerLength1[2].InnerText)};
-                    MarkerDB.Add(data1);
-                }
-                //挑出Mandible下面的Marker element
-                XmlNodeList mandibleList = doc.SelectNodes("BWMarker/Mandible/Marker");
-                foreach (XmlNode OneNode in mandibleList)
-                {
-                    XmlNodeList markerLength2 = OneNode.ChildNodes;
-
-                    double[] data2 = new double[3] { Convert.ToDouble(markerLength2[0].InnerText)
-                                                  , Convert.ToDouble(markerLength2[1].InnerText)
-                                                  , Convert.ToDouble(markerLength2[2].InnerText)};
-                    MarkerDB.Add(data2);
-                }
-
-                //挑出Head下面的Marker element
-                XmlNode headNode = doc.SelectSingleNode("BWMarker/Head/Marker");                
-                XmlNodeList markerLength3 = headNode.ChildNodes;               
-                double[] data3 = new double[3] { Convert.ToDouble(markerLength3[0].InnerText)
-                                                  , Convert.ToDouble(markerLength3[1].InnerText)
-                                                  , Convert.ToDouble(markerLength3[2].InnerText)};
-                HeadIndex = MarkerDB.Count;
-                MarkerDB.Add(data3);
+        //        //挑出Maxilla下面的Marker element
+        //        XmlNodeList maxillaList = doc.SelectNodes("BWMarker/Maxilla/Marker");
+        //        foreach (XmlNode OneNode in maxillaList)
+        //        {
+        //            //String StrAttrValue = OneNode.Attributes["ID"].Value;
 
 
-                XmlNode splintNode = doc.SelectSingleNode("BWMarker/Splint/Marker");
-                XmlNodeList markerLength4 = splintNode.ChildNodes;
-                double[] data4 = new double[3] { Convert.ToDouble(markerLength4[0].InnerText)
-                                                  , Convert.ToDouble(markerLength4[1].InnerText)
-                                                  , Convert.ToDouble(markerLength4[2].InnerText)};
-                SplintIndex = MarkerDB.Count; //Splint永遠最後一個
-                MarkerDB.Add(data4);
+        //            XmlNodeList markerLength1 = OneNode.ChildNodes;
 
-            }
-            catch
-            {
-                MessageBox.Show("資料庫檔案錯誤");
-            }
-        }
+
+        //            double[] data1 = new double[3] { Convert.ToDouble(markerLength1[0].InnerText)
+        //                                          , Convert.ToDouble(markerLength1[1].InnerText)
+        //                                          , Convert.ToDouble(markerLength1[2].InnerText)};
+        //            MarkerDB.Add(data1);
+        //        }
+        //        //挑出Mandible下面的Marker element
+        //        XmlNodeList mandibleList = doc.SelectNodes("BWMarker/Mandible/Marker");
+        //        foreach (XmlNode OneNode in mandibleList)
+        //        {
+        //            XmlNodeList markerLength2 = OneNode.ChildNodes;
+
+        //            double[] data2 = new double[3] { Convert.ToDouble(markerLength2[0].InnerText)
+        //                                          , Convert.ToDouble(markerLength2[1].InnerText)
+        //                                          , Convert.ToDouble(markerLength2[2].InnerText)};
+        //            MarkerDB.Add(data2);
+        //        }
+
+        //        //挑出Head下面的Marker element
+        //        XmlNode headNode = doc.SelectSingleNode("BWMarker/Head/Marker");                
+        //        XmlNodeList markerLength3 = headNode.ChildNodes;               
+        //        double[] data3 = new double[3] { Convert.ToDouble(markerLength3[0].InnerText)
+        //                                          , Convert.ToDouble(markerLength3[1].InnerText)
+        //                                          , Convert.ToDouble(markerLength3[2].InnerText)};
+        //        HeadIndex = MarkerDB.Count;
+        //        MarkerDB.Add(data3);
+
+
+        //        XmlNode splintNode = doc.SelectSingleNode("BWMarker/Splint/Marker");
+        //        XmlNodeList markerLength4 = splintNode.ChildNodes;
+        //        double[] data4 = new double[3] { Convert.ToDouble(markerLength4[0].InnerText)
+        //                                          , Convert.ToDouble(markerLength4[1].InnerText)
+        //                                          , Convert.ToDouble(markerLength4[2].InnerText)};
+        //        SplintIndex = MarkerDB.Count; //Splint永遠最後一個
+        //        MarkerDB.Add(data4);
+
+        //    }
+        //    catch
+        //    {
+        //        MessageBox.Show("資料庫檔案錯誤");
+        //    }
+        //}
         /// <summary>
         /// 輸入點群資料跟指定的Marker(上、下顎)索引，回傳資料庫的索引位置
         /// </summary>
-        private int GetSpecIndex(List<Marker3D> Markerdata,int specIndex)
+        private int GetSpecIndex(List<Marker3D> Markerdata,String ID)
         {
-            for (int i = 0; i < Markerdata.Count; i++)
+            for (int i = 0; i < Markerdata.Count; i++) 
             {
-                if (Markerdata[i].DatabaseIndex == specIndex)
+                if (Markerdata[i].MarkerID.Equals(ID)) 
                 {
                     return i;
                 }
@@ -599,24 +567,24 @@ namespace Nart
             if (WorldPoints.Count > 2)
             {
                 //取得咬板Marker在WorldPoints中的索引值
-                RegSplintIndex = GetSpecIndex(WorldPoints, SplintIndex);
+                RegSplintIndex = GetSpecIndex(WorldPoints, "Splint");
                 Console.WriteLine("\n\n第" + (RegSplintIndex + 1) + "組點是咬板");
                 //取得頭Marker在WorldPoints中的索引值
-                RegHeadIndex = GetSpecIndex(WorldPoints, HeadIndex);
+                RegHeadIndex = GetSpecIndex(WorldPoints, "Head");
                 Console.WriteLine("\n\n第" + (RegHeadIndex + 1) + "組點是頭部");
 
                 //註冊需要咬板與頭部標記片
                 if (RegSplintIndex != -1 && RegHeadIndex != -1)
                 {
                     SimplifyDatabase();
-                    for (int i = 0; i < MarkerDB.Count; i++)
+                    for (int i = 0; i < database.MarkerInfo.Count; i++)
                     {
-                        Console.WriteLine("\n\n" + MarkerDB[i][0] + " " + MarkerDB[i][1] + " " + MarkerDB[i][2]);
+                        Console.WriteLine("\n\n" + database.MarkerInfo[i].ThreeLength[0] + " " + database.MarkerInfo[i].ThreeLength[1] + " " + database.MarkerInfo[i].ThreeLength[2]);
                     }
-                    Console.WriteLine("splint:" + SplintIndex);
-                    Console.WriteLine("Head:" + HeadIndex);
+                    Console.WriteLine("splint:" + database.SplintIndex);
+                    Console.WriteLine("Head:" + database.HeadIndex);
 
-                    MatchRealMarker();//比對當前資料庫並存下引數
+                    MatchRealMarker();//比對當前世界座標與資料庫並存下引數
 
                     for (int i = 0; i < WorldPoints.Count; i++) 
                     {
@@ -631,11 +599,13 @@ namespace Nart
                         //創建註冊時的世界座標點
                         Marker3D OriWorldPoint = new Marker3D();
                         OriWorldPoint.DatabaseIndex = WorldPoints[i].DatabaseIndex;
+                        OriWorldPoint.MarkerID = WorldPoints[i].MarkerID;
                         WorldPoints[i].ThreePoints.CopyTo(OriWorldPoint.ThreePoints, 0); //將當前世界座標點存進OriWorldPoint當作註冊時的狀態
 
                         //創建轉成MS座標系的世界座標點
                         Marker3D MSWorldPoint = new Marker3D();
                         MSWorldPoint.DatabaseIndex = WorldPoints[i].DatabaseIndex;
+                        MSWorldPoint.MarkerID = WorldPoints[i].MarkerID;
                         OriWorldtoMS.Transform(WorldPoints[i].ThreePoints);
                         WorldPoints[i].ThreePoints.CopyTo(MSWorldPoint.ThreePoints, 0);
 
@@ -677,17 +647,16 @@ namespace Nart
         }
         public void CalcModelTransform()
         {
-
-            CurrentHeadIndex = GetSpecIndex(WorldPoints, HeadIndex);
+            CurrentHeadIndex = GetSpecIndex(WorldPoints, "Head");
 
             //沒有找到頭的Marker
             if (CurrentHeadIndex != -1) 
             {
                 Parallel.For(0, WorldPoints.Count, i =>
                {                   
-                    if (WorldPoints[i].DatabaseIndex != -1 && WorldPoints[i].DatabaseIndex != SplintIndex && WorldPoints[i].DatabaseIndex != HeadIndex)
+                    if (WorldPoints[i].DatabaseIndex != -1 && WorldPoints[i].DatabaseIndex != database.SplintIndex && WorldPoints[i].DatabaseIndex != database.HeadIndex)
                     {
-                        int MSandOriIndex = GetSpecIndex(MSWorldPoints, WorldPoints[i].DatabaseIndex);//取得當前世界座標在註冊時的座標索引值是多少
+                        int MSandOriIndex = GetSpecIndex(MSWorldPoints, WorldPoints[i].MarkerID);//取得當前世界座標在註冊時的座標索引值是多少
 
                         Matrix3D level1 = TransformCoordinate(CTBall, MSBall);
 

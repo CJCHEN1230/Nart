@@ -234,7 +234,7 @@ namespace Nart
           
             _calcCoord.MatchAndCalc3D(OutputMarker);
             
-            _calcCoord.MatchRealMarker();
+            _calcCoord.MatchRealMarker();//比對當前世界座標與資料庫並存下引數與Marker的ID
 
 
             if (CameraControl.RegToggle)

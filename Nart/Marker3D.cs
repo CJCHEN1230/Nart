@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
+using static Nart.Database;
 
 namespace Nart
 {
@@ -23,7 +24,11 @@ namespace Nart
         /// <summary>
         /// 記錄在資料庫中對應的Marker索引
         /// </summary>
-        public int DatabaseIndex = -1;        
+        public int DatabaseIndex = -1;
+        /// <summary>
+        /// 記錄在資料庫中對應的MarkerID
+        /// </summary>
+        public String MarkerID = "";
         public Marker3D()
         {
             ThreePoints = new Point3D[3];
@@ -126,20 +131,21 @@ namespace Nart
         /// <summary>
         /// 輸入資料庫，並存下對應的索引值到DatabaseIndex
         /// </summary>
-        public void CompareDatabase(List<double[]> MarkerDB)
+        public void CompareDatabase(List<MarkerData> MarkerDB)
         {
            
             for (int i = 0; i < MarkerDB.Count; i++)
             {
-                double diff1 = ThreeLength[0] - MarkerDB[i][0];
-                double diff2 = ThreeLength[1] - MarkerDB[i][1];
-                double diff3 = ThreeLength[2] - MarkerDB[i][2];
+                
+                double diff1 = ThreeLength[0] - MarkerDB[i].ThreeLength[0];
+                double diff2 = ThreeLength[1] - MarkerDB[i].ThreeLength[1];
+                double diff3 = ThreeLength[2] - MarkerDB[i].ThreeLength[2];
 
                 
                 if (Math.Abs(diff1) < 1 && Math.Abs(diff2) < 1 && Math.Abs(diff3) < 1) 
-                {
-                   
+                {                   
                     DatabaseIndex = i;
+                    MarkerID = MarkerDB[i].ID;
                     return;
                 }
 

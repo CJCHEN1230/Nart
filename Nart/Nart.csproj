@@ -136,6 +136,7 @@
     <Compile Include="CameraControl.cs" />
     <Compile Include="CalcCoord.cs" />
     <Compile Include="CamParam.cs" />
+    <Compile Include="Database.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>

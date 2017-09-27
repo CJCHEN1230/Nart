@@ -37,8 +37,8 @@
                 <ComboBox x:Name="comboBox1"  Width="50" HorizontalAlignment="Stretch" Grid.Column="6" Margin="1,1,1,1" Grid.RowSpan="1">
                     <ComboBoxItem>A</ComboBoxItem>
                     <ComboBoxItem>B</ComboBoxItem>
-                    <ComboBoxItem>C</ComboBoxItem>
-                    <ComboBoxItem>D</ComboBoxItem>
+                    <ComboBoxItem>Head</ComboBoxItem>
+                    <ComboBoxItem>Splint</ComboBoxItem>
                 </ComboBox>
             </Grid>
         </DataTemplate>
