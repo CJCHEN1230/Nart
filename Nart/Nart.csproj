@@ -146,15 +146,24 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="MultiAngleView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Marker3D.cs" />
     <Compile Include="ModelData.cs" />
+    <Compile Include="ModelInfo.cs" />
     <Compile Include="ModelSettingView.xaml.cs">
       <DependentUpon>ModelSettingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ModelSettingViewModel.cs" />
+    <Compile Include="MultiAngleView.xaml.cs">
+      <DependentUpon>MultiAngleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MultiAngleViewModel.cs" />
     <Compile Include="NartServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

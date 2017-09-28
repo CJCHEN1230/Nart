@@ -156,7 +156,7 @@ namespace Nart
         /// <summary>
         /// combobox選項的內容
         /// </summary>
-        private List<String> comboboxList;
+        private List<String> comboboxList = MarkerDatabase.MarkerIDList;
         public List<String> ComboBoxList
         {
             get

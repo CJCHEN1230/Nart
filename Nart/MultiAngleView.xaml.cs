@@ -19,7 +19,7 @@ using SharpDX;
 using HelixToolkit.Wpf.SharpDX.Core;
 using System.Collections.ObjectModel;
 
-namespace NartControl.Control
+namespace Nart
 {
     /// <summary>
     /// MultiAngleView.xaml 的互動邏輯

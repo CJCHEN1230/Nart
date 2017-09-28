@@ -55,7 +55,7 @@
                     </LinearGradientBrush>
                 </TabItem.Background>
 
-                <Controls:MultiAngleView x:Name="multiAngleView" Margin="1" Width="Auto" Height="Auto"  />
+                <local:MultiAngleView x:Name="multiAngleView" Margin="1" Width="Auto" Height="Auto"  />
 
             </TabItem>
         </TabControl>

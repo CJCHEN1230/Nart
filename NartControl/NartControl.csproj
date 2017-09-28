@@ -130,10 +130,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Control\MultiAngleView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Control\ImgButton.xaml.cs">
@@ -142,12 +138,7 @@
     <Compile Include="Control\ImgButton2.xaml.cs">
       <DependentUpon>ImgButton2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Control\MultiAngleView.xaml.cs">
-      <DependentUpon>MultiAngleView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Control\MultiAngleViewModel.cs" />
     <Compile Include="Converter\NartConverter.cs" />
-    <Compile Include="ModelInfo.cs" />
     <Compile Include="ObservableObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

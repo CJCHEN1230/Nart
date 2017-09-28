@@ -8,12 +8,12 @@ using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf.SharpDX;
 using SharpDX;
 using HelixToolkit.Wpf.SharpDX.Core;
-//using DemoCore;
+using NartControl;
 
 
-
-namespace NartControl.Control
+namespace Nart
 {
+    
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Windows;
