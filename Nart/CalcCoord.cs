@@ -50,7 +50,7 @@ namespace Nart
         /// </summary>
         private List<Marker3D> MSWorldPoints = new List<Marker3D>(10);
 
-        public  Database database = new Database();
+        public  MarkerDatabase database = new MarkerDatabase();
         
         private Matrix3D CTtoMS;
 
@@ -289,9 +289,6 @@ namespace Nart
         /// </summary>
         public void MatchRealMarker()
         {
-
-
-
             for (int i = 0; i < WorldPoints.Count; i++)
             {               
 
@@ -668,13 +665,37 @@ namespace Nart
                         
                         Matrix3D Final = level1 * level2 * level3 * level4;
 
-                        for (int j = 0; j < MainView.AllModelData.Count; j++)
-                        {
-                            if (MainView.AllModelData[j].DatabaseIndex == WorldPoints[i].DatabaseIndex)
-                            {
-                                MainView.AllModelData[j].AddItem(Final);
-                            }
-                        }
+
+                       for (int j = 0; j < MainViewModel.ModelInfoCollection.Count; j++)
+                       {
+                           if (MainViewModel.ModelInfoCollection[j].MarkerID == WorldPoints[i].MarkerID)
+                           {
+                           }
+                       }
+
+
+
+                       //for (int j = 0; j < MainView.AllModelData.Count; j++)
+                       // {
+                       //     if (MainView.AllModelData[j].DatabaseIndex == WorldPoints[i].DatabaseIndex)
+                       //     {
+                       //         MainView.AllModelData[j].AddItem(Final);
+
+
+                       //        //Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
+                       //        //multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
+                       //        //Console.WriteLine("Count:" + this.multiAngleView._multiAngleViewModel.ModelInfoCollection.Count);
+                       //        //for (int i = 0; i < MainViewModel.ModelInfoCollection.Count; i++)
+                       //        //{
+                       //        //    MainViewModel.ModelInfoCollection[i].ModelTransform = new MatrixTransform3D(TEST);
+                       //        //}
+                       //        //multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
+
+
+
+
+                       //    }
+                       // }
                     }
                     
                                     

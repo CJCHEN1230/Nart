@@ -25,7 +25,7 @@
 
         <Controls:ImgButton2 ButtonLabel="1234567"  ButtonImageSource="/Icon/test.ico" Margin="0,572,0,99"/>
         <Button x:Name="button" Command="ApplicationCommands.Open" Content="Open" HorizontalAlignment="Left" Margin="21,24,0,0" VerticalAlignment="Top" Width="56" Height="56" />
-        <Button x:Name="button1" Click="SettingViewClick" Content="Set Model" HorizontalAlignment="Left" Margin="18,90,0,0" VerticalAlignment="Top" Width="58" Height="54"/>
+        <Button x:Name="button1" Click="SettingView_Click" Content="Set Model" HorizontalAlignment="Left" Margin="18,90,0,0" VerticalAlignment="Top" Width="58" Height="54"/>
         <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="16,153,0,0" VerticalAlignment="Top" Width="56" Height="56"/>
         <Button x:Name="button4" Click="TrackingButton_Click" Content="Tracking" HorizontalAlignment="Left" Margin="22,374,0,0" VerticalAlignment="Top" Width="58" Height="54" />
         <TabControl x:Name="tabControl" SelectedIndex="{Binding Path = TabIndex}" Margin="0,0,0,0" Background="#FF474747" OpacityMask="Black" Grid.Column="1">

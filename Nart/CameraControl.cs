@@ -210,10 +210,10 @@ namespace Nart
         }
         private void MoveModel()
         {           
-            for (int i = 0; i < MainView.AllModelData.Count - 1; i++)
-            {
-                MainView.AllModelData[i].SetTransformMatrix();
-            }
+            //for (int i = 0; i < MainView.AllModelData.Count - 1; i++)
+            //{
+            //    MainView.AllModelData[i].SetTransformMatrix();
+            //}
         }
         /// <summary>
         /// 實體化委派的顯示函數

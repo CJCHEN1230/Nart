@@ -8,14 +8,20 @@ using System.Xml;
 
 namespace Nart
 {
-    public class Database
+    public class MarkerDatabase
     {
+        /// <summary>
+        ///使用一個Class專門記錄三邊長與ID
+        /// </summary>
         public struct MarkerData
         {
             public double[] ThreeLength;
             public string ID;
         }
-        public  List<MarkerData> MarkerInfo = new List<MarkerData>(10);
+        /// <summary>
+        ///使用一個List儲存Marker的三邊長與ID
+        /// </summary>
+        public List<MarkerData> MarkerInfo = new List<MarkerData>(10);
         /// <summary>
         ///頭在Database中引數，定義在CreateDatabase
         /// </summary>
@@ -24,20 +30,10 @@ namespace Nart
         ///咬板在Database中引數，定義在CreateDatabase
         /// </summary>
         public int SplintIndex = -1;
-        /// <summary>
-        ///上顎在Database中引數
-        /// </summary>
-        private int MaxillaIndex = -1;
-        /// <summary>
-        ///下顎在Database中引數
-        /// </summary>
-        private int MandibleIndex = -1;
-
-        public Database()
-        {
-            
+        public static List<String> MarkerIDList = new List<String>();
+        public MarkerDatabase()
+        {            
             CreateDatabase();
-
         }
         private void CreateDatabase()
         {
@@ -51,13 +47,14 @@ namespace Nart
                 foreach (XmlNode OneNode in markerList)
                 {
                     String ID = OneNode.Attributes["ID"].Value;
+                    //將新讀到的MarkerID加到清單裡面
+                    MarkerIDList.Add(ID);
 
-                    XmlNodeList markerLength1 = OneNode.ChildNodes;
+                    XmlNodeList markerLength = OneNode.ChildNodes;
 
-
-                    double[] data1 = new double[3] { Convert.ToDouble(markerLength1[0].InnerText)
-                                                  , Convert.ToDouble(markerLength1[1].InnerText)
-                                                  , Convert.ToDouble(markerLength1[2].InnerText)};
+                    double[] lengthData = new double[3] { Convert.ToDouble(markerLength[0].InnerText)
+                                                  , Convert.ToDouble(markerLength[1].InnerText)
+                                                  , Convert.ToDouble(markerLength[2].InnerText)};
                     //存下Head Marker在Database中的Index
                     if (ID.Equals("Head"))
                     {
@@ -70,11 +67,10 @@ namespace Nart
                     }
 
                     MarkerData markerdata = new MarkerData();
-                    markerdata.ThreeLength = data1;
+                    markerdata.ThreeLength = lengthData;
                     markerdata.ID = ID;
                     MarkerInfo.Add(markerdata);
                 }
-               
             }
             catch
             {

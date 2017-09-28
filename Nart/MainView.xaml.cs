@@ -31,8 +31,6 @@ namespace Nart
     /// </summary>
     public partial class MainView : Window
     {
-        
-        public static List<ModelData> AllModelData = new List<ModelData>(5);
         private MainViewModel _mainViewModel = null;
         public MainView()
         {
@@ -44,7 +42,7 @@ namespace Nart
 
             AllocConsole();
         }        
-        private void SettingViewClick(object sender, RoutedEventArgs e)
+        private void SettingView_Click(object sender, RoutedEventArgs e)
         {
             ModelSettingView modelSettingdlg = new ModelSettingView();
 

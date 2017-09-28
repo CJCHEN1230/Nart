@@ -48,6 +48,8 @@ namespace Nart
 
                 ModelInfoCollection = MainViewModel.ModelInfoCollection;
 
+                
+
                 //ModelInfoCollection.Add(new ModelInfo
                 //{
                 //    CMode = CullMode.Back

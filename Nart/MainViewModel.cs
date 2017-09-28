@@ -91,6 +91,8 @@ namespace Nart
                     //不知道為什麼整個ModelInfo一定要重建，理論上應該只要LoatSTL有走過就好
                     MainViewModel.ModelInfoCollection[i] = new ModelInfo
                     {
+                        ComboBoxList = MainViewModel.ModelInfoCollection[i].ComboBoxList,
+                        MarkerID = MainViewModel.ModelInfoCollection[i].MarkerID,                        
                         CMode = MainViewModel.ModelInfoCollection[i].CMode,
                         ModelFilePath = MainViewModel.ModelInfoCollection[i].ModelFilePath,
                         ModelDiffuseColor = MainViewModel.ModelInfoCollection[i].ModelDiffuseColor,
@@ -99,6 +101,9 @@ namespace Nart
                     };
                     MainViewModel.ModelInfoCollection[i].LoadSTL();
                 }
+
+
+                Console.WriteLine("MarkerID:"+ MainViewModel.ModelInfoCollection[i].MarkerID);
             }
             MainWindow.multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
 

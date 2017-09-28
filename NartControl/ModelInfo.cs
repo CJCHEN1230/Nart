@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
 
+
 namespace Nart
 {
     using SharpDX.Direct3D11;
@@ -47,7 +48,10 @@ namespace Nart
             {
                 SetValue(ref modelMaterial, value);
             }
-        }       
+        }
+        /// <summary>
+        /// 模型矩陣設定
+        /// </summary>     
         private MatrixTransform3D modelTransform;
         public MatrixTransform3D ModelTransform
         {
@@ -134,6 +138,42 @@ namespace Nart
                 SetValue(ref cMode, value);
             }
         }
+        /// <summary>
+        /// MarkerID 的值
+        /// </summary>
+        private String markerID;
+        public String MarkerID
+        {
+            get
+            {
+                return markerID;
+            }
+            set
+            {
+                SetValue(ref markerID, value);
+            }
+        }
+        /// <summary>
+        /// combobox選項的內容
+        /// </summary>
+        private List<String> comboboxList;
+        public List<String> ComboBoxList
+        {
+            get
+            {
+                return comboboxList;
+            }
+            set
+            {
+                SetValue(ref comboboxList, value);
+            }
+        }    
+        
+        
+        
+        
+        
+        
         /// <summary>
         /// 讀檔時特別存下Model3DGroup的
         /// </summary>
