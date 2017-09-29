@@ -479,68 +479,7 @@ namespace Nart
             }
         }
         /// <summary>
-        /// 輸入Marker的data並將資料存進MarkerDB裡面
-        /// </summary>
-        //private void CreateDatabase()
-        //{
-        //    try
-        //    {
-        //        XmlDocument doc = new XmlDocument();
-        //        doc.Load("../../../data/MarkerDatabase.xml");
-
-        //        //挑出Maxilla下面的Marker element
-        //        XmlNodeList maxillaList = doc.SelectNodes("BWMarker/Maxilla/Marker");
-        //        foreach (XmlNode OneNode in maxillaList)
-        //        {
-        //            //String StrAttrValue = OneNode.Attributes["ID"].Value;
-
-
-        //            XmlNodeList markerLength1 = OneNode.ChildNodes;
-
-
-        //            double[] data1 = new double[3] { Convert.ToDouble(markerLength1[0].InnerText)
-        //                                          , Convert.ToDouble(markerLength1[1].InnerText)
-        //                                          , Convert.ToDouble(markerLength1[2].InnerText)};
-        //            MarkerDB.Add(data1);
-        //        }
-        //        //挑出Mandible下面的Marker element
-        //        XmlNodeList mandibleList = doc.SelectNodes("BWMarker/Mandible/Marker");
-        //        foreach (XmlNode OneNode in mandibleList)
-        //        {
-        //            XmlNodeList markerLength2 = OneNode.ChildNodes;
-
-        //            double[] data2 = new double[3] { Convert.ToDouble(markerLength2[0].InnerText)
-        //                                          , Convert.ToDouble(markerLength2[1].InnerText)
-        //                                          , Convert.ToDouble(markerLength2[2].InnerText)};
-        //            MarkerDB.Add(data2);
-        //        }
-
-        //        //挑出Head下面的Marker element
-        //        XmlNode headNode = doc.SelectSingleNode("BWMarker/Head/Marker");                
-        //        XmlNodeList markerLength3 = headNode.ChildNodes;               
-        //        double[] data3 = new double[3] { Convert.ToDouble(markerLength3[0].InnerText)
-        //                                          , Convert.ToDouble(markerLength3[1].InnerText)
-        //                                          , Convert.ToDouble(markerLength3[2].InnerText)};
-        //        HeadIndex = MarkerDB.Count;
-        //        MarkerDB.Add(data3);
-
-
-        //        XmlNode splintNode = doc.SelectSingleNode("BWMarker/Splint/Marker");
-        //        XmlNodeList markerLength4 = splintNode.ChildNodes;
-        //        double[] data4 = new double[3] { Convert.ToDouble(markerLength4[0].InnerText)
-        //                                          , Convert.ToDouble(markerLength4[1].InnerText)
-        //                                          , Convert.ToDouble(markerLength4[2].InnerText)};
-        //        SplintIndex = MarkerDB.Count; //Splint永遠最後一個
-        //        MarkerDB.Add(data4);
-
-        //    }
-        //    catch
-        //    {
-        //        MessageBox.Show("資料庫檔案錯誤");
-        //    }
-        //}
-        /// <summary>
-        /// 輸入點群資料跟指定的Marker(上、下顎)索引，回傳資料庫的索引位置
+        /// 輸入點群資料跟指定的Marker(上、下顎、頭)ID，回傳資料庫的索引位置
         /// </summary>
         private int GetSpecIndex(List<Marker3D> Markerdata,String ID)
         {
@@ -642,6 +581,9 @@ namespace Nart
             }
             CameraControl.RegToggle = false;
         }
+        /// <summary>
+        /// 計算出每個Marker的轉移矩陣
+        /// </summary>
         public void CalcModelTransform()
         {
             CurrentHeadIndex = GetSpecIndex(WorldPoints, "Head");
@@ -670,35 +612,11 @@ namespace Nart
                        {
                            if (MainViewModel.ModelInfoCollection[j].MarkerID == WorldPoints[i].MarkerID)
                            {
+                               MainViewModel.ModelInfoCollection[j].AddItem(Final);
                            }
                        }
-
-
-
-                       //for (int j = 0; j < MainView.AllModelData.Count; j++)
-                       // {
-                       //     if (MainView.AllModelData[j].DatabaseIndex == WorldPoints[i].DatabaseIndex)
-                       //     {
-                       //         MainView.AllModelData[j].AddItem(Final);
-
-
-                       //        //Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
-                       //        //multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
-                       //        //Console.WriteLine("Count:" + this.multiAngleView._multiAngleViewModel.ModelInfoCollection.Count);
-                       //        //for (int i = 0; i < MainViewModel.ModelInfoCollection.Count; i++)
-                       //        //{
-                       //        //    MainViewModel.ModelInfoCollection[i].ModelTransform = new MatrixTransform3D(TEST);
-                       //        //}
-                       //        //multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
-
-
-
-
-                       //    }
-                       // }
-                    }
-                    
-                                    
+                   }
+                                                        
                });
             }
         }

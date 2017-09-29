@@ -47,33 +47,6 @@ namespace Nart
             MainWindow.CamHost1.Child = CamCtrl.icImagingControl[0];
             MainWindow.CamHost2.Child = CamCtrl.icImagingControl[1];
             CamCtrl.CameraStart();
-
-           
-
-
-
-
-
-
-            //ObservableCollection < ModelInfo > temp = new ObservableCollection<ModelInfo>();
-            //ModelInfo TEST = new ModelInfo
-            //{
-            //    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
-            //                                                                    ,
-            //    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
-            //                                                                    ,
-            //    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
-            //                                                                    ,
-            //    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
-            //};
-            //TEST.LoadSTL();
-            //temp.Add(TEST);
-            //MainWindow.multiAngleView._multiAngleViewModel.ModelInfoCollection = temp;
-
-
-
-
-
         }
 
 
@@ -101,9 +74,7 @@ namespace Nart
                     };
                     MainViewModel.ModelInfoCollection[i].LoadSTL();
                 }
-
-
-                Console.WriteLine("MarkerID:"+ MainViewModel.ModelInfoCollection[i].MarkerID);
+                
             }
             MainWindow.multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
 

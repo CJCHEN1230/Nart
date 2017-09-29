@@ -97,9 +97,7 @@ namespace Nart
             {
                 foreach (String filename in dlg.FileNames)
                 {
-                    ModelData mData = new ModelData(filename);
-
-                    //mainModelVisual.Children.Add(mData.ModelVisual);
+                    
                 }
 
             }

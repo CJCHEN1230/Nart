@@ -168,12 +168,6 @@ namespace Nart
                 SetValue(ref comboboxList, value);
             }
         }    
-        
-        
-        
-        
-        
-        
         /// <summary>
         /// 讀檔時特別存下Model3DGroup的
         /// </summary>
@@ -186,18 +180,26 @@ namespace Nart
         /// 儲存模型資料，包括矩陣轉移、材質、網格
         /// </summary>        
         public MeshGeometryModel3D MeshGeometryData { get; private set; } = new MeshGeometryModel3D();
+
+
+
+
         /// <summary>
         /// 此Model的最終轉換矩陣
         /// </summary>
-        private SharpDX.Matrix ModelTransformMatrix = new SharpDX.Matrix();
+        private Matrix3D FinalModelTransform = new Matrix3D();
+        /// <summary>
+        /// 此Model的最終轉換矩陣
+        /// </summary>
+        private Matrix3D ModelTransformMatrix = new Matrix3D();
         /// <summary>
         /// 用來累加的矩陣
         /// </summary>
-        private SharpDX.Matrix TotalModelTransform = new SharpDX.Matrix();
+        private Matrix3D TotalModelTransform = new Matrix3D();
         /// <summary>
         /// 防止抖動，用來存放所有矩陣，10是累積總數量
         /// </summary>
-        private SharpDX.Matrix[] ModelTransformSet = new SharpDX.Matrix[10];
+        private Matrix3D[] ModelTransformSet = new Matrix3D[10];
         /// <summary>
         /// 設定模型材質
         /// </summary>
@@ -227,12 +229,11 @@ namespace Nart
 
             DatabaseIndex = -1;
 
-            TotalModelTransform = new Matrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-            ModelTransformMatrix = new Matrix(1, 0, 0, 0
-                                                                     , 0, 1, 0, 0
-                                                                     , 0, 0, 1, 0
-                                                                     , 0, 0, 0, 1); //單位矩陣
-       
+            TotalModelTransform = new Matrix3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            
+            ModelTransformMatrix.SetIdentity();
+
+
         }
         /// <summary>
         /// 設定好模型之後Load進去模型資料所用
@@ -291,6 +292,61 @@ namespace Nart
             MeshGeometryData.Geometry = this.ModelGeometry;
             MeshGeometryData.Transform = new TranslateTransform3D(0, 0, 0);
             IsLoaded = true;
+        }
+        public void AddItem(Matrix3D item)
+        {
+            if (Count < ModelTransformSet.Length)
+            {
+                Count++;
+
+                TotalModelTransform = AddMatrix3D(TotalModelTransform, item);
+                
+                FinalModelTransform = DivideMatrix3D(TotalModelTransform, Count);
+                
+            }
+            else
+            {
+                TotalModelTransform = SubtractMatrix3D(TotalModelTransform, ModelTransformSet[CurrenIndex]);
+
+                TotalModelTransform = AddMatrix3D(TotalModelTransform, item);
+                
+                FinalModelTransform = DivideMatrix3D(TotalModelTransform, ModelTransformSet.Length);
+            }
+
+            ModelTransformSet[CurrenIndex] = item;
+
+            CurrenIndex++;
+            CurrenIndex = CurrenIndex % ModelTransformSet.Length;
+
+        }
+        /// <summary>
+        /// 每個ModelData當中都會儲存最終轉換的轉移矩陣ModelTransform
+        /// </summary>
+        public void SetTransformMatrix()
+        {
+            ModelTransform = new MatrixTransform3D(FinalModelTransform);
+        }
+
+        private Matrix3D AddMatrix3D(Matrix3D A, Matrix3D B)
+        {
+            return new Matrix3D(A.M11 + B.M11, A.M12 + B.M12, A.M13 + B.M13, A.M14 + B.M14,
+                                A.M21 + B.M21, A.M22 + B.M22, A.M23 + B.M23, A.M24 + B.M24,
+                                A.M31 + B.M31, A.M32 + B.M32, A.M33 + B.M33, A.M34 + B.M34,
+                                A.OffsetX + B.OffsetX, A.OffsetY + B.OffsetY, A.OffsetZ + B.OffsetZ, A.M44 + B.M44);
+        }
+        private Matrix3D SubtractMatrix3D(Matrix3D A, Matrix3D B)
+        {
+            return new Matrix3D(A.M11 - B.M11, A.M12 - B.M12, A.M13 - B.M13, A.M14 - B.M14,
+                                A.M21 - B.M21, A.M22 - B.M22, A.M23 - B.M23, A.M24 - B.M24,
+                                A.M31 - B.M31, A.M32 - B.M32, A.M33 - B.M33, A.M34 - B.M34,
+                                A.OffsetX - B.OffsetX, A.OffsetY - B.OffsetY, A.OffsetZ - B.OffsetZ, A.M44 - B.M44);
+        }
+        private Matrix3D DivideMatrix3D(Matrix3D A, double Divisor)
+        {
+            return new Matrix3D(A.M11 / Divisor, A.M12 / Divisor, A.M13 / Divisor, A.M14 / Divisor,
+                                A.M21 / Divisor, A.M22 / Divisor, A.M23 / Divisor, A.M24 / Divisor,
+                                A.M31 / Divisor, A.M32 / Divisor, A.M33 / Divisor, A.M34 / Divisor,
+                                A.OffsetX / Divisor, A.OffsetY / Divisor, A.OffsetZ / Divisor, A.M44 / Divisor);
         }
     }
 }

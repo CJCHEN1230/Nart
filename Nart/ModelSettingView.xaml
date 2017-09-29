@@ -7,14 +7,14 @@
         xmlns:pt ="http://propertytools.org/wpf"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Model Setting" Height="862.257" Width="751.767" Background="#FFC8C8C8">
+        Title="Model Setting" Height="866.257" Width="745.767" Background="#FFC8C8C8">
     <Window.Resources>
         <sys:Double x:Key="FileWidth">150</sys:Double>
         <sys:Double x:Key="ColorWidth">110</sys:Double>
         <sys:Double x:Key="OneCellWidth">260</sys:Double>
         <sys:Double x:Key="Height">70</sys:Double>
 
-        <DataTemplate x:Key="myItemTemplate" x:Name="FD12">
+        <DataTemplate x:Key="myItemTemplate">
             <Grid Margin="1,1,1,1" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
@@ -34,15 +34,15 @@
                 <pt:FilePicker Margin="1,1,1,1" Filter="STL File (.stl)|*.stl" Width="{StaticResource  FileWidth}"  FilePath="{Binding OSPFilePath}" Grid.RowSpan="1" Grid.Column="3" />
                 <pt:ColorPicker SelectedColor="{Binding OSPDiffuseColor}" Width="{StaticResource  ColorWidth}" Margin="1,1,1,1" Grid.ColumnSpan="1" Grid.Column="4"/>
                 <Rectangle Grid.RowSpan="2" Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="1" VerticalAlignment="Stretch" Width="1" Margin="1,1" Stroke="#FFC6C6C6" />
-                <ComboBox x:Name="comboBox1"  Width="50"  SelectedValue="{Binding MarkerID}" ItemsSource="{Binding ComboBoxList}" HorizontalAlignment="Stretch" Grid.Column="6" Margin="1,1,1,1" Grid.RowSpan="1"/>
+                <ComboBox x:Name="comboBox1"  Width="70"  SelectedValue="{Binding MarkerID}" ItemsSource="{Binding ComboBoxList}" HorizontalAlignment="Center" Grid.Column="6" Margin="1,1,1,1" Grid.RowSpan="1"/>
             </Grid>
         </DataTemplate>
     </Window.Resources>
     <Grid Margin="0,0,-8,-8" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="15*"/>
-            <ColumnDefinition Width="343*"/>
-            <ColumnDefinition Width="18*"/>
+            <ColumnDefinition Width="339*"/>
+            <ColumnDefinition Width="19*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="268*"/>

@@ -137,7 +137,6 @@
     <Compile Include="CalcCoord.cs" />
     <Compile Include="CamParam.cs" />
     <Compile Include="MarkerDatabase.cs" />
-    <Compile Include="Environment.cs" />
     <Compile Include="MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -154,7 +153,6 @@
   <ItemGroup>
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Marker3D.cs" />
-    <Compile Include="ModelData.cs" />
     <Compile Include="ModelInfo.cs" />
     <Compile Include="ModelSettingView.xaml.cs">
       <DependentUpon>ModelSettingView.xaml</DependentUpon>

@@ -30,11 +30,17 @@ namespace Nart
         ///咬板在Database中引數，定義在CreateDatabase
         /// </summary>
         public int SplintIndex = -1;
+        /// <summary>
+        /// Marker的ID資料組成的List
+        /// </summary>
         public static List<String> MarkerIDList = new List<String>();
         public MarkerDatabase()
         {            
             CreateDatabase();
         }
+        /// <summary>
+        /// 輸入Marker的data並將資料存進MarkerDB裡面
+        /// </summary>
         private void CreateDatabase()
         {
             try

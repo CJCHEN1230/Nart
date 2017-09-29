@@ -48,36 +48,21 @@ namespace Nart
 
                 ModelInfoCollection = MainViewModel.ModelInfoCollection;
 
-                
-
-                //ModelInfoCollection.Add(new ModelInfo
-                //{
-                //    CMode = CullMode.Back
-                //                                                                ,
-                //    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
-                //                                                                ,
-                //    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
-                //                                                                ,
-                //    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
-                //                                                                ,
-                //    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
-                //});
-
-
 
 
                 ModelInfoCollection.Add(new ModelInfo
                 {
-                    CMode = CullMode.Front
-                                                                               ,
-                    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP2.stl"
+                    CMode = CullMode.Back
                                                                                 ,
-                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP2.stl"
+                    MarkerID = "A"
+                                                                                ,
+                    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
+                                                                                ,
+                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
                                                                                 ,
                     ModelDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
                                                                                 ,
                     OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
-
                 });
 
 
@@ -87,17 +72,23 @@ namespace Nart
                 {
                     CMode = CullMode.Back
                                                                                 ,
+                    MarkerID = "C"
+                                                                                ,
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl"
                                                                                 ,
-                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
+                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP2.stl"
                                                                                 ,
                     ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
                                                                                 ,
                     OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
+
                 });
+                
                 ModelInfoCollection.Add(new ModelInfo
                 {
                     CMode = CullMode.Back
+                                                                                                      ,
+                    MarkerID = "Head"
                                                                                 ,
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"
                                                                                 ,
