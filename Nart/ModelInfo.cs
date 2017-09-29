@@ -18,7 +18,6 @@ namespace Nart
     using Color = System.Windows.Media.Color;
     public class ModelInfo : ObservableObject
     {
-
         /// <summary>
         /// 模型幾何形狀
         /// </summary>

@@ -14,19 +14,11 @@ using UseCVLibrary;
 namespace Nart
 {
     public class CameraControl :DispatcherObject //繼承此DispatcherObject才能使用Dispatch
-    {
-        /// <summary>
-        /// 相片寬度
-        /// </summary>
-        private int _width;
-        /// <summary>
-        /// 相片長度
-        /// </summary>
-        private int _height;
+    {       
          /// <summary>
         /// 儲存兩相機的點資料
         /// </summary>
-        List<BWMarker>[] OutputMarker = new List<BWMarker>[2];
+        private List<BWMarker>[] OutputMarker = new List<BWMarker>[2];
         /// <summary>
         /// 雙相機控制項
         /// </summary>
@@ -74,68 +66,34 @@ namespace Nart
         private MainViewModel _mainViewModel = null;
         /// <summary>
         /// 傳進來的width跟height決定inImageControl的長寬
-        /// </summary>
-        public CameraControl(int width, int height , MainViewModel mainViewModel)
+        /// </summary>      
+        public CameraControl(TIS.Imaging.ICImagingControl[] cam ,  MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
 
             _calcCoord = new CalcCoord(_mainViewModel);
 
-            icImagingControl[0] = new TIS.Imaging.ICImagingControl();
-            icImagingControl[1] = new TIS.Imaging.ICImagingControl();
-            
+            icImagingControl = cam;
+
             _are[0] = new AutoResetEvent(false);
             _are[1] = new AutoResetEvent(false);
 
             _corPtFltr[0] = new CornerPointFilter(0);
-            _corPtFltr[1] = new CornerPointFilter(1);           
+            _corPtFltr[1] = new CornerPointFilter(1);
 
             OutputMarker[0] = new List<BWMarker>(10);// 儲存的Marker空間，預設10個
             OutputMarker[1] = new List<BWMarker>(10);
 
-            ((System.ComponentModel.ISupportInitialize)(icImagingControl[0])).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(icImagingControl[1])).BeginInit();
            
-            icImagingControl[0].Size = new System.Drawing.Size(width, height);
-            icImagingControl[1].Size = new System.Drawing.Size(width, height);
-
-            defaultControlSetting(icImagingControl[0]);
-            defaultControlSetting(icImagingControl[1]);
-
             icImagingControl[0].ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl1_ImageAvailable);
             icImagingControl[1].ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl2_ImageAvailable);
-            //icImagingControl[0].OverlayUpdateEventEnable = true;
-            //icImagingControl[0].OverlayUpdate += new System.EventHandler<ICImagingControl.OverlayUpdateEventArgs>(this.icImagingControl1_OverlayUpdate);
-
-
-            ((System.ComponentModel.ISupportInitialize)(icImagingControl[0])).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(icImagingControl[1])).EndInit();
-           
+          
             LoadCamSetting();
 
             _displayThread = new Thread(DisplayLoop);
             _displayThread.IsBackground = true;
 
-        }       
-        /// <summary>
-        /// 雙相機控制項的初始化設定
-        /// </summary>
-        private void defaultControlSetting(TIS.Imaging.ICImagingControl icImagingControl)
-        {
-            icImagingControl.DeviceListChangedExecutionMode = TIS.Imaging.EventExecutionMode.Invoke;
-            icImagingControl.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
-            icImagingControl.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
-            icImagingControl.ImageRingBufferSize = 8;
-            icImagingControl.LiveDisplayPosition =new Point(0,0);
-            icImagingControl.BackColor = System.Drawing.Color.Black;
-            icImagingControl.LiveDisplayDefault = false; //如果設定為true，將無法改變顯示視窗大小，所以下面的icImagingControl.Height將無法使用
-            icImagingControl.LiveCaptureContinuous = true; //LiveCaptureContinuous = True means that every frame is copied to the ring buffer.
-            icImagingControl.LiveCaptureLastImage = false;
-            icImagingControl.LiveDisplay = false; //設定為false才能將影像處理顯示在control
-            icImagingControl.LiveDisplayHeight = icImagingControl.Height;
-            icImagingControl.LiveDisplayWidth = icImagingControl.Width;
-            icImagingControl.MemoryCurrentGrabberColorformat = ICImagingControlColorformats.ICY800;
-        }
+        }            
         /// <summary>
         /// 從xml匯入相機參數
         /// </summary>
@@ -181,16 +139,12 @@ namespace Nart
             if (icImagingControl[0].DeviceValid && icImagingControl[1].DeviceValid) 
             {
                 _displayThread.Start();
-
-                _width = icImagingControl[0].ImageSize.Width;
-                _height = icImagingControl[0].ImageSize.Height;
+                
 
                 Parallel.For(0, 2, i =>
                 {
-                    Console.WriteLine("剛開始 " + i + ":" + Thread.CurrentThread.ManagedThreadId);
                     icImagingControl[i].LiveStart();
                 });
-               
             }
         }
         public void CameraClose()
@@ -267,7 +221,7 @@ namespace Nart
 
                     byte* data = _displayBuffer[0].Ptr;
 
-                    OutputMarker[0] = _corPtFltr[0].GetCornerPoint(_width, _height, data);
+                    OutputMarker[0] = _corPtFltr[0].GetCornerPoint(icImagingControl[0].ImageSize.Width, icImagingControl[0].ImageSize.Height, data);
 
                     _count.Signal();
 
@@ -292,7 +246,7 @@ namespace Nart
 
                     byte* data = _displayBuffer[1].Ptr;
 
-                    OutputMarker[1] = _corPtFltr[1].GetCornerPoint(_width, _height, data);
+                    OutputMarker[1] = _corPtFltr[1].GetCornerPoint(icImagingControl[0].ImageSize.Width, icImagingControl[0].ImageSize.Height, data);
                  
                     _count.Signal();
 

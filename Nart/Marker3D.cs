@@ -22,10 +22,6 @@ namespace Nart
         /// </summary>
         public double[] ThreeLength;
         /// <summary>
-        /// 記錄在資料庫中對應的Marker索引
-        /// </summary>
-        public int DatabaseIndex = -1;
-        /// <summary>
         /// 記錄在資料庫中對應的MarkerID
         /// </summary>
         public String MarkerID = "";
@@ -144,8 +140,7 @@ namespace Nart
                 
                 if (Math.Abs(diff1) < 1 && Math.Abs(diff2) < 1 && Math.Abs(diff3) < 1) 
                 {                   
-                    DatabaseIndex = i;
-                    MarkerID = MarkerDB[i].ID;
+                    this.MarkerID = MarkerDB[i].ID;
                     return;
                 }
 

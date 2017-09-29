@@ -57,8 +57,7 @@ namespace Nart
         private Matrix3D MStoCT;
 
         private Matrix3D OriWorldtoMS;
-
-        public int CurrentHeadIndex = -1;
+        
         ///<summary>
         ///頭在註冊資料中引數
         /// </summary>
@@ -524,7 +523,7 @@ namespace Nart
 
                     for (int i = 0; i < WorldPoints.Count; i++) 
                     {
-                        Console.WriteLine(i+":"+WorldPoints[i].DatabaseIndex);
+                        Console.WriteLine("MarkerID"+i +":"+WorldPoints[i].MarkerID);
                     }
 
 
@@ -534,13 +533,11 @@ namespace Nart
                     {
                         //創建註冊時的世界座標點
                         Marker3D OriWorldPoint = new Marker3D();
-                        OriWorldPoint.DatabaseIndex = WorldPoints[i].DatabaseIndex;
                         OriWorldPoint.MarkerID = WorldPoints[i].MarkerID;
                         WorldPoints[i].ThreePoints.CopyTo(OriWorldPoint.ThreePoints, 0); //將當前世界座標點存進OriWorldPoint當作註冊時的狀態
 
                         //創建轉成MS座標系的世界座標點
                         Marker3D MSWorldPoint = new Marker3D();
-                        MSWorldPoint.DatabaseIndex = WorldPoints[i].DatabaseIndex;
                         MSWorldPoint.MarkerID = WorldPoints[i].MarkerID;
                         OriWorldtoMS.Transform(WorldPoints[i].ThreePoints);
                         WorldPoints[i].ThreePoints.CopyTo(MSWorldPoint.ThreePoints, 0);
@@ -557,7 +554,7 @@ namespace Nart
                         Console.WriteLine(OriWorldPoints[i].ThreePoints[0]);
                         Console.WriteLine(OriWorldPoints[i].ThreePoints[1]);
                         Console.WriteLine(OriWorldPoints[i].ThreePoints[2]);
-                        Console.WriteLine(OriWorldPoints[i].DatabaseIndex);
+                        Console.WriteLine(OriWorldPoints[i].MarkerID);
                     }
                     Console.WriteLine("\n\n\n");
                     for (int i = 0; i < MSWorldPoints.Count; i++)
@@ -566,7 +563,7 @@ namespace Nart
                         Console.WriteLine(MSWorldPoints[i].ThreePoints[0]);
                         Console.WriteLine(MSWorldPoints[i].ThreePoints[1]);
                         Console.WriteLine(MSWorldPoints[i].ThreePoints[2]);
-                        Console.WriteLine("引數:" + MSWorldPoints[i].DatabaseIndex);
+                        Console.WriteLine("引數:" + MSWorldPoints[i].MarkerID);
                     }
 
                 }
@@ -586,14 +583,14 @@ namespace Nart
         /// </summary>
         public void CalcModelTransform()
         {
-            CurrentHeadIndex = GetSpecIndex(WorldPoints, "Head");
+            int CurrentHeadIndex = GetSpecIndex(WorldPoints, "Head");
 
             //沒有找到頭的Marker
             if (CurrentHeadIndex != -1) 
             {
                 Parallel.For(0, WorldPoints.Count, i =>
-               {                   
-                    if (WorldPoints[i].DatabaseIndex != -1 && WorldPoints[i].DatabaseIndex != database.SplintIndex && WorldPoints[i].DatabaseIndex != database.HeadIndex)
+               {
+                   if (!WorldPoints[i].MarkerID.Equals("")&& !WorldPoints[i].MarkerID.Equals("Splint") && !WorldPoints[i].MarkerID.Equals("Head"))
                     {
                         int MSandOriIndex = GetSpecIndex(MSWorldPoints, WorldPoints[i].MarkerID);//取得當前世界座標在註冊時的座標索引值是多少
 

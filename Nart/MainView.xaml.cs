@@ -39,7 +39,7 @@ namespace Nart
             _mainViewModel = new MainViewModel(this);
 
             this.DataContext = _mainViewModel;
-
+            
             AllocConsole();
         }        
         private void SettingView_Click(object sender, RoutedEventArgs e)
@@ -105,12 +105,31 @@ namespace Nart
         private void NewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
 
-        }
+        }       
         private void CamHost1_Loaded(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("\nHeight:" + CamHost1.ActualHeight
-                + "\nWidth:" + CamHost1.ActualWidth);
+            if (!CamHost1.IsActivated)
+            {
+                CamHost1.InitializeCamSetting(CamHost1.ActualWidth, CamHost1.ActualHeight);
+            }
         }
+        private void CamHost2_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!CamHost2.IsActivated)
+            {
+                CamHost2.InitializeCamSetting(CamHost2.ActualWidth, CamHost2.ActualHeight);
+                _mainViewModel.InitCamCtrl();
+                CamHost1.IsActivated = true;
+                CamHost2.IsActivated = true;
+            }
+        }
+
+       
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+           
+        }
+
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -118,6 +137,7 @@ namespace Nart
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
-        
+
+
     }
 }

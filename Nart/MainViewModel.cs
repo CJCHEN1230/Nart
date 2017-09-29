@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
 using NartControl;
 using System.Collections.ObjectModel;
+using NartControl.Control;
 
 namespace Nart
 {
@@ -16,7 +17,7 @@ namespace Nart
     /// </summary>
     public class MainViewModel : ObservableObject
     {
-        public CameraControl CamCtrl
+        public CameraControl CamCtrl 
         {
             get;
             set;
@@ -26,11 +27,10 @@ namespace Nart
             get;
             set;
         } = new NartServer();
-        public static List<ModelInfo> AllModelData2 = new List<ModelInfo>(5);
-        public static List<MeshGeometryModel3D> AllModelData3 = new List<MeshGeometryModel3D>(5);
+
+        //CameraWrapper temp = new CameraWrapper();
 
         public static ObservableCollection<ModelInfo> ModelInfoCollection = new ObservableCollection<ModelInfo>();
-
         private MainView _window;
         public MainView MainWindow
         {
@@ -43,13 +43,11 @@ namespace Nart
 
 
 
-            CamCtrl = new CameraControl(873, 815, this);
-            MainWindow.CamHost1.Child = CamCtrl.icImagingControl[0];
-            MainWindow.CamHost2.Child = CamCtrl.icImagingControl[1];
-            CamCtrl.CameraStart();
+            //CamCtrl = new CameraControl(878, 764, this);
+            //MainWindow.CamHost1.Child = CamCtrl.icImagingControl[0];
+            //MainWindow.CamHost2.Child = CamCtrl.icImagingControl[1];
+            //CamCtrl.CameraStart();
         }
-
-
         /// <summary>
         /// 顯示設置好的各項模型資訊，按下Set Model 之後並且按ok後會走到這
         /// </summary>
@@ -80,8 +78,13 @@ namespace Nart
 
         }
 
+        public void InitCamCtrl()
+        {
 
-        private int _tabIndex = 1; //預設tab頁面索引值
+            CamCtrl = new CameraControl(new TIS.Imaging.ICImagingControl[2] { _window.CamHost1.icImagingControl, _window.CamHost2.icImagingControl }, this);
+            CamCtrl.CameraStart();
+        }
+        private int _tabIndex = 0; //預設tab頁面索引值
         public int TabIndex
         {
             get { return this._tabIndex; }

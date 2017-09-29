@@ -20,26 +20,24 @@ namespace NartControl.Control
     /// <summary>
     /// CameraWrapper.xaml 的互動邏輯
     /// </summary>
-    public partial class CameraWrapper : WindowsFormsHost
+    public partial class CameraWrapper : UserControl
     {
 
         public TIS.Imaging.ICImagingControl icImagingControl = new TIS.Imaging.ICImagingControl();
-
-        
+        public bool IsActivated = false;        
         public CameraWrapper()
         {
-            InitializeComponent();
-            defaultControlSetting(this.ActualWidth, this.ActualHeight);
+            InitializeComponent();            
         }
 
-        private void WindowsFormsHost_Loaded(object sender, RoutedEventArgs e)
+        public void InitializeCamSetting(double width , double height)
         {
-            this.Child = icImagingControl;
-            Console.WriteLine("  ActualHeight:" + this.ActualHeight+ "  ActualWidth:" + this.ActualWidth);
-            Console.WriteLine("  height:" + this.Height + "  width:" + this.Width);
-
-            
+            defaultControlSetting(width, height);
+            this.CamHost.Child = icImagingControl;
         }
+        /// <summary>
+        /// 相機控制項的初始化設定
+        /// </summary>
         private void defaultControlSetting(double width, double height)
         {
             ((System.ComponentModel.ISupportInitialize)(icImagingControl)).BeginInit();
@@ -53,11 +51,11 @@ namespace NartControl.Control
             icImagingControl.LiveDisplayDefault = false; //如果設定為true，將無法改變顯示視窗大小，所以下面的icImagingControl.Height將無法使用
             icImagingControl.LiveCaptureContinuous = true; //LiveCaptureContinuous = True means that every frame is copied to the ring buffer.
             icImagingControl.LiveCaptureLastImage = false;
-            icImagingControl.LiveDisplay = true; //設定為false才能將影像處理顯示在control
+            icImagingControl.LiveDisplay = false; //設定為false才能將影像處理顯示在control
             icImagingControl.LiveDisplayHeight = icImagingControl.Height;
             icImagingControl.LiveDisplayWidth = icImagingControl.Width;
             icImagingControl.MemoryCurrentGrabberColorformat = ICImagingControlColorformats.ICY800;
-            ((System.ComponentModel.ISupportInitialize)(icImagingControl)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(icImagingControl)).EndInit();
         }
     }
 }

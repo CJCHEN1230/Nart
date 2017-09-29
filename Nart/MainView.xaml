@@ -9,7 +9,7 @@
         xmlns:helix="http://helix-toolkit.org/wpf"
         xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
         Foreground="White"
-        Title="Nart" Height="762" Width="1583.5" WindowState="Maximized" Background="#FF474747" Closed="load_Closed">
+        Title="Nart" Height="762" Width="1583.5" WindowState="Maximized" Background="#FF474747" Closed="load_Closed" Loaded="Window_Loaded">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCmdExecuted"/>
         <CommandBinding Command="ApplicationCommands.New" Executed="NewCmdExecuted"/>
@@ -23,10 +23,10 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Controls:ImgButton2 ButtonLabel="1234567"  ButtonImageSource="/Icon/test.ico" Margin="0,572,0,99"/>
+        <Controls:ImgButton2 x:Name="ImgButton22" ButtonLabel="1234567"  ButtonImageSource="/Icon/test.ico" Margin="0,572,0,99"/>
         <Button x:Name="button" Command="ApplicationCommands.Open" Content="Open" HorizontalAlignment="Left" Margin="21,24,0,0" VerticalAlignment="Top" Width="56" Height="56" />
-        <Button x:Name="button1" Click="SettingView_Click" Content="Set Model" HorizontalAlignment="Left" Margin="18,90,0,0" VerticalAlignment="Top" Width="74" Height="54"/>
-        <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="16,153,0,0" VerticalAlignment="Top" Width="76" Height="56"/>
+        <Button x:Name="button1" Click="SettingView_Click" Content="Set Model" HorizontalAlignment="Left" Margin="10,152,0,0" VerticalAlignment="Top" Width="74" Height="54"/>
+        <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="10,218,0,0" VerticalAlignment="Top" Width="76" Height="56"/>
         <Button x:Name="button4" Click="TrackingButton_Click" Content="Tracking" HorizontalAlignment="Left" Margin="22,374,0,0" VerticalAlignment="Top" Width="58" Height="54" />
         <TabControl x:Name="tabControl" SelectedIndex="{Binding Path = TabIndex}" Margin="0,0,0,0" Background="#FF474747" OpacityMask="Black" Grid.Column="1">
             <TabItem Header="Camera" FontSize="15" >
@@ -37,14 +37,21 @@
                     </LinearGradientBrush>
                 </TabItem.Background>
                 <Grid Background="Black">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="7*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <WindowsFormsHost x:Name="CamHost1" Grid.Column="0"  Margin="0,80,0,80" Background="#FF666666" Loaded="CamHost1_Loaded"/>
-                    <WindowsFormsHost x:Name="CamHost2" Grid.Column="2"  Margin="0,80,0,80" Background="#FF666666" />
-                    <Rectangle Fill="#FF474747" HorizontalAlignment="Center" Grid.Column="1" Margin="0" Stroke="Black" Width="10" RadiusY="61" RadiusX="61" Grid.ColumnSpan="1"/>
+                    <Controls:CameraWrapper x:Name="CamHost1" Grid.Column="0"  Grid.Row="1"  Margin="0,1,0,1" Background="#FF666666" Loaded="CamHost1_Loaded" />
+                    <Controls:CameraWrapper x:Name="CamHost2" Grid.Column="2"  Grid.Row="1"  Margin="0,1,0,1" Background="#FF666666" Loaded="CamHost2_Loaded" />
+
+                    <Rectangle Fill="#FF474747" HorizontalAlignment="Center" Grid.Column="1" Margin="0" Stroke="Black" Width="10" RadiusY="61" RadiusX="61" Grid.ColumnSpan="1" Grid.RowSpan="3"/>
+
                 </Grid>
             </TabItem>
             <TabItem Header="3D View" FontSize="15" HorizontalAlignment="Left" Width="74">
