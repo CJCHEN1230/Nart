@@ -16,12 +16,13 @@
             <ColumnDefinition Width="26*"/>
             <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
-        <hx:ModelContainer3DX x:Name="sharedContainer"  RenderTechnique="{Binding RenderTechnique}">
+        <hx:ModelContainer3DX x:Name="sharedContainer"  RenderTechnique="{Binding RenderTechnique}" EffectsManager="{Binding EffectsManager}">
             <hx:ItemsModel3D ItemsSource="{Binding ModelInfoCollection}">
                 <hx:ItemsModel3D.ItemTemplate>
                     <DataTemplate>
                         <hx:MeshGeometryModel3D
                             CullMode="{Binding CMode}" 
+                            
                             ReuseVertexArrayBuffer="True"
                             Geometry="{Binding ModelGeometry}"
                             Material="{Binding ModelMaterial}"

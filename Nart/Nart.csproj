@@ -47,15 +47,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="HelixToolkit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelixToolkit.1.0.0-unstable1767\lib\portable-net45+win8+wpa81+wp8\HelixToolkit.dll</HintPath>
+      <HintPath>..\packages\HelixToolkit.1.0.0-unstable1813\lib\portable-net45+win8+wpa81+wp8\HelixToolkit.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="HelixToolkit.Wpf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelixToolkit.Wpf.1.0.0-unstable1767\lib\net45\HelixToolkit.Wpf.dll</HintPath>
+      <HintPath>..\packages\HelixToolkit.Wpf.1.0.0-unstable1813\lib\net45\HelixToolkit.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="HelixToolkit.Wpf.SharpDX, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelixToolkit.Wpf.SharpDX.1.0.0-unstable1767\lib\net45\HelixToolkit.Wpf.SharpDX.dll</HintPath>
+      <HintPath>..\packages\HelixToolkit.Wpf.SharpDX.1.0.0-unstable1813\lib\net45\HelixToolkit.Wpf.SharpDX.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PropertyTools, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">

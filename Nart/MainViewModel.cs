@@ -84,7 +84,7 @@ namespace Nart
             CamCtrl = new CameraControl(new TIS.Imaging.ICImagingControl[2] { _window.CamHost1.icImagingControl, _window.CamHost2.icImagingControl }, this);
             CamCtrl.CameraStart();
         }
-        private int _tabIndex = 0; //預設tab頁面索引值
+        private int _tabIndex = 1; //預設tab頁面索引值
         public int TabIndex
         {
             get { return this._tabIndex; }

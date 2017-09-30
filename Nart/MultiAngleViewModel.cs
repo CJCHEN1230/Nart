@@ -40,9 +40,9 @@ namespace Nart
             private set
             {
                 SetValue(ref cam1, value);
-                CameraModel = value is PerspectiveCamera
-                                       ? Perspective
-                                       : value is OrthographicCamera ? Orthographic : null;
+                //CameraModel = value is PerspectiveCamera
+                //                       ? Perspective
+                //                       : value is OrthographicCamera ? Orthographic : null;
             }
         }
         private Camera cam2;
@@ -56,12 +56,12 @@ namespace Nart
             private set
             {
                 SetValue(ref cam2, value);
-                CameraModel = value is PerspectiveCamera
-                                       ? Perspective
-                                       : value is OrthographicCamera ? Orthographic : null;
+                //CameraModel = value is PerspectiveCamera
+                //                       ? Perspective
+                //                       : value is OrthographicCamera ? Orthographic : null;
             }
         }
-        private Camera cam3;
+        private Camera cam3 =   new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
         public Camera Camera3
         {
             get
@@ -72,11 +72,11 @@ namespace Nart
             private set
             {
                 SetValue(ref cam3, value);
-                CameraModel = value is PerspectiveCamera
-                                       ? Perspective
-                                       : value is OrthographicCamera ? Orthographic : null;
+                //CameraModel = value is PerspectiveCamera
+                //                       ? Perspective
+                //                       : value is OrthographicCamera ? Orthographic : null;
             }
-        }
+        } 
         private Vector3 light1Direction = new Vector3();
         public Vector3 Light1Direction
         {
@@ -197,6 +197,8 @@ namespace Nart
         private MultiAngleView Multiview;
         public MultiAngleViewModel(MultiAngleView _multiview)
         {
+            Camera3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
             RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Phong];
             EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
