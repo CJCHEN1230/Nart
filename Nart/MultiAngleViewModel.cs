@@ -24,89 +24,26 @@ namespace Nart
     using PerspectiveCamera = HelixToolkit.Wpf.SharpDX.PerspectiveCamera;
     using ProjectionCamera = HelixToolkit.Wpf.SharpDX.ProjectionCamera;
 
-    public class MultiAngleViewModel : BaseViewModel
+    public class MultiAngleViewModel : ObservableObject
     {
         /// <summary>
         /// 將load好的Model3DGroup加進去方便計算BoundingBox，因為setCamera會使用到，但在其他類別Load進模型檔所以設定成static
         /// </summary>
 
-        //private RenderTechnique renderTechnique;
-        //public RenderTechnique RenderTechnique
-        //{
-        //    get
-        //    {
-        //        return renderTechnique;
-        //    }
-        //    set
-        //    {
-        //        SetValue(ref renderTechnique, value);
-        //    }
-        //}
-        //public IEffectsManager EffectsManager { get; protected set; }
-        //public IRenderTechniquesManager RenderTechniquesManager { get; protected set; }
-
-        public MSAALevel MSAA
-        {
-            set; get;
-        } = MSAALevel.Disable;
-
-        public MSAALevel[] MSAAs { get; } = new MSAALevel[] { MSAALevel.Disable, MSAALevel.Two, MSAALevel.Four, MSAALevel.Eight, MSAALevel.Maximum };
-
-        private int specularValue;
-        public int SpecularValue
+        private RenderTechnique renderTechnique;
+        public RenderTechnique RenderTechnique
         {
             get
             {
-                return specularValue;
+                return renderTechnique;
             }
-
-            private set
+            set
             {
-                SetValue(ref specularValue, value);
-
-                for (int i = 0; i < ModelInfoCollection.Count; i++)
-                {
-
-                    ModelInfoCollection[i].ModelMaterial.SpecularColor = new SharpDX.Color(specularValue, specularValue, specularValue, 255);
-                    Console.WriteLine("SpecularColor" + specularValue);
-
-                }
-                OnPropertyChanged("ModelInfoCollection");
+                SetValue(ref renderTechnique, value);
             }
         }
-
-        private float shininess;
-
-        public float Shininess
-        {
-            get
-            {
-                return shininess;
-            }
-
-            private set
-            {
-                SetValue(ref shininess, value);
-
-                for (int i =0; i<ModelInfoCollection.Count; i++)
-                {
-
-                    ModelInfoCollection[i].ModelMaterial.SpecularShininess = shininess;
-                    Console.WriteLine("SpecularShininess" + shininess);
-
-                }
-                OnPropertyChanged("ModelInfoCollection");
-            }
-        }
-
-
-
-
-
-
-
-
-
+        public IEffectsManager EffectsManager { get; protected set; }
+        public IRenderTechniquesManager RenderTechniquesManager { get; protected set; }        
         private Camera cam1;
         public Camera Camera1
         {
@@ -265,7 +202,7 @@ namespace Nart
         {
 
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
-            RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Phong];
+            RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Blinn];
             EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
             this._multiview = _multiview;
 

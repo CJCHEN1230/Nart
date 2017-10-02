@@ -28,7 +28,7 @@ namespace Nart
         /// <summary>
         /// 病人名字
         /// </summary>
-        private static String patientName;
+        private static String patientName = "蔡慧君";
         public static String PatientName
         {
             get
@@ -241,18 +241,7 @@ namespace Nart
                 if (!ModelInfoCollection[i].IsLoaded)
                 {
                     //不知道為什麼整個ModelInfo一定要重建，理論上應該只要LoatSTL有走過就好
-                    ModelInfoCollection[i] = new ModelInfo
-                    {
-                        IvtNormal = MainViewModel.ModelInfoCollection[i].IvtNormal,
-                        FrontCounterClockwise = MainViewModel.ModelInfoCollection[i].FrontCounterClockwise,
-                        ComboBoxList = MainViewModel.ModelInfoCollection[i].ComboBoxList,
-                        MarkerID = MainViewModel.ModelInfoCollection[i].MarkerID,
-                        CMode = MainViewModel.ModelInfoCollection[i].CMode,
-                        ModelFilePath = MainViewModel.ModelInfoCollection[i].ModelFilePath,
-                        ModelDiffuseColor = MainViewModel.ModelInfoCollection[i].ModelDiffuseColor,
-                        OSPFilePath = MainViewModel.ModelInfoCollection[i].OSPFilePath,
-                        OSPDiffuseColor = MainViewModel.ModelInfoCollection[i].OSPDiffuseColor
-                    };
+                    ModelInfoCollection[i] = new ModelInfo(MainViewModel.ModelInfoCollection[i]);                  
                     ModelInfoCollection[i].LoadSTL();
                 }
 

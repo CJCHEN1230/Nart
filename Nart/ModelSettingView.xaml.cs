@@ -25,7 +25,6 @@ namespace Nart
         /// ModelSettingView的ViewModel
         /// </summary>
         private ModelSettingViewModel _modelSettingViewModel;
-
         public ModelSettingView()
         {
             InitializeComponent();
@@ -65,8 +64,6 @@ namespace Nart
             e.Cancel = true;
             this.Hide();
         }
-
-
     }
 }
 

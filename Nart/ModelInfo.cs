@@ -196,15 +196,11 @@ namespace Nart
             {
                 SetValue(ref comboboxList, value);
             }
-        }    
+        }
         /// <summary>
         /// 讀檔時特別存下Model3DGroup的
         /// </summary>
-        public Model3DGroup SingleModel
-        {
-            get;
-            set;
-        }
+        public Model3DGroup SingleModel;
         /// <summary>
         /// 儲存模型資料，包括矩陣轉移、材質、網格
         /// </summary>        
@@ -220,7 +216,7 @@ namespace Nart
         /// <summary>
         /// 用來累加的矩陣
         /// </summary>
-        private Matrix3D TotalModelTransform = new Matrix3D();
+        private Matrix3D TotalModelTransform = new Matrix3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         /// <summary>
         /// 防止抖動，用來存放所有矩陣，10是累積總數量
         /// </summary>
@@ -236,28 +232,37 @@ namespace Nart
             ModelMaterial.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
             ModelMaterial.DiffuseColor = ModelDiffuseColor.ToColor4();
             ModelMaterial.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
-            float Specular = 0.5f;
+            int Specular = 90;
             ModelMaterial.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
-            ModelMaterial.SpecularShininess = 80;
+            ModelMaterial.SpecularShininess = 60;
         }
         /// <summary>
         /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
         /// </summary>
         private int CurrenIndex = 0;
         public bool IsLoaded = false;
-        public int DatabaseIndex { get; set; }
-        public int Count { get; set; }
+        public int DatabaseIndex = -1;
+        public int Count = 0;
         public ModelInfo()
+        {                       
+            ModelTransformMatrix.SetIdentity();
+        }
+        public ModelInfo(ModelInfo oldModelInfo)
         {
-   
-            Count = 0;
-
-            DatabaseIndex = -1;
-
-            TotalModelTransform = new Matrix3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-            
             ModelTransformMatrix.SetIdentity();
 
+            ModelGeometry = oldModelInfo.ModelGeometry;
+            ModelMaterial = oldModelInfo.ModelMaterial;
+            ModelTransform = oldModelInfo.ModelTransform;
+            ModelFilePath = oldModelInfo.ModelFilePath;
+            OSPFilePath = oldModelInfo.OSPFilePath;
+            ModelDiffuseColor = oldModelInfo.ModelDiffuseColor;
+            OSPDiffuseColor = oldModelInfo.OSPDiffuseColor;
+            CMode = oldModelInfo.CMode;
+            IvtNormal = oldModelInfo.IvtNormal;
+            FrontCounterClockwise = oldModelInfo.FrontCounterClockwise;
+            MarkerID = oldModelInfo.MarkerID;
+            ComboBoxList = oldModelInfo.ComboBoxList;
 
         }
         /// <summary>
@@ -351,7 +356,6 @@ namespace Nart
         {
             ModelTransform = new MatrixTransform3D(FinalModelTransform);
         }
-
         private Matrix3D AddMatrix3D(Matrix3D A, Matrix3D B)
         {
             return new Matrix3D(A.M11 + B.M11, A.M12 + B.M12, A.M13 + B.M13, A.M14 + B.M14,
