@@ -125,7 +125,7 @@ namespace Nart
                 SetValue(ref ospDiffuseColor, value);
             }
         }    
-        private CullMode cMode;
+        private CullMode cMode = CullMode.Back;
         public CullMode CMode
         {
             get
@@ -135,6 +135,36 @@ namespace Nart
             set
             {
                 SetValue(ref cMode, value);
+            }
+        }
+        /// <summary>
+        /// 反轉Normal方向
+        /// </summary>
+        private bool ivtNormal = false;
+        public bool IvtNormal
+        {
+            get
+            {
+                return ivtNormal;
+            }
+            set
+            {
+                SetValue(ref ivtNormal, value);
+            }
+        }
+        /// <summary>
+        /// Helixtoolkit裡面是右手定則
+        /// </summary>
+        private bool frontCounterClockwise =true;
+        public bool FrontCounterClockwise
+        {
+            get
+            {
+                return frontCounterClockwise;
+            }
+            set
+            {
+                SetValue(ref frontCounterClockwise, value);
             }
         }
         /// <summary>
@@ -179,10 +209,6 @@ namespace Nart
         /// 儲存模型資料，包括矩陣轉移、材質、網格
         /// </summary>        
         public MeshGeometryModel3D MeshGeometryData { get; private set; } = new MeshGeometryModel3D();
-
-
-
-
         /// <summary>
         /// 此Model的最終轉換矩陣
         /// </summary>
@@ -283,7 +309,7 @@ namespace Nart
             {
                 ModelGeometry.Indices.Add(triangleindice);
             }
-            OnPropertyChanged("ModelGeometry");
+            
 
             //MeshGeometryData = new MeshGeometryModel3D();
             //將建立好的指派進helix.sharp格式的MeshGeometryModel3D

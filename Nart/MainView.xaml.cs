@@ -31,6 +31,8 @@ namespace Nart
     /// </summary>
     public partial class MainView : Window
     {
+
+        private ModelSettingView modelSettingdlg;
         private MainViewModel _mainViewModel = null;
         public MainView()
         {
@@ -44,29 +46,27 @@ namespace Nart
         }        
         private void SettingView_Click(object sender, RoutedEventArgs e)
         {
-            ModelSettingView modelSettingdlg = new ModelSettingView();
-
+            if (modelSettingdlg== null)
+            {
+                modelSettingdlg = new ModelSettingView();
+            }
             modelSettingdlg.Owner = this;
 
-            bool? dialogResult = modelSettingdlg.ShowDialog();
-
-            if (dialogResult != null && (bool)dialogResult == true)
-            {
-                _mainViewModel.LoadSettingModel();
-            }
-
+            modelSettingdlg.ShowDialog();
+            //Dialog 結束之後指派給_multiAngleViewModel中的值
+            multiAngleView._multiAngleViewModel.ModelInfoCollection = ModelSettingViewModel.ModelInfoCollection;            
         }
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
            
-            Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
-            multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
-            Console.WriteLine("Count:"+ this.multiAngleView._multiAngleViewModel.ModelInfoCollection.Count);
-            for (int i = 0; i< MainViewModel.ModelInfoCollection.Count; i++) 
-            {
-                MainViewModel.ModelInfoCollection[i].ModelTransform = new MatrixTransform3D(TEST);
-            }
-            multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
+            //Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
+            //multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
+            //Console.WriteLine("Count:"+ this.multiAngleView._multiAngleViewModel.ModelInfoCollection.Count);
+            //for (int i = 0; i< MainViewModel.ModelInfoCollection.Count; i++) 
+            //{
+            //    MainViewModel.ModelInfoCollection[i].ModelTransform = new MatrixTransform3D(TEST);
+            //}
+            //multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
         }
         private void RegButton_Click(object sender, RoutedEventArgs e)
         {
@@ -122,15 +122,11 @@ namespace Nart
                 CamHost1.IsActivated = true;
                 CamHost2.IsActivated = true;
             }
-        }
-
-       
+        }       
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
            
         }
-
-
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();

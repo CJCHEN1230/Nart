@@ -34,8 +34,6 @@ namespace Nart
 
         private MainViewModel _mainViewModel = null;
 
-        //public List<double[]> MarkerDB = new List<double[]>(10);
-
         private Point3D[] CTBall; //CT珠子中心座標
 
         private Point3D[] MSBall; //MS點的珠子中心座標
@@ -66,10 +64,6 @@ namespace Nart
         ///咬板在註冊資料中引數
         /// </summary>
         public int RegSplintIndex = -1;
-
-
-        private List<int> Database = new List<int>();
-
         public CalcCoord(MainViewModel window)
         {
             _mainViewModel = window;
@@ -77,7 +71,7 @@ namespace Nart
             _camParam[1] = new CamParam("../../../data/CaliR_R.txt");
             CalcLensCenter();
             CalcEpipolarGeometry();
-            LoadNartReg("../../../data/reg20170713.txt");
+            
             //CreateDatabase();
         }
         /// <summary>
@@ -421,7 +415,7 @@ namespace Nart
         /// <summary>
         /// 匯入原N-Art的註冊檔
         /// </summary>
-        private void LoadNartReg(string path)
+        private bool LoadNartReg(string path)
         {
             try
             {
@@ -471,10 +465,13 @@ namespace Nart
                     Console.WriteLine(MSMarker[i]);
                 }
                 Console.WriteLine("  ");
+                return true;
             }
             catch
             {
                 MessageBox.Show("註冊檔案錯誤");
+
+                return false;
             }
         }
         /// <summary>
@@ -498,6 +495,12 @@ namespace Nart
         {
             OriWorldPoints.Clear();
             MSWorldPoints.Clear();
+
+            if (!LoadNartReg(ModelSettingViewModel.RegPath))
+            {                
+                return;
+            }
+
             //先判斷當前標記片數量是否過少
             if (WorldPoints.Count > 2)
             {

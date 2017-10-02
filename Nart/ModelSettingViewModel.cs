@@ -10,21 +10,79 @@ using SharpDX.Direct3D11;
 
 namespace Nart
 {
-    class ModelSettingViewModel : ObservableObject
-    {     
+    public class ModelSettingViewModel : ObservableObject
+    {
         /// <summary>
         /// 每個列中的Model資料集合
         /// </summary>
-        private ObservableCollection<ModelInfo> modelInfoCollection;
-        public ObservableCollection<ModelInfo> ModelInfoCollection
+       
+        private static ObservableCollection<ModelInfo> modelInfoCollection;
+        public static ObservableCollection<ModelInfo> ModelInfoCollection
+        {
+            get { return modelInfoCollection; }
+            set
+            {
+                SetStaticValue(ref modelInfoCollection, value);
+            }
+        }
+        /// <summary>
+        /// 病人名字
+        /// </summary>
+        private static String patientName;
+        public static String PatientName
         {
             get
             {
-                return modelInfoCollection;
+                return patientName;
             }
             set
             {
-                SetValue(ref modelInfoCollection, value);
+                SetStaticValue(ref patientName, value);
+            }
+        }
+        /// <summary>
+        /// 病人ID
+        /// </summary>
+        private static String patierntID;
+        public static String PatierntID
+        {
+            get
+            {
+                return patierntID;
+            }
+            set
+            {
+                SetStaticValue(ref patierntID, value);
+            }
+        }
+        /// <summary>
+        /// 醫院名字
+        /// </summary>
+        private static String hospital;
+        public static String Hospital
+        {
+            get
+            {
+                return hospital;
+            }
+            set
+            {
+                SetStaticValue(ref hospital, value);
+            }
+        }
+        /// <summary>
+        /// 註冊檔名
+        /// </summary>
+        private static String regPath = "../../../data/reg20170713.txt";
+        public static String RegPath
+        {
+            get
+            {
+                return regPath;
+            }
+            set
+            {
+                SetStaticValue(ref regPath, value);
             }
         }
         /// <summary>
@@ -41,22 +99,71 @@ namespace Nart
         public ModelSettingViewModel(ModelSettingView _modelSettingView)
         {
             ModelSetView = _modelSettingView;
+
+
+
+            ModelInfoCollection = MainViewModel.ModelInfoCollection;
             //如果ModelInfoCollection為空的
-            if (MainViewModel.ModelInfoCollection == null|| MainViewModel.ModelInfoCollection.Count==0)
+            if (ModelInfoCollection == null || ModelInfoCollection.Count == 0)
             {
                 MainViewModel.ModelInfoCollection = new ObservableCollection<ModelInfo>();
 
                 ModelInfoCollection = MainViewModel.ModelInfoCollection;
 
 
+                ModelInfoCollection.Add(new ModelInfo
+                {
+                    CMode = CullMode.Back
+                                                                                ,
+                    IvtNormal = false
+                                                                                ,
+                    FrontCounterClockwise = true
+                                                                                ,
+                    MarkerID = "C"
+                                                                                ,
+                    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl"
+                    //ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
+                                                                                ,
+                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP2.stl"
+                                                                                ,
+                    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
+                                                                                ,
+                    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
+
+                });
+
+                //ModelInfoCollection.Add(new ModelInfo
+                //{
+                //    CMode = CullMode.Back
+                //                                                                ,
+                //    IvtNormal = true
+                //                                                                ,
+                //    FrontCounterClockwise = false
+                //                                                                ,
+                //    MarkerID = "A"
+                //                                                                ,
+                //    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
+                //                                                                // ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
+                //                                                                ,
+                //    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
+                //                                                                ,
+                //    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
+                //                                                                ,
+                //    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(30, 40, 181, 187)
+                //});
 
                 ModelInfoCollection.Add(new ModelInfo
                 {
                     CMode = CullMode.Back
                                                                                 ,
+                    IvtNormal = false
+                                                                                ,
+                    FrontCounterClockwise = true
+                                                                                ,
                     MarkerID = "A"
                                                                                 ,
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
+                    // ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
                                                                                 ,
                     OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
                                                                                 ,
@@ -66,43 +173,44 @@ namespace Nart
                 });
 
 
+                //ModelInfoCollection.Add(new ModelInfo
+                //{
+                //    CMode = CullMode.Back
+                //                                                                   ,
+                //    IvtNormal = false
+                //                                                                ,
+                //    FrontCounterClockwise = false
+                //                                                                ,
+                //    MarkerID = "A"
+                //                                                                ,
+                //    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
+                //                                                                ,
+                //    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
+                //                                                                ,
+                //    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
+                //                                                                ,
+                //    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
+                //});
 
 
-                ModelInfoCollection.Add(new ModelInfo
-                {
-                    CMode = CullMode.Back
-                                                                                ,
-                    MarkerID = "C"
-                                                                                ,
-                    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl"
-                                                                                ,
-                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP2.stl"
-                                                                                ,
-                    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
-                                                                                ,
-                    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
 
-                });
+
+
+
+                //ModelInfoCollection.Add(new ModelInfo
+                //{
+                //    CMode = CullMode.Back
+                //                                                                                      ,
+                //    MarkerID = "Head"
+                //                                                                ,
+                //    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"
+                //                                                                ,
+                //    OSPFilePath = ""
+                //                                                                ,
+                //    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
+                //});
                 
-                ModelInfoCollection.Add(new ModelInfo
-                {
-                    CMode = CullMode.Back
-                                                                                                      ,
-                    MarkerID = "Head"
-                                                                                ,
-                    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"
-                                                                                ,
-                    OSPFilePath = ""
-                                                                                ,
-                    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
-                });
-
             }
-            else
-            {
-                ModelInfoCollection = MainViewModel.ModelInfoCollection;
-            }
-
         }
         /// <summary>
         /// 新增ModelInfo進ModelInfoCollection
@@ -122,6 +230,34 @@ namespace Nart
                 ModelInfoCollection.Remove((ModelInfo)ModelSetView.ModelListView.SelectedItem);
                 ModelSetView.ModelListView.SelectedIndex = ModelInfoCollection.Count - 1;
             }
-        }        
+        }
+
+        public void LoadSettingModel()
+        {
+            //確保所有模型資訊都有set進去ModelInfo的資料
+            for (int i = 0; i < ModelInfoCollection.Count; i++)
+            {
+                //檢查模型有無load，有換過檔名就變成沒有Load
+                if (!ModelInfoCollection[i].IsLoaded)
+                {
+                    //不知道為什麼整個ModelInfo一定要重建，理論上應該只要LoatSTL有走過就好
+                    ModelInfoCollection[i] = new ModelInfo
+                    {
+                        IvtNormal = MainViewModel.ModelInfoCollection[i].IvtNormal,
+                        FrontCounterClockwise = MainViewModel.ModelInfoCollection[i].FrontCounterClockwise,
+                        ComboBoxList = MainViewModel.ModelInfoCollection[i].ComboBoxList,
+                        MarkerID = MainViewModel.ModelInfoCollection[i].MarkerID,
+                        CMode = MainViewModel.ModelInfoCollection[i].CMode,
+                        ModelFilePath = MainViewModel.ModelInfoCollection[i].ModelFilePath,
+                        ModelDiffuseColor = MainViewModel.ModelInfoCollection[i].ModelDiffuseColor,
+                        OSPFilePath = MainViewModel.ModelInfoCollection[i].OSPFilePath,
+                        OSPDiffuseColor = MainViewModel.ModelInfoCollection[i].OSPDiffuseColor
+                    };
+                    ModelInfoCollection[i].LoadSTL();
+                }
+
+            }
+            
+        }
     }
 }

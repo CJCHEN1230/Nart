@@ -29,6 +29,84 @@ namespace Nart
         /// <summary>
         /// 將load好的Model3DGroup加進去方便計算BoundingBox，因為setCamera會使用到，但在其他類別Load進模型檔所以設定成static
         /// </summary>
+
+        //private RenderTechnique renderTechnique;
+        //public RenderTechnique RenderTechnique
+        //{
+        //    get
+        //    {
+        //        return renderTechnique;
+        //    }
+        //    set
+        //    {
+        //        SetValue(ref renderTechnique, value);
+        //    }
+        //}
+        //public IEffectsManager EffectsManager { get; protected set; }
+        //public IRenderTechniquesManager RenderTechniquesManager { get; protected set; }
+
+        public MSAALevel MSAA
+        {
+            set; get;
+        } = MSAALevel.Disable;
+
+        public MSAALevel[] MSAAs { get; } = new MSAALevel[] { MSAALevel.Disable, MSAALevel.Two, MSAALevel.Four, MSAALevel.Eight, MSAALevel.Maximum };
+
+        private int specularValue;
+        public int SpecularValue
+        {
+            get
+            {
+                return specularValue;
+            }
+
+            private set
+            {
+                SetValue(ref specularValue, value);
+
+                for (int i = 0; i < ModelInfoCollection.Count; i++)
+                {
+
+                    ModelInfoCollection[i].ModelMaterial.SpecularColor = new SharpDX.Color(specularValue, specularValue, specularValue, 255);
+                    Console.WriteLine("SpecularColor" + specularValue);
+
+                }
+                OnPropertyChanged("ModelInfoCollection");
+            }
+        }
+
+        private float shininess;
+
+        public float Shininess
+        {
+            get
+            {
+                return shininess;
+            }
+
+            private set
+            {
+                SetValue(ref shininess, value);
+
+                for (int i =0; i<ModelInfoCollection.Count; i++)
+                {
+
+                    ModelInfoCollection[i].ModelMaterial.SpecularShininess = shininess;
+                    Console.WriteLine("SpecularShininess" + shininess);
+
+                }
+                OnPropertyChanged("ModelInfoCollection");
+            }
+        }
+
+
+
+
+
+
+
+
+
         private Camera cam1;
         public Camera Camera1
         {
@@ -40,9 +118,6 @@ namespace Nart
             private set
             {
                 SetValue(ref cam1, value);
-                //CameraModel = value is PerspectiveCamera
-                //                       ? Perspective
-                //                       : value is OrthographicCamera ? Orthographic : null;
             }
         }
         private Camera cam2;
@@ -56,12 +131,9 @@ namespace Nart
             private set
             {
                 SetValue(ref cam2, value);
-                //CameraModel = value is PerspectiveCamera
-                //                       ? Perspective
-                //                       : value is OrthographicCamera ? Orthographic : null;
             }
         }
-        private Camera cam3 =   new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+        private Camera cam3;
         public Camera Camera3
         {
             get
@@ -72,11 +144,8 @@ namespace Nart
             private set
             {
                 SetValue(ref cam3, value);
-                //CameraModel = value is PerspectiveCamera
-                //                       ? Perspective
-                //                       : value is OrthographicCamera ? Orthographic : null;
             }
-        } 
+        }
         private Vector3 light1Direction = new Vector3();
         public Vector3 Light1Direction
         {
@@ -177,10 +246,7 @@ namespace Nart
                 SetValue(ref ambientLightColor, value);
             }
         }
-        private Model3DGroup ModelGroup { get; set; }
         public bool IsRenderLight { get; set; }
-        Rect3D BoundingBox { get; set; }
-        Point3D ModelCenter { get; set; }
         private ObservableCollection<Nart.ModelInfo> modelInfoCollection;
         public ObservableCollection<Nart.ModelInfo> ModelInfoCollection
         {
@@ -193,16 +259,15 @@ namespace Nart
                 SetValue(ref modelInfoCollection, value);
                 ResetCameraPosition();
             }
-        }
-        private MultiAngleView Multiview;
+        }       
+        private MultiAngleView _multiview;
         public MultiAngleViewModel(MultiAngleView _multiview)
         {
-            Camera3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
 
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
             RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Phong];
             EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
-            Multiview = _multiview;
+            this._multiview = _multiview;
 
             SetLight();
             SetCamera();
@@ -223,14 +288,14 @@ namespace Nart
         /// </summary>
         private void SetCamera()
         {
-            this.Camera1 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
-            this.Camera2 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
-            this.Camera3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+            Camera1 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+            Camera2 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+            Camera3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
 
 
-            SetupCameraBindings(this.Camera1, "Cam1LookDir");
-            SetupCameraBindings(this.Camera2, "Cam2LookDir");
-            SetupCameraBindings(this.Camera3, "Cam3LookDir");
+            SetupCameraBindings(Camera1, "Cam1LookDir");
+            SetupCameraBindings(Camera2, "Cam2LookDir");
+            SetupCameraBindings(Camera3, "Cam3LookDir");
 
 
             ResetCameraPosition();
@@ -246,7 +311,7 @@ namespace Nart
                 return;
 
             //重新調整模型中心
-            ModelGroup = new Model3DGroup();
+            Model3DGroup ModelGroup = new Model3DGroup();
             for (int i = 0; i < ModelInfoCollection.Count; i++) 
             {   //如果選擇多模型但檔名是空或不存在則進不去
                 if (ModelInfoCollection[i].SingleModel != null)
@@ -254,11 +319,11 @@ namespace Nart
                     ModelGroup.Children.Add(ModelInfoCollection[i].SingleModel);
                 }
             }
-            
 
-            BoundingBox = ModelGroup.Bounds;
 
-            ModelCenter = new Point3D(BoundingBox.X + BoundingBox.SizeX / 2.0, BoundingBox.Y + BoundingBox.SizeY / 2.0, BoundingBox.Z + BoundingBox.SizeZ / 2.0);
+            Rect3D BoundingBox = ModelGroup.Bounds;
+
+            Point3D ModelCenter = new Point3D(BoundingBox.X + BoundingBox.SizeX / 2.0, BoundingBox.Y + BoundingBox.SizeY / 2.0, BoundingBox.Z + BoundingBox.SizeZ / 2.0);
 
             
             OrthographicCamera orthoCam1 = Camera1 as OrthographicCamera;

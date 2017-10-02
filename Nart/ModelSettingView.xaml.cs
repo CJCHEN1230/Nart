@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,8 +51,22 @@ namespace Nart
         /// </summary>
         private void OKClick(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
+            _modelSettingViewModel.LoadSettingModel();
+
+            //DialogResult = true;
+
+            this.Hide();
         }
+        /// <summary>
+        /// 設定頁面按下紅色按紐
+        /// </summary>
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
+        }
+
+
     }
 }
 
