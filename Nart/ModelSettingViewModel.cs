@@ -43,16 +43,16 @@ namespace Nart
         /// <summary>
         /// 病人ID
         /// </summary>
-        private static String patierntID;
-        public static String PatierntID
+        private static String patientID;
+        public static String PatientID
         {
             get
             {
-                return patierntID;
+                return patientID;
             }
             set
             {
-                SetStaticValue(ref patierntID, value);
+                SetStaticValue(ref patientID, value);
             }
         }
         /// <summary>
@@ -231,7 +231,6 @@ namespace Nart
                 ModelSetView.ModelListView.SelectedIndex = ModelInfoCollection.Count - 1;
             }
         }
-
         public void LoadSettingModel()
         {
             //確保所有模型資訊都有set進去ModelInfo的資料

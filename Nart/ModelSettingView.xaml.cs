@@ -51,9 +51,6 @@ namespace Nart
         private void OKClick(object sender, RoutedEventArgs e)
         {
             _modelSettingViewModel.LoadSettingModel();
-
-            //DialogResult = true;
-
             this.Hide();
         }
         /// <summary>

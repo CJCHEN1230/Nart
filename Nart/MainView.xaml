@@ -10,6 +10,9 @@
         xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
         Foreground="White"
         Title="Nart" Height="762" Width="1583.5" WindowState="Maximized" Background="#FF474747" Closed="load_Closed" Loaded="Window_Loaded">
+    <!--<Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>-->
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCmdExecuted"/>
         <CommandBinding Command="ApplicationCommands.New" Executed="NewCmdExecuted"/>

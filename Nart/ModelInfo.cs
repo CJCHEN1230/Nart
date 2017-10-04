@@ -250,7 +250,6 @@ namespace Nart
         public ModelInfo(ModelInfo oldModelInfo)
         {
             ModelTransformMatrix.SetIdentity();
-
             ModelGeometry = oldModelInfo.ModelGeometry;
             ModelMaterial = oldModelInfo.ModelMaterial;
             ModelTransform = oldModelInfo.ModelTransform;
