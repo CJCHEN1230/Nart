@@ -26,10 +26,7 @@ namespace Nart
 
     public class MultiAngleViewModel : ObservableObject
     {
-        /// <summary>
-        /// 將load好的Model3DGroup加進去方便計算BoundingBox，因為setCamera會使用到，但在其他類別Load進模型檔所以設定成static
-        /// </summary>
-
+       
         private RenderTechnique renderTechnique;
         public RenderTechnique RenderTechnique
         {
@@ -170,22 +167,10 @@ namespace Nart
                 return cam3LookDir;
             }
         }
-        public Color4 LightColor { get; set; }
-        private Color4 ambientLightColor;
-        public Color4 AmbientLightColor
-        {
-            get
-            {
-                return ambientLightColor;
-            }
-            set
-            {
-                SetValue(ref ambientLightColor, value);
-            }
-        }
-        public bool IsRenderLight { get; set; }
-        private ObservableCollection<Nart.ModelInfo> modelInfoCollection;
-        public ObservableCollection<Nart.ModelInfo> ModelInfoCollection
+        public Color4 DirectionalLightColor { get; set; }
+
+        private ObservableCollection<ModelInfo> modelInfoCollection;
+        public ObservableCollection<ModelInfo> ModelInfoCollection
         {
             get
             {
@@ -196,7 +181,22 @@ namespace Nart
                 SetValue(ref modelInfoCollection, value);
                 ResetCameraPosition();
             }
-        }       
+        }
+
+        private ObservableCollection<ModelData> modeldataCollection;
+        public ObservableCollection<ModelData> ModelDataCollection
+        {
+            get
+            {
+                return modeldataCollection;
+            }
+            set
+            {
+                SetValue(ref modeldataCollection, value);
+                ResetCameraPosition();
+            }
+        }
+
         private MultiAngleView _multiview;
         public MultiAngleViewModel(MultiAngleView _multiview)
         {
@@ -213,12 +213,8 @@ namespace Nart
         /// 設定光源Ambientlight顏色、DirectionaLlight顏色        
         /// </summary>
         internal void SetLight()
-        {
-            AmbientLightColor = new Color4(0.1f, 0.1f, 0.1f, 1.0f);
-            AmbientLightColor = Color.White;
-
-            this.LightColor = (Color4)Color.White;
-            this.IsRenderLight = true;
+        {         
+            this.DirectionalLightColor = (Color4)Color.White;
         }
         /// <summary>
         /// 初始化相機參數，並綁定相機觀看方向
@@ -251,9 +247,9 @@ namespace Nart
             Model3DGroup ModelGroup = new Model3DGroup();
             for (int i = 0; i < ModelInfoCollection.Count; i++) 
             {   //如果選擇多模型但檔名是空或不存在則進不去
-                if (ModelInfoCollection[i].SingleModel != null)
+                if (ModelInfoCollection[i].ModelContainer != null)
                 {
-                    ModelGroup.Children.Add(ModelInfoCollection[i].SingleModel);
+                    ModelGroup.Children.Add(ModelInfoCollection[i].ModelContainer);
                 }
             }
 
@@ -312,5 +308,76 @@ namespace Nart
             BindingOperations.SetBinding(dobj, property, binding);
         }
 
+        public void SetModelDataCollection(ObservableCollection<ModelInfo> ModelInfoCollection)
+        {
+
+           
+
+            if (ModelDataCollection == null)
+                ModelDataCollection = new ObservableCollection<ModelData>();
+
+
+            //檢查模型清單 不存在於設定清單則移除
+            for (int i=0,j=0; i<ModelDataCollection.Count ;i++)
+            {
+                
+                for (j = 0; j < ModelInfoCollection.Count; j++) 
+                {
+                    if (ModelDataCollection[i].ModelFilePath.Equals(ModelInfoCollection[j].ModelFilePath) ||
+                         ModelDataCollection[i].ModelFilePath.Equals(ModelInfoCollection[j].OSPFilePath))
+                    {
+                        break;
+                    }
+                }
+                if (j == ModelInfoCollection.Count) 
+                {
+                    ModelDataCollection.RemoveAt(i);
+                }
+            }
+
+            //新增模型    檢查設定清單的模型  如果在模型清單中有找到則直接更換顏色  如果沒找到則新增
+            for (int i = 0, j = 0; i < ModelInfoCollection.Count; i++) 
+            {
+                for (j = 0; j < ModelDataCollection.Count; j++) 
+                {
+                    if (ModelInfoCollection[i].ModelFilePath.Equals(ModelDataCollection[j].ModelFilePath))
+                    {
+                        ModelDataCollection[j].ModelDiffuseColor = ModelInfoCollection[i].ModelDiffuseColor;
+                    }
+
+                    if (ModelInfoCollection[i].OSPFilePath.Equals(ModelDataCollection[j].ModelFilePath))
+                    {
+                        ModelDataCollection[j].ModelDiffuseColor = ModelInfoCollection[i].OSPDiffuseColor;
+                    }
+                }
+
+                if (j == ModelInfoCollection.Count)
+                {
+                    ModelData model = new ModelData();
+                    model.ModelFilePath = ModelInfoCollection[i].OSPFilePath;
+                    model.ModelDiffuseColor = ModelInfoCollection[i].OSPDiffuseColor;
+                    model.MarkerID = ModelInfoCollection[i].MarkerID;
+                    model.IsOSP = true;
+                    model.LoadSTL();
+                }
+
+
+
+                
+            }
+
+            for (int i = 0; i < ModelInfoCollection.Count; i++)
+            {
+                ModelData model = new ModelData();
+                model.ModelFilePath = ModelInfoCollection[i].ModelFilePath;
+                model.ModelDiffuseColor = ModelInfoCollection[i].ModelDiffuseColor;
+                model.MarkerID = ModelInfoCollection[i].MarkerID;
+                model.IsOSP = false;
+                if (model.IsLoaded)
+                {
+                    ModelDataCollection.Add(model);
+                }
+            }
+        }
     }
 }

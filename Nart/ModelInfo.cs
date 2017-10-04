@@ -34,6 +34,21 @@ namespace Nart
             }
         }
         /// <summary>
+        /// 模型幾何形狀
+        /// </summary>
+        private HelixToolkit.Wpf.SharpDX.MeshGeometry3D ospGeometry;
+        public HelixToolkit.Wpf.SharpDX.MeshGeometry3D OSPGeometry
+        {
+            get
+            {
+                return ospGeometry;
+            }
+            set
+            {
+                SetValue(ref ospGeometry, value);
+            }
+        }
+        /// <summary>
         /// 模型材質設定
         /// </summary>
         private PhongMaterial modelMaterial;
@@ -46,6 +61,21 @@ namespace Nart
             set
             {
                 SetValue(ref modelMaterial, value);
+            }
+        }       
+        /// <summary>
+        /// 模型材質設定
+        /// </summary>
+        private PhongMaterial ospMaterial;
+        public PhongMaterial OSPMaterial
+        {
+            get
+            {
+                return ospMaterial;
+            }
+            set
+            {
+                SetValue(ref ospMaterial, value);
             }
         }
         /// <summary>
@@ -64,6 +94,21 @@ namespace Nart
             }
         }
         /// <summary>
+        /// 模型矩陣設定
+        /// </summary>     
+        private MatrixTransform3D ospTransform;
+        public MatrixTransform3D OSPTransform
+        {
+            get
+            {
+                return ospTransform;
+            }
+            set
+            {
+                SetValue(ref ospTransform, value);
+            }
+        }
+        /// <summary>
         /// 模型名稱
         /// </summary>
         private String modelFilePath;
@@ -76,7 +121,7 @@ namespace Nart
             set
             {
                 SetValue(ref modelFilePath, value);
-                IsLoaded = false;
+                IsModelLoaded = false;
             }
         }
         /// <summary>
@@ -92,6 +137,7 @@ namespace Nart
             set
             {
                 SetValue(ref ospFilePath, value);
+                IsOSPLoaded = false;
             }
         }
         /// <summary>
@@ -200,11 +246,7 @@ namespace Nart
         /// <summary>
         /// 讀檔時特別存下Model3DGroup的
         /// </summary>
-        public Model3DGroup SingleModel;
-        /// <summary>
-        /// 儲存模型資料，包括矩陣轉移、材質、網格
-        /// </summary>        
-        public MeshGeometryModel3D MeshGeometryData { get; private set; } = new MeshGeometryModel3D();
+        public Model3DGroup ModelContainer;     
         /// <summary>
         /// 此Model的最終轉換矩陣
         /// </summary>
@@ -236,13 +278,28 @@ namespace Nart
             ModelMaterial.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
             ModelMaterial.SpecularShininess = 60;
         }
+        private void SetOSPMaterial()
+        {
+            OSPMaterial = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
+            OSPMaterial.ReflectiveColor = SharpDX.Color.Black;
+            float ambient = 0.0f;
+            OSPMaterial.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
+            OSPMaterial.DiffuseColor = OSPDiffuseColor.ToColor4();
+            OSPMaterial.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
+            int Specular = 90;
+            OSPMaterial.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
+            OSPMaterial.SpecularShininess = 60;
+        }
         /// <summary>
         /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
         /// </summary>
         private int CurrenIndex = 0;
-        public bool IsLoaded = false;
+        public bool IsModelLoaded = false;
+        public bool IsOSPLoaded = false;
         public int DatabaseIndex = -1;
         public int Count = 0;
+        public ModelData Model = new ModelData();
+        public ModelData OSP = new ModelData();
         public ModelInfo()
         {                       
             ModelTransformMatrix.SetIdentity();
@@ -250,36 +307,64 @@ namespace Nart
         public ModelInfo(ModelInfo oldModelInfo)
         {
             ModelTransformMatrix.SetIdentity();
+
             ModelGeometry = oldModelInfo.ModelGeometry;
             ModelMaterial = oldModelInfo.ModelMaterial;
             ModelTransform = oldModelInfo.ModelTransform;
             ModelFilePath = oldModelInfo.ModelFilePath;
-            OSPFilePath = oldModelInfo.OSPFilePath;
             ModelDiffuseColor = oldModelInfo.ModelDiffuseColor;
+
+            OSPGeometry = oldModelInfo.ModelGeometry;
+            OSPMaterial = oldModelInfo.ModelMaterial;
+            OSPTransform = oldModelInfo.ModelTransform;       
+            OSPFilePath = oldModelInfo.OSPFilePath;            
             OSPDiffuseColor = oldModelInfo.OSPDiffuseColor;
+
             CMode = oldModelInfo.CMode;
             IvtNormal = oldModelInfo.IvtNormal;
             FrontCounterClockwise = oldModelInfo.FrontCounterClockwise;
             MarkerID = oldModelInfo.MarkerID;
             ComboBoxList = oldModelInfo.ComboBoxList;
-
         }
+
         /// <summary>
         /// 設定好模型之後Load進去模型資料所用
         /// </summary>
-        public void LoadSTL()
+        public void Load()
+        {
+            LoadModel();
+
+
+            Model.ModelGeometry = this.ModelGeometry;
+            Model.ModelMaterial = this.ModelMaterial;
+            Model.ModelTransform = this.ModelTransform;
+            Model.ModelFilePath = this.ModelFilePath;
+            Model.ModelDiffuseColor = this.ModelDiffuseColor;
+
+
+
+            LoadOSP();
+
+            OSP.ModelGeometry = this.OSPGeometry;
+            OSP.ModelMaterial = this.OSPMaterial;
+            OSP.ModelTransform = this.OSPTransform;
+            OSP.ModelFilePath = this.OSPFilePath;
+            OSP.ModelDiffuseColor = this.OSPDiffuseColor;
+
+        }
+        public void LoadModel()
         {
             //ModelGeometry已經有幾何模型存在內部 及 阻擋檔案不存在的情況
-            if (IsLoaded || !System.IO.File.Exists(ModelFilePath)) 
+            if (IsModelLoaded || !System.IO.File.Exists(ModelFilePath))
             {
                 return;
             }
             //利用helixtoolkit.wpf裡面提供的StlReader讀檔案，後續要轉成wpf.sharpdx可用的格式
             StLReader reader = new HelixToolkit.Wpf.StLReader();
 
-            SingleModel = reader.Read(ModelFilePath);            
+            ModelContainer = reader.Read(ModelFilePath);
 
-            System.Windows.Media.Media3D.GeometryModel3D geometryModel = SingleModel.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
+            System.Windows.Media.Media3D.GeometryModel3D geometryModel = ModelContainer.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
 
             System.Windows.Media.Media3D.MeshGeometry3D mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
 
@@ -287,7 +372,7 @@ namespace Nart
             SetModelMaterial();
             //設定模型幾何形狀
             ModelGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
-            
+
             ModelGeometry.Normals = new Vector3Collection();
             ModelGeometry.Positions = new Vector3Collection();
             ModelGeometry.Indices = new IntCollection();
@@ -313,15 +398,59 @@ namespace Nart
             {
                 ModelGeometry.Indices.Add(triangleindice);
             }
-            
 
-            //MeshGeometryData = new MeshGeometryModel3D();
-            //將建立好的指派進helix.sharp格式的MeshGeometryModel3D
-            MeshGeometryData.Material = this.ModelMaterial;
-            MeshGeometryData.Geometry = this.ModelGeometry;
-            MeshGeometryData.Transform = new TranslateTransform3D(0, 0, 0);
-            IsLoaded = true;
+            IsModelLoaded = true;
         }
+        public void LoadOSP()
+        {
+            //ModelGeometry已經有幾何模型存在內部 及 阻擋檔案不存在的情況
+            if (IsOSPLoaded || !System.IO.File.Exists(OSPFilePath))
+            {
+                return;
+            }
+            //利用helixtoolkit.wpf裡面提供的StlReader讀檔案，後續要轉成wpf.sharpdx可用的格式
+            StLReader reader = new HelixToolkit.Wpf.StLReader();
+
+            Model3DGroup OSPContainer = reader.Read(OSPFilePath);
+
+            System.Windows.Media.Media3D.GeometryModel3D geometryModel = OSPContainer.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
+
+            System.Windows.Media.Media3D.MeshGeometry3D mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
+
+            //設定模型材質
+            SetModelMaterial();
+            //設定模型幾何形狀
+            OSPGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
+
+            OSPGeometry.Normals = new Vector3Collection();
+            OSPGeometry.Positions = new Vector3Collection();
+            OSPGeometry.Indices = new IntCollection();
+
+            //將從stlreader讀到的資料轉入
+            foreach (Point3D position in mesh.Positions)
+            {
+                OSPGeometry.Positions.Add(new Vector3(
+                      Convert.ToSingle(position.X)
+                    , Convert.ToSingle(position.Y)
+                    , Convert.ToSingle(position.Z)));
+            }
+
+            foreach (Vector3D normal in mesh.Normals)
+            {
+                OSPGeometry.Normals.Add(new Vector3(
+                      Convert.ToSingle(normal.X)
+                    , Convert.ToSingle(normal.Y)
+                    , Convert.ToSingle(normal.Z)));
+            }
+
+            foreach (Int32 triangleindice in mesh.TriangleIndices)
+            {
+                OSPGeometry.Indices.Add(triangleindice);
+            }
+
+            IsOSPLoaded = true;
+        }
+
         public void AddItem(Matrix3D item)
         {
             if (Count < ModelTransformSet.Length)

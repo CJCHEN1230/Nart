@@ -17,7 +17,8 @@
             <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
         <hx:ModelContainer3DX x:Name="sharedContainer"  RenderTechnique="{Binding RenderTechnique}" EffectsManager="{Binding EffectsManager}">
-            <hx:ItemsModel3D ItemsSource="{Binding ModelInfoCollection}">
+            <hx:AmbientLight3D x:Name="test" Color="{Binding AmbientLightColor}" />
+            <hx:ItemsModel3D ItemsSource="{Binding ModelDataCollection}">
                 <hx:ItemsModel3D.ItemTemplate>
                     <DataTemplate>
                         <hx:MeshGeometryModel3D
@@ -61,11 +62,10 @@
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
-            <hx:AmbientLight3D x:Name="test" Color="{Binding AmbientLightColor}" />
+            <!--<hx:AmbientLight3D x:Name="test" Color="{Binding AmbientLightColor}" />-->
             <hx:DirectionalLight3D
                 Direction="{Binding Light1Direction}"
-                IsRendering="{Binding IsRenderLight}"
-                Color="{Binding LightColor}" />
+                Color="{Binding DirectionalLightColor}" />
 
         </hx:Viewport3DX>
         <hx:Viewport3DX  x:Name="viewport2"
@@ -93,11 +93,10 @@
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
-            <hx:AmbientLight3D Color="{Binding AmbientLightColor}" />
+            
             <hx:DirectionalLight3D
                 Direction="{Binding Light2Direction}"
-                IsRendering="{Binding IsRenderLight}"
-                Color="{Binding LightColor}" />
+                Color="{Binding DirectionalLightColor}" />
         </hx:Viewport3DX>
         <hx:Viewport3DX  x:Name="viewport3"
                         ShowViewCube="True" 
@@ -125,11 +124,10 @@
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
-            <hx:AmbientLight3D Color="{Binding AmbientLightColor}" />
+            
             <hx:DirectionalLight3D
                 Direction="{Binding Light3Direction}"
-                IsRendering="{Binding IsRenderLight}"
-                Color="{Binding LightColor}" />
+                Color="{Binding DirectionalLightColor}" />
         </hx:Viewport3DX>
     </Grid>
 </UserControl>

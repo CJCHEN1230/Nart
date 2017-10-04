@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NartControl;
 using System.Windows.Media;
 using SharpDX.Direct3D11;
+using System.Windows.Controls;
 
 namespace Nart
 {
@@ -23,6 +24,15 @@ namespace Nart
             set
             {
                 SetStaticValue(ref modelInfoCollection, value);
+            }
+        }
+        private static ObservableCollection<ModelData> modelDataCollection;
+        public static ObservableCollection<ModelData> ModelDataCollection
+        {
+            get { return modelDataCollection; }
+            set
+            {
+                SetStaticValue(ref modelDataCollection, value);
             }
         }
         /// <summary>
@@ -111,6 +121,28 @@ namespace Nart
                 ModelInfoCollection = MainViewModel.ModelInfoCollection;
 
 
+
+
+
+                ModelInfoCollection.Add(new ModelInfo
+                {
+                    CMode = CullMode.Back
+                                                                                ,
+                    IvtNormal = false
+                                                                                ,
+                    FrontCounterClockwise = true
+                                                                                ,
+                    MarkerID = "Head"
+                                                                                ,
+                    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"
+                                                                                ,
+                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
+                                                                                ,
+                    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
+                                                                                ,
+                    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
+                });
+
                 ModelInfoCollection.Add(new ModelInfo
                 {
                     CMode = CullMode.Back
@@ -124,7 +156,7 @@ namespace Nart
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl"
                     //ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
                                                                                 ,
-                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP2.stl"
+                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl"
                                                                                 ,
                     ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
                                                                                 ,
@@ -164,8 +196,8 @@ namespace Nart
                                                                                 ,
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
                     // ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
-                                                                                ,
-                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
+                                                                                
+                    //OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
                                                                                 ,
                     ModelDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
                                                                                 ,
@@ -173,43 +205,6 @@ namespace Nart
                 });
 
 
-                //ModelInfoCollection.Add(new ModelInfo
-                //{
-                //    CMode = CullMode.Back
-                //                                                                   ,
-                //    IvtNormal = false
-                //                                                                ,
-                //    FrontCounterClockwise = false
-                //                                                                ,
-                //    MarkerID = "A"
-                //                                                                ,
-                //    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
-                //                                                                ,
-                //    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
-                //                                                                ,
-                //    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
-                //                                                                ,
-                //    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
-                //});
-
-
-
-
-
-
-                //ModelInfoCollection.Add(new ModelInfo
-                //{
-                //    CMode = CullMode.Back
-                //                                                                                      ,
-                //    MarkerID = "Head"
-                //                                                                ,
-                //    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"
-                //                                                                ,
-                //    OSPFilePath = ""
-                //                                                                ,
-                //    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
-                //});
-                
             }
         }
         /// <summary>
@@ -227,25 +222,66 @@ namespace Nart
         {
             if (ModelSetView.ModelListView.SelectedItem != null)
             {
-                ModelInfoCollection.Remove((ModelInfo)ModelSetView.ModelListView.SelectedItem);
+                //選擇的ModelInfo
+                ModelInfo SelectedModelInfo=(ModelInfo)ModelSetView.ModelListView.SelectedItem;
+                //確認ModelInfo中的Model有沒有被load過(有load過才有實體化)，有的話標記removed為true
+                if (SelectedModelInfo.Model!=null)
+                {
+                    SelectedModelInfo.Model.IsRemoved = true;
+                }
+                //確認ModelInfo中的OSP有沒有被load過(有load過才有實體化)，有的話標記removed為true
+                if (SelectedModelInfo.OSP != null)
+                {
+                    SelectedModelInfo.OSP.IsRemoved = true;
+                }
+                ModelInfoCollection.Remove(SelectedModelInfo);
                 ModelSetView.ModelListView.SelectedIndex = ModelInfoCollection.Count - 1;
+
+                ListViewItem item = ModelSetView.ModelListView.ItemContainerGenerator.ContainerFromIndex(ModelSetView.ModelListView.SelectedIndex) as ListViewItem;
+                item.Focus();
+
+                
             }
         }
         public void LoadSettingModel()
         {
-            //確保所有模型資訊都有set進去ModelInfo的資料
-            for (int i = 0; i < ModelInfoCollection.Count; i++)
-            {
-                //檢查模型有無load，有換過檔名就變成沒有Load
-                if (!ModelInfoCollection[i].IsLoaded)
-                {
-                    //不知道為什麼整個ModelInfo一定要重建，理論上應該只要LoatSTL有走過就好
-                    ModelInfoCollection[i] = new ModelInfo(MainViewModel.ModelInfoCollection[i]);                  
-                    ModelInfoCollection[i].LoadSTL();
-                }
+            if (ModelDataCollection == null)
+                ModelDataCollection = new ObservableCollection<ModelData>();
 
+            //確保所有模型資訊都有set進去ModelInfo的資料
+            for (int i = 0; i < ModelInfoCollection.Count; i++) 
+            {               
+                 //不知道為什麼整個ModelInfo一定要重建，理論上應該只要LoatSTL有走過就好
+                //ModelInfoCollection[i] = new ModelInfo(MainViewModel.ModelInfoCollection[i]);                  
+                ModelInfoCollection[i].Load();
+
+                //確認有Load過且有沒有被加進去
+                if (ModelInfoCollection[i].IsOSPLoaded && !ModelInfoCollection[i].OSP.IsAdded)
+                {
+                    ModelDataCollection.Insert(0, ModelInfoCollection[i].OSP);
+                    ModelInfoCollection[i].OSP.IsAdded = true;
+                }
+                //確認有Load過且有沒有被加進去
+                if (ModelInfoCollection[i].IsModelLoaded && !ModelInfoCollection[i].Model.IsAdded)
+                {
+                    ModelDataCollection.Add(ModelInfoCollection[i].Model);
+                    ModelInfoCollection[i].Model.IsAdded = true;
+                }
+                
             }
-            
-        }
+
+            for (int i = 0; i < ModelDataCollection.Count; i++)
+            {
+              
+                if (ModelDataCollection[i].IsRemoved)
+                {
+                    ModelDataCollection.RemoveAt(i);
+                }
+           
+            }
+
+
+            Console.WriteLine("Model data count: " + ModelDataCollection.Count);
+        }        
     }
 }

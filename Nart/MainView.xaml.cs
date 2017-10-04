@@ -31,13 +31,12 @@ namespace Nart
     /// </summary>
     public partial class MainView : Window
     {
-
         private ModelSettingView modelSettingdlg;
         private MainViewModel _mainViewModel = null;
         public MainView()
         {
             InitializeComponent();
-            
+
             _mainViewModel = new MainViewModel(this);
 
             this.DataContext = _mainViewModel;
@@ -54,7 +53,10 @@ namespace Nart
 
             modelSettingdlg.ShowDialog();
             //Dialog 結束之後指派給_multiAngleViewModel中的值
-            multiAngleView._multiAngleViewModel.ModelInfoCollection = ModelSettingViewModel.ModelInfoCollection;            
+            multiAngleView._multiAngleViewModel.ModelInfoCollection = ModelSettingViewModel.ModelInfoCollection;
+
+            multiAngleView._multiAngleViewModel.ModelDataCollection = ModelSettingViewModel.ModelDataCollection;
+
         }
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
