@@ -53,9 +53,9 @@ namespace Nart
 
             modelSettingdlg.ShowDialog();
             //Dialog 結束之後指派給_multiAngleViewModel中的值
-            multiAngleView._multiAngleViewModel.ModelInfoCollection = ModelSettingViewModel.ModelInfoCollection;
+            //multiAngleView._multiAngleViewModel.ModelInfoCollection = ModelSettingViewModel.ModelInfoCollection;
 
-            multiAngleView._multiAngleViewModel.ModelDataCollection = ModelSettingViewModel.ModelDataCollection;
+            multiAngleView._multiAngleViewModel.ModelDataCollection = ModelSettingViewModel.modelDataCollection;
 
         }
         private void Translate_Click(object sender, RoutedEventArgs e)

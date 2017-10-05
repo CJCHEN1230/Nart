@@ -166,7 +166,7 @@ namespace Nart
         {
             for (int i = 0; i < MainViewModel.ModelInfoCollection.Count - 1; i++)
             {
-                MainViewModel.ModelInfoCollection[i].SetTransformMatrix();
+                MainViewModel.ModelDataCollection[i].SetTransformMatrix();
             }
         }
         /// <summary>

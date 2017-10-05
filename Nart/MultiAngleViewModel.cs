@@ -169,19 +169,19 @@ namespace Nart
         }
         public Color4 DirectionalLightColor { get; set; }
 
-        private ObservableCollection<ModelInfo> modelInfoCollection;
-        public ObservableCollection<ModelInfo> ModelInfoCollection
-        {
-            get
-            {
-                return modelInfoCollection;
-            }
-            set
-            {
-                SetValue(ref modelInfoCollection, value);
-                ResetCameraPosition();
-            }
-        }
+        //private ObservableCollection<ModelInfo> modelInfoCollection;
+        //public ObservableCollection<ModelInfo> ModelInfoCollection
+        //{
+        //    get
+        //    {
+        //        return modelInfoCollection;
+        //    }
+        //    set
+        //    {
+        //        SetValue(ref modelInfoCollection, value);
+        //        ResetCameraPosition();
+        //    }
+        //}
 
         private ObservableCollection<ModelData> modeldataCollection;
         public ObservableCollection<ModelData> ModelDataCollection
@@ -240,16 +240,16 @@ namespace Nart
         {
 
             //ModelGroup裡面有模型之後才調整相機位置
-            if (ModelInfoCollection == null || ModelInfoCollection.Count == 0) 
+            if (ModelDataCollection == null || ModelDataCollection.Count == 0) 
                 return;
 
             //重新調整模型中心
             Model3DGroup ModelGroup = new Model3DGroup();
-            for (int i = 0; i < ModelInfoCollection.Count; i++) 
+            for (int i = 0; i < ModelDataCollection.Count; i++) 
             {   //如果選擇多模型但檔名是空或不存在則進不去
-                if (ModelInfoCollection[i].ModelContainer != null)
+                if (ModelDataCollection[i].ModelContainer != null)
                 {
-                    ModelGroup.Children.Add(ModelInfoCollection[i].ModelContainer);
+                    ModelGroup.Children.Add(ModelDataCollection[i].ModelContainer);
                 }
             }
 
@@ -308,76 +308,76 @@ namespace Nart
             BindingOperations.SetBinding(dobj, property, binding);
         }
 
-        public void SetModelDataCollection(ObservableCollection<ModelInfo> ModelInfoCollection)
+        public void SetModelDataCollection(ObservableCollection<ModelSettingItem> ModelInfoCollection)
         {
 
            
 
-            if (ModelDataCollection == null)
-                ModelDataCollection = new ObservableCollection<ModelData>();
+            //if (ModelDataCollection == null)
+            //    ModelDataCollection = new ObservableCollection<ModelData>();
 
 
-            //檢查模型清單 不存在於設定清單則移除
-            for (int i=0,j=0; i<ModelDataCollection.Count ;i++)
-            {
+            ////檢查模型清單 不存在於設定清單則移除
+            //for (int i=0,j=0; i<ModelDataCollection.Count ;i++)
+            //{
                 
-                for (j = 0; j < ModelInfoCollection.Count; j++) 
-                {
-                    if (ModelDataCollection[i].ModelFilePath.Equals(ModelInfoCollection[j].ModelFilePath) ||
-                         ModelDataCollection[i].ModelFilePath.Equals(ModelInfoCollection[j].OSPFilePath))
-                    {
-                        break;
-                    }
-                }
-                if (j == ModelInfoCollection.Count) 
-                {
-                    ModelDataCollection.RemoveAt(i);
-                }
-            }
+            //    for (j = 0; j < ModelInfoCollection.Count; j++) 
+            //    {
+            //        if (ModelDataCollection[i].ModelFilePath.Equals(ModelInfoCollection[j].ModelFilePath) ||
+            //             ModelDataCollection[i].ModelFilePath.Equals(ModelInfoCollection[j].OSPFilePath))
+            //        {
+            //            break;
+            //        }
+            //    }
+            //    if (j == ModelInfoCollection.Count) 
+            //    {
+            //        ModelDataCollection.RemoveAt(i);
+            //    }
+            //}
 
-            //新增模型    檢查設定清單的模型  如果在模型清單中有找到則直接更換顏色  如果沒找到則新增
-            for (int i = 0, j = 0; i < ModelInfoCollection.Count; i++) 
-            {
-                for (j = 0; j < ModelDataCollection.Count; j++) 
-                {
-                    if (ModelInfoCollection[i].ModelFilePath.Equals(ModelDataCollection[j].ModelFilePath))
-                    {
-                        ModelDataCollection[j].ModelDiffuseColor = ModelInfoCollection[i].ModelDiffuseColor;
-                    }
+            ////新增模型    檢查設定清單的模型  如果在模型清單中有找到則直接更換顏色  如果沒找到則新增
+            //for (int i = 0, j = 0; i < ModelInfoCollection.Count; i++) 
+            //{
+            //    for (j = 0; j < ModelDataCollection.Count; j++) 
+            //    {
+            //        if (ModelInfoCollection[i].ModelFilePath.Equals(ModelDataCollection[j].ModelFilePath))
+            //        {
+            //            ModelDataCollection[j].ModelDiffuseColor = ModelInfoCollection[i].ModelDiffuseColor;
+            //        }
 
-                    if (ModelInfoCollection[i].OSPFilePath.Equals(ModelDataCollection[j].ModelFilePath))
-                    {
-                        ModelDataCollection[j].ModelDiffuseColor = ModelInfoCollection[i].OSPDiffuseColor;
-                    }
-                }
+            //        if (ModelInfoCollection[i].OSPFilePath.Equals(ModelDataCollection[j].ModelFilePath))
+            //        {
+            //            ModelDataCollection[j].ModelDiffuseColor = ModelInfoCollection[i].OSPDiffuseColor;
+            //        }
+            //    }
 
-                if (j == ModelInfoCollection.Count)
-                {
-                    ModelData model = new ModelData();
-                    model.ModelFilePath = ModelInfoCollection[i].OSPFilePath;
-                    model.ModelDiffuseColor = ModelInfoCollection[i].OSPDiffuseColor;
-                    model.MarkerID = ModelInfoCollection[i].MarkerID;
-                    model.IsOSP = true;
-                    model.LoadSTL();
-                }
+            //    if (j == ModelInfoCollection.Count)
+            //    {
+            //        ModelData model = new ModelData();
+            //        model.ModelFilePath = ModelInfoCollection[i].OSPFilePath;
+            //        model.ModelDiffuseColor = ModelInfoCollection[i].OSPDiffuseColor;
+            //        model.MarkerID = ModelInfoCollection[i].MarkerID;
+            //        model.IsOSP = true;
+            //        model.LoadSTL();
+            //    }
 
 
 
                 
-            }
+            //}
 
-            for (int i = 0; i < ModelInfoCollection.Count; i++)
-            {
-                ModelData model = new ModelData();
-                model.ModelFilePath = ModelInfoCollection[i].ModelFilePath;
-                model.ModelDiffuseColor = ModelInfoCollection[i].ModelDiffuseColor;
-                model.MarkerID = ModelInfoCollection[i].MarkerID;
-                model.IsOSP = false;
-                if (model.IsLoaded)
-                {
-                    ModelDataCollection.Add(model);
-                }
-            }
+            //for (int i = 0; i < ModelInfoCollection.Count; i++)
+            //{
+            //    ModelData model = new ModelData();
+            //    model.ModelFilePath = ModelInfoCollection[i].ModelFilePath;
+            //    model.ModelDiffuseColor = ModelInfoCollection[i].ModelDiffuseColor;
+            //    model.MarkerID = ModelInfoCollection[i].MarkerID;
+            //    model.IsOSP = false;
+            //    if (model.IsLoaded)
+            //    {
+            //        ModelDataCollection.Add(model);
+            //    }
+            //}
         }
     }
 }

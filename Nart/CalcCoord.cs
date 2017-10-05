@@ -608,11 +608,11 @@ namespace Nart
                         Matrix3D Final = level1 * level2 * level3 * level4;
 
 
-                       for (int j = 0; j < MainViewModel.ModelInfoCollection.Count; j++)
+                       for (int j = 0; j < MainViewModel.ModelDataCollection.Count; j++)
                        {
-                           if (MainViewModel.ModelInfoCollection[j].MarkerID == WorldPoints[i].MarkerID)
+                           if (MainViewModel.ModelDataCollection[j].MarkerID == WorldPoints[i].MarkerID)
                            {
-                               MainViewModel.ModelInfoCollection[j].AddItem(Final);
+                               MainViewModel.ModelDataCollection[j].AddItem(Final);
                            }
                        }
                    }
