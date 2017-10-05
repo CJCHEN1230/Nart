@@ -87,24 +87,7 @@ namespace Nart
             {
                 SetStaticValue(ref regPath, value);
             }
-        }
-        /// <summary>
-        /// 清單中選擇的索引
-        /// </summary>
-        private int selectedIndex = 0;
-        public int SelectedIndex
-        {
-            get
-            {
-                return selectedIndex;
-            }
-            set
-            {
-
-                SetValue(ref selectedIndex, value);
-                Console.WriteLine("INDEX:" + selectedIndex);
-            }
-        }
+        }      
         /// <summary>
         /// ModelSettingView的物件
         /// </summary>
@@ -115,8 +98,6 @@ namespace Nart
         public ModelSettingViewModel(ModelSettingView _modelSettingView)
         {
             ModelSetView = _modelSettingView;
-
-
 
             ModelInfoCollection = MainViewModel.ModelInfoCollection;
             //如果ModelInfoCollection為空的
@@ -238,16 +219,11 @@ namespace Nart
                 //選擇的ModelItem
                 ModelSettingItem SelectedModelItem=(ModelSettingItem)ModelSetView.ModelListView.SelectedItem;
 
-                //移除所選項目中的模型
-                SelectedModelItem.Model.IsRemoved = true;
-          
+                //設定所選模型物件為"已移除"，按下OK之後會刪除
+                SelectedModelItem.Model.IsRemoved = true;          
                 SelectedModelItem.OSP.IsRemoved = true;
-                Console.WriteLine("有刪除喔!!!!");
-                Console.WriteLine("model file :"+SelectedModelItem.ModelFilePath);
-                Console.WriteLine("osp file:"+SelectedModelItem.OSPFilePath);
-
-
-            int temp = ModelSetView.ModelListView.SelectedIndex;
+   
+                int temp = ModelSetView.ModelListView.SelectedIndex;
               
                 ModelInfoCollection.Remove(SelectedModelItem);
 
@@ -283,16 +259,14 @@ namespace Nart
                 ModelInfoCollection[i].Load();
 
                 //確認有Load過且有沒有被加進去modelDataCollection
-                if (ModelInfoCollection[i].IsOSPLoaded/* && !ModelInfoCollection[i].OSP.IsAdded*/)
+                if (ModelInfoCollection[i].IsOSPLoaded)
                 {
                     modelDataCollection.Insert(0, ModelInfoCollection[i].OSP);
-                    ModelInfoCollection[i].OSP.IsAdded = true;
                 }
                 //確認有Load過且有沒有被加進去modelDataCollection
-                if (ModelInfoCollection[i].IsModelLoaded/* && !ModelInfoCollection[i].Model.IsAdded*/)
+                if (ModelInfoCollection[i].IsModelLoaded)
                 {
                     modelDataCollection.Add(ModelInfoCollection[i].Model);
-                    ModelInfoCollection[i].Model.IsAdded = true;
                 }
                 
             }
@@ -303,12 +277,9 @@ namespace Nart
                 {
                     modelDataCollection.RemoveAt(i);
                     i --;
-                }
-           
+                }           
             }
-
-
-            Console.WriteLine("Model data count: " + modelDataCollection.Count);
+            
         }        
     }
 }

@@ -128,8 +128,7 @@
                 <Border BorderBrush="Black" BorderThickness="4" Height="4" Margin="-5,1,-5,1" VerticalAlignment="Top"/>
                 <ListView  BorderThickness="0" x:Name="ModelListView" Background="#FFC8C8C8" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0" Margin="0,-1,-1,-1"
                   ItemTemplate="{StaticResource myItemTemplate}"
-                  ItemsSource = "{Binding ModelInfoCollection}" Height="359"
-                  SelectedIndex="{Binding SelectedIndex}"/>
+                  ItemsSource = "{Binding ModelInfoCollection}" Height="359"/>
             </StackPanel>
         </Border>
         <Button x:Name="addBtn" Content="+" FontSize="30" FontWeight="Bold" BorderThickness="4" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="538,7,0,0" VerticalAlignment="Top" Width="45" Height="45" Click="AddItemClick" Grid.Row="1" Grid.Column="1"/>

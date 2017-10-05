@@ -142,7 +142,6 @@ namespace Nart
         public bool IsOSP = false;
         public bool IsLoaded = false;
         public bool IsRemoved = false;
-        public bool IsAdded = true;
         public ModelData()
         {
             
