@@ -32,8 +32,6 @@ namespace Nart
 
         private List<Marker3D> WorldPoints = new List<Marker3D>(10);
 
-        private MainViewModel _mainViewModel = null;
-
         private Point3D[] CTBall; //CT珠子中心座標
 
         private Point3D[] MSBall; //MS點的珠子中心座標
@@ -64,9 +62,9 @@ namespace Nart
         ///咬板在註冊資料中引數
         /// </summary>
         public int RegSplintIndex = -1;
-        public CalcCoord(MainViewModel window)
+        public CalcCoord()
         {
-            _mainViewModel = window;
+
             _camParam[0] = new CamParam("../../../data/CaliR_L.txt");
             _camParam[1] = new CamParam("../../../data/CaliR_R.txt");
             CalcLensCenter();
@@ -275,7 +273,7 @@ namespace Nart
                 WorldPoints[i].SortedByLength();
             }
 
-            _mainViewModel.PointNumber = (WorldPoints.Count * 3).ToString() + "個點";      
+            MainViewModel.PointNumber = (WorldPoints.Count * 3).ToString() + "個點";      
         }
         /// <summary>
         /// 將計算出的3D座標點與資料庫比對並存下引數
@@ -337,7 +335,9 @@ namespace Nart
         /// 在註冊時使用，比對當前WorldPoints並清除MarkerDB中不需要的資料
         /// </summary>
         private void SimplifyDatabase()
-        {            
+        {
+            //Reset 資料庫中的Marker
+            //database = new MarkerDatabase();
             //尋訪資料庫中的Marker
             for (int i = 0, j = 0; i < database.MarkerInfo.Count; i++)
             {   //尋訪世界座標中的Marker
@@ -514,6 +514,8 @@ namespace Nart
                 //註冊需要咬板與頭部標記片
                 if (RegSplintIndex != -1 && RegHeadIndex != -1)
                 {
+
+
                     SimplifyDatabase();
                     for (int i = 0; i < database.MarkerInfo.Count; i++)
                     {
@@ -586,14 +588,16 @@ namespace Nart
         /// </summary>
         public void CalcModelTransform()
         {
-            int CurrentHeadIndex = GetSpecIndex(WorldPoints, "Head");
+            int currentHeadIndex = GetSpecIndex(WorldPoints, "Head");
 
             //沒有找到頭的Marker
-            if (CurrentHeadIndex != -1) 
+            if (currentHeadIndex != -1) 
             {
+                
                 Parallel.For(0, WorldPoints.Count, i =>
                {
-                   if (!WorldPoints[i].MarkerID.Equals("")&& !WorldPoints[i].MarkerID.Equals("Splint") && !WorldPoints[i].MarkerID.Equals("Head"))
+                   //當前Marker找不到或頭部咬板沒找到則跳過
+                   if (!WorldPoints[i].MarkerID.Equals("")/*&& !WorldPoints[i].MarkerID.Equals("Splint") */&& !WorldPoints[i].MarkerID.Equals("Head"))
                     {
                         int MSandOriIndex = GetSpecIndex(MSWorldPoints, WorldPoints[i].MarkerID);//取得當前世界座標在註冊時的座標索引值是多少
 
@@ -601,23 +605,23 @@ namespace Nart
 
                         Matrix3D level2 = TransformCoordinate(MSWorldPoints[MSandOriIndex].ThreePoints, WorldPoints[i].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"
 
-                        Matrix3D level3 = TransformCoordinate(WorldPoints[CurrentHeadIndex].ThreePoints, MSWorldPoints[RegHeadIndex].ThreePoints);
+                        Matrix3D level3 = TransformCoordinate(WorldPoints[currentHeadIndex].ThreePoints, MSWorldPoints[RegHeadIndex].ThreePoints);
 
                         Matrix3D level4 = TransformCoordinate(MSBall, CTBall);
                         
                         Matrix3D Final = level1 * level2 * level3 * level4;
 
-
-                       for (int j = 0; j < MainViewModel.ModelDataCollection.Count; j++)
+                      
+                       for (int j = 0; j < ModelSettingViewModel.ModelDataCollection.Count; j++)
                        {
-                           if (MainViewModel.ModelDataCollection[j].MarkerID == WorldPoints[i].MarkerID)
+                           if (ModelSettingViewModel.ModelDataCollection[j].MarkerID == WorldPoints[i].MarkerID)
                            {
-                               MainViewModel.ModelDataCollection[j].AddItem(Final);
+                               ModelSettingViewModel.ModelDataCollection[j].AddItem(Final);
                            }
                        }
-                   }
-                                                        
+                   }                                                        
                });
+
             }
         }
     }

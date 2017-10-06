@@ -272,7 +272,7 @@ namespace Nart
 
         }
         /// <summary>
-        /// 將自訂義的cam1LookDir綁到相機實際的觀看方向
+        /// 將自定義的cam1LookDir綁到相機實際的觀看方向
         /// </summary>
         public void SetupCameraBindings(Camera camera, string propertyName)
         {
@@ -282,7 +282,7 @@ namespace Nart
             }
         }
         /// <summary>
-        /// path:目標屬性
+        /// path:目標屬性名稱
         /// dobj:來源屬性
         /// viewModel
         /// mode:綁定方向

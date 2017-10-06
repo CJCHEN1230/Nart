@@ -63,15 +63,13 @@ namespace Nart
         /// 管理相機通過與否
         /// </summary>
         private bool[] CameraToggle = new bool[2] {true,true};
-        private MainViewModel _mainViewModel = null;
         /// <summary>
         /// 傳進來的width跟height決定inImageControl的長寬
         /// </summary>      
-        public CameraControl(TIS.Imaging.ICImagingControl[] cam ,  MainViewModel mainViewModel)
+        public CameraControl(TIS.Imaging.ICImagingControl[] cam)
         {
-            _mainViewModel = mainViewModel;
-
-            _calcCoord = new CalcCoord(_mainViewModel);
+          
+            _calcCoord = new CalcCoord();
 
             icImagingControl = cam;
 
@@ -164,9 +162,9 @@ namespace Nart
         }
         private void MoveModel()
         {
-            for (int i = 0; i < MainViewModel.ModelSettingCollection.Count - 1; i++)
+            for (int i = 0; i < ModelSettingViewModel.ModelDataCollection.Count ; i++)
             {
-                MainViewModel.ModelDataCollection[i].SetTransformMatrix();
+                ModelSettingViewModel.ModelDataCollection[i].SetTransformMatrix();
             }
         }
         /// <summary>
@@ -175,7 +173,7 @@ namespace Nart
         private void ShowImageBuffer()
         {
 
-            if (_mainViewModel.TabIndex == 0)
+            if (MainViewModel.TabIndex == 0)
             {
                 Parallel.For(0, 2, i =>
                 {                    
@@ -199,9 +197,9 @@ namespace Nart
             if (CameraControl.TrackToggle)
             {
                 _calcCoord.CalcModelTransform();
-                MoveModel();
+                MoveModel();                
             }
-
+        
 
             CameraToggle[0] = true;
             CameraToggle[1] = true;           

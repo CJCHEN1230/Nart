@@ -9,6 +9,7 @@ using System.Windows.Media.Media3D;
 using NartControl;
 using System.Collections.ObjectModel;
 using NartControl.Control;
+using System.Windows.Input;
 
 namespace Nart
 {
@@ -17,57 +18,69 @@ namespace Nart
     /// </summary>
     public class MainViewModel : ObservableObject
     {
+        public static ObservableCollection<ModelSettingItem> ModelSettingCollection;
+        public static ObservableCollection<ModelData> ModelDataCollection;
         public CameraControl CamCtrl 
         {
             get;
             set;
         }
-        public NartServer nartserver
+        public NartServer Server= new NartServer();
+        private static string _pointNumber;
+        private static int _tabIndex = 1; //預設tab頁面索引值        
+        private ModelSettingView _modelSettingdlg;
+        private MainView _mainWindow;
+        
+        public MainViewModel(MainView mainWindow)
         {
-            get;
-            set;
-        } = new NartServer();        
-        public static ObservableCollection<ModelSettingItem> ModelSettingCollection;
-        public static ObservableCollection<ModelData> ModelDataCollection;
-        private MainView _window;
-        public MainView MainWindow
-        {
-            get { return this._window; }
-            set { this._window = value; }
+            _mainWindow = mainWindow;
+            SetModelCommand = new RelayCommand(SetModel);
+
         }
-        public MainViewModel(MainView window)
+        
+        
+
+        public static int TabIndex
         {
-            MainWindow = window;
+            get { return _tabIndex; }
+            set
+            {
+                SetStaticValue(ref _tabIndex, value);
+            }
+        }
+        public static string PointNumber
+        {
+            get { return _pointNumber; }
+            set
+            {
+                SetStaticValue(ref _pointNumber, value);
+            }
+        }
+        public ICommand SetModelCommand { private set; get; }
+
+
+        public void InitCamCtrl()
+        {
+
+            CamCtrl = new CameraControl(new TIS.Imaging.ICImagingControl[2] { _mainWindow.CamHost1.icImagingControl, _mainWindow.CamHost2.icImagingControl });
+            CamCtrl.CameraStart();
         }
         /// <summary>
         /// 顯示設置好的各項模型資訊，按下Set Model 之後並且按ok後會走到這
         /// </summary>       
-        public void InitCamCtrl()
+        private void SetModel(object o)
         {
-
-            CamCtrl = new CameraControl(new TIS.Imaging.ICImagingControl[2] { _window.CamHost1.icImagingControl, _window.CamHost2.icImagingControl }, this);
-            CamCtrl.CameraStart();
-        }
-        private int _tabIndex = 1; //預設tab頁面索引值
-        public int TabIndex
-        {
-            get { return this._tabIndex; }
-            set
+            if (_modelSettingdlg == null)
             {
-                SetValue(ref _tabIndex, value);
+                _modelSettingdlg = new ModelSettingView();
             }
+            _modelSettingdlg.Owner = _mainWindow;
+
+            _modelSettingdlg.ShowDialog();
+
+            //Dialog 結束之後指派給_multiAngleViewModel中的值
+            _mainWindow.multiAngleView._multiAngleViewModel.ModelDataCollection = ModelSettingViewModel.ModelDataCollection;
+            MainViewModel.ModelDataCollection = ModelSettingViewModel.ModelDataCollection;
         }
-
-        private string _pointNumber;
-        public string PointNumber
-        {
-            get { return this._pointNumber; }
-            set
-            {
-                SetValue(ref _pointNumber, value);
-            }
-        }
-
-
     }
 }

@@ -22,14 +22,6 @@ namespace Nart
     public class ModelSettingItem : ObservableObject
     {
         /// <summary>
-        /// 模型Load成功後會轉成true
-        /// </summary>
-        public bool IsModelLoaded = false;
-        /// <summary>
-        /// OSP Load成功後會轉成true
-        /// </summary>
-        public bool IsOSPLoaded = false;
-        /// <summary>
         /// 設置列當中的模型物件
         /// </summary>
         public ModelData Model = new ModelData();
@@ -119,7 +111,7 @@ namespace Nart
         public void LoadModel()
         {
             //ModelGeometry已經有幾何模型存在內部 及 阻擋檔案不存在的情況
-            if (IsModelLoaded || !System.IO.File.Exists(ModelFilePath))
+            if (Model.IsLoaded || !System.IO.File.Exists(ModelFilePath))
             {
                 return;
             }
@@ -166,9 +158,11 @@ namespace Nart
             }
             Model.MarkerID = this.MarkerID;
 
-            IsModelLoaded = true;
-
             Model.ModelGeometry = modelGeometry;
+
+            Model.ModelTransform = new MatrixTransform3D();
+
+            Model.IsLoaded = true;                        
         }
         /// <summary>
         /// load進OSP檔案
@@ -176,7 +170,7 @@ namespace Nart
         public void LoadOSP()
         {
             //ModelGeometry已經有幾何模型存在內部 及 阻擋檔案不存在的情況
-            if (IsOSPLoaded || !System.IO.File.Exists(OSPFilePath))
+            if (OSP.IsLoaded || !System.IO.File.Exists(OSPFilePath))
             {
                 return;
             }
@@ -223,7 +217,9 @@ namespace Nart
 
             OSP.ModelGeometry = ospGeometry;
 
-            IsOSPLoaded = true;
+            OSP.ModelTransform = new MatrixTransform3D();
+
+            OSP.IsLoaded = true;
         }
 
 
@@ -236,7 +232,7 @@ namespace Nart
             set
             {
                 SetValue(ref modelFilePath, value);
-                IsModelLoaded = false;
+                Model.IsLoaded = false;                
             }
         }
         public String OSPFilePath
@@ -248,7 +244,7 @@ namespace Nart
             set
             {
                 SetValue(ref ospFilePath, value);
-                IsOSPLoaded = false;
+                OSP.IsLoaded = false;
             }
         }
         public Color ModelDiffuseColor
@@ -260,7 +256,7 @@ namespace Nart
             set
             {
                 SetValue(ref modelDiffuseColor, value);
-                if (IsModelLoaded == true)
+                if (Model.IsLoaded == true)
                 {
                     SetModelMaterial();
                 }
@@ -275,7 +271,7 @@ namespace Nart
             set
             {
                 SetValue(ref ospDiffuseColor, value);
-                if (IsOSPLoaded == true)
+                if (OSP.IsLoaded == true)
                 {
                     SetOSPMaterial();
                 }

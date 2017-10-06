@@ -31,11 +31,11 @@ namespace Nart
     /// </summary>
     public partial class MainView : Window
     {
-        private ModelSettingView _modelSettingdlg;
+        
         private MainViewModel _mainViewModel = null;
         public MainView()
         {
-            InitializeComponent();
+            InitializeComponent();            
 
             _mainViewModel = new MainViewModel(this);
 
@@ -43,20 +43,7 @@ namespace Nart
             
             AllocConsole();
         }        
-        private void SettingView_Click(object sender, RoutedEventArgs e)
-        {
-            if (_modelSettingdlg== null)
-            {
-                _modelSettingdlg = new ModelSettingView();
-            }
-            _modelSettingdlg.Owner = this;
-
-            _modelSettingdlg.ShowDialog();
-            //Dialog 結束之後指派給_multiAngleViewModel中的值
-         
-            multiAngleView._multiAngleViewModel.ModelDataCollection = ModelSettingViewModel.modelDataCollection;
-
-        }
+        
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
            

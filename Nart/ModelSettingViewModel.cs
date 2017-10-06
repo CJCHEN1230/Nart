@@ -17,7 +17,7 @@ namespace Nart
         /// <summary>
         /// 轉換成模型清單的資料集合
         /// </summary>       
-        public static ObservableCollection<ModelData> modelDataCollection;
+        public static ObservableCollection<ModelData> ModelDataCollection;
         /// <summary>
         /// 項目中每個Item的資料集合
         /// </summary>       
@@ -42,6 +42,8 @@ namespace Nart
         /// ModelSettingView的物件
         /// </summary>
         private ModelSettingView _modelSettingView;
+        
+        
         /// <summary>
         /// 建構子，如果ModelInfoCollection是空的，則自製部分預設項目
         /// </summary>
@@ -67,8 +69,7 @@ namespace Nart
                     MarkerID = "Head"
                                                                                 ,
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"
-                                                                                ,
-                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
+                                                                               
                                                                                 ,
                     OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
                                                                                 ,
@@ -82,7 +83,7 @@ namespace Nart
                                                                                 ,
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl"
                     //ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
-                                                                                ,
+                                                                               ,
                     OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl"
                                                                                 ,
                     ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
@@ -91,40 +92,16 @@ namespace Nart
 
                 });
 
-                //ModelInfoCollection.Add(new ModelInfo
-                //{
-                //    CMode = CullMode.Back
-                //                                                                ,
-                //    IvtNormal = true
-                //                                                                ,
-                //    FrontCounterClockwise = false
-                //                                                                ,
-                //    MarkerID = "A"
-                //                                                                ,
-                //    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
-                //                                                                // ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
-                //                                                                ,
-                //    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
-                //                                                                ,
-                //    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
-                //                                                                ,
-                //    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(30, 40, 181, 187)
-                //});
 
                 ModelSettingCollection.Add(new ModelSettingItem
                 {
-                    //CMode = CullMode.Back
-                    //                                                            ,
-                    //IvtNormal = false
-                    //                                                            ,
-                    //FrontCounterClockwise = true
-                    //                                                            ,
+
                     MarkerID = "A"
                                                                                 ,
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
                     // ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
-                                                                                
-                    //OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
+                                                                               ,
+                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
                                                                                 ,
                     ModelDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
                                                                                 ,
@@ -133,7 +110,9 @@ namespace Nart
 
 
             }
-        }      
+        }
+
+
         public static ObservableCollection<ModelSettingItem> ModelSettingCollection
         {
             get { return modelSettingCollection; }
@@ -256,10 +235,10 @@ namespace Nart
         /// </summary>
         public void LoadSettingModel(object o)
         {
-            if (modelDataCollection == null)
-                modelDataCollection = new ObservableCollection<ModelData>();
+            if (ModelDataCollection == null)
+                ModelDataCollection = new ObservableCollection<ModelData>();
 
-            Console.WriteLine("ModelInfoCollection count:" + ModelSettingCollection.Count);
+            
             //確保所有模型資訊都有set進去ModelInfo的資料
             for (int i = 0; i < ModelSettingCollection.Count; i++)
             {
@@ -267,26 +246,30 @@ namespace Nart
                 ModelSettingCollection[i].Load();
 
                 //確認有Load過且有沒有被加進去modelDataCollection
-                if (ModelSettingCollection[i].IsOSPLoaded)
+                if (ModelSettingCollection[i].OSP.IsLoaded && !ModelSettingCollection[i].OSP.IsAdded) 
                 {
-                    modelDataCollection.Insert(0, ModelSettingCollection[i].OSP);
+                    ModelDataCollection.Insert(0, ModelSettingCollection[i].OSP);
+                    ModelSettingCollection[i].OSP.IsAdded = true;
                 }
                 //確認有Load過且有沒有被加進去modelDataCollection
-                if (ModelSettingCollection[i].IsModelLoaded)
+                if (ModelSettingCollection[i].Model.IsLoaded && !ModelSettingCollection[i].Model.IsAdded) 
                 {
-                    modelDataCollection.Add(ModelSettingCollection[i].Model);
+                    ModelDataCollection.Add(ModelSettingCollection[i].Model);
+                    ModelSettingCollection[i].Model.IsAdded = true;
                 }
 
             }
             //刪除modelDataCollection中已經從ModelInfoCollection移除的模型，
-            for (int i = 0; i < modelDataCollection.Count; i++)
+            for (int i = 0; i < ModelDataCollection.Count; i++)
             {
-                if (modelDataCollection[i].IsRemoved)
+                //模型如果透過 - 移除 或是 因為換錯誤檔名造成IsLoaded 為false則直接移除
+                if (ModelDataCollection[i].IsRemoved || !ModelDataCollection[i].IsLoaded)
                 {
-                    modelDataCollection.RemoveAt(i);
+                    ModelDataCollection.RemoveAt(i);
                     i--;
                 }
             }
+            Console.WriteLine(" 模型總數:  " + ModelDataCollection.Count);
             _modelSettingView.Hide();
         }
     }

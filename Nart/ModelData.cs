@@ -26,6 +26,11 @@ namespace Nart
         /// </summary>
         public bool IsRemoved = false;
         /// <summary>
+        /// 有被加進去模型清單才為True
+        /// </summary>
+        public bool IsAdded = false;
+        public bool IsLoaded = false;
+        /// <summary>
         /// 模型幾何形狀
         /// </summary>
         private HelixToolkit.Wpf.SharpDX.MeshGeometry3D modelGeometry;        
@@ -36,7 +41,10 @@ namespace Nart
         /// <summary>
         /// 模型矩陣設定
         /// </summary>     
-        private MatrixTransform3D modelTransform;        
+        private MatrixTransform3D modelTransform;
+        /// <summary>
+        /// 剔除面
+        /// </summary>
         private CullMode cMode = CullMode.Back;
         /// <summary>
         /// 反轉Normal方向
@@ -53,15 +61,18 @@ namespace Nart
         /// <summary>
         /// 此Model的最終轉換矩陣
         /// </summary>
-        private Matrix3D FinalModelTransform = new Matrix3D();
+        private Matrix3D _finalModelTransform = new Matrix3D();
         /// <summary>
         /// 用來累加的矩陣
         /// </summary>
-        private Matrix3D TotalModelTransform = new Matrix3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        private Matrix3D _totalModelTransform = new Matrix3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         /// <summary>
         /// 防止抖動，用來存放所有矩陣，10是累積總數量
         /// </summary>
-        private Matrix3D[] ModelTransformSet = new Matrix3D[10];
+        private Matrix3D[] _modelTransformSet = new Matrix3D[10];
+        /// <summary>
+        /// Count是在ModelTransformSet中的累積數量
+        /// </summary>
         private int Count = 0;
         /// <summary>
         /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
@@ -74,54 +85,58 @@ namespace Nart
         }        
         public void AddItem(Matrix3D item)
         {
-            if (Count < ModelTransformSet.Length)
+            //數量少於陣列總長度則往後加入
+            if (Count < _modelTransformSet.Length)
             {
                 Count++;
 
-                TotalModelTransform = AddMatrix3D(TotalModelTransform, item);
+                AddMatrix3D(ref _totalModelTransform, ref item);
 
-                FinalModelTransform = DivideMatrix3D(TotalModelTransform, Count);
+                DivideMatrix3D(ref _totalModelTransform,  Count, ref _finalModelTransform);
 
             }
             else
             {
-                TotalModelTransform = SubtractMatrix3D(TotalModelTransform, ModelTransformSet[CurrenIndex]);
+                SubtractMatrix3D(ref _totalModelTransform, ref _modelTransformSet[CurrenIndex]);
 
-                TotalModelTransform = AddMatrix3D(TotalModelTransform, item);
+                AddMatrix3D(ref _totalModelTransform, ref item);
 
-                FinalModelTransform = DivideMatrix3D(TotalModelTransform, ModelTransformSet.Length);
+                DivideMatrix3D(ref _totalModelTransform, Count, ref _finalModelTransform);
             }
 
-            ModelTransformSet[CurrenIndex] = item;
+            _modelTransformSet[CurrenIndex] = item;
 
             CurrenIndex++;
-            CurrenIndex = CurrenIndex % ModelTransformSet.Length;
+            CurrenIndex = CurrenIndex % _modelTransformSet.Length;
 
         }
         public void SetTransformMatrix()
         {
-            ModelTransform = new MatrixTransform3D(FinalModelTransform);
-        }
-        private Matrix3D AddMatrix3D(Matrix3D A, Matrix3D B)
+            ModelTransform = new MatrixTransform3D(_finalModelTransform);
+        }       
+        private void AddMatrix3D(ref Matrix3D A, ref Matrix3D B)
         {
-            return new Matrix3D(A.M11 + B.M11, A.M12 + B.M12, A.M13 + B.M13, A.M14 + B.M14,
-                                A.M21 + B.M21, A.M22 + B.M22, A.M23 + B.M23, A.M24 + B.M24,
-                                A.M31 + B.M31, A.M32 + B.M32, A.M33 + B.M33, A.M34 + B.M34,
-                                A.OffsetX + B.OffsetX, A.OffsetY + B.OffsetY, A.OffsetZ + B.OffsetZ, A.M44 + B.M44);
+            A.M11 = A.M11 + B.M11; A.M12 = A.M12 + B.M12; A.M13 = A.M13 + B.M13; A.M14 = A.M14 + B.M14;
+            A.M21 = A.M21 + B.M21; A.M22 = A.M22 + B.M22; A.M23 = A.M23 + B.M23; A.M24 = A.M24 + B.M24;
+            A.M31 = A.M31 + B.M31; A.M32 = A.M32 + B.M32; A.M33 = A.M33 + B.M33; A.M34 = A.M34 + B.M34;
+            A.OffsetX = A.OffsetX + B.OffsetX; A.OffsetY = A.OffsetY + B.OffsetY; A.OffsetZ = A.OffsetZ + B.OffsetZ; A.M44 = A.M44 + B.M44;
         }
-        private Matrix3D SubtractMatrix3D(Matrix3D A, Matrix3D B)
+        private void  SubtractMatrix3D(ref Matrix3D A, ref Matrix3D B)
         {
-            return new Matrix3D(A.M11 - B.M11, A.M12 - B.M12, A.M13 - B.M13, A.M14 - B.M14,
-                                A.M21 - B.M21, A.M22 - B.M22, A.M23 - B.M23, A.M24 - B.M24,
-                                A.M31 - B.M31, A.M32 - B.M32, A.M33 - B.M33, A.M34 - B.M34,
-                                A.OffsetX - B.OffsetX, A.OffsetY - B.OffsetY, A.OffsetZ - B.OffsetZ, A.M44 - B.M44);
+            A.M11 = A.M11 - B.M11; A.M12 = A.M12 - B.M12; A.M13 = A.M13 - B.M13; A.M14 = A.M14 - B.M14;
+            A.M21 = A.M21 - B.M21; A.M22 = A.M22 - B.M22; A.M23 = A.M23 - B.M23; A.M24 = A.M24 - B.M24;
+            A.M31 = A.M31 - B.M31; A.M32 = A.M32 - B.M32; A.M33 = A.M33 - B.M33; A.M34 = A.M34 - B.M34;
+            A.OffsetX = A.OffsetX - B.OffsetX; A.OffsetY = A.OffsetY - B.OffsetY; A.OffsetZ = A.OffsetZ - B.OffsetZ; A.M44 = A.M44 - B.M44;
         }
-        private Matrix3D DivideMatrix3D(Matrix3D A, double Divisor)
+        private void DivideMatrix3D(ref Matrix3D A, int divisor ,ref Matrix3D result)
         {
-            return new Matrix3D(A.M11 / Divisor, A.M12 / Divisor, A.M13 / Divisor, A.M14 / Divisor,
-                                A.M21 / Divisor, A.M22 / Divisor, A.M23 / Divisor, A.M24 / Divisor,
-                                A.M31 / Divisor, A.M32 / Divisor, A.M33 / Divisor, A.M34 / Divisor,
-                                A.OffsetX / Divisor, A.OffsetY / Divisor, A.OffsetZ / Divisor, A.M44 / Divisor);
+            double divisorDouble = Convert.ToDouble(divisor);
+
+            result.M11 = A.M11 / divisorDouble; result.M12 = A.M12 / divisorDouble; result.M13 = A.M13 / divisorDouble; result.M14 = A.M14 / divisorDouble;
+            result.M21 = A.M21 / divisorDouble; result.M22 = A.M22 / divisorDouble; result.M23 = A.M23 / divisorDouble; result.M24 = A.M24 / divisorDouble;
+            result.M31 = A.M31 / divisorDouble; result.M32 = A.M32 / divisorDouble; result.M33 = A.M33 / divisorDouble; result.M34 = A.M34 / divisorDouble;
+            result.OffsetX = A.OffsetX / divisorDouble; result.OffsetY = A.OffsetY / divisorDouble; result.OffsetZ = A.OffsetZ / divisorDouble; result.M44 = A.M44 / divisorDouble;
+
         }
 
         public HelixToolkit.Wpf.SharpDX.MeshGeometry3D ModelGeometry
