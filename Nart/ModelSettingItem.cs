@@ -20,113 +20,59 @@ namespace Nart
     /// 模型設置清單中Listview中的項目
     /// </summary>
     public class ModelSettingItem : ObservableObject
-    {      
+    {
+        /// <summary>
+        /// 模型Load成功後會轉成true
+        /// </summary>
+        public bool IsModelLoaded = false;
+        /// <summary>
+        /// OSP Load成功後會轉成true
+        /// </summary>
+        public bool IsOSPLoaded = false;
+        /// <summary>
+        /// 設置列當中的模型物件
+        /// </summary>
+        public ModelData Model = new ModelData();
+        /// <summary>
+        /// 設置列當中的OSP物件
+        /// </summary>
+        public ModelData OSP = new ModelData();
         /// <summary>
         /// 模型名稱
         /// </summary>
         private String modelFilePath;
-        public String ModelFilePath
-        {
-            get
-            {
-                return modelFilePath;
-            }
-            set
-            {
-                SetValue(ref modelFilePath, value);
-                IsModelLoaded = false;
-            }
-        }
         /// <summary>
         /// OSP名稱
         /// </summary>
         private String ospFilePath;
-        public String OSPFilePath
-        {
-            get
-            {
-                return ospFilePath;
-            }
-            set
-            {
-                SetValue(ref ospFilePath, value);
-                IsOSPLoaded = false;
-            }
-        }
         /// <summary>
         /// Model 顏色
         /// </summary>
         private Color modelDiffuseColor;
-        public Color ModelDiffuseColor
-        {
-            get
-            {
-                return modelDiffuseColor;
-            }
-            set
-            {
-                SetValue(ref modelDiffuseColor, value);
-                if (IsModelLoaded == true)
-                {
-                    SetModelMaterial();
-                }
-            }
-        }
         /// <summary>
         /// OSP 顏色
         /// </summary>
         private Color ospDiffuseColor;
-        public Color OSPDiffuseColor
-        {
-            get
-            {
-                return ospDiffuseColor;
-            }
-            set
-            {
-                SetValue(ref ospDiffuseColor, value);
-                if (IsOSPLoaded == true)
-                {
-                    SetOSPMaterial();
-                }
-            }
-        }            
         /// <summary>
         /// MarkerID 的值
         /// </summary>
         private String markerID;
-        public String MarkerID
-        {
-            get
-            {
-                return markerID;
-            }
-            set
-            {
-                SetValue(ref markerID, value);
-            }
-        }
         /// <summary>
         /// combobox選項的內容
         /// </summary>
         private List<String> comboboxList = MarkerDatabase.MarkerIDList;
-        public List<String> ComboBoxList
-        {
-            get
-            {
-                return comboboxList;
-            }
-            set
-            {
-                SetValue(ref comboboxList, value);
-            }
-        }    
+
+                               
+        public ModelSettingItem()
+        {                       
+            
+        }
         /// <summary>
         /// 設定模型材質
         /// </summary>        
         private void SetModelMaterial()
         {
-            if (Model.ModelMaterial == null) 
+            if (Model.ModelMaterial == null)
             {
                 Model.ModelMaterial = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
                 Model.ModelMaterial.ReflectiveColor = SharpDX.Color.Black;
@@ -137,7 +83,7 @@ namespace Nart
                 Model.ModelMaterial.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
                 Model.ModelMaterial.SpecularShininess = 60;
             }
-            
+
             Model.ModelMaterial.DiffuseColor = ModelDiffuseColor.ToColor4();
         }
         /// <summary>
@@ -156,40 +102,9 @@ namespace Nart
                 OSP.ModelMaterial.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
                 OSP.ModelMaterial.SpecularShininess = 60;
             }
-            
+
             OSP.ModelMaterial.DiffuseColor = OSPDiffuseColor.ToColor4();
         }
-        /// <summary>
-        /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
-        /// </summary>
-        public bool IsModelLoaded = false;
-        public bool IsOSPLoaded = false;
-        public ModelData Model = new ModelData();
-        public ModelData OSP = new ModelData();
-        public ModelSettingItem()
-        {                       
-            
-        }
-        public ModelSettingItem(ModelSettingItem oldModelInfo)
-        {
-         
-            //ModelGeometry = oldModelInfo.ModelGeometry;
-            //ModelMaterial = oldModelInfo.ModelMaterial;
-            //ModelTransform = oldModelInfo.ModelTransform;
-            ModelFilePath = oldModelInfo.ModelFilePath;
-            ModelDiffuseColor = oldModelInfo.ModelDiffuseColor;
-
-            //OSPGeometry = oldModelInfo.ModelGeometry;
-            //OSPMaterial = oldModelInfo.ModelMaterial;
-            //OSPTransform = oldModelInfo.ModelTransform;       
-            OSPFilePath = oldModelInfo.OSPFilePath;            
-            OSPDiffuseColor = oldModelInfo.OSPDiffuseColor;
-
-            
-            MarkerID = oldModelInfo.MarkerID;
-            ComboBoxList = oldModelInfo.ComboBoxList;
-        }
-
         /// <summary>
         /// 設定好模型之後Load進去模型資料所用
         /// </summary>
@@ -309,6 +224,84 @@ namespace Nart
             OSP.ModelGeometry = ospGeometry;
 
             IsOSPLoaded = true;
-        }  
+        }
+
+
+        public String ModelFilePath
+        {
+            get
+            {
+                return modelFilePath;
+            }
+            set
+            {
+                SetValue(ref modelFilePath, value);
+                IsModelLoaded = false;
+            }
+        }
+        public String OSPFilePath
+        {
+            get
+            {
+                return ospFilePath;
+            }
+            set
+            {
+                SetValue(ref ospFilePath, value);
+                IsOSPLoaded = false;
+            }
+        }
+        public Color ModelDiffuseColor
+        {
+            get
+            {
+                return modelDiffuseColor;
+            }
+            set
+            {
+                SetValue(ref modelDiffuseColor, value);
+                if (IsModelLoaded == true)
+                {
+                    SetModelMaterial();
+                }
+            }
+        }
+        public Color OSPDiffuseColor
+        {
+            get
+            {
+                return ospDiffuseColor;
+            }
+            set
+            {
+                SetValue(ref ospDiffuseColor, value);
+                if (IsOSPLoaded == true)
+                {
+                    SetOSPMaterial();
+                }
+            }
+        }
+        public String MarkerID
+        {
+            get
+            {
+                return markerID;
+            }
+            set
+            {
+                SetValue(ref markerID, value);
+            }
+        }
+        public List<String> ComboBoxList
+        {
+            get
+            {
+                return comboboxList;
+            }
+            set
+            {
+                SetValue(ref comboboxList, value);
+            }
+        }
     }
 }

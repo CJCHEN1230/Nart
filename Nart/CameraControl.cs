@@ -164,7 +164,7 @@ namespace Nart
         }
         private void MoveModel()
         {
-            for (int i = 0; i < MainViewModel.ModelInfoCollection.Count - 1; i++)
+            for (int i = 0; i < MainViewModel.ModelSettingCollection.Count - 1; i++)
             {
                 MainViewModel.ModelDataCollection[i].SetTransformMatrix();
             }

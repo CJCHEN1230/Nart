@@ -28,6 +28,29 @@ namespace Nart
     {
        
         private RenderTechnique renderTechnique;
+        private Camera cam1;
+        private Camera cam2;
+        private Camera cam3;
+        private Vector3 light1Direction = new Vector3();
+        private Vector3 light2Direction = new Vector3();
+        private Vector3 light3Direction = new Vector3();
+        private Vector3D cam1LookDir = new Vector3D();
+        private Vector3D cam2LookDir = new Vector3D();
+        private Vector3D cam3LookDir = new Vector3D();
+        private ObservableCollection<ModelData> modeldataCollection;
+        private MultiAngleView _multiview;
+                
+        public MultiAngleViewModel(MultiAngleView _multiview)
+        {
+
+            RenderTechniquesManager = new DefaultRenderTechniquesManager();
+            RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Blinn];
+            EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
+            this._multiview = _multiview;
+
+            SetLight();
+            SetCamera();
+        }
         public RenderTechnique RenderTechnique
         {
             get
@@ -40,8 +63,7 @@ namespace Nart
             }
         }
         public IEffectsManager EffectsManager { get; protected set; }
-        public IRenderTechniquesManager RenderTechniquesManager { get; protected set; }        
-        private Camera cam1;
+        public IRenderTechniquesManager RenderTechniquesManager { get; protected set; }
         public Camera Camera1
         {
             get
@@ -54,7 +76,6 @@ namespace Nart
                 SetValue(ref cam1, value);
             }
         }
-        private Camera cam2;
         public Camera Camera2
         {
             get
@@ -67,7 +88,6 @@ namespace Nart
                 SetValue(ref cam2, value);
             }
         }
-        private Camera cam3;
         public Camera Camera3
         {
             get
@@ -80,7 +100,6 @@ namespace Nart
                 SetValue(ref cam3, value);
             }
         }
-        private Vector3 light1Direction = new Vector3();
         public Vector3 Light1Direction
         {
             get
@@ -92,7 +111,6 @@ namespace Nart
                 SetValue(ref light1Direction, value);
             }
         }
-        private Vector3 light2Direction = new Vector3();
         public Vector3 Light2Direction
         {
             get
@@ -104,7 +122,6 @@ namespace Nart
                 SetValue(ref light2Direction, value);
             }
         }
-        private Vector3 light3Direction = new Vector3();
         public Vector3 Light3Direction
         {
             get
@@ -116,7 +133,6 @@ namespace Nart
                 SetValue(ref light3Direction, value);
             }
         }
-        private Vector3D cam1LookDir = new Vector3D();
         public Vector3D Cam1LookDir
         {
             set
@@ -133,7 +149,6 @@ namespace Nart
                 return cam1LookDir;
             }
         }
-        private Vector3D cam2LookDir = new Vector3D();
         public Vector3D Cam2LookDir
         {
             set
@@ -150,7 +165,6 @@ namespace Nart
                 return cam2LookDir;
             }
         }
-        private Vector3D cam3LookDir = new Vector3D();
         public Vector3D Cam3LookDir
         {
             set
@@ -168,22 +182,6 @@ namespace Nart
             }
         }
         public Color4 DirectionalLightColor { get; set; }
-
-        //private ObservableCollection<ModelInfo> modelInfoCollection;
-        //public ObservableCollection<ModelInfo> ModelInfoCollection
-        //{
-        //    get
-        //    {
-        //        return modelInfoCollection;
-        //    }
-        //    set
-        //    {
-        //        SetValue(ref modelInfoCollection, value);
-        //        ResetCameraPosition();
-        //    }
-        //}
-
-        private ObservableCollection<ModelData> modeldataCollection;
         public ObservableCollection<ModelData> ModelDataCollection
         {
             get
@@ -196,19 +194,8 @@ namespace Nart
                 ResetCameraPosition();
             }
         }
-
-        private MultiAngleView _multiview;
-        public MultiAngleViewModel(MultiAngleView _multiview)
-        {
-
-            RenderTechniquesManager = new DefaultRenderTechniquesManager();
-            RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Blinn];
-            EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
-            this._multiview = _multiview;
-
-            SetLight();
-            SetCamera();
-        }
+        
+        
         /// <summary>
         /// 設定光源Ambientlight顏色、DirectionaLlight顏色        
         /// </summary>
@@ -244,44 +231,44 @@ namespace Nart
                 return;
 
             //重新調整模型中心
-            Model3DGroup ModelGroup = new Model3DGroup();
+            Model3DGroup modelGroup = new Model3DGroup();
             for (int i = 0; i < ModelDataCollection.Count; i++) 
             {   //如果選擇多模型但檔名是空或不存在則進不去
                 if (ModelDataCollection[i].ModelContainer != null)
                 {
-                    ModelGroup.Children.Add(ModelDataCollection[i].ModelContainer);
+                    modelGroup.Children.Add(ModelDataCollection[i].ModelContainer);
                 }
             }
 
 
-            Rect3D BoundingBox = ModelGroup.Bounds;
+            Rect3D boundingBox = modelGroup.Bounds;
 
-            Point3D ModelCenter = new Point3D(BoundingBox.X + BoundingBox.SizeX / 2.0, BoundingBox.Y + BoundingBox.SizeY / 2.0, BoundingBox.Z + BoundingBox.SizeZ / 2.0);
+            Point3D modelCenter = new Point3D(boundingBox.X + boundingBox.SizeX / 2.0, boundingBox.Y + boundingBox.SizeY / 2.0, boundingBox.Z + boundingBox.SizeZ / 2.0);
 
             
             OrthographicCamera orthoCam1 = Camera1 as OrthographicCamera;
-            orthoCam1.Position = new Point3D(ModelCenter.X, ModelCenter.Y - (BoundingBox.SizeY), ModelCenter.Z);
+            orthoCam1.Position = new Point3D(modelCenter.X, modelCenter.Y - (boundingBox.SizeY), modelCenter.Z);
             orthoCam1.UpDirection = new Vector3D(0, 0, 1);
-            orthoCam1.LookDirection = new Vector3D(0, BoundingBox.SizeY, 0);
+            orthoCam1.LookDirection = new Vector3D(0, boundingBox.SizeY, 0);
             orthoCam1.NearPlaneDistance = -1000;
             orthoCam1.FarPlaneDistance = 1e15;
-            orthoCam1.Width = BoundingBox.SizeX + 110;
+            orthoCam1.Width = boundingBox.SizeX + 110;
 
             OrthographicCamera orthoCam2 = Camera2 as OrthographicCamera;
-            orthoCam2.Position = new Point3D(ModelCenter.X, ModelCenter.Y, ModelCenter.Z - (BoundingBox.SizeZ));
+            orthoCam2.Position = new Point3D(modelCenter.X, modelCenter.Y, modelCenter.Z - (boundingBox.SizeZ));
             orthoCam2.UpDirection = new Vector3D(0, 1, 0);
-            orthoCam2.LookDirection = new Vector3D(0, 0, BoundingBox.SizeZ);
+            orthoCam2.LookDirection = new Vector3D(0, 0, boundingBox.SizeZ);
             orthoCam2.NearPlaneDistance = -1000;
             orthoCam2.FarPlaneDistance = 1e15;
-            orthoCam2.Width = BoundingBox.SizeX + 110;
+            orthoCam2.Width = boundingBox.SizeX + 110;
 
             OrthographicCamera orthoCam3 = Camera3 as OrthographicCamera;
-            orthoCam3.Position = new Point3D(ModelCenter.X - (BoundingBox.SizeX), ModelCenter.Y, ModelCenter.Z);
+            orthoCam3.Position = new Point3D(modelCenter.X - (boundingBox.SizeX), modelCenter.Y, modelCenter.Z);
             orthoCam3.UpDirection = new Vector3D(0, 0, 1);
-            orthoCam3.LookDirection = new Vector3D(BoundingBox.SizeX, 0, 0);
+            orthoCam3.LookDirection = new Vector3D(boundingBox.SizeX, 0, 0);
             orthoCam3.NearPlaneDistance = -1000;
             orthoCam3.FarPlaneDistance = 1e15;
-            orthoCam3.Width = BoundingBox.SizeX + 110;
+            orthoCam3.Width = boundingBox.SizeX + 110;
 
         }
         /// <summary>
@@ -307,77 +294,6 @@ namespace Nart
             binding.Mode = mode;
             BindingOperations.SetBinding(dobj, property, binding);
         }
-
-        public void SetModelDataCollection(ObservableCollection<ModelSettingItem> ModelInfoCollection)
-        {
-
-           
-
-            //if (ModelDataCollection == null)
-            //    ModelDataCollection = new ObservableCollection<ModelData>();
-
-
-            ////檢查模型清單 不存在於設定清單則移除
-            //for (int i=0,j=0; i<ModelDataCollection.Count ;i++)
-            //{
-                
-            //    for (j = 0; j < ModelInfoCollection.Count; j++) 
-            //    {
-            //        if (ModelDataCollection[i].ModelFilePath.Equals(ModelInfoCollection[j].ModelFilePath) ||
-            //             ModelDataCollection[i].ModelFilePath.Equals(ModelInfoCollection[j].OSPFilePath))
-            //        {
-            //            break;
-            //        }
-            //    }
-            //    if (j == ModelInfoCollection.Count) 
-            //    {
-            //        ModelDataCollection.RemoveAt(i);
-            //    }
-            //}
-
-            ////新增模型    檢查設定清單的模型  如果在模型清單中有找到則直接更換顏色  如果沒找到則新增
-            //for (int i = 0, j = 0; i < ModelInfoCollection.Count; i++) 
-            //{
-            //    for (j = 0; j < ModelDataCollection.Count; j++) 
-            //    {
-            //        if (ModelInfoCollection[i].ModelFilePath.Equals(ModelDataCollection[j].ModelFilePath))
-            //        {
-            //            ModelDataCollection[j].ModelDiffuseColor = ModelInfoCollection[i].ModelDiffuseColor;
-            //        }
-
-            //        if (ModelInfoCollection[i].OSPFilePath.Equals(ModelDataCollection[j].ModelFilePath))
-            //        {
-            //            ModelDataCollection[j].ModelDiffuseColor = ModelInfoCollection[i].OSPDiffuseColor;
-            //        }
-            //    }
-
-            //    if (j == ModelInfoCollection.Count)
-            //    {
-            //        ModelData model = new ModelData();
-            //        model.ModelFilePath = ModelInfoCollection[i].OSPFilePath;
-            //        model.ModelDiffuseColor = ModelInfoCollection[i].OSPDiffuseColor;
-            //        model.MarkerID = ModelInfoCollection[i].MarkerID;
-            //        model.IsOSP = true;
-            //        model.LoadSTL();
-            //    }
-
-
-
-                
-            //}
-
-            //for (int i = 0; i < ModelInfoCollection.Count; i++)
-            //{
-            //    ModelData model = new ModelData();
-            //    model.ModelFilePath = ModelInfoCollection[i].ModelFilePath;
-            //    model.ModelDiffuseColor = ModelInfoCollection[i].ModelDiffuseColor;
-            //    model.MarkerID = ModelInfoCollection[i].MarkerID;
-            //    model.IsOSP = false;
-            //    if (model.IsLoaded)
-            //    {
-            //        ModelDataCollection.Add(model);
-            //    }
-            //}
-        }
+        
     }
 }

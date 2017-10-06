@@ -27,7 +27,7 @@ namespace Nart
             get;
             set;
         } = new NartServer();        
-        public static ObservableCollection<ModelSettingItem> ModelInfoCollection;
+        public static ObservableCollection<ModelSettingItem> ModelSettingCollection;
         public static ObservableCollection<ModelData> ModelDataCollection;
         private MainView _window;
         public MainView MainWindow

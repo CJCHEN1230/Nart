@@ -31,7 +31,7 @@ namespace Nart
     /// </summary>
     public partial class MainView : Window
     {
-        private ModelSettingView modelSettingdlg;
+        private ModelSettingView _modelSettingdlg;
         private MainViewModel _mainViewModel = null;
         public MainView()
         {
@@ -45,16 +45,15 @@ namespace Nart
         }        
         private void SettingView_Click(object sender, RoutedEventArgs e)
         {
-            if (modelSettingdlg== null)
+            if (_modelSettingdlg== null)
             {
-                modelSettingdlg = new ModelSettingView();
+                _modelSettingdlg = new ModelSettingView();
             }
-            modelSettingdlg.Owner = this;
+            _modelSettingdlg.Owner = this;
 
-            modelSettingdlg.ShowDialog();
+            _modelSettingdlg.ShowDialog();
             //Dialog 結束之後指派給_multiAngleViewModel中的值
-            //multiAngleView._multiAngleViewModel.ModelInfoCollection = ModelSettingViewModel.ModelInfoCollection;
-
+         
             multiAngleView._multiAngleViewModel.ModelDataCollection = ModelSettingViewModel.modelDataCollection;
 
         }
