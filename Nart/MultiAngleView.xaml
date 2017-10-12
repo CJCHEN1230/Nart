@@ -45,7 +45,7 @@
                         UseDefaultGestures="True"
                         EnableSharedModelMode="True"                        
                         SharedModelContainer="{Binding ElementName=sharedContainer}"
-                        BackgroundColor="{x:Static sdx:Color4.Black}"
+                        BackgroundColor="{x:Static sdx:Color4.White}"
                         ShowCoordinateSystem="True"
                         CoordinateSystemLabelForeground="White"
                         ShowFrameRate="True"

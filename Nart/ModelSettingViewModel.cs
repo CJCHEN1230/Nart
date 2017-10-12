@@ -101,8 +101,8 @@ namespace Nart
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
                     // ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
                                                                                ,
-                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
-                                                                                ,
+                    //OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
+                    //                                                            ,
                     ModelDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
                                                                                 ,
                     OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
@@ -140,7 +140,7 @@ namespace Nart
             }
             set
             {
-                SetStaticValue(ref patientID, value);
+                SetStaticValue(ref patientID, value);                
             }
         }
         public static String Hospital
@@ -248,13 +248,13 @@ namespace Nart
                 //確認有Load過且有沒有被加進去modelDataCollection
                 if (ModelSettingCollection[i].OSP.IsLoaded && !ModelSettingCollection[i].OSP.IsAdded) 
                 {
-                    ModelDataCollection.Insert(0, ModelSettingCollection[i].OSP);
+                    ModelDataCollection.Add(ModelSettingCollection[i].OSP);
                     ModelSettingCollection[i].OSP.IsAdded = true;
                 }
                 //確認有Load過且有沒有被加進去modelDataCollection
                 if (ModelSettingCollection[i].Model.IsLoaded && !ModelSettingCollection[i].Model.IsAdded) 
                 {
-                    ModelDataCollection.Add(ModelSettingCollection[i].Model);
+                    ModelDataCollection.Insert(0, ModelSettingCollection[i].Model);
                     ModelSettingCollection[i].Model.IsAdded = true;
                 }
 

@@ -46,15 +46,7 @@ namespace Nart
         
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
-           
-            //Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
-            //multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
-            //Console.WriteLine("Count:"+ this.multiAngleView._multiAngleViewModel.ModelInfoCollection.Count);
-            //for (int i = 0; i< MainViewModel.ModelInfoCollection.Count; i++) 
-            //{
-            //    MainViewModel.ModelInfoCollection[i].ModelTransform = new MatrixTransform3D(TEST);
-            //}
-            //multiAngleView._multiAngleViewModel.ModelInfoCollection = MainViewModel.ModelInfoCollection;
+
         }
         private void RegButton_Click(object sender, RoutedEventArgs e)
         {

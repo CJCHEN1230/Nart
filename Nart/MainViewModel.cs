@@ -35,7 +35,6 @@ namespace Nart
         {
             _mainWindow = mainWindow;
             SetModelCommand = new RelayCommand(SetModel);
-
         }
         
         
