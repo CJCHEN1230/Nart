@@ -47,6 +47,34 @@ namespace Nart
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
 
+            
+            
+            Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
+            MainViewModel.ModelDataCollection = multiAngleView._multiAngleViewModel.ModelDataCollection;
+
+            SharpDX.Vector3 temp = MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0];
+
+            Point3D oldPoint = new Point3D(temp.X,temp.Y,temp.Z);
+
+            Console.WriteLine("oldPoint:" + oldPoint);
+
+            for (int i = 0; i < MainViewModel.ModelDataCollection.Count; i++)
+            {
+                MainViewModel.ModelDataCollection[i].ModelTransform = new MatrixTransform3D(TEST);
+            }
+
+            SharpDX.Vector3 temp2 = MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0];
+
+            Point3D newPoint = new Point3D(temp2.X, temp2.Y, temp2.Z);
+
+
+            Console.WriteLine("newPoint:" + newPoint);
+
+            //multiAngleView._multiAngleViewModel.ModelDataCollection = MainViewModel.ModelDataCollection;
+
+
+           // Console.WriteLine(MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0].X);
+
         }
         private void RegButton_Click(object sender, RoutedEventArgs e)
         {

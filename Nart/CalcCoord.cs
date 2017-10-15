@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDX;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -16,9 +17,9 @@ namespace Nart
     public class CalcCoord
     {
         /// <summary>
-        ///兩台相機參數
+        ///Marker的database
         /// </summary>
-        private CamParam[] _camParam = new CamParam[2];
+        public MarkerDatabase database = new MarkerDatabase();       
         /// <summary>
         ///雙相機鏡心在世界座標
         /// </summary>
@@ -26,17 +27,33 @@ namespace Nart
         /// <summary>
         /// 基線座標系的旋轉矩陣
         /// </summary>
-        public Matrix3D epipolarCoord;
-
+        public Matrix3D EpipolarCoord;
+        /// <summary>
+        /// 基線座標系的旋轉矩陣
+        /// </summary>
+        public Matrix3D FHCoord;
+        /// <summary>
+        ///兩台相機參數
+        /// </summary>
+        private CamParam[] _camParam = new CamParam[2];
+        /// <summary>
+        ///盧顎面資訊Go Po Or Me...
+        /// </summary>
+        private CraniofacialInfo _craniofacialInfo;
         private const double MatchError = 3;
-
         private List<Marker3D> WorldPoints = new List<Marker3D>(10);
-
-        private Point3D[] CTBall; //CT珠子中心座標
-
-        private Point3D[] MSBall; //MS點的珠子中心座標
-
-        private Point3D[] MSMarker; //MS點的Marker中心座標
+        /// <summary>
+        ///CT珠子中心座標
+        /// </summary>
+        private Point3D[] CTBall;
+        /// <summary>
+        ///MS點的珠子中心座標
+        /// </summary>
+        private Point3D[] MSBall;
+        /// <summary>
+        ///MS點的Marker中心座標
+        /// </summary>
+        private Point3D[] MSMarker; 
         /// <summary>
         /// 註冊時的點世界座標
         /// </summary>
@@ -45,14 +62,10 @@ namespace Nart
         /// 世界座標轉換到MS的座標
         /// </summary>
         private List<Marker3D> MSWorldPoints = new List<Marker3D>(10);
-
-        public  MarkerDatabase database = new MarkerDatabase();
-        
         private Matrix3D CTtoMS;
-
         private Matrix3D MStoCT;
+        private Matrix3D OriWorldtoMS;        
 
-        private Matrix3D OriWorldtoMS;
         
         ///<summary>
         ///頭在註冊資料中引數
@@ -67,6 +80,8 @@ namespace Nart
 
             _camParam[0] = new CamParam("../../../data/CaliR_L.txt");
             _camParam[1] = new CamParam("../../../data/CaliR_R.txt");
+            _craniofacialInfo = new CraniofacialInfo("../../../data/ceph.csv");
+            
             CalcLensCenter();
             CalcEpipolarGeometry();
             
@@ -89,6 +104,7 @@ namespace Nart
         /// </summary>
         private void CalcEpipolarGeometry()
         {
+            //虛擬成像平面的中心
             Point4D PlainCenter = new Point4D(0, 0, _camParam[0].FocalLength, 1);                       
 
             PlainCenter = _camParam[0].invExtParam.Transform(PlainCenter);
@@ -106,7 +122,7 @@ namespace Nart
         
             Vector3D vec_z = Vector3D.CrossProduct(vec_x, vec_y);
           
-            epipolarCoord = new Matrix3D(vec_x.X, vec_y.X, vec_z.X, 0,
+            EpipolarCoord = new Matrix3D(vec_x.X, vec_y.X, vec_z.X, 0,
                                          vec_x.Y, vec_y.Y, vec_z.Y, 0,
                                          vec_x.Z, vec_y.Z, vec_z.Z, 0,
                                                0,       0,       0, 1);
@@ -120,9 +136,9 @@ namespace Nart
         {
             //計算出平均x跟平均y
             Parallel.For(0, 2, i =>
-            {
+            { 
 
-                for (int j = 0; j < OutputMarker[i].Count; j++)
+            for (int j = 0; j < OutputMarker[i].Count; j++)
                 {
                     double accumX = 0;
                     double accumRecY = 0;
@@ -146,7 +162,7 @@ namespace Nart
 
                         Point4D WorldPoint = _camParam[i].RotationInvert.Transform(OutputMarker[i][j].CornerPoint[k].CameraPoint);
 
-                        Point4D rectify_Point = epipolarCoord.Transform(WorldPoint);
+                        Point4D rectify_Point = EpipolarCoord.Transform(WorldPoint);
 
                         double Rectify_Y = _camParam[i].FocalLength * rectify_Point.Y / rectify_Point.Z / _camParam[i].dy;
                         //儲存此點扭正後的值
@@ -502,7 +518,7 @@ namespace Nart
             }
 
             //先判斷當前標記片數量是否過少
-            if (WorldPoints.Count > 2)
+            if (WorldPoints.Count > 1)
             {
                 //取得咬板Marker在WorldPoints中的索引值
                 RegSplintIndex = GetSpecIndex(WorldPoints, "Splint");
@@ -514,9 +530,11 @@ namespace Nart
                 //註冊需要咬板與頭部標記片
                 if (RegSplintIndex != -1 && RegHeadIndex != -1)
                 {
-
-
+                    
                     SimplifyDatabase();
+
+                    CalcFHCoord();
+
                     for (int i = 0; i < database.MarkerInfo.Count; i++)
                     {
                         Console.WriteLine("\n\n" + database.MarkerInfo[i].ThreeLength[0] + " " + database.MarkerInfo[i].ThreeLength[1] + " " + database.MarkerInfo[i].ThreeLength[2]);
@@ -596,7 +614,7 @@ namespace Nart
                 
                 Parallel.For(0, WorldPoints.Count, i =>
                {
-                   //當前Marker找不到或頭部咬板沒找到則跳過
+                   //當前Marker找不到或找到的是頭部Marker則跳過
                    if (!WorldPoints[i].MarkerID.Equals("")/*&& !WorldPoints[i].MarkerID.Equals("Splint") */&& !WorldPoints[i].MarkerID.Equals("Head"))
                     {
                         int MSandOriIndex = GetSpecIndex(MSWorldPoints, WorldPoints[i].MarkerID);//取得當前世界座標在註冊時的座標索引值是多少
@@ -624,7 +642,171 @@ namespace Nart
 
             }
         }
-    }
 
-    
+        private void CalcFHCoord()
+        {
+            int mandibleOSPIndex = -1;
+            int headOSPIndex = -1;
+            Vector3D headNormal;
+            Vector3D mandibleNormal;
+
+            //先找出模型引數
+            for (int i = 0; i < MainViewModel.ModelDataCollection.Count; i++)
+            {
+                ModelData model = MainViewModel.ModelDataCollection[i];
+                if (model.IsOSP && model.IsLoaded)
+                {
+                    if (model.MarkerID == "Head")
+                    {
+                        headOSPIndex = i;
+                    }
+                    if (model.MarkerID == "C")
+                    {
+                        mandibleOSPIndex = i;
+                    }
+                }
+            }
+            //如果下顎跟頭顱的引數都沒找到 則根本無法計算五項指標
+            if (headOSPIndex == -1 || mandibleOSPIndex == -1)
+            {
+                return;
+            }
+            //取得頭顱跟下顎的模型
+            ModelData headOSP = MainViewModel.ModelDataCollection[headOSPIndex];
+            ModelData mandibleOSP = MainViewModel.ModelDataCollection[mandibleOSPIndex];
+
+
+            //頭顱模型的索引值
+            headNormal = headOSP.OSPNormal;
+            //下顎模型的索引值
+            mandibleNormal = mandibleOSP.OSPNormal;
+
+            //Po Or四個點
+            Point3D[] PoOr = new Point3D[] { _craniofacialInfo.PoL, _craniofacialInfo.PoR, _craniofacialInfo.OrL, _craniofacialInfo.OrR };            
+            Point3D NormalPlanePoint = headOSP.OSPPlanePoint;
+            Point3D[] PoOrProj = new Point3D[4];
+
+            //計算Po Or四點投影到頭顱對稱面的點座標存進PoOrProj
+            for (int i = 0; i < PoOr.Length; i++)
+            {
+                double v1 = NormalPlanePoint.X - PoOr[i].X;
+                double v2 = NormalPlanePoint.Y - PoOr[i].Y;
+                double v3 = NormalPlanePoint.Z - PoOr[i].Z;
+
+                double t1 = (headNormal.X * v1 + headNormal.Y * v2 + headNormal.Z * v3) / (headNormal.LengthSquared);
+
+                double x = PoOr[i].X + headNormal.X * t1;
+                double y = PoOr[i].Y + headNormal.Y * t1;
+                double z = PoOr[i].Z + headNormal.Z * t1;
+                PoOrProj[i] = new Point3D(x, y, z);
+            }
+
+            //投影到頭顱對稱面的Po兩點平均
+            Point3D avgPo = new Point3D((PoOrProj[0].X + PoOrProj[1].X) / 2.0, (PoOrProj[0].Y + PoOrProj[1].Y) / 2.0, (PoOrProj[0].Z + PoOrProj[1].Z) / 2.0);
+            //投影到頭顱對稱面的Or兩點平均
+            Point3D avgOr = new Point3D((PoOrProj[2].X + PoOrProj[3].X) / 2.0, (PoOrProj[2].Y + PoOrProj[3].Y) / 2.0, (PoOrProj[2].Z + PoOrProj[3].Z) / 2.0);
+            //定義FH平面座標系
+            Vector3D FHY = avgPo - avgOr;
+            Vector3D FHZ = Vector3D.CrossProduct(FHY, headNormal);
+            Vector3D FHX = Vector3D.CrossProduct(FHY, FHZ);
+
+            FHX.Normalize();
+            FHY.Normalize();
+            FHZ.Normalize();
+
+
+            FHCoord = new Matrix3D(FHX.X, FHY.X, FHZ.X, 0,
+                                                             FHX.Y, FHY.Y, FHZ.Y, 0,
+                                                             FHX.Z, FHY.Z, FHZ.Z, 0,
+                                                                      0,         0,          0, 1);
+
+
+            //計算Go點連線與下顎對稱面交點 存進GoIntersection
+            Point3D manPlanePoint = mandibleOSP.OSPPlanePoint;
+            Vector3D GoVector = _craniofacialInfo.GoL - _craniofacialInfo.GoR;
+
+            double t = (mandibleNormal.X * (manPlanePoint.X - _craniofacialInfo.GoL.X) + mandibleNormal.Y * (manPlanePoint.Y - _craniofacialInfo.GoL.Y) + mandibleNormal.Z * (manPlanePoint.Z - _craniofacialInfo.GoL.Z))
+                /(mandibleNormal.X * GoVector.X + mandibleNormal.Y * GoVector.Y + mandibleNormal.Z * GoVector.Z);
+            double X = _craniofacialInfo.GoL.X + GoVector.X * t;
+            double Y = _craniofacialInfo.GoL.Y + GoVector.Y * t;
+            double Z = _craniofacialInfo.GoL.Z + GoVector.Z * t;
+            _craniofacialInfo.GoIntersection = new Point3D(X, Y, Z);
+
+        }
+
+
+        public void CalcCraniofacialInfo()
+        {
+            int mandibleOSPIndex = -1;
+            int headOSPIndex = -1;
+           
+
+            //先找出模型引數
+            for (int i =0;i<MainViewModel.ModelDataCollection.Count ;i++)
+            {
+                ModelData model = MainViewModel.ModelDataCollection[i];
+                if (model.IsOSP && model.IsLoaded)
+                {
+                    if (model.MarkerID == "Head")
+                    {
+                        headOSPIndex = i;
+                    }
+                    if (model.MarkerID == "C")
+                    {
+                        mandibleOSPIndex = i;
+                    }
+                }
+            }
+
+            if (headOSPIndex == -1 || mandibleOSPIndex == -1) 
+            {
+                return;
+            }
+
+            ModelData headOSP = MainViewModel.ModelDataCollection[headOSPIndex];
+            ModelData mandibleOSP = MainViewModel.ModelDataCollection[mandibleOSPIndex];
+
+            Vector3D headNormal;
+            Vector3D mandibleNormal;
+            headNormal = headOSP.OSPNormal;
+            mandibleNormal = mandibleOSP.OSPNormal;
+
+
+
+            //先算DA
+            double DA = Math.Acos(Vector3D.DotProduct(headNormal, mandibleNormal)) / Math.PI * 180.0;
+            MultiAngleViewModel.DeviationAngle = "DA:" + Math.Round(DA, 4).ToString();
+
+            
+            Vector3D FHMandibleNormal = FHCoord.Transform(mandibleNormal);
+            double x = FHMandibleNormal.X;
+            double y = FHMandibleNormal.Y;
+            double z = FHMandibleNormal.Z;
+
+            double FDA = Math.Acos(x / Math.Sqrt(x * x + z * z));
+            MultiAngleViewModel.FrontalDeviationAngle = "FDA:" + Math.Round(FDA, 2).ToString();
+
+            double HDA = Math.Acos(x / Math.Sqrt(x * x + y * y));
+            MultiAngleViewModel.HorizontalDeviationAngle = "HDA:" + Math.Round(HDA, 2).ToString();
+
+            Point3D Me = mandibleOSP.ModelTransform.Transform(_craniofacialInfo.Me);
+            Point3D headNormalPoint = headOSP.OSPPlanePoint;//法向量平面上的點
+
+            double DD = Math.Abs(Vector3D.DotProduct(headNormal, Me - headNormalPoint));
+            MultiAngleViewModel.DeviationDistance = "DD:" + Math.Round(DD, 3).ToString();
+
+
+            Point3D Intersection = _craniofacialInfo.GoIntersection;
+            double PDD = Math.Abs(Vector3D.DotProduct(headNormal, Intersection - headNormalPoint));
+            MultiAngleViewModel.PosteriorDeviationDistance = "PDD:" + Math.Round(PDD, 3).ToString();
+
+
+            Console.WriteLine("\n\nDA:" + DA);
+            Console.WriteLine("\nFDA:" + FDA);
+            Console.WriteLine("\nHDA:" + HDA);
+            Console.WriteLine("\nDD:" + DD);
+            Console.WriteLine("\nPDD:" + PDD);
+
+        }
+    }
 }

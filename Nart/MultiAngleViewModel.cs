@@ -26,20 +26,26 @@ namespace Nart
 
     public class MultiAngleViewModel : ObservableObject
     {
-       
+
+        private static string DevAngle; //DeviationAngle
+        private static string DevDist;     //DeviationDistance
+        private static string FrontalDevAngle;//FrontalDeviationAngle
+        private static string HorizontalDevAngle;//HorizontalDeviationAngle
+        private static string PosteriorDevDist;      //PosteriorDeviationDistance
         private RenderTechnique renderTechnique;
-        private Camera cam1;
-        private Camera cam2;
-        private Camera cam3;
+        private Camera cam1 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+        private Camera cam2 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+        private Camera cam3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
         private Vector3 light1Direction = new Vector3();
         private Vector3 light2Direction = new Vector3();
         private Vector3 light3Direction = new Vector3();
         private Vector3D cam1LookDir = new Vector3D();
         private Vector3D cam2LookDir = new Vector3D();
         private Vector3D cam3LookDir = new Vector3D();
-        private ObservableCollection<ModelData> modeldataCollection;
+        private static ObservableCollection<ModelData> modeldataCollection;
         private MultiAngleView _multiview;
-                
+        
+
         public MultiAngleViewModel(MultiAngleView _multiview)
         {
 
@@ -51,6 +57,8 @@ namespace Nart
             SetLight();
             SetCamera();
         }
+
+
         public RenderTechnique RenderTechnique
         {
             get
@@ -64,6 +72,46 @@ namespace Nart
         }
         public IEffectsManager EffectsManager { get; protected set; }
         public IRenderTechniquesManager RenderTechniquesManager { get; protected set; }
+        public static string DeviationAngle
+        {
+            get { return DevAngle; }
+            set
+            {
+                SetStaticValue(ref DevAngle, value);
+            }
+        }
+        public static string DeviationDistance
+        {
+            get { return DevDist; }
+            set
+            {
+                SetStaticValue(ref DevDist, value);
+            }
+        }
+        public static string FrontalDeviationAngle
+        {
+            get { return FrontalDevAngle; }
+            set
+            {
+                SetStaticValue(ref FrontalDevAngle, value);
+            }
+        }
+        public static string HorizontalDeviationAngle
+        {
+            get { return HorizontalDevAngle; }
+            set
+            {
+                SetStaticValue(ref HorizontalDevAngle, value);
+            }
+        }
+        public static string PosteriorDeviationDistance
+        {
+            get { return PosteriorDevDist; }
+            set
+            {
+                SetStaticValue(ref PosteriorDevDist, value);
+            }
+        }
         public Camera Camera1
         {
             get
@@ -207,16 +255,10 @@ namespace Nart
         /// 初始化相機參數，並綁定相機觀看方向
         /// </summary>
         private void SetCamera()
-        {
-            Camera1 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
-            Camera2 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
-            Camera3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
-
-
+        {           
             SetupCameraBindings(Camera1, "Cam1LookDir");
             SetupCameraBindings(Camera2, "Cam2LookDir");
             SetupCameraBindings(Camera3, "Cam3LookDir");
-
 
             ResetCameraPosition();
         }

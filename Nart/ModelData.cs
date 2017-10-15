@@ -29,7 +29,22 @@ namespace Nart
         /// 有被加進去模型清單才為True
         /// </summary>
         public bool IsAdded = false;
+        /// <summary>
+        /// 模型有Load進去則為true
+        /// </summary>
         public bool IsLoaded = false;
+        /// <summary>
+        /// 模型是不是OSP
+        /// </summary>
+        public bool IsOSP = false;
+        /// <summary>
+        /// OSP才有的Normal
+        /// </summary>
+        public Vector3D OSPNormal;
+        /// <summary>
+        /// OSP才有的平面點
+        /// </summary>
+        public Point3D OSPPlanePoint;
         /// <summary>
         /// 模型幾何形狀
         /// </summary>
@@ -65,7 +80,7 @@ namespace Nart
         /// <summary>
         /// 用來累加的矩陣
         /// </summary>
-        private Matrix3D _totalModelTransform = new Matrix3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        private Matrix3D _totalModelTransform = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
         /// <summary>
         /// 防止抖動，用來存放所有矩陣，10是累積總數量
         /// </summary>
@@ -80,9 +95,10 @@ namespace Nart
         private int CurrenIndex = 0;
 
         public ModelData()
-        {
+        {            
             
         }        
+
         public void AddItem(Matrix3D item)
         {
             //數量少於陣列總長度則往後加入
@@ -112,7 +128,13 @@ namespace Nart
         }
         public void SetTransformMatrix()
         {
+            _finalModelTransform.SetIdentity();
             ModelTransform = new MatrixTransform3D(_finalModelTransform);
+            if (IsOSP)
+            {                
+                OSPNormal = ModelTransform.Transform(OSPNormal);
+                OSPNormal.Normalize();
+            }
         }       
         private void AddMatrix3D(ref Matrix3D A, ref Matrix3D B)
         {

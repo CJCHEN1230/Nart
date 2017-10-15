@@ -69,7 +69,8 @@ namespace Nart
                     MarkerID = "Head"
                                                                                 ,
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"
-                                                                               
+                                                                                ,
+                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
                                                                                 ,
                     OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
                                                                                 ,
@@ -100,9 +101,9 @@ namespace Nart
                                                                                 ,
                     ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
                     // ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
-                                                                               ,
+                    //                                                           ,
                     //OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
-                    //                                                            ,
+                                                                                ,
                     ModelDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
                                                                                 ,
                     OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)

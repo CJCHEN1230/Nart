@@ -197,7 +197,11 @@ namespace Nart
             if (CameraControl.TrackToggle)
             {
                 _calcCoord.CalcModelTransform();
-                MoveModel();                
+                MoveModel();
+                if (_calcCoord.FHCoord!=null)
+                {
+                    _calcCoord.CalcCraniofacialInfo();
+                }
             }
         
 

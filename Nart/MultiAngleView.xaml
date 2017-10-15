@@ -21,7 +21,7 @@
             <hx:ItemsModel3D ItemsSource="{Binding ModelDataCollection}">
                 <hx:ItemsModel3D.ItemTemplate>
                     <DataTemplate>
-                        <hx:MeshGeometryModel3D
+                        <hx:MeshGeometryModel3D 
                             CullMode="{Binding CMode}" 
                             InvertNormal="{Binding IvtNormal}" 
                             FrontCounterClockwise="{Binding FrontCounterClockwise}"                             
@@ -45,8 +45,8 @@
                         UseDefaultGestures="True"
                         EnableSharedModelMode="True"                        
                         SharedModelContainer="{Binding ElementName=sharedContainer}"
-                        BackgroundColor="{x:Static sdx:Color4.White}"
-                        ShowCoordinateSystem="True"
+                        BackgroundColor="{x:Static sdx:Color4.Black}"
+                        ShowCoordinateSystem="False"
                         CoordinateSystemLabelForeground="White"
                         ShowFrameRate="True"
                         Grid.RowSpan="2">
@@ -93,7 +93,7 @@
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
-            
+
             <hx:DirectionalLight3D
                 Direction="{Binding Light2Direction}"
                 Color="{Binding DirectionalLightColor}" />
@@ -124,10 +124,19 @@
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
-            
+
             <hx:DirectionalLight3D
                 Direction="{Binding Light3Direction}"
                 Color="{Binding DirectionalLightColor}" />
         </hx:Viewport3DX>
+
+
+        <StackPanel  Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,0,0" Grid.RowSpan="2" Width="165">
+            <Label x:Name="DALabel" Content="{Binding DeviationAngle}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
+            <Label x:Name="DDLabel" Content="{Binding DeviationDistance}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
+            <Label x:Name="FDALabel" Content="{Binding FrontalDeviationAngle}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
+            <Label x:Name="HDALabel" Content="{Binding HorizontalDeviationAngle}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
+            <Label x:Name="PDDLabel" Content="{Binding PosteriorDeviationDistance}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -36,9 +36,7 @@ namespace Nart
             _mainWindow = mainWindow;
             SetModelCommand = new RelayCommand(SetModel);
         }
-        
-        
-
+                
         public static int TabIndex
         {
             get { return _tabIndex; }
@@ -79,6 +77,7 @@ namespace Nart
 
             //Dialog 結束之後指派給_multiAngleViewModel中的值
             _mainWindow.multiAngleView._multiAngleViewModel.ModelDataCollection = ModelSettingViewModel.ModelDataCollection;
+
             MainViewModel.ModelDataCollection = ModelSettingViewModel.ModelDataCollection;
         }
     }

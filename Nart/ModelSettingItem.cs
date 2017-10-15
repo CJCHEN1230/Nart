@@ -162,6 +162,8 @@ namespace Nart
 
             Model.ModelTransform = new MatrixTransform3D();
 
+            OSP.IsOSP = false;
+
             Model.IsLoaded = true;                        
         }
         /// <summary>
@@ -174,68 +176,51 @@ namespace Nart
             {
                 return;
             }
+            
             //利用helixtoolkit.wpf裡面提供的StlReader讀檔案，後續要轉成wpf.sharpdx可用的格式
             StLReader reader = new HelixToolkit.Wpf.StLReader();
 
             OSP.ModelContainer = reader.Read(OSPFilePath);
-
-            //builder = new MeshBuilder(true, false, false);
-            //builder.AddBox(center, 1, 1, 1);
-            //Box = builder.ToMeshGeometry3D();
-
-
+            
             var geometryModel = OSP.ModelContainer.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
 
             var mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
 
+            if (mesh.Positions.Count != 6) 
+            {
+                return;
+            }
+
+            OSP.OSPNormal = new Vector3D(mesh.Normals[0].X, mesh.Normals[0].Y, mesh.Normals[0].Z);
+            OSP.OSPNormal.Normalize();//將上述向量正規化
+            OSP.OSPPlanePoint  = mesh.Positions[0];
             //設定模型材質
             SetOSPMaterial();
-            //設定模型幾何形狀
-            HelixToolkit.Wpf.SharpDX.MeshGeometry3D ospGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
-
-            ospGeometry.Normals = new Vector3Collection();
-            ospGeometry.Positions = new Vector3Collection();
-            ospGeometry.Indices = new IntCollection();
-
+           
+            //定義整個對稱面八個點
             Point3D[] ospPoint = new Point3D[8];
             int[] repeatIndex = new int[2] { -1, -1 };
             int[] repeatIndex2 = new int[2] { -1, -1 };
 
+            //前半網格點
             for (int i=0,k=0;i<mesh.Positions.Count/2 ;i++)
-            {
-                for (int j = 3; j < mesh.Positions.Count; j++) 
-                {
-                    Console.WriteLine("i:" + i);
-                    Console.WriteLine("j:" + j);
+            { //後半網格點
+                for (int j = 3; j < mesh.Positions.Count; j++)
+                {   //尋找前半跟後半有哪些重複存下引數在repeatIndex  repeatIndex2
                     double error = Math.Abs(Math.Pow(mesh.Positions[i].X - mesh.Positions[j].X, 2)) + Math.Abs(Math.Pow(mesh.Positions[i].Y - mesh.Positions[j].Y, 2)) + Math.Abs(Math.Pow(mesh.Positions[i].Z - mesh.Positions[j].Z, 2));
                     if (error < 10E-008)
                     {
                         repeatIndex[k] = i;
                         repeatIndex2[k] = j;
-                        Console.WriteLine("repeatIndex:" + repeatIndex[k]);
-                        Console.WriteLine("repeatIndex:" + repeatIndex2[k]);
                         k++;
                     }                   
                  }
             }
-            for (int i=0;i< repeatIndex.Length; i++)
-            {
-                Console.WriteLine("repeatIndex:" + repeatIndex[i]);
-                
-            }
-            for (int i = 0; i < repeatIndex.Length; i++)
-            {
-                Console.WriteLine("repeatIndex2:" + repeatIndex2[i]);
-            }
-
+             //找出沒有重複的那個引數字
             int thirdIndex = 3 - repeatIndex[0] - repeatIndex[1];
             int thirdIndex2 = 12 - repeatIndex2[0] - repeatIndex2[1];
 
-            Console.WriteLine("thirdIndex:" + thirdIndex);
-            Console.WriteLine("thirdIndex2:" + thirdIndex2);
-
-            Console.WriteLine("\n\n點:");
-
+          
             if (thirdIndex == 0)
             {
                 ospPoint[0] = mesh.Positions[0];
@@ -275,18 +260,35 @@ namespace Nart
 
 
 
+            HelixToolkit.Wpf.SharpDX.MeshGeometry3D ospGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
+            ospGeometry.Normals = new Vector3Collection();
+            ospGeometry.Positions = new Vector3Collection();
+            ospGeometry.Indices = new IntCollection();
 
-            HelixToolkit.Wpf.SharpDX.MeshGeometry3D ospGeometry2 = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
 
-            ospGeometry2.Normals = new Vector3Collection();
-            ospGeometry2.Positions = new Vector3Collection();
-            ospGeometry2.Indices = new IntCollection();
+            //var builder = new HelixToolkit.Wpf.SharpDX.MeshBuilder(true, false, false);
+            //var center = new Vector3(Convert.ToSingle(-0.463861), Convert.ToSingle(-127.7), Convert.ToSingle(-183.243));
+            //builder.AddSphere(center, 2, 12, 12);
+            //center = new Vector3(Convert.ToSingle(-0.473168), Convert.ToSingle(-127.317), Convert.ToSingle(-182.388));
+            //builder.AddSphere(center, 2, 12, 12);
+
+            
+
+            ////center = new Vector3(Convert.ToSingle(0.622753), Convert.ToSingle(-196.831), Convert.ToSingle(-191.1));
+            ////builder.AddSphere(center, 2, 12, 12);
+
+            ////center = new Vector3(Convert.ToSingle(0.613464), Convert.ToSingle(-196.201), Convert.ToSingle(-191.183));
+            ////builder.AddSphere(center, 2, 12, 12);
+
+            //HelixToolkit.Wpf.SharpDX.MeshGeometry3D Sphere = builder.ToMeshGeometry3D();
+
 
 
 
             // 0 1 2 3
-            CreatePoint(0, 1, 2, 3, ospGeometry2.Positions, ospPoint);
-            CreateNormal(0, 1, 2, ospGeometry2.Normals, ospPoint);
+            CreatePoint(0, 1, 2, 3, ospGeometry.Positions, ospPoint);
+
+            CreateNormal(0, 1, 2, ospGeometry.Normals, ospPoint);
 
             ////4 0 3 7
             //CreatePoint(4, 0, 3, 7, ospGeometry2.Positions, ospPoint);
@@ -305,102 +307,28 @@ namespace Nart
             //CreateNormal(3, 2, 6, ospGeometry2.Normals, ospPoint);
 
             ////5 4 7 6
-            CreatePoint(5, 4, 7, 6, ospGeometry2.Positions, ospPoint);
-            CreateNormal(5, 4, 7, ospGeometry2.Normals, ospPoint);
+            CreatePoint(5, 4, 7, 6, ospGeometry.Positions, ospPoint);
+            CreateNormal(5, 4, 7, ospGeometry.Normals, ospPoint);
 
-            for (int i = 0; i < ospGeometry2.Positions.Count ; i++) 
+            for (int i = 0; i < ospGeometry.Positions.Count ; i++) 
             {
-                ospGeometry2.Indices.Add(i);
+                ospGeometry.Indices.Add(i);
             }
-
-            //將從stlreader讀到的資料轉入
-
-            Console.WriteLine("\n點數量:" + mesh.Positions.Count);
-            foreach (Point3D position in mesh.Positions)
-            {
-                Console.WriteLine("\nx:" + position.X + "\ny:" + position.Y + "\nz:" + position.Z);
-                ospGeometry.Positions.Add(new Vector3(
-                      Convert.ToSingle(position.X)
-                    , Convert.ToSingle(position.Y)
-                    , Convert.ToSingle(position.Z)));
-            }
-            Console.WriteLine("\n\nNormal:");
-            Console.WriteLine("\nNormal數量:" + mesh.Normals.Count);
-            foreach (Vector3D normal in mesh.Normals)
-            {
-                Console.WriteLine("\nx:" + normal.X + "\ny:" + normal.Y + "\nz:" + normal.Z);
-                ospGeometry.Normals.Add(new Vector3(
-                      Convert.ToSingle(normal.X)
-                    , Convert.ToSingle(normal.Y)
-                    , Convert.ToSingle(normal.Z)));
-            }
-            Console.WriteLine("\n\n引數:");
-            Console.WriteLine("\n引數數量:" + mesh.TriangleIndices.Count);
-            foreach (Int32 triangleindice in mesh.TriangleIndices)
-            {
-                Console.WriteLine("\n:" + triangleindice);
-                ospGeometry.Indices.Add(triangleindice);
-            }
-
-
-
-            //Vector3 Normal = new Vector3(-1*Convert.ToSingle(mesh.Normals[0].X), -1 * Convert.ToSingle(mesh.Normals[0].Y), -1 * Convert.ToSingle(mesh.Normals[0].Z));
-            //foreach (Point3D position in mesh.Positions)
-            //{
-            //    Console.WriteLine("\nx:" + position.X + "\ny:" + position.Y + "\nz:" + position.Z);
-            //    ospGeometry.Positions.Add(new Vector3(
-            //        Convert.ToSingle(Normal[0] * 0.1 + position.X),
-            //        Convert.ToSingle(Normal[1] * 0.1 + position.Y),
-            //        Convert.ToSingle(Normal[2] * 0.1 + position.Z)));
-            //}
-            //foreach (Vector3D normal in mesh.Normals)
-            //{                
-            //    ospGeometry.Normals.Add(Normal);
-            //}
-            //for (int i=0;i== mesh.TriangleIndices.Count; i++)
-            //{
-            //    ospGeometry.Indices.Add(i + mesh.TriangleIndices.Count);
-            //}
-
-            HelixToolkit.Wpf.SharpDX.MeshGeometry3D Sphere;
-            var builder = new HelixToolkit.Wpf.SharpDX.MeshBuilder(true, false, false);
-            
-            for (int i = 0;i<ospPoint.Length ;i++)
-            {
-                builder.AddSphere(new Vector3(Convert.ToSingle(ospPoint[i].X), Convert.ToSingle(ospPoint[i].Y), Convert.ToSingle(ospPoint[i].Z)), 10, 12, 12);
-            }
-            OSP.ModelGeometry = builder.ToMeshGeometry3D();
-
-          
-
-            Console.WriteLine("\n\n\n點數量:" + ospGeometry2.Positions.Count);
-            foreach (Vector3 position in ospGeometry2.Positions)
-            {
-                Console.WriteLine("\nx:" + position.X + "\ny:" + position.Y + "\nz:" + position.Z);                
-            }
-
-            Console.WriteLine("\n\n\nNormal數量:" + ospGeometry2.Normals.Count);
-            foreach (Vector3 normal in ospGeometry2.Normals)
-            {
-                Console.WriteLine("\nx:" + normal.X + "\ny:" + normal.Y + "\nz:" + normal.Z);
-            }
-            
-            Console.WriteLine("\n\n\n引數數量:" + ospGeometry2.TriangleIndices.Count);
-            foreach (Int32 triangleindice in ospGeometry2.TriangleIndices)
-            {
-                Console.WriteLine("\n:" + triangleindice);
-            }
-
-
-
-
 
 
             OSP.MarkerID = this.MarkerID;
 
-            OSP.ModelGeometry = ospGeometry2;
-
+            //if (OSPFilePath == "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl")
+            //{
+            //    OSP.ModelGeometry = /*ospGeometry;*/Sphere;
+            //}
+            //else
+            //{
+                OSP.ModelGeometry = ospGeometry;
+            //}
             OSP.ModelTransform = new MatrixTransform3D();
+
+            OSP.IsOSP = true;
 
             OSP.IsLoaded = true;
         }
@@ -438,9 +366,6 @@ namespace Nart
         }
         private void CreateNormal(int index0, int index1, int index2, Vector3Collection normals, Point3D[] ospPoint)
         {
-            //Vector3 normal = Vector3.Cross(new Vector3(Convert.ToSingle(ospPoint[index2].X-ospPoint[index0].X), Convert.ToSingle(ospPoint[index2].Y - ospPoint[index0].Y), Convert.ToSingle(ospPoint[index2].Z - ospPoint[index0].Z))
-            //    , new Vector3(Convert.ToSingle(ospPoint[index1].X - ospPoint[index0].X), Convert.ToSingle(ospPoint[index1].Y - ospPoint[index0].Y), Convert.ToSingle(ospPoint[index1].Z - ospPoint[index0].Z)));
-
             Vector3 normal = Vector3.Cross(new Vector3(Convert.ToSingle(ospPoint[index1].X - ospPoint[index0].X), Convert.ToSingle(ospPoint[index1].Y - ospPoint[index0].Y), Convert.ToSingle(ospPoint[index1].Z - ospPoint[index0].Z))
                 , new Vector3(Convert.ToSingle(ospPoint[index2].X - ospPoint[index0].X), Convert.ToSingle(ospPoint[index2].Y - ospPoint[index0].Y), Convert.ToSingle(ospPoint[index2].Z - ospPoint[index0].Z)));
 
