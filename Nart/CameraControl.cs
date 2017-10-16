@@ -180,8 +180,8 @@ namespace Nart
                     icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
                 });
             }
+            Console.WriteLine("show buffer current id:" + Thread.CurrentThread.ManagedThreadId);
 
-            
             _calcCoord.Rectify(OutputMarker);
           
             _calcCoord.MatchAndCalc3D(OutputMarker);

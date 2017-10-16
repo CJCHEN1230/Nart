@@ -127,8 +127,7 @@ namespace Nart
 
         }
         public void SetTransformMatrix()
-        {
-            _finalModelTransform.SetIdentity();
+        {            
             ModelTransform = new MatrixTransform3D(_finalModelTransform);
             if (IsOSP)
             {                

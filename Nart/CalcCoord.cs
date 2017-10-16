@@ -782,17 +782,18 @@ namespace Nart
             double x = FHMandibleNormal.X;
             double y = FHMandibleNormal.Y;
             double z = FHMandibleNormal.Z;
-
-            double FDA = Math.Acos(x / Math.Sqrt(x * x + z * z));
+            MultiAngleViewModel.DeviationDistance = "000000000";
+            double FDA = Math.Acos(Math.Abs(x) / Math.Sqrt(x * x + z * z)) / Math.PI * 180.0;
             MultiAngleViewModel.FrontalDeviationAngle = "FDA:" + Math.Round(FDA, 2).ToString();
+            Console.WriteLine();
 
-            double HDA = Math.Acos(x / Math.Sqrt(x * x + y * y));
+            double HDA = Math.Acos(Math.Abs(x) / Math.Sqrt(x * x + y * y)) / Math.PI * 180.0;
             MultiAngleViewModel.HorizontalDeviationAngle = "HDA:" + Math.Round(HDA, 2).ToString();
 
             Point3D Me = mandibleOSP.ModelTransform.Transform(_craniofacialInfo.Me);
             Point3D headNormalPoint = headOSP.OSPPlanePoint;//法向量平面上的點
 
-            double DD = Math.Abs(Vector3D.DotProduct(headNormal, Me - headNormalPoint));
+            double DD = Vector3D.DotProduct(headNormal, Me - headNormalPoint);
             MultiAngleViewModel.DeviationDistance = "DD:" + Math.Round(DD, 3).ToString();
 
 
@@ -801,12 +802,7 @@ namespace Nart
             MultiAngleViewModel.PosteriorDeviationDistance = "PDD:" + Math.Round(PDD, 3).ToString();
 
 
-            Console.WriteLine("\n\nDA:" + DA);
-            Console.WriteLine("\nFDA:" + FDA);
-            Console.WriteLine("\nHDA:" + HDA);
-            Console.WriteLine("\nDD:" + DD);
-            Console.WriteLine("\nPDD:" + PDD);
-
+            Console.WriteLine("cranio info current id:" + Thread.CurrentThread.ManagedThreadId);
         }
     }
 }

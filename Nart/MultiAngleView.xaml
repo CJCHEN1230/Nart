@@ -46,7 +46,7 @@
                         EnableSharedModelMode="True"                        
                         SharedModelContainer="{Binding ElementName=sharedContainer}"
                         BackgroundColor="{x:Static sdx:Color4.Black}"
-                        ShowCoordinateSystem="False"
+                        ShowCoordinateSystem="True"
                         CoordinateSystemLabelForeground="White"
                         ShowFrameRate="True"
                         Grid.RowSpan="2">

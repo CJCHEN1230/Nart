@@ -69,7 +69,7 @@
 
             </TabItem>
         </TabControl>
-        <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" HorizontalAlignment="Left" Margin="6,522,0,0" VerticalAlignment="Top" Height="46" Width="106" FontSize="20"/>
+        <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" HorizontalAlignment="Left" Margin="3,484,0,0" VerticalAlignment="Top" Height="46" Width="106" FontSize="20"/>
         <Button x:Name="RegButton" Content="Registration" HorizontalAlignment="Left" Margin="10,286,0,0" VerticalAlignment="Top" Width="74" Height="56" Click="RegButton_Click"/>
         <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
 
