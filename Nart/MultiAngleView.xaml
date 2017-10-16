@@ -7,6 +7,12 @@
              xmlns:sdx="clr-namespace:SharpDX;assembly=SharpDX.Mathematics"
              xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
              mc:Ignorable="d" Height="309.473" Width="637.895">
+    <!--<UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontSize"
+                    Value="18" />
+        </Style>
+    </UserControl.Resources>-->
     <Grid Background="#FFE5E5E5" Margin="1">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -16,7 +22,7 @@
             <ColumnDefinition Width="26*"/>
             <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
-        <hx:ModelContainer3DX x:Name="sharedContainer"  RenderTechnique="{Binding RenderTechnique}" EffectsManager="{Binding EffectsManager}">
+        <hx:ModelContainer3DX x:Name="sharedContainer"  RenderTechnique="{Binding RenderTechnique}" EffectsManager="{Binding EffectsManager}" Margin="1" Grid.Row="1">
             <hx:AmbientLight3D x:Name="test" Color="{Binding AmbientLightColor}" />
             <hx:ItemsModel3D ItemsSource="{Binding ModelDataCollection}">
                 <hx:ItemsModel3D.ItemTemplate>
@@ -32,42 +38,6 @@
                 </hx:ItemsModel3D.ItemTemplate>
             </hx:ItemsModel3D>
         </hx:ModelContainer3DX>
-
-
-        <hx:Viewport3DX  x:Name="viewport1"
-                        ShowViewCube="True" 
-                        ZoomExtentsWhenLoaded="False" 
-                        Background="Black" Margin="1"              
-                        Camera="{Binding Camera1}"
-                        CameraRotationMode="Trackball" 
-                        Orthographic="True" 
-                        CameraMode="Inspect"                            
-                        UseDefaultGestures="True"
-                        EnableSharedModelMode="True"                        
-                        SharedModelContainer="{Binding ElementName=sharedContainer}"
-                        BackgroundColor="{x:Static sdx:Color4.Black}"
-                        ShowCoordinateSystem="True"
-                        CoordinateSystemLabelForeground="White"
-                        ShowFrameRate="True"
-                        Grid.RowSpan="2">
-            <hx:Viewport3DX.InputBindings>
-                <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
-                <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
-                <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
-                <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
-                <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
-                <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
-                <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
-                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
-                <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
-                <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
-            </hx:Viewport3DX.InputBindings>
-            <!--<hx:AmbientLight3D x:Name="test" Color="{Binding AmbientLightColor}" />-->
-            <hx:DirectionalLight3D
-                Direction="{Binding Light1Direction}"
-                Color="{Binding DirectionalLightColor}" />
-
-        </hx:Viewport3DX>
         <hx:Viewport3DX  x:Name="viewport2"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" 
@@ -129,14 +99,47 @@
                 Direction="{Binding Light3Direction}"
                 Color="{Binding DirectionalLightColor}" />
         </hx:Viewport3DX>
+        <hx:Viewport3DX  x:Name="viewport1"
+                        ShowViewCube="True" 
+                        ZoomExtentsWhenLoaded="False" 
+                        Background="Black" Margin="1,1,1,1"              
+                        Camera="{Binding Camera1}"
+                        CameraRotationMode="Trackball" 
+                        Orthographic="True" 
+                        CameraMode="Inspect"                            
+                        UseDefaultGestures="True"
+                        EnableSharedModelMode="True"                        
+                        SharedModelContainer="{Binding ElementName=sharedContainer}"
+                        BackgroundColor="{x:Static sdx:Color4.Black}"
+                        ShowCoordinateSystem="True"
+                        CoordinateSystemLabelForeground="White"
+                        ShowFrameRate="True"
+                        Grid.RowSpan="2">
+            <hx:Viewport3DX.InputBindings>
+                <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
+                <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
+                <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
+                <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
+                <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
+                <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
+                <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
+                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
+                <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
+                <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
+            </hx:Viewport3DX.InputBindings>
+            <!--<hx:AmbientLight3D x:Name="test" Color="{Binding AmbientLightColor}" />-->
+            <hx:DirectionalLight3D
+                Direction="{Binding Light1Direction}"
+                Color="{Binding DirectionalLightColor}" />
 
 
-        <StackPanel  Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,0,0" Grid.RowSpan="2" Width="165">
-            <Label x:Name="DALabel" Content="{Binding DeviationAngle}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
-            <Label x:Name="DDLabel" Content="{Binding DeviationDistance}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
-            <Label x:Name="FDALabel" Content="{Binding FrontalDeviationAngle}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
-            <Label x:Name="HDALabel" Content="{Binding HorizontalDeviationAngle}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
-            <Label x:Name="PDDLabel" Content="{Binding PosteriorDeviationDistance}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
+        </hx:Viewport3DX>
+        <StackPanel  Orientation="Vertical" HorizontalAlignment="Left" Margin="1,2,0,32" Width="165">
+            <Label x:Name="DALabel" Content="{Binding DeviationAngle, Mode=OneWay}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
+            <Label x:Name="DDLabel" Content="{Binding DeviationDistance, Mode=OneWay}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
+            <Label x:Name="FDALabel" Content="{Binding FrontalDeviationAngle, Mode=OneWay}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
+            <Label x:Name="HDALabel" Content="{Binding HorizontalDeviationAngle, Mode=OneWay}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
+            <Label x:Name="PDDLabel" Content="{Binding PosteriorDeviationDistance, Mode=OneWay}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>
         </StackPanel>
     </Grid>
 </UserControl>

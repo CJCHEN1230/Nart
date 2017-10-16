@@ -36,8 +36,7 @@ namespace Nart
         public MainView()
         {
             InitializeComponent();
-            MultiAngleViewModel.DeviationDistance = "1111";
-            Console.WriteLine("main view current id:"+Thread.CurrentThread.ManagedThreadId);
+          
             _mainViewModel = new MainViewModel(this);
 
             this.DataContext = _mainViewModel;

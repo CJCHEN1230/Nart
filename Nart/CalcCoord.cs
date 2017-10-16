@@ -677,9 +677,9 @@ namespace Nart
 
 
             //頭顱模型的索引值
-            headNormal = headOSP.OSPNormal;
+            headNormal = headOSP.OSPOriNormal;
             //下顎模型的索引值
-            mandibleNormal = mandibleOSP.OSPNormal;
+            mandibleNormal = mandibleOSP.OSPOriNormal;
 
             //Po Or四個點
             Point3D[] PoOr = new Point3D[] { _craniofacialInfo.PoL, _craniofacialInfo.PoR, _craniofacialInfo.OrL, _craniofacialInfo.OrR };            
@@ -768,11 +768,9 @@ namespace Nart
 
             Vector3D headNormal;
             Vector3D mandibleNormal;
-            headNormal = headOSP.OSPNormal;
-            mandibleNormal = mandibleOSP.OSPNormal;
-
-
-
+            headNormal = headOSP.OSPCurrentNormal;
+            mandibleNormal = mandibleOSP.OSPCurrentNormal;
+            
             //先算DA
             double DA = Math.Acos(Vector3D.DotProduct(headNormal, mandibleNormal)) / Math.PI * 180.0;
             MultiAngleViewModel.DeviationAngle = "DA:" + Math.Round(DA, 4).ToString();
@@ -782,10 +780,9 @@ namespace Nart
             double x = FHMandibleNormal.X;
             double y = FHMandibleNormal.Y;
             double z = FHMandibleNormal.Z;
-            MultiAngleViewModel.DeviationDistance = "000000000";
+
             double FDA = Math.Acos(Math.Abs(x) / Math.Sqrt(x * x + z * z)) / Math.PI * 180.0;
             MultiAngleViewModel.FrontalDeviationAngle = "FDA:" + Math.Round(FDA, 2).ToString();
-            Console.WriteLine();
 
             double HDA = Math.Acos(Math.Abs(x) / Math.Sqrt(x * x + y * y)) / Math.PI * 180.0;
             MultiAngleViewModel.HorizontalDeviationAngle = "HDA:" + Math.Round(HDA, 2).ToString();
@@ -796,13 +793,11 @@ namespace Nart
             double DD = Vector3D.DotProduct(headNormal, Me - headNormalPoint);
             MultiAngleViewModel.DeviationDistance = "DD:" + Math.Round(DD, 3).ToString();
 
-
-            Point3D Intersection = _craniofacialInfo.GoIntersection;
+            Point3D Intersection = mandibleOSP.ModelTransform.Transform(_craniofacialInfo.GoIntersection);
             double PDD = Math.Abs(Vector3D.DotProduct(headNormal, Intersection - headNormalPoint));
             MultiAngleViewModel.PosteriorDeviationDistance = "PDD:" + Math.Round(PDD, 3).ToString();
 
-
-            Console.WriteLine("cranio info current id:" + Thread.CurrentThread.ManagedThreadId);
+            
         }
     }
 }

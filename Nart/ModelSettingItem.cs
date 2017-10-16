@@ -191,8 +191,8 @@ namespace Nart
                 return;
             }
 
-            OSP.OSPNormal = new Vector3D(mesh.Normals[0].X, mesh.Normals[0].Y, mesh.Normals[0].Z);
-            OSP.OSPNormal.Normalize();//將上述向量正規化
+            OSP.OSPOriNormal = new Vector3D(mesh.Normals[0].X, mesh.Normals[0].Y, mesh.Normals[0].Z);
+            OSP.OSPOriNormal.Normalize();//將上述向量正規化
             OSP.OSPPlanePoint  = mesh.Positions[0];
             //設定模型材質
             SetOSPMaterial();

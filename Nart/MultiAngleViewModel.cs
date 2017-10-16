@@ -13,9 +13,10 @@ using NartControl;
 
 namespace Nart
 {
-    
+
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Runtime.CompilerServices;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -336,6 +337,26 @@ namespace Nart
             binding.Mode = mode;
             BindingOperations.SetBinding(dobj, property, binding);
         }
-        
+
+
+        public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;
+        protected static void OnStaticPropertyChanged([CallerMemberName]string info = "")
+        {
+            if (StaticPropertyChanged != null)
+            {
+                StaticPropertyChanged(null, new PropertyChangedEventArgs(info));
+            }
+        }
+        protected static bool SetStaticValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")//CallerMemberName主要是.net4.5後定義好的caller訊息，能將訊息傳給後者的變數，目的在使用時不用特地傳入"Property"名稱
+        {
+            if (object.Equals(oldValue, newValue))
+            {
+                return false;
+            }
+            oldValue = newValue;
+            OnStaticPropertyChanged(propertyName);
+            return true;
+        }
+
     }
 }

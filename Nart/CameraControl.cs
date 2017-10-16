@@ -172,7 +172,7 @@ namespace Nart
         /// </summary>
         private void ShowImageBuffer()
         {
-
+           
             if (MainViewModel.TabIndex == 0)
             {
                 Parallel.For(0, 2, i =>
@@ -180,7 +180,6 @@ namespace Nart
                     icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
                 });
             }
-            Console.WriteLine("show buffer current id:" + Thread.CurrentThread.ManagedThreadId);
 
             _calcCoord.Rectify(OutputMarker);
           

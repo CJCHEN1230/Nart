@@ -40,7 +40,11 @@ namespace Nart
         /// <summary>
         /// OSP才有的Normal
         /// </summary>
-        public Vector3D OSPNormal;
+        public Vector3D OSPCurrentNormal;
+        /// <summary>
+        /// OSP才有的Normal
+        /// </summary>
+        public Vector3D OSPOriNormal;
         /// <summary>
         /// OSP才有的平面點
         /// </summary>
@@ -131,8 +135,8 @@ namespace Nart
             ModelTransform = new MatrixTransform3D(_finalModelTransform);
             if (IsOSP)
             {                
-                OSPNormal = ModelTransform.Transform(OSPNormal);
-                OSPNormal.Normalize();
+                OSPCurrentNormal = ModelTransform.Transform(OSPOriNormal);
+                OSPCurrentNormal.Normalize();
             }
         }       
         private void AddMatrix3D(ref Matrix3D A, ref Matrix3D B)

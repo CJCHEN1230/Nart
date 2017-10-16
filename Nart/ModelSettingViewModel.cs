@@ -9,6 +9,8 @@ using System.Windows.Media;
 using SharpDX.Direct3D11;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Nart
 {
@@ -273,5 +275,32 @@ namespace Nart
             Console.WriteLine(" 模型總數:  " + ModelDataCollection.Count);
             _modelSettingView.Hide();
         }
+
+
+
+
+
+
+        public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;
+        protected static void OnStaticPropertyChanged([CallerMemberName]string info = "")
+        {
+            if (StaticPropertyChanged != null)
+            {
+                StaticPropertyChanged(null, new PropertyChangedEventArgs(info));
+            }
+        }
+        protected static bool SetStaticValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")//CallerMemberName主要是.net4.5後定義好的caller訊息，能將訊息傳給後者的變數，目的在使用時不用特地傳入"Property"名稱
+        {
+            if (object.Equals(oldValue, newValue))
+            {
+                return false;
+            }
+            oldValue = newValue;
+            OnStaticPropertyChanged(propertyName);
+            return true;
+        }
+
+
+
     }
 }
