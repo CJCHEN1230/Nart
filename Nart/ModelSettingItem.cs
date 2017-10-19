@@ -162,7 +162,7 @@ namespace Nart
 
             Model.ModelTransform = new MatrixTransform3D();
 
-            OSP.IsOSP = false;
+            Model.IsOSP = false;
 
             Model.IsLoaded = true;                        
         }

@@ -11,9 +11,9 @@
 *.userprefs
 
 # Build results
-[Dd]ebug/
+[Dd]ebug/sharpdx_direct3d11_1_effects_arm.dll
 [Dd]ebugPublic/
-[Rr]elease/
+[Rr]elease/sharpdx_direct3d11_1_effects_arm.dll
 [Rr]eleases/
 [Xx]64/
 [Xx]86/
