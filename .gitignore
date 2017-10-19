@@ -10,15 +10,13 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
-!/bin/Debug/sharpdx_direct3d11_1_effects_arm.dll
-!/bin/Debug/sharpdx_direct3d11_1_effects_arm.dll
-!/bin/Debug/sharpdx_direct3d11_1_effects_arm.dll
+
 
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
-[Rr]eleases/
+#[Rr]eleases/
 [Xx]64/
 [Xx]86/
 [Bb]uild/
@@ -26,6 +24,15 @@ bld/
 #[Bb]in/
 [Oo]bj/
 
+Nart/bin/Debug/*
+!/Nart/bin/Debug/sharpdx_direct3d11_1_effects_arm.dll
+!/Nart/bin/Debug/sharpdx_direct3d11_1_effects_x64.dll
+!/Nart/bin/Debug/sharpdx_direct3d11_1_effects_x86.dll
+
+Nart/bin/Release/*
+!/Nart/bin/Release/sharpdx_direct3d11_1_effects_arm.dll
+!/Nart/bin/Release/sharpdx_direct3d11_1_effects_x64.dll
+!/Nart/bin/Release/sharpdx_direct3d11_1_effects_x86.dll
 
 
 # Visual Studio 2015 cache/options directory
