@@ -11,9 +11,9 @@
 *.userprefs
 
 # Build results
-[Dd]ebug/sharpdx_direct3d11_1_effects_arm.dll
+[Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/sharpdx_direct3d11_1_effects_arm.dll
+[Rr]elease/
 [Rr]eleases/
 [Xx]64/
 [Xx]86/
@@ -21,6 +21,8 @@
 bld/
 [Bb]in/
 [Oo]bj/
+!sharpdx_direct3d11_1_effects_arm.dll
+
 
 # Visual Studio 2015 cache/options directory
 .vs/
