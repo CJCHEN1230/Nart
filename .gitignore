@@ -10,18 +10,20 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
-!sharpdx_direct3d11_1_effects_arm.dll
+!/bin/Debug/sharpdx_direct3d11_1_effects_arm.dll
+!/bin/Debug/sharpdx_direct3d11_1_effects_arm.dll
+!/bin/Debug/sharpdx_direct3d11_1_effects_arm.dll
 
 # Build results
-#[Dd]ebug/
+[Dd]ebug/
 [Dd]ebugPublic/
-#[Rr]elease/
+[Rr]elease/
 [Rr]eleases/
 [Xx]64/
 [Xx]86/
 [Bb]uild/
 bld/
-[Bb]in/
+#[Bb]in/
 [Oo]bj/
 
 
