@@ -630,11 +630,11 @@ namespace Nart
                         Matrix3D Final = level1 * level2 * level3 * level4;
 
                       
-                       for (int j = 0; j < ModelSettingViewModel.ModelDataCollection.Count; j++)
+                       for (int j = 0; j < MultiAngleViewModel.ModelDataCollection.Count; j++)
                        {
-                           if (ModelSettingViewModel.ModelDataCollection[j].MarkerID == WorldPoints[i].MarkerID)
+                           if (MultiAngleViewModel.ModelDataCollection[j].MarkerID == WorldPoints[i].MarkerID)
                            {
-                               ModelSettingViewModel.ModelDataCollection[j].AddItem(Final);
+                               MultiAngleViewModel.ModelDataCollection[j].AddItem(Final);
                            }
                        }
                    }                                                        
@@ -651,9 +651,9 @@ namespace Nart
             Vector3D mandibleNormal;
 
             //先找出模型引數
-            for (int i = 0; i < MainViewModel.ModelDataCollection.Count; i++)
+            for (int i = 0; i < MultiAngleViewModel.ModelDataCollection.Count; i++)
             {
-                ModelData model = MainViewModel.ModelDataCollection[i];
+                ModelData model = MultiAngleViewModel.ModelDataCollection[i];
                 if (model.IsOSP && model.IsLoaded)
                 {
                     if (model.MarkerID == "Head")
@@ -672,8 +672,8 @@ namespace Nart
                 return;
             }
             //取得頭顱跟下顎的模型
-            ModelData headOSP = MainViewModel.ModelDataCollection[headOSPIndex];
-            ModelData mandibleOSP = MainViewModel.ModelDataCollection[mandibleOSPIndex];
+            ModelData headOSP = MultiAngleViewModel.ModelDataCollection[headOSPIndex];
+            ModelData mandibleOSP = MultiAngleViewModel.ModelDataCollection[mandibleOSPIndex];
 
 
             //頭顱模型的索引值
@@ -743,9 +743,9 @@ namespace Nart
             {
 
                 //先找出模型引數
-                for (int i = 0; i < MainViewModel.ModelDataCollection.Count; i++)
+                for (int i = 0; i < MultiAngleViewModel.ModelDataCollection.Count; i++)
                 {
-                    ModelData model = MainViewModel.ModelDataCollection[i];
+                    ModelData model = MultiAngleViewModel.ModelDataCollection[i];
                     if (model.IsOSP && model.IsLoaded)
                     {
                         if (model.MarkerID == "Head")
@@ -764,8 +764,8 @@ namespace Nart
                     return;
                 }
 
-                ModelData headOSP = MainViewModel.ModelDataCollection[headOSPIndex];
-                ModelData mandibleOSP = MainViewModel.ModelDataCollection[mandibleOSPIndex];
+                ModelData headOSP = MultiAngleViewModel.ModelDataCollection[headOSPIndex];
+                ModelData mandibleOSP = MultiAngleViewModel.ModelDataCollection[mandibleOSPIndex];
 
                 Vector3D headNormal;
                 Vector3D mandibleNormal;

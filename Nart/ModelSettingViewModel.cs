@@ -16,14 +16,11 @@ namespace Nart
 {
     public class ModelSettingViewModel : ObservableObject
     {
-        /// <summary>
-        /// 轉換成模型清單的資料集合
-        /// </summary>       
-        public static ObservableCollection<ModelData> ModelDataCollection;
+        
         /// <summary>
         /// 項目中每個Item的資料集合
         /// </summary>       
-        private static ObservableCollection<ModelSettingItem> modelSettingCollection;        
+        private static ObservableCollection<ModelSettingItem> modelSettingCollection;      
         /// <summary>
         /// 病人名字
         /// </summary>
@@ -39,7 +36,11 @@ namespace Nart
         /// <summary>
         /// 註冊檔名
         /// </summary>
-        private static String regPath = "../../../data/reg20170713.txt";               
+        private static String regPath = "../../../data/reg20170713.txt";
+        /// <summary>
+        /// 轉換成模型清單的資料集合
+        /// </summary>       
+        private ObservableCollection<ModelData> ModelDataCollection;
         /// <summary>
         /// ModelSettingView的物件
         /// </summary>
@@ -56,14 +57,13 @@ namespace Nart
             AddItemCommand = new RelayCommand(AddItem);
             RemoveItemCommand = new RelayCommand(RemoveItem);
             ModelSettingCommand = new RelayCommand(LoadSettingModel);
-
-            ModelSettingCollection = MainViewModel.ModelSettingCollection;
+            
             //如果ModelInfoCollection為空的
             if (ModelSettingCollection == null || ModelSettingCollection.Count == 0)
             {
-                MainViewModel.ModelSettingCollection = new ObservableCollection<ModelSettingItem>();
+                ModelSettingViewModel.ModelSettingCollection = new ObservableCollection<ModelSettingItem>();
 
-                ModelSettingCollection = MainViewModel.ModelSettingCollection;
+                ModelSettingCollection = ModelSettingViewModel.ModelSettingCollection;
 
 
                 ModelSettingCollection.Add(new ModelSettingItem
@@ -272,6 +272,8 @@ namespace Nart
                     i--;
                 }
             }
+            MultiAngleViewModel.ModelDataCollection = ModelDataCollection; //將此處的ModelDataCollection 指派給MultiAngleViewModel
+
             Console.WriteLine(" 模型總數:  " + ModelDataCollection.Count);
             _modelSettingView.Hide();
         }

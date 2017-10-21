@@ -49,26 +49,26 @@ namespace Nart
 
             
             
-            Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
-            MainViewModel.ModelDataCollection = multiAngleView._multiAngleViewModel.ModelDataCollection;
+            //Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
+            //MainViewModel.ModelDataCollection = multiAngleView._multiAngleViewModel.ModelDataCollection;
 
-            SharpDX.Vector3 temp = MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0];
+            //SharpDX.Vector3 temp = MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0];
 
-            Point3D oldPoint = new Point3D(temp.X,temp.Y,temp.Z);
+            //Point3D oldPoint = new Point3D(temp.X,temp.Y,temp.Z);
 
-            Console.WriteLine("oldPoint:" + oldPoint);
+            //Console.WriteLine("oldPoint:" + oldPoint);
 
-            for (int i = 0; i < MainViewModel.ModelDataCollection.Count; i++)
-            {
-                MainViewModel.ModelDataCollection[i].ModelTransform = new MatrixTransform3D(TEST);
-            }
+            //for (int i = 0; i < MainViewModel.ModelDataCollection.Count; i++)
+            //{
+            //    MainViewModel.ModelDataCollection[i].ModelTransform = new MatrixTransform3D(TEST);
+            //}
 
-            SharpDX.Vector3 temp2 = MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0];
+            //SharpDX.Vector3 temp2 = MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0];
 
-            Point3D newPoint = new Point3D(temp2.X, temp2.Y, temp2.Z);
+            //Point3D newPoint = new Point3D(temp2.X, temp2.Y, temp2.Z);
 
 
-            Console.WriteLine("newPoint:" + newPoint);
+            //Console.WriteLine("newPoint:" + newPoint);
 
             //multiAngleView._multiAngleViewModel.ModelDataCollection = MainViewModel.ModelDataCollection;
 
@@ -141,7 +141,6 @@ namespace Nart
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
-
-
+      
     }
 }

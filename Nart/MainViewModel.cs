@@ -19,13 +19,8 @@ namespace Nart
     /// </summary>
     public class MainViewModel : ObservableObject
     {
-        public static ObservableCollection<ModelSettingItem> ModelSettingCollection;
-        public static ObservableCollection<ModelData> ModelDataCollection;
-        public CameraControl CamCtrl 
-        {
-            get;
-            set;
-        }
+
+        public CameraControl CamCtrl;
         public NartServer Server= new NartServer();
         private static string _pointNumber;
         private static int _tabIndex = 1; //預設tab頁面索引值        
@@ -75,11 +70,6 @@ namespace Nart
             _modelSettingdlg.Owner = _mainWindow;
 
             _modelSettingdlg.ShowDialog();
-
-            //Dialog 結束之後指派給_multiAngleViewModel中的值
-            _mainWindow.multiAngleView._multiAngleViewModel.ModelDataCollection = ModelSettingViewModel.ModelDataCollection;
-
-            MainViewModel.ModelDataCollection = ModelSettingViewModel.ModelDataCollection;
         }
 
         public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;

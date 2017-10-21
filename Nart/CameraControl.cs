@@ -162,9 +162,9 @@ namespace Nart
         }
         private void MoveModel()
         {
-            for (int i = 0; i < ModelSettingViewModel.ModelDataCollection.Count ; i++)
+            for (int i = 0; i < MultiAngleViewModel.ModelDataCollection.Count ; i++)
             {
-                ModelSettingViewModel.ModelDataCollection[i].SetTransformMatrix();
+                MultiAngleViewModel.ModelDataCollection[i].SetTransformMatrix();
             }
         }
         /// <summary>

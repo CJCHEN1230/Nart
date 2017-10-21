@@ -34,16 +34,16 @@ namespace Nart
         private static string HorizontalDevAngle;//HorizontalDeviationAngle
         private static string PosteriorDevDist;      //PosteriorDeviationDistance
         private RenderTechnique renderTechnique;
-        private Camera cam1 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
-        private Camera cam2 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
-        private Camera cam3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+        private static Camera cam1 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+        private static Camera cam2 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+        private static Camera cam3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
         private Vector3 light1Direction = new Vector3();
         private Vector3 light2Direction = new Vector3();
         private Vector3 light3Direction = new Vector3();
         private Vector3D cam1LookDir = new Vector3D();
         private Vector3D cam2LookDir = new Vector3D();
         private Vector3D cam3LookDir = new Vector3D();
-        private static ObservableCollection<ModelData> modeldataCollection;
+        private static ObservableCollection<ModelData> modeldataCollection = new ObservableCollection<ModelData>();
         private MultiAngleView _multiview;
         
 
@@ -60,19 +60,7 @@ namespace Nart
         }
 
 
-        public RenderTechnique RenderTechnique
-        {
-            get
-            {
-                return renderTechnique;
-            }
-            set
-            {
-                SetValue(ref renderTechnique, value);
-            }
-        }
-        public IEffectsManager EffectsManager { get; protected set; }
-        public IRenderTechniquesManager RenderTechniquesManager { get; protected set; }
+        
         public static string DeviationAngle
         {
             get { return DevAngle; }
@@ -113,7 +101,19 @@ namespace Nart
                 SetStaticValue(ref PosteriorDevDist, value);
             }
         }
-        public Camera Camera1
+        public static ObservableCollection<ModelData> ModelDataCollection
+        {
+            get
+            {
+                return modeldataCollection;
+            }
+            set
+            {
+                SetStaticValue(ref modeldataCollection, value);
+                ResetCameraPosition();
+            }
+        }
+        public static Camera Camera1
         {
             get
             {
@@ -122,10 +122,10 @@ namespace Nart
 
             private set
             {
-                SetValue(ref cam1, value);
+                SetStaticValue(ref cam1, value);
             }
         }
-        public Camera Camera2
+        public static Camera Camera2
         {
             get
             {
@@ -134,10 +134,10 @@ namespace Nart
 
             private set
             {
-                SetValue(ref cam2, value);
+                SetStaticValue(ref cam2, value);
             }
         }
-        public Camera Camera3
+        public static Camera Camera3
         {
             get
             {
@@ -146,7 +146,7 @@ namespace Nart
 
             private set
             {
-                SetValue(ref cam3, value);
+                SetStaticValue(ref cam3, value);
             }
         }
         public Vector3 Light1Direction
@@ -231,20 +231,21 @@ namespace Nart
             }
         }
         public Color4 DirectionalLightColor { get; set; }
-        public ObservableCollection<ModelData> ModelDataCollection
+        public RenderTechnique RenderTechnique
         {
             get
             {
-                return modeldataCollection;
+                return renderTechnique;
             }
             set
             {
-                SetValue(ref modeldataCollection, value);
-                ResetCameraPosition();
+                SetValue(ref renderTechnique, value);
             }
         }
-        
-        
+        public IEffectsManager EffectsManager { get; protected set; }
+        public IRenderTechniquesManager RenderTechniquesManager { get; protected set; }
+
+
         /// <summary>
         /// 設定光源Ambientlight顏色、DirectionaLlight顏色        
         /// </summary>
@@ -266,7 +267,7 @@ namespace Nart
         /// <summary>
         /// 重設相機觀向位置
         /// </summary>
-        internal void ResetCameraPosition()
+        internal static void ResetCameraPosition()
         {
 
             //ModelGroup裡面有模型之後才調整相機位置
