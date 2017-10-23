@@ -73,6 +73,7 @@
       <HintPath>..\packages\HelixToolkit.Wpf.SharpDX.1.0.0-unstable1813\lib\net45\HelixToolkit.Wpf.SharpDX.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="PropertyTools, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
       <HintPath>..\packages\PropertyTools.Wpf.2.0.1\lib\net45\PropertyTools.dll</HintPath>
       <Private>True</Private>
@@ -117,6 +118,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -175,6 +177,8 @@
       <DependentUpon>ModelSettingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ModelSettingViewModel.cs" />
+    <Compile Include="Model\ModelPrototype.cs" />
+    <Compile Include="OSPModel.cs" />
     <Compile Include="MultiAngleView.xaml.cs">
       <DependentUpon>MultiAngleView.xaml</DependentUpon>
     </Compile>
@@ -224,8 +228,6 @@
     <Content Include="sharpdx_direct3d11_1_effects_arm.dll" />
     <Content Include="sharpdx_direct3d11_1_effects_x64.dll" />
     <Content Include="sharpdx_direct3d11_1_effects_x86.dll" />
-    <Content Include="x64\d3dcompiler_47.dll" />
-    <Content Include="x86\d3dcompiler_47.dll" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
@@ -239,6 +241,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

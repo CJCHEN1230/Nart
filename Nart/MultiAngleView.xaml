@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ie="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:local="clr-namespace:Nart"
              xmlns:sdx="clr-namespace:SharpDX;assembly=SharpDX.Mathematics"
              xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
@@ -23,20 +25,27 @@
             <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
         <hx:ModelContainer3DX x:Name="sharedContainer"  RenderTechnique="{Binding RenderTechnique}" EffectsManager="{Binding EffectsManager}" Margin="1" Grid.Row="1">
-            <hx:AmbientLight3D x:Name="test" Color="{Binding AmbientLightColor}" />
             <hx:ItemsModel3D ItemsSource="{Binding ModelDataCollection}">
                 <hx:ItemsModel3D.ItemTemplate>
                     <DataTemplate>
-                        <hx:MeshGeometryModel3D 
+                        <hx:MeshGeometryModel3D                             
                             CullMode="{Binding CMode}" 
                             InvertNormal="{Binding IvtNormal}" 
                             FrontCounterClockwise="{Binding FrontCounterClockwise}"                             
-                            Geometry="{Binding ModelGeometry}"
+                            Geometry="{Binding ModelGeometry}"                            
                             Material="{Binding ModelMaterial}"
-                            Transform="{Binding ModelTransform}"/>
+                            Transform="{Binding ModelTransform}"
+                            ReuseVertexArrayBuffer="True"/>
                     </DataTemplate>
                 </hx:ItemsModel3D.ItemTemplate>
             </hx:ItemsModel3D>
+
+            <!--<local:OSPModel
+                  x:Name="OSPModel2"
+                  ReuseVertexArrayBuffer="True"
+                  Geometry="{Binding FloorModel}"
+                  Material="{Binding FloorMaterial}" />-->
+
         </hx:ModelContainer3DX>
         <hx:Viewport3DX  x:Name="viewport2"
                         ShowViewCube="True" 
@@ -63,7 +72,11 @@
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
-
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonDown">
+                    <ie:CallMethodAction MethodName="OnMouseLeftButtonDownHandler" TargetObject="{Binding}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <hx:DirectionalLight3D
                 Direction="{Binding Light2Direction}"
                 Color="{Binding DirectionalLightColor}" />
@@ -90,11 +103,15 @@
                 <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
                 <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
                 <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
-                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
+                <!--<MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />-->
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
-
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonDown">
+                    <ie:CallMethodAction MethodName="OnMouseLeftButtonDownHandler" TargetObject="{Binding}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <hx:DirectionalLight3D
                 Direction="{Binding Light3Direction}"
                 Color="{Binding DirectionalLightColor}" />
@@ -127,7 +144,12 @@
                 <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
-            <!--<hx:AmbientLight3D x:Name="test" Color="{Binding AmbientLightColor}" />-->
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonDown">
+                    <ie:CallMethodAction MethodName="OnMouseLeftButtonDownHandler" TargetObject="{Binding}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            
             <hx:DirectionalLight3D
                 Direction="{Binding Light1Direction}"
                 Color="{Binding DirectionalLightColor}" />

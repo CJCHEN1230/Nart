@@ -29,6 +29,8 @@ namespace NartControl.Control
         //第一個參數是和此DependencyProperty關聯的Property名稱
         //第二個用來指明此依賴屬性用來存儲什麼類型的值
         //第三個參數用來指明此依賴屬性的宿主是什麼類型或者說DependencyProperty.Register方法將把這個依賴屬性註冊關聯到哪個類型上。
+        //第四個參數是用來設定一些Dependency Property的細節，例如是否要延續父層的屬性、是否會影響尺寸、預設值等等
+        //第五個參數是當值改變的時候，要呼叫的方法。
         public static readonly DependencyProperty ButtonImageSourceProperty = DependencyProperty.Register("ButtonImageSource", typeof(Uri), typeof(ImgButton2), new FrameworkPropertyMetadata(new PropertyChangedCallback(ImageSourceChanged)));
 
         public Uri ButtonImageSource

@@ -15,6 +15,8 @@ using System.Windows.Media.Media3D;
 namespace Nart
 {
     using SharpDX.Direct3D11;
+    using System.Windows;
+    using System.Windows.Data;
     using Color = System.Windows.Media.Color;
     /// <summary>
     /// 模型設置清單中Listview中的項目
@@ -29,6 +31,8 @@ namespace Nart
         /// 設置列當中的OSP物件
         /// </summary>
         public ModelData OSP = new ModelData();
+
+
         /// <summary>
         /// 模型名稱
         /// </summary>
@@ -102,8 +106,11 @@ namespace Nart
         /// </summary>
         public void Load()
         {            
-            LoadModel();            
-            LoadOSP();
+            LoadModel();
+            if (Model.IsLoaded)
+            {
+                LoadOSP();
+            }
         }
         /// <summary>
         /// load進模型檔案
@@ -134,7 +141,6 @@ namespace Nart
             modelGeometry.Normals = new Vector3Collection();
             modelGeometry.Positions = new Vector3Collection();
             modelGeometry.Indices = new IntCollection();
-
             //將從stlreader讀到的資料轉入
             foreach (Point3D position in mesh.Positions)
             {
@@ -144,6 +150,13 @@ namespace Nart
                     , Convert.ToSingle(position.Z)));
             }
 
+
+            modelGeometry.Colors = new Color4Collection();
+            for ( int i =0; i<mesh.Positions.Count;i++)
+            {
+                modelGeometry.Colors.Add(new Color4(0.1f, 0.1f, 0.8f, 0.2f));
+            }
+
             foreach (Vector3D normal in mesh.Normals)
             {
                 modelGeometry.Normals.Add(new Vector3(
@@ -151,6 +164,9 @@ namespace Nart
                     , Convert.ToSingle(normal.Y)
                     , Convert.ToSingle(normal.Z)));
             }
+
+
+
 
             foreach (Int32 triangleindice in mesh.TriangleIndices)
             {
@@ -331,6 +347,7 @@ namespace Nart
             OSP.IsOSP = true;
 
             OSP.IsLoaded = true;
+
         }
         private void CreatePoint(int index0, int index1, int index2, int index3 , Vector3Collection positions,Point3D[]  ospPoint )
         {
@@ -379,7 +396,7 @@ namespace Nart
         }
 
         
-
+       
 
         public String ModelFilePath
         {

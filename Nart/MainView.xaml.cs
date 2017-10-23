@@ -23,6 +23,7 @@ using System.Threading;
 using System.ComponentModel;
 using HelixToolkit.Wpf.SharpDX;
 using System.Diagnostics;
+using NartControl.Control;
 
 namespace Nart
 {
@@ -40,7 +41,7 @@ namespace Nart
             _mainViewModel = new MainViewModel(this);
 
             this.DataContext = _mainViewModel;
-            
+
             AllocConsole();
         }        
         

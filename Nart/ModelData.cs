@@ -96,7 +96,7 @@ namespace Nart
         /// <summary>
         /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
         /// </summary>
-        private int CurrenIndex = 0;
+        private int CurrentIndex = 0;
 
         public ModelData()
         {            
@@ -117,17 +117,17 @@ namespace Nart
             }
             else
             {
-                SubtractMatrix3D(ref _totalModelTransform, ref _modelTransformSet[CurrenIndex]);
+                SubtractMatrix3D(ref _totalModelTransform, ref _modelTransformSet[CurrentIndex]);
 
                 AddMatrix3D(ref _totalModelTransform, ref item);
 
                 DivideMatrix3D(ref _totalModelTransform, Count, ref _finalModelTransform);
             }
 
-            _modelTransformSet[CurrenIndex] = item;
+            _modelTransformSet[CurrentIndex] = item;
 
-            CurrenIndex++;
-            CurrenIndex = CurrenIndex % _modelTransformSet.Length;
+            CurrentIndex++;
+            CurrentIndex = CurrentIndex % _modelTransformSet.Length;
 
         }
         public void SetTransformMatrix()
@@ -241,5 +241,45 @@ namespace Nart
                 SetValue(ref markerID, value);
             }
         }
+
+
+        ////////////////////////////////////////////
+
+        private bool highlight = false;
+        public bool Highlight
+        {
+            set
+            {
+                if (highlight == value) { return; }
+                highlight = value;
+                if (highlight)
+                {
+                    //orgMaterial = material;
+                    ModelMaterial.EmissiveColor = SharpDX.Color.Yellow;
+                }
+                else
+                {
+                    ModelMaterial.EmissiveColor = SharpDX.Color.Transparent;
+                    //Material = orgMaterial;
+                }
+            }
+            get
+            {
+                return highlight;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
