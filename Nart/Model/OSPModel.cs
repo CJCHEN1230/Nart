@@ -217,52 +217,7 @@ namespace Nart.Model
             this.IsOSP = false;
 
             this.IsLoaded = true;
-        }
-        //private void CreatePoint(int index0, int index1, int index2, int index3, Vector3Collection positions, Point3D[] ospPoint)
-        //{
-        //    positions.Add(new Vector3(
-        //              Convert.ToSingle(ospPoint[index0].X)
-        //            , Convert.ToSingle(ospPoint[index0].Y)
-        //            , Convert.ToSingle(ospPoint[index0].Z)));
-
-        //    positions.Add(new Vector3(
-        //              Convert.ToSingle(ospPoint[index1].X)
-        //            , Convert.ToSingle(ospPoint[index1].Y)
-        //            , Convert.ToSingle(ospPoint[index1].Z)));
-
-        //    positions.Add(new Vector3(
-        //              Convert.ToSingle(ospPoint[index3].X)
-        //            , Convert.ToSingle(ospPoint[index3].Y)
-        //            , Convert.ToSingle(ospPoint[index3].Z)));
-
-        //    positions.Add(new Vector3(
-        //              Convert.ToSingle(ospPoint[index1].X)
-        //            , Convert.ToSingle(ospPoint[index1].Y)
-        //            , Convert.ToSingle(ospPoint[index1].Z)));
-
-        //    positions.Add(new Vector3(
-        //              Convert.ToSingle(ospPoint[index2].X)
-        //            , Convert.ToSingle(ospPoint[index2].Y)
-        //            , Convert.ToSingle(ospPoint[index2].Z)));
-
-        //    positions.Add(new Vector3(
-        //              Convert.ToSingle(ospPoint[index3].X)
-        //            , Convert.ToSingle(ospPoint[index3].Y)
-        //            , Convert.ToSingle(ospPoint[index3].Z)));
-        //}
-        //private void CreateNormal(int index0, int index1, int index2, Vector3Collection normals, Point3D[] ospPoint)
-        //{
-        //    Vector3 normal = Vector3.Cross(new Vector3(Convert.ToSingle(ospPoint[index1].X - ospPoint[index0].X), Convert.ToSingle(ospPoint[index1].Y - ospPoint[index0].Y), Convert.ToSingle(ospPoint[index1].Z - ospPoint[index0].Z))
-        //        , new Vector3(Convert.ToSingle(ospPoint[index2].X - ospPoint[index0].X), Convert.ToSingle(ospPoint[index2].Y - ospPoint[index0].Y), Convert.ToSingle(ospPoint[index2].Z - ospPoint[index0].Z)));
-
-
-        //    normals.Add(normal);
-        //    normals.Add(normal);
-        //    normals.Add(normal);
-        //    normals.Add(normal);
-        //    normals.Add(normal);
-        //    normals.Add(normal);
-        //}
+        }      
         public void SetTransformMatrix()
         {
             this.Transform = new MatrixTransform3D(_finalModelTransform);

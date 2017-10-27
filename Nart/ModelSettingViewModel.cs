@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Nart.Model;
 using HelixToolkit.Wpf.SharpDX;
+using System.Windows.Data;
 
 namespace Nart
 {
@@ -259,7 +260,15 @@ namespace Nart
                     MultiAngleViewModel.BoneModelCollection.Add(ModelSettingCollection[i].Bone);
                     ModelSettingCollection[i].Bone.IsAdded = true;
                 }
-
+                //做bone 跟 osp transform的binding
+                if (boneModel.IsLoaded && ospModel.IsAdded)
+                {
+                    var binding = new Binding("Transform");
+                    binding.Source = boneModel;
+                    binding.Mode = BindingMode.OneWay;
+                    BindingOperations.SetBinding(ospModel, Model3D.TransformProperty, binding);
+                }
+             
             }
             //刪除modelDataCollection中已經從ModelInfoCollection移除的模型，
             for (int i = 0; i < MultiAngleViewModel.BoneModelCollection.Count; i++)

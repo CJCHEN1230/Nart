@@ -242,9 +242,7 @@ namespace Nart
             }
         }
 
-
-        ////////////////////////////////////////////
-
+        
         private bool highlight = false;
         public bool Highlight
         {

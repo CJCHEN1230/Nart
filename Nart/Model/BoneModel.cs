@@ -143,11 +143,7 @@ namespace Nart.Model
             var geometryModel = this.ModelContainer.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
 
             var mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
-
-            //設定模型材質
-            //SetMaterial(ref Model.ModelMaterial, modelDiffuseColor);
-            //SetModelMaterial(ModelDiffuseColor);
-
+        
             //設定模型幾何形狀
             HelixToolkit.Wpf.SharpDX.MeshGeometry3D modelGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
 

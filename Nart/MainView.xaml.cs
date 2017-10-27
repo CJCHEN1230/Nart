@@ -25,6 +25,7 @@ using HelixToolkit.Wpf.SharpDX;
 using System.Diagnostics;
 using NartControl.Control;
 using Nart.ExtensionMethods;
+using Nart.Model;
 
 namespace Nart
 {
@@ -51,10 +52,11 @@ namespace Nart
 
 
             Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
-            Matrix3D B = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
-            Matrix3DExtension.SubtractMatrix3D(ref TEST,ref B);
+    
 
+            BoneModel test = MultiAngleViewModel.BoneModelCollection[0] as BoneModel;
 
+            test.Transform= new MatrixTransform3D(TEST);
             //MainViewModel.ModelDataCollection = multiAngleView._multiAngleViewModel.ModelDataCollection;
 
             //SharpDX.Vector3 temp = MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0];
