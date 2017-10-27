@@ -26,17 +26,7 @@ namespace Nart
     using ProjectionCamera = HelixToolkit.Wpf.SharpDX.ProjectionCamera;
 
     public class MultiAngleViewModel : ObservableObject
-    {
-        public  static Collection<OSPModel> ospDataCollection = new Collection<OSPModel>();
-
-        private static ObservableCollection<Element3D> boneModelCollection = new ObservableCollection<Element3D>();
-        public static ObservableCollection<Element3D> OSPModelCollection
-        {
-            get;
-            set;
-        } = new ObservableCollection<Element3D>();
-
-
+    {          
         private static string DevAngle; //DeviationAngle
         private static string DevDist;     //DeviationDistance
         private static string FrontalDevAngle;//FrontalDeviationAngle
@@ -51,10 +41,7 @@ namespace Nart
         private Vector3 light3Direction = new Vector3();
         private Vector3D cam1LookDir = new Vector3D();
         private Vector3D cam2LookDir = new Vector3D();
-        private Vector3D cam3LookDir = new Vector3D();
-        private static ObservableCollection<ModelData> modeldataCollection = new ObservableCollection<ModelData>(); //專放模型物件
-
-
+        private Vector3D cam3LookDir = new Vector3D();      
         private MultiAngleView _multiview;
         private readonly IList<ModelData> HighlightItems = new List<ModelData>(); //專門放點到的變色物件
 
@@ -383,34 +370,7 @@ namespace Nart
             {
                 SetStaticValue(ref PosteriorDevDist, value);
             }
-        }
-        public static ObservableCollection<ModelData> ModelDataCollection
-        {
-            get
-            {
-                return modeldataCollection;
-            }
-            set
-            {
-                SetStaticValue(ref modeldataCollection, value);
-                ResetCameraPosition();
-            }
-        }
-
-        public static ObservableCollection<Element3D> BoneModelCollection
-        {
-            get
-            {
-                return boneModelCollection;
-            }
-            set
-            {
-                SetStaticValue(ref boneModelCollection, value);
-                ResetCameraPosition();
-            }
-        }
-
-
+        }    
         public static Camera Camera1
         {
             get
@@ -542,7 +502,16 @@ namespace Nart
         }
         public IEffectsManager EffectsManager { get; protected set; }
         public IRenderTechniquesManager RenderTechniquesManager { get; protected set; }
-
+        public static ObservableCollection<Element3D> BoneModelCollection
+        {
+            get;
+            set;
+        } = new ObservableCollection<Element3D>();
+        public static ObservableCollection<Element3D> OSPModelCollection
+        {
+            get;
+            set;
+        } = new ObservableCollection<Element3D>();
 
         /// <summary>
         /// 設定光源Ambientlight顏色、DirectionaLlight顏色        

@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using Nart.Model;
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -630,11 +631,12 @@ namespace Nart
                         Matrix3D Final = level1 * level2 * level3 * level4;
 
                       
-                       for (int j = 0; j < MultiAngleViewModel.ModelDataCollection.Count; j++)
+                       for (int j = 0; j < MultiAngleViewModel.BoneModelCollection.Count; j++)
                        {
-                           if (MultiAngleViewModel.ModelDataCollection[j].MarkerID == WorldPoints[i].MarkerID)
+                           BoneModel boneModel = MultiAngleViewModel.BoneModelCollection[j] as BoneModel;
+                           if (boneModel.MarkerID == WorldPoints[i].MarkerID)
                            {
-                               MultiAngleViewModel.ModelDataCollection[j].AddItem(Final);
+                               boneModel.AddItem(Final);
                            }
                        }
                    }                                                        
@@ -651,16 +653,17 @@ namespace Nart
             Vector3D mandibleNormal;
 
             //先找出模型引數
-            for (int i = 0; i < MultiAngleViewModel.ModelDataCollection.Count; i++)
-            {
-                ModelData model = MultiAngleViewModel.ModelDataCollection[i];
-                if (model.IsOSP && model.IsLoaded)
+            for (int i = 0; i < MultiAngleViewModel.OSPModelCollection.Count; i++)
+            {                
+                OSPModel ospModel = MultiAngleViewModel.OSPModelCollection[i] as OSPModel;
+
+                if (ospModel.IsOSP && ospModel.IsLoaded)
                 {
-                    if (model.MarkerID == "Head")
+                    if (ospModel.MarkerID == "Head")
                     {
                         headOSPIndex = i;
                     }
-                    if (model.MarkerID == "C")
+                    if (ospModel.MarkerID == "C")
                     {
                         mandibleOSPIndex = i;
                     }
@@ -672,8 +675,8 @@ namespace Nart
                 return;
             }
             //取得頭顱跟下顎的模型
-            ModelData headOSP = MultiAngleViewModel.ModelDataCollection[headOSPIndex];
-            ModelData mandibleOSP = MultiAngleViewModel.ModelDataCollection[mandibleOSPIndex];
+            OSPModel headOSP = MultiAngleViewModel.OSPModelCollection[headOSPIndex] as OSPModel;
+            OSPModel mandibleOSP = MultiAngleViewModel.OSPModelCollection[mandibleOSPIndex] as OSPModel;
 
 
             //頭顱模型的索引值
@@ -743,16 +746,17 @@ namespace Nart
             {
 
                 //先找出模型引數
-                for (int i = 0; i < MultiAngleViewModel.ModelDataCollection.Count; i++)
+                for (int i = 0; i < MultiAngleViewModel.OSPModelCollection.Count; i++)
                 {
-                    ModelData model = MultiAngleViewModel.ModelDataCollection[i];
-                    if (model.IsOSP && model.IsLoaded)
+                    OSPModel ospModel = MultiAngleViewModel.OSPModelCollection[i] as OSPModel;
+
+                    if (ospModel.IsOSP && ospModel.IsLoaded)
                     {
-                        if (model.MarkerID == "Head")
+                        if (ospModel.MarkerID == "Head")
                         {
                             headOSPIndex = i;
                         }
-                        if (model.MarkerID == "C")
+                        if (ospModel.MarkerID == "C")
                         {
                             mandibleOSPIndex = i;
                         }
@@ -764,8 +768,8 @@ namespace Nart
                     return;
                 }
 
-                ModelData headOSP = MultiAngleViewModel.ModelDataCollection[headOSPIndex];
-                ModelData mandibleOSP = MultiAngleViewModel.ModelDataCollection[mandibleOSPIndex];
+                OSPModel headOSP = MultiAngleViewModel.OSPModelCollection[headOSPIndex] as OSPModel;
+                OSPModel mandibleOSP = MultiAngleViewModel.OSPModelCollection[mandibleOSPIndex] as OSPModel;
 
                 Vector3D headNormal;
                 Vector3D mandibleNormal;
@@ -785,13 +789,13 @@ namespace Nart
 
                 double HDA = Math.Acos(Math.Abs(x) / Math.Sqrt(x * x + y * y)) / Math.PI * 180.0;
 
-                Point3D Me = mandibleOSP.ModelTransform.Transform(_craniofacialInfo.Me);
+                Point3D Me = mandibleOSP.Transform.Transform(_craniofacialInfo.Me);
                 Point3D headNormalPoint = headOSP.OSPPlanePoint;//法向量平面上的點
 
                 double DD = Vector3D.DotProduct(headNormal, Me - headNormalPoint);
 
 
-                Point3D Intersection = mandibleOSP.ModelTransform.Transform(_craniofacialInfo.GoIntersection);
+                Point3D Intersection = mandibleOSP.Transform.Transform(_craniofacialInfo.GoIntersection);
                 double PDD = Math.Abs(Vector3D.DotProduct(headNormal, Intersection - headNormalPoint));
 
 

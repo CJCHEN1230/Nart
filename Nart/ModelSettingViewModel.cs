@@ -40,10 +40,6 @@ namespace Nart
         /// </summary>
         private static String regPath = "../../../data/reg20170713.txt";
         /// <summary>
-        /// 轉換成模型清單的資料集合
-        /// </summary>       
-        private ObservableCollection<ModelData> ModelDataCollection;
-        /// <summary>
         /// ModelSettingView的物件
         /// </summary>
         private ModelSettingView _modelSettingView;
@@ -69,14 +65,14 @@ namespace Nart
 
 
                 ModelSettingCollection.Add(new ModelSettingItem
-                {              
+                {
                     MarkerID = "Head"
                                                                                 ,
                     BoneFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"
                                                                                 ,
                     OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
                                                                                 ,
-                    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
+                    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(50, 255, 0, 0)
                                                                                 ,
                     BoneDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
                 });
@@ -93,7 +89,7 @@ namespace Nart
                                                                                 ,
                     BoneDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
                                                                                 ,
-                    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
+                    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(50, 0, 255, 0)
 
                 });
 
@@ -109,8 +105,6 @@ namespace Nart
                     //OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
                                                                                 ,
                     BoneDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
-                                                                                ,
-                    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
                 });
 
 
@@ -120,7 +114,10 @@ namespace Nart
 
         public static ObservableCollection<ModelSettingItem> ModelSettingCollection
         {
-            get { return modelSettingCollection; }
+            get
+            {
+                return modelSettingCollection;
+            }
             set
             {
                 SetStaticValue(ref modelSettingCollection, value);
@@ -240,10 +237,7 @@ namespace Nart
         /// </summary>
         public void LoadSettingModel(object o)
         {
-            //if (ModelDataCollection == null)
-            //    ModelDataCollection = new ObservableCollection<ModelData>();
-            ObservableCollection<Element3D>  localModel = new ObservableCollection<Element3D>();
-
+          
             //確保所有模型資訊都有set進去ModelInfo的資料
             for (int i = 0; i < ModelSettingCollection.Count; i++)
             {
@@ -262,7 +256,7 @@ namespace Nart
                 //確認有Load過且有沒有被加進去modelDataCollection
                 if (boneModel.IsLoaded && !boneModel.IsAdded) 
                 {
-                    localModel.Add(ModelSettingCollection[i].Bone);
+                    MultiAngleViewModel.BoneModelCollection.Add(ModelSettingCollection[i].Bone);
                     ModelSettingCollection[i].Bone.IsAdded = true;
                 }
 
@@ -291,10 +285,10 @@ namespace Nart
                     i--;
                 }
             }
-            MultiAngleViewModel.BoneModelCollection = localModel;
+
 
             //MultiAngleViewModel.ModelDataCollection = ModelDataCollection; //將此處的ModelDataCollection 指派給MultiAngleViewModel
-
+            MultiAngleViewModel.ResetCameraPosition();
             //Console.WriteLine(" 模型總數:  " + ModelDataCollection.Count);
             _modelSettingView.Hide();
         }

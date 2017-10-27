@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nart.Model;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -162,9 +163,10 @@ namespace Nart
         }
         private void MoveModel()
         {
-            for (int i = 0; i < MultiAngleViewModel.ModelDataCollection.Count ; i++)
+            for (int i = 0; i < MultiAngleViewModel.BoneModelCollection.Count; i++)
             {
-                MultiAngleViewModel.ModelDataCollection[i].SetTransformMatrix();
+                BoneModel boneModel = MultiAngleViewModel.BoneModelCollection[i] as BoneModel;
+                boneModel.SetTransformMatrix();
             }
         }
         /// <summary>

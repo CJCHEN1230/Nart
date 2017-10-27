@@ -28,35 +28,24 @@ namespace Nart.Model
         /// </summary>
         public bool IsAdded = false;
         /// <summary>
-        /// 模型有Load進去則為true
-        /// </summary>
-        public new bool IsLoaded = false;
-        /// <summary>
         /// 模型是不是OSP
         /// </summary>
         public bool IsOSP = false;
         /// <summary>
-        /// OSP才有的Normal
+        /// 模型有Load進去則為true
         /// </summary>
-        public Vector3D OSPCurrentNormal;
-        /// <summary>
-        /// OSP原始的Normal
-        /// </summary>
-        public Vector3D OSPOriNormal;
-        /// <summary>
-        /// OSP才有的平面點
-        /// </summary>
-        public Point3D OSPPlanePoint;
+        public new bool IsLoaded = false;
         /// <summary>
         /// MarkerID 的值
         /// </summary>
         public String MarkerID;
-
+        /// <summary>
+        /// 模型顏色
+        /// </summary>
         public Color DiffuseColor;
-
-
-
-
+        /// <summary>
+        /// 模型路徑
+        /// </summary>
         public String FilePath;
         /// <summary>
         /// 此Model的最終轉換矩陣
@@ -79,12 +68,10 @@ namespace Nart.Model
         /// </summary>
         private int CurrentIndex = 0;
 
-
         public BoneModel()
         {
 
         }
-
 
         public void AddItem(Matrix3D item)
         {
@@ -115,12 +102,7 @@ namespace Nart.Model
         }
         public void SetTransformMatrix()
         {
-            Transform = new MatrixTransform3D(_finalModelTransform);
-            if (IsOSP)
-            {
-                OSPCurrentNormal = Transform.Transform(OSPOriNormal);
-                OSPCurrentNormal.Normalize();
-            }
+            Transform = new MatrixTransform3D(_finalModelTransform);          
         }    
         /// <summary>
         /// 設定模型材質
