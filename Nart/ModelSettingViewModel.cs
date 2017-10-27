@@ -269,6 +269,7 @@ namespace Nart
                 if (boneModel.IsRemoved || !boneModel.IsLoaded)
                 {
                     MultiAngleViewModel.BoneModelCollection.RemoveAt(i);
+                    boneModel.IsAdded = false;
                     i--;
                 }
             }
@@ -282,9 +283,14 @@ namespace Nart
                 if (ospModel.IsRemoved || !ospModel.IsLoaded)
                 {
                     MultiAngleViewModel.OSPModelCollection.RemoveAt(i);
+                    ospModel.IsAdded = false;
                     i--;
                 }
             }
+
+
+            Console.WriteLine("OSP 數量:"+ MultiAngleViewModel.OSPModelCollection.Count);
+            Console.WriteLine("Bone  數量:" + MultiAngleViewModel.BoneModelCollection.Count);
 
 
             //MultiAngleViewModel.ModelDataCollection = ModelDataCollection; //將此處的ModelDataCollection 指派給MultiAngleViewModel

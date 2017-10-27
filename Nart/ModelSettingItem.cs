@@ -57,63 +57,11 @@ namespace Nart
         /// </summary>
         private List<String> comboboxList = MarkerDatabase.MarkerIDList;
 
-                               
-        //public ModelSettingItem()
-        //{                       
-            
-        //}
-        ///// <summary>
-        ///// 設定模型材質
-        ///// </summary>        
-        //private void SetModelMaterial()
-        //{
-        //    if (Model.ModelMaterial == null)
-        //    {
-        //        Model.ModelMaterial = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
-        //        Model.ModelMaterial.ReflectiveColor = SharpDX.Color.Black;
-        //        float ambient = 0.0f;
-        //        Model.ModelMaterial.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
-        //        Model.ModelMaterial.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
-        //        int Specular = 90;
-        //        Model.ModelMaterial.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
-        //        Model.ModelMaterial.SpecularShininess = 60;
-        //    }
 
-        //    Model.ModelMaterial.DiffuseColor = ModelDiffuseColor.ToColor4();
-        //}
-        ///// <summary>
-        ///// 設定OSP材質
-        ///// </summary>        
-        //private void SetOSPMaterial()
-        //{
-        //    //if (OSP.ModelMaterial == null)
-        //    //{
-        //    //    OSP.ModelMaterial = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
-        //    //    OSP.ModelMaterial.ReflectiveColor = SharpDX.Color.Black;
-        //    //    float ambient = 0.0f;
-        //    //    OSP.ModelMaterial.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
-        //    //    OSP.ModelMaterial.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
-        //    //    int Specular = 90;
-        //    //    OSP.ModelMaterial.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
-        //    //    OSP.ModelMaterial.SpecularShininess = 60;
-        //    //}
+        public ModelSettingItem()
+        {
 
-        //    //OSP.ModelMaterial.DiffuseColor = OSPDiffuseColor.ToColor4();
-
-        //    HelixToolkit.Wpf.SharpDX.PhongMaterial  material= new PhongMaterial();
-
-        //    material.ReflectiveColor = SharpDX.Color.Black;
-        //    float ambient = 0.0f;
-        //    material.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
-        //    material.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
-        //    int Specular = 90;
-        //    material.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
-        //    material.SpecularShininess = 60;
-        //    material.DiffuseColor = OSPDiffuseColor.ToColor4();
-
-        //    OSP2.Material = material;
-
-        //}
+        }
         /// <summary>
         /// 設定好模型之後Load進去模型資料所用
         /// </summary>
