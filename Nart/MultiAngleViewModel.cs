@@ -13,7 +13,7 @@ using NartControl;
 
 namespace Nart
 {
-
+    using Model;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
@@ -28,6 +28,15 @@ namespace Nart
     public class MultiAngleViewModel : ObservableObject
     {
         public  static Collection<OSPModel> ospDataCollection = new Collection<OSPModel>();
+
+        private static ObservableCollection<Element3D> boneModelCollection = new ObservableCollection<Element3D>();
+        public static ObservableCollection<Element3D> OSPModelCollection
+        {
+            get;
+            set;
+        } = new ObservableCollection<Element3D>();
+
+
         private static string DevAngle; //DeviationAngle
         private static string DevDist;     //DeviationDistance
         private static string FrontalDevAngle;//FrontalDeviationAngle
@@ -44,9 +53,11 @@ namespace Nart
         private Vector3D cam2LookDir = new Vector3D();
         private Vector3D cam3LookDir = new Vector3D();
         private static ObservableCollection<ModelData> modeldataCollection = new ObservableCollection<ModelData>(); //專放模型物件
+
+
         private MultiAngleView _multiview;
         private readonly IList<ModelData> HighlightItems = new List<ModelData>(); //專門放點到的變色物件
-        public OSPModel osp = new OSPModel();
+
 
 
         public MultiAngleViewModel(MultiAngleView _multiview)
@@ -68,256 +79,256 @@ namespace Nart
         private void CreateDefaultModels()
         {
             
-            var b2 = new HelixToolkit.Wpf.SharpDX.MeshBuilder(true, true, true);
-            b2.AddSphere(new Vector3(15f, 0f, 0f), 4, 64, 64);
-            b2.AddSphere(new Vector3(25f, 0f, 0f), 2, 32, 32);
-            b2.AddTube(new Vector3[] { new Vector3(10f, 5f, 0f), new Vector3(10f, 7f, 0f) }, 2, 12, false, true, true);
+            //var b2 = new HelixToolkit.Wpf.SharpDX.MeshBuilder(true, true, true);
+            //b2.AddSphere(new Vector3(15f, 0f, 0f), 4, 64, 64);
+            //b2.AddSphere(new Vector3(25f, 0f, 0f), 2, 32, 32);
+            //b2.AddTube(new Vector3[] { new Vector3(10f, 5f, 0f), new Vector3(10f, 7f, 0f) }, 2, 12, false, true, true);
 
 
             
 
-            ModelData Skull = new Nart.ModelData();
+            //ModelData Skull = new Nart.ModelData();
        
        
-            //利用helixtoolkit.wpf裡面提供的StlReader讀檔案，後續要轉成wpf.sharpdx可用的格式
-            StLReader reader = new HelixToolkit.Wpf.StLReader();
+            ////利用helixtoolkit.wpf裡面提供的StlReader讀檔案，後續要轉成wpf.sharpdx可用的格式
+            //StLReader reader = new HelixToolkit.Wpf.StLReader();
 
-            Skull.ModelContainer = reader.Read("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl");
+            //Skull.ModelContainer = reader.Read("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl");
 
          
-            var geometryModel = Skull.ModelContainer.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
+            //var geometryModel = Skull.ModelContainer.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
 
-            var mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
+            //var mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
 
-            var color = rnd.NextColor();
+            //var color = rnd.NextColor();
 
             
 
-            //設定模型幾何形狀
-            HelixToolkit.Wpf.SharpDX.MeshGeometry3D modelGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
-
-            modelGeometry.Normals = new Vector3Collection();
-            modelGeometry.Positions = new Vector3Collection();
-            modelGeometry.Indices = new IntCollection();
-
-            //將從stlreader讀到的資料轉入
-            foreach (Point3D position in mesh.Positions)
-            {
-                modelGeometry.Positions.Add(new Vector3(
-                      Convert.ToSingle(position.X)
-                    , Convert.ToSingle(position.Y)
-                    , Convert.ToSingle(position.Z)));
-            }
-
-            foreach (Vector3D normal in mesh.Normals)
-            {
-                modelGeometry.Normals.Add(new Vector3(
-                      Convert.ToSingle(normal.X)
-                    , Convert.ToSingle(normal.Y)
-                    , Convert.ToSingle(normal.Z)));
-            }
-
-            foreach (Int32 triangleindice in mesh.TriangleIndices)
-            {
-                modelGeometry.Indices.Add(triangleindice);
-            }
-
-            Skull.ModelGeometry = modelGeometry;
-
-            //設定模型材質
-            Skull.ModelMaterial = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
-            Skull.ModelMaterial.ReflectiveColor = SharpDX.Color.Black;
-            float ambient = 0.0f;
-            Skull.ModelMaterial.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
-            Skull.ModelMaterial.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
-            int Specular = 90;
-            Skull.ModelMaterial.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
-            Skull.ModelMaterial.SpecularShininess = 60;
-            Skull.ModelMaterial.DiffuseColor = rnd.NextColor().ToColor4();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            //StLReader reader2 = new HelixToolkit.Wpf.StLReader();
-
-            //Model3DGroup model3dgroup = reader2.Read("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl");
-
-
-            //var geometryModel2 = model3dgroup.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
-
-            //var mesh2 = geometryModel2.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
-
-
-
             ////設定模型幾何形狀
-            //HelixToolkit.Wpf.SharpDX.MeshGeometry3D modelGeometry2 = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
+            //HelixToolkit.Wpf.SharpDX.MeshGeometry3D modelGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
 
-            //modelGeometry2.Normals = new Vector3Collection();
-            //modelGeometry2.Positions = new Vector3Collection();
-            //modelGeometry2.Indices = new IntCollection();
-            //modelGeometry2.Colors = new Color4Collection();
-
-            //for (int i = 0; i < mesh.Positions.Count; i++)
-            //{
-            //    modelGeometry2.Colors.Add(new Color4(0.1f, 0.1f, 0.8f, 0.2f));
-            //}
+            //modelGeometry.Normals = new Vector3Collection();
+            //modelGeometry.Positions = new Vector3Collection();
+            //modelGeometry.Indices = new IntCollection();
 
             ////將從stlreader讀到的資料轉入
-            //foreach (Point3D position in mesh2.Positions)
+            //foreach (Point3D position in mesh.Positions)
             //{
-            //    modelGeometry2.Positions.Add(new Vector3(
+            //    modelGeometry.Positions.Add(new Vector3(
             //          Convert.ToSingle(position.X)
             //        , Convert.ToSingle(position.Y)
             //        , Convert.ToSingle(position.Z)));
             //}
 
-            //foreach (Vector3D normal in mesh2.Normals)
+            //foreach (Vector3D normal in mesh.Normals)
             //{
-            //    modelGeometry2.Normals.Add(new Vector3(
+            //    modelGeometry.Normals.Add(new Vector3(
             //          Convert.ToSingle(normal.X)
             //        , Convert.ToSingle(normal.Y)
             //        , Convert.ToSingle(normal.Z)));
             //}
 
-            //foreach (Int32 triangleindice in mesh2.TriangleIndices)
+            //foreach (Int32 triangleindice in mesh.TriangleIndices)
             //{
-            //    modelGeometry2.Indices.Add(triangleindice);
+            //    modelGeometry.Indices.Add(triangleindice);
             //}
 
+            //Skull.ModelGeometry = modelGeometry;
 
-            //_multiview.osp.Geometry = modelGeometry2;
+            ////設定模型材質
+            //Skull.ModelMaterial = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
+            //Skull.ModelMaterial.ReflectiveColor = SharpDX.Color.Black;
+            //float ambient = 0.0f;
+            //Skull.ModelMaterial.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
+            //Skull.ModelMaterial.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
+            //int Specular = 90;
+            //Skull.ModelMaterial.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
+            //Skull.ModelMaterial.SpecularShininess = 60;
+            //Skull.ModelMaterial.DiffuseColor = rnd.NextColor().ToColor4();
 
 
 
-            StLReader reader2 = new HelixToolkit.Wpf.StLReader();
 
-            Model3DGroup model3dgroup = reader2.Read("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl");
 
-            var geometryModel2 = model3dgroup.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
 
-            var mesh2 = geometryModel2.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
+
+
+
+
+
+
+
+
+
+
+
+            ////StLReader reader2 = new HelixToolkit.Wpf.StLReader();
+
+            ////Model3DGroup model3dgroup = reader2.Read("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl");
+
+
+            ////var geometryModel2 = model3dgroup.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
+
+            ////var mesh2 = geometryModel2.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
+
+
+
+            //////設定模型幾何形狀
+            ////HelixToolkit.Wpf.SharpDX.MeshGeometry3D modelGeometry2 = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
+
+            ////modelGeometry2.Normals = new Vector3Collection();
+            ////modelGeometry2.Positions = new Vector3Collection();
+            ////modelGeometry2.Indices = new IntCollection();
+            ////modelGeometry2.Colors = new Color4Collection();
+
+            ////for (int i = 0; i < mesh.Positions.Count; i++)
+            ////{
+            ////    modelGeometry2.Colors.Add(new Color4(0.1f, 0.1f, 0.8f, 0.2f));
+            ////}
+
+            //////將從stlreader讀到的資料轉入
+            ////foreach (Point3D position in mesh2.Positions)
+            ////{
+            ////    modelGeometry2.Positions.Add(new Vector3(
+            ////          Convert.ToSingle(position.X)
+            ////        , Convert.ToSingle(position.Y)
+            ////        , Convert.ToSingle(position.Z)));
+            ////}
+
+            ////foreach (Vector3D normal in mesh2.Normals)
+            ////{
+            ////    modelGeometry2.Normals.Add(new Vector3(
+            ////          Convert.ToSingle(normal.X)
+            ////        , Convert.ToSingle(normal.Y)
+            ////        , Convert.ToSingle(normal.Z)));
+            ////}
+
+            ////foreach (Int32 triangleindice in mesh2.TriangleIndices)
+            ////{
+            ////    modelGeometry2.Indices.Add(triangleindice);
+            ////}
+
+
+            ////_multiview.osp.Geometry = modelGeometry2;
+
+
+
+            //StLReader reader2 = new HelixToolkit.Wpf.StLReader();
+
+            //Model3DGroup model3dgroup = reader2.Read("D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl");
+
+            //var geometryModel2 = model3dgroup.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
+
+            //var mesh2 = geometryModel2.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
 
       
 
-            //定義整個對稱面八個點
-            Point3D[] ospPoint = new Point3D[8];
-            int[] repeatIndex = new int[2] { -1, -1 };
-            int[] repeatIndex2 = new int[2] { -1, -1 };
+            ////定義整個對稱面八個點
+            //Point3D[] ospPoint = new Point3D[8];
+            //int[] repeatIndex = new int[2] { -1, -1 };
+            //int[] repeatIndex2 = new int[2] { -1, -1 };
 
-            //前半網格點
-            for (int i = 0, k = 0; i < mesh2.Positions.Count / 2; i++)
-            { //後半網格點
-                for (int j = 3; j < mesh2.Positions.Count; j++)
-                {   //尋找前半跟後半有哪些重複存下引數在repeatIndex  repeatIndex2
-                    double error = Math.Abs(Math.Pow(mesh2.Positions[i].X - mesh2.Positions[j].X, 2)) + Math.Abs(Math.Pow(mesh2.Positions[i].Y - mesh2.Positions[j].Y, 2)) + Math.Abs(Math.Pow(mesh2.Positions[i].Z - mesh2.Positions[j].Z, 2));
-                    if (error < 10E-008)
-                    {
-                        repeatIndex[k] = i;
-                        repeatIndex2[k] = j;
-                        k++;
-                    }
-                }
-            }
-            //找出沒有重複的那個引數字
-            int thirdIndex = 3 - repeatIndex[0] - repeatIndex[1];
-            int thirdIndex2 = 12 - repeatIndex2[0] - repeatIndex2[1];
-
-
-            if (thirdIndex == 0)
-            {
-                ospPoint[0] = mesh2.Positions[0];
-                ospPoint[1] = mesh2.Positions[1];
-                ospPoint[2] = mesh2.Positions[thirdIndex2];
-                ospPoint[3] = mesh2.Positions[2];
-            }
-            else if (thirdIndex == 1)
-            {
-                ospPoint[0] = mesh2.Positions[1];
-                ospPoint[1] = mesh2.Positions[2];
-                ospPoint[2] = mesh2.Positions[thirdIndex2];
-                ospPoint[3] = mesh2.Positions[0];
-            }
-            else
-            {
-                ospPoint[0] = mesh2.Positions[2];
-                ospPoint[1] = mesh2.Positions[0];
-                ospPoint[2] = mesh2.Positions[thirdIndex2];
-                ospPoint[3] = mesh2.Positions[1];
-            }
+            ////前半網格點
+            //for (int i = 0, k = 0; i < mesh2.Positions.Count / 2; i++)
+            //{ //後半網格點
+            //    for (int j = 3; j < mesh2.Positions.Count; j++)
+            //    {   //尋找前半跟後半有哪些重複存下引數在repeatIndex  repeatIndex2
+            //        double error = Math.Abs(Math.Pow(mesh2.Positions[i].X - mesh2.Positions[j].X, 2)) + Math.Abs(Math.Pow(mesh2.Positions[i].Y - mesh2.Positions[j].Y, 2)) + Math.Abs(Math.Pow(mesh2.Positions[i].Z - mesh2.Positions[j].Z, 2));
+            //        if (error < 10E-008)
+            //        {
+            //            repeatIndex[k] = i;
+            //            repeatIndex2[k] = j;
+            //            k++;
+            //        }
+            //    }
+            //}
+            ////找出沒有重複的那個引數字
+            //int thirdIndex = 3 - repeatIndex[0] - repeatIndex[1];
+            //int thirdIndex2 = 12 - repeatIndex2[0] - repeatIndex2[1];
 
 
-            for (int i = 4; i < ospPoint.Length; i++)
-            {
-                ospPoint[i] = new Point3D(ospPoint[i - 4].X - 0.1 * mesh2.Normals[0].X,
-                                                                  ospPoint[i - 4].Y - 0.1 * mesh2.Normals[0].Y,
-                                                                  ospPoint[i - 4].Z - 0.1 * mesh2.Normals[0].Z);
-            }
+            //if (thirdIndex == 0)
+            //{
+            //    ospPoint[0] = mesh2.Positions[0];
+            //    ospPoint[1] = mesh2.Positions[1];
+            //    ospPoint[2] = mesh2.Positions[thirdIndex2];
+            //    ospPoint[3] = mesh2.Positions[2];
+            //}
+            //else if (thirdIndex == 1)
+            //{
+            //    ospPoint[0] = mesh2.Positions[1];
+            //    ospPoint[1] = mesh2.Positions[2];
+            //    ospPoint[2] = mesh2.Positions[thirdIndex2];
+            //    ospPoint[3] = mesh2.Positions[0];
+            //}
+            //else
+            //{
+            //    ospPoint[0] = mesh2.Positions[2];
+            //    ospPoint[1] = mesh2.Positions[0];
+            //    ospPoint[2] = mesh2.Positions[thirdIndex2];
+            //    ospPoint[3] = mesh2.Positions[1];
+            //}
 
-            for (int i = 0; i < ospPoint.Length / 2; i++)
-            {
-                ospPoint[i] = new Point3D(ospPoint[i].X + 0.1 * mesh2.Normals[0].X,
-                                                                  ospPoint[i].Y + 0.1 * mesh2.Normals[0].Y,
-                                                                  ospPoint[i].Z + 0.1 * mesh2.Normals[0].Z);
-            }
+
+            //for (int i = 4; i < ospPoint.Length; i++)
+            //{
+            //    ospPoint[i] = new Point3D(ospPoint[i - 4].X - 0.1 * mesh2.Normals[0].X,
+            //                                                      ospPoint[i - 4].Y - 0.1 * mesh2.Normals[0].Y,
+            //                                                      ospPoint[i - 4].Z - 0.1 * mesh2.Normals[0].Z);
+            //}
+
+            //for (int i = 0; i < ospPoint.Length / 2; i++)
+            //{
+            //    ospPoint[i] = new Point3D(ospPoint[i].X + 0.1 * mesh2.Normals[0].X,
+            //                                                      ospPoint[i].Y + 0.1 * mesh2.Normals[0].Y,
+            //                                                      ospPoint[i].Z + 0.1 * mesh2.Normals[0].Z);
+            //}
 
 
 
-            HelixToolkit.Wpf.SharpDX.MeshGeometry3D ospGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
-            ospGeometry.Normals = new Vector3Collection();
-            ospGeometry.Positions = new Vector3Collection();
-            ospGeometry.Indices = new IntCollection();
+            //HelixToolkit.Wpf.SharpDX.MeshGeometry3D ospGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
+            //ospGeometry.Normals = new Vector3Collection();
+            //ospGeometry.Positions = new Vector3Collection();
+            //ospGeometry.Indices = new IntCollection();
             
-            // 0 1 2 3
-            CreatePoint(0, 1, 2, 3, ospGeometry.Positions, ospPoint);
+            //// 0 1 2 3
+            //CreatePoint(0, 1, 2, 3, ospGeometry.Positions, ospPoint);
 
-            CreateNormal(0, 1, 2, ospGeometry.Normals, ospPoint);
-
-
-            ////5 4 7 6
-            CreatePoint(5, 4, 7, 6, ospGeometry.Positions, ospPoint);
-            CreateNormal(5, 4, 7, ospGeometry.Normals, ospPoint);
-
-            for (int i = 0; i < ospGeometry.Positions.Count; i++)
-            {
-                ospGeometry.Indices.Add(i);
-            }
-            ospGeometry.Colors = new Color4Collection();
-
-            for (int i = 0; i < ospGeometry.Positions.Count; i++)
-            {
-                ospGeometry.Colors.Add(new Color4(0.1f, 0.1f, 0.8f, 0.2f));
-            }
+            //CreateNormal(0, 1, 2, ospGeometry.Normals, ospPoint);
 
 
+            //////5 4 7 6
+            //CreatePoint(5, 4, 7, 6, ospGeometry.Positions, ospPoint);
+            //CreateNormal(5, 4, 7, ospGeometry.Normals, ospPoint);
+
+            //for (int i = 0; i < ospGeometry.Positions.Count; i++)
+            //{
+            //    ospGeometry.Indices.Add(i);
+            //}
+            //ospGeometry.Colors = new Color4Collection();
+
+            //for (int i = 0; i < ospGeometry.Positions.Count; i++)
+            //{
+            //    ospGeometry.Colors.Add(new Color4(0.1f, 0.1f, 0.8f, 0.2f));
+            //}
 
 
-            PhongMaterial OSPMaterial = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
-            //OSPMaterial.ReflectiveColor = SharpDX.Color.Black;
-            //OSPMaterial.AmbientColor = new SharpDX.Color(0.0f, 0.0f, 0.0f, 1.0f);
-            //OSPMaterial.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
-            //OSPMaterial.SpecularColor = new SharpDX.Color(90, 90, 90, 255);
-            //OSPMaterial.SpecularShininess = 60;
-            //OSPMaterial.DiffuseColor = new Color4(0.1f, 0.1f, 0.8f, 0.2f);
 
 
-            osp.Material = OSPMaterial;
-            osp.Geometry = ospGeometry;
+            //PhongMaterial OSPMaterial = new HelixToolkit.Wpf.SharpDX.PhongMaterial();
+            ////OSPMaterial.ReflectiveColor = SharpDX.Color.Black;
+            ////OSPMaterial.AmbientColor = new SharpDX.Color(0.0f, 0.0f, 0.0f, 1.0f);
+            ////OSPMaterial.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
+            ////OSPMaterial.SpecularColor = new SharpDX.Color(90, 90, 90, 255);
+            ////OSPMaterial.SpecularShininess = 60;
+            ////OSPMaterial.DiffuseColor = new Color4(0.1f, 0.1f, 0.8f, 0.2f);
 
 
-            _multiview.sharedContainer.Items.Add(osp);
+            //osp.Material = OSPMaterial;
+            //osp.Geometry = ospGeometry;
+
+
+            //_multiview.sharedContainer.Items.Add(osp);
 
 
            
@@ -325,7 +336,7 @@ namespace Nart
 
 
 
-            ModelDataCollection.Add(Skull);
+            //ModelDataCollection.Add(Skull);
 
        
         }
@@ -385,6 +396,21 @@ namespace Nart
                 ResetCameraPosition();
             }
         }
+
+        public static ObservableCollection<Element3D> BoneModelCollection
+        {
+            get
+            {
+                return boneModelCollection;
+            }
+            set
+            {
+                SetStaticValue(ref boneModelCollection, value);
+                ResetCameraPosition();
+            }
+        }
+
+
         public static Camera Camera1
         {
             get
@@ -529,10 +555,10 @@ namespace Nart
         /// 初始化相機參數，並綁定相機觀看方向
         /// </summary>
         private void SetCamera()
-        {           
-            SetupCameraBindings(Camera1, "Cam1LookDir");
-            SetupCameraBindings(Camera2, "Cam2LookDir");
-            SetupCameraBindings(Camera3, "Cam3LookDir");
+        {
+            SetupCameraBindings("Cam1LookDir", Camera1);
+            SetupCameraBindings("Cam2LookDir", Camera2);
+            SetupCameraBindings("Cam3LookDir", Camera3);
 
             ResetCameraPosition();
         }
@@ -543,16 +569,18 @@ namespace Nart
         {
 
             //ModelGroup裡面有模型之後才調整相機位置
-            if (ModelDataCollection == null || ModelDataCollection.Count == 0) 
+            if (BoneModelCollection == null || BoneModelCollection.Count == 0) 
                 return;
 
             //重新調整模型中心
             Model3DGroup modelGroup = new Model3DGroup();
-            for (int i = 0; i < ModelDataCollection.Count; i++) 
-            {   //如果選擇多模型但檔名是空或不存在則進不去
-                if (ModelDataCollection[i].ModelContainer != null)
-                {
-                    modelGroup.Children.Add(ModelDataCollection[i].ModelContainer);
+            for (int i = 0; i < BoneModelCollection.Count; i++) 
+            {
+                BoneModel boneModel = BoneModelCollection[i] as BoneModel;
+                //如果選擇多模型但檔名是空或不存在則進不去
+                if (boneModel.ModelContainer != null)
+                {                   
+                    modelGroup.Children.Add(boneModel.ModelContainer);
                 }
             }
 
@@ -560,8 +588,7 @@ namespace Nart
             Rect3D boundingBox = modelGroup.Bounds;
 
             Point3D modelCenter = new Point3D(boundingBox.X + boundingBox.SizeX / 2.0, boundingBox.Y + boundingBox.SizeY / 2.0, boundingBox.Z + boundingBox.SizeZ / 2.0);
-            //modelCenter = new Point3D(0,0,0);
-            //boundingBox = new Rect3D(0, 0, 0,10,10,10);
+          
 
             OrthographicCamera orthoCam1 = Camera1 as OrthographicCamera;
             orthoCam1.Position = new Point3D(modelCenter.X, modelCenter.Y - (boundingBox.SizeY), modelCenter.Z);
@@ -591,8 +618,9 @@ namespace Nart
         /// <summary>
         /// 將自定義的cam1LookDir綁到相機實際的觀看方向
         /// </summary>
-        public void SetupCameraBindings(Camera camera, string propertyName)
+        public void SetupCameraBindings(string propertyName, Camera camera )//Camera1, "Cam1LookDir"
         {
+
             if (camera is ProjectionCamera)
             {
                 SetBinding(propertyName, camera, ProjectionCamera.LookDirectionProperty, this);
@@ -685,6 +713,11 @@ namespace Nart
             normals.Add(normal);
             normals.Add(normal);
         }
+
+
+
+
+
 
 
         public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;

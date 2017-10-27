@@ -11,6 +11,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Nart.Model;
+using HelixToolkit.Wpf.SharpDX;
 
 namespace Nart
 {
@@ -70,13 +72,13 @@ namespace Nart
                 {              
                     MarkerID = "Head"
                                                                                 ,
-                    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"
+                    BoneFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"
                                                                                 ,
                     OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
                                                                                 ,
                     OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
                                                                                 ,
-                    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
+                    BoneDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
                 });
 
                 ModelSettingCollection.Add(new ModelSettingItem
@@ -84,12 +86,12 @@ namespace Nart
                  
                     MarkerID = "C"
                                                                                 ,
-                    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl"
+                    BoneFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl"
                     //ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
                                                                                ,
                     OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl"
                                                                                 ,
-                    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
+                    BoneDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
                                                                                 ,
                     OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
 
@@ -101,12 +103,12 @@ namespace Nart
 
                     MarkerID = "A"
                                                                                 ,
-                    ModelFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
+                    BoneFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
                     // ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
                     //                                                           ,
                     //OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
                                                                                 ,
-                    ModelDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
+                    BoneDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
                                                                                 ,
                     OSPDiffuseColor = System.Windows.Media.Color.FromArgb(100, 40, 181, 187)
                 });
@@ -207,7 +209,7 @@ namespace Nart
                 ModelSettingItem SelectedModelItem = (ModelSettingItem)_modelSettingView.ModelListView.SelectedItem;
 
                 //設定所選模型物件為"已移除"，按下OK之後會刪除
-                SelectedModelItem.Model.IsRemoved = true;
+                SelectedModelItem.Bone.IsRemoved = true;
                 SelectedModelItem.OSP.IsRemoved = true;
 
                 int temp = _modelSettingView.ModelListView.SelectedIndex;
@@ -238,43 +240,62 @@ namespace Nart
         /// </summary>
         public void LoadSettingModel(object o)
         {
-            if (ModelDataCollection == null)
-                ModelDataCollection = new ObservableCollection<ModelData>();
+            //if (ModelDataCollection == null)
+            //    ModelDataCollection = new ObservableCollection<ModelData>();
+            ObservableCollection<Element3D>  localModel = new ObservableCollection<Element3D>();
 
-            
             //確保所有模型資訊都有set進去ModelInfo的資料
             for (int i = 0; i < ModelSettingCollection.Count; i++)
             {
                 //Load模型檔，內部有防呆防止重複Load
                 ModelSettingCollection[i].Load();
 
+                OSPModel ospModel = ModelSettingCollection[i].OSP as OSPModel;
+                BoneModel boneModel = ModelSettingCollection[i].Bone as BoneModel;
+
                 //確認有Load過且有沒有被加進去modelDataCollection
-                if (ModelSettingCollection[i].OSP.IsLoaded && !ModelSettingCollection[i].OSP.IsAdded) 
+                if (ospModel.IsLoaded && !ospModel.IsAdded) 
                 {
-                    ModelDataCollection.Add(ModelSettingCollection[i].OSP);
+                    MultiAngleViewModel.OSPModelCollection.Add(ModelSettingCollection[i].OSP);
                     ModelSettingCollection[i].OSP.IsAdded = true;
                 }
                 //確認有Load過且有沒有被加進去modelDataCollection
-                if (ModelSettingCollection[i].Model.IsLoaded && !ModelSettingCollection[i].Model.IsAdded) 
+                if (boneModel.IsLoaded && !boneModel.IsAdded) 
                 {
-                    ModelDataCollection.Insert(0, ModelSettingCollection[i].Model);
-                    ModelSettingCollection[i].Model.IsAdded = true;
+                    localModel.Add(ModelSettingCollection[i].Bone);
+                    ModelSettingCollection[i].Bone.IsAdded = true;
                 }
 
             }
             //刪除modelDataCollection中已經從ModelInfoCollection移除的模型，
-            for (int i = 0; i < ModelDataCollection.Count; i++)
+            for (int i = 0; i < MultiAngleViewModel.BoneModelCollection.Count; i++)
             {
+                BoneModel boneModel = MultiAngleViewModel.BoneModelCollection[i] as BoneModel;
                 //模型如果透過 - 移除 或是 因為換錯誤檔名造成IsLoaded 為false則直接移除
-                if (ModelDataCollection[i].IsRemoved || !ModelDataCollection[i].IsLoaded)
+                if (boneModel.IsRemoved || !boneModel.IsLoaded)
                 {
-                    ModelDataCollection.RemoveAt(i);
+                    MultiAngleViewModel.BoneModelCollection.RemoveAt(i);
                     i--;
                 }
             }
-            MultiAngleViewModel.ModelDataCollection = ModelDataCollection; //將此處的ModelDataCollection 指派給MultiAngleViewModel
 
-            Console.WriteLine(" 模型總數:  " + ModelDataCollection.Count);
+
+            //刪除modelDataCollection中已經從ModelInfoCollection移除的模型，
+            for (int i = 0; i < MultiAngleViewModel.OSPModelCollection.Count; i++)
+            {
+                OSPModel ospModel = MultiAngleViewModel.OSPModelCollection[i] as OSPModel;
+                //模型如果透過 - 移除 或是 因為換錯誤檔名造成IsLoaded 為false則直接移除
+                if (ospModel.IsRemoved || !ospModel.IsLoaded)
+                {
+                    MultiAngleViewModel.OSPModelCollection.RemoveAt(i);
+                    i--;
+                }
+            }
+            MultiAngleViewModel.BoneModelCollection = localModel;
+
+            //MultiAngleViewModel.ModelDataCollection = ModelDataCollection; //將此處的ModelDataCollection 指派給MultiAngleViewModel
+
+            //Console.WriteLine(" 模型總數:  " + ModelDataCollection.Count);
             _modelSettingView.Hide();
         }
 

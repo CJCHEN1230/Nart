@@ -25,6 +25,10 @@
             <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
         <hx:ModelContainer3DX x:Name="sharedContainer"  RenderTechnique="{Binding RenderTechnique}" EffectsManager="{Binding EffectsManager}" Margin="1" Grid.Row="1">
+            <hx:GroupModel3D ItemsSource="{Binding BoneModelCollection}">
+            </hx:GroupModel3D>
+            <hx:GroupModel3D ItemsSource="{Binding OSPModelCollection}">
+            </hx:GroupModel3D>
             <hx:ItemsModel3D ItemsSource="{Binding ModelDataCollection}">
                 <hx:ItemsModel3D.ItemTemplate>
                     <DataTemplate>
@@ -39,12 +43,6 @@
                     </DataTemplate>
                 </hx:ItemsModel3D.ItemTemplate>
             </hx:ItemsModel3D>
-
-            <!--<local:OSPModel
-                  x:Name="OSPModel2"
-                  ReuseVertexArrayBuffer="True"
-                  Geometry="{Binding FloorModel}"
-                  Material="{Binding FloorMaterial}" />-->
 
         </hx:ModelContainer3DX>
         <hx:Viewport3DX  x:Name="viewport2"

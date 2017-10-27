@@ -24,6 +24,7 @@ using System.ComponentModel;
 using HelixToolkit.Wpf.SharpDX;
 using System.Diagnostics;
 using NartControl.Control;
+using Nart.ExtensionMethods;
 
 namespace Nart
 {
@@ -48,9 +49,12 @@ namespace Nart
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
 
-            
-            
-            //Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
+
+            Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
+            Matrix3D B = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
+            Matrix3DExtension.SubtractMatrix3D(ref TEST,ref B);
+
+
             //MainViewModel.ModelDataCollection = multiAngleView._multiAngleViewModel.ModelDataCollection;
 
             //SharpDX.Vector3 temp = MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0];
@@ -74,7 +78,7 @@ namespace Nart
             //multiAngleView._multiAngleViewModel.ModelDataCollection = MainViewModel.ModelDataCollection;
 
 
-           // Console.WriteLine(MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0].X);
+            // Console.WriteLine(MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0].X);
 
         }
         private void RegButton_Click(object sender, RoutedEventArgs e)
@@ -136,6 +140,8 @@ namespace Nart
         {
            
         }
+        
+
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();

@@ -61,16 +61,16 @@
       <HintPath>..\packages\Cyotek.Drawing.BitmapFont.1.3.2\lib\net20\Cyotek.Drawing.BitmapFont.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="HelixToolkit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelixToolkit.1.0.0-unstable1813\lib\portable-net45+win8+wpa81+wp8\HelixToolkit.dll</HintPath>
+    <Reference Include="HelixToolkit, Version=1.1.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HelixToolkit.1.1.0-unstable0017\lib\portable-net45+win8+wpa81+wp8\HelixToolkit.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="HelixToolkit.Wpf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelixToolkit.Wpf.1.0.0-unstable1813\lib\net45\HelixToolkit.Wpf.dll</HintPath>
+    <Reference Include="HelixToolkit.Wpf, Version=1.1.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HelixToolkit.Wpf.1.1.0-unstable0017\lib\net45\HelixToolkit.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="HelixToolkit.Wpf.SharpDX, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelixToolkit.Wpf.SharpDX.1.0.0-unstable1813\lib\net45\HelixToolkit.Wpf.SharpDX.dll</HintPath>
+    <Reference Include="HelixToolkit.Wpf.SharpDX, Version=1.1.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HelixToolkit.Wpf.SharpDX.1.1.0-unstable0017\lib\net45\HelixToolkit.Wpf.SharpDX.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -154,6 +154,7 @@
     <Compile Include="CalcCoord.cs" />
     <Compile Include="CamParam.cs" />
     <Compile Include="CraniofacialInfo.cs" />
+    <Compile Include="ExtensionMethods\Matrix3DExtension.cs" />
     <Compile Include="MarkerDatabase.cs" />
     <Compile Include="MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
@@ -177,8 +178,8 @@
       <DependentUpon>ModelSettingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ModelSettingViewModel.cs" />
-    <Compile Include="Model\ModelPrototype.cs" />
-    <Compile Include="OSPModel.cs" />
+    <Compile Include="Model\OSPModel.cs" />
+    <Compile Include="Model\BoneModel.cs" />
     <Compile Include="MultiAngleView.xaml.cs">
       <DependentUpon>MultiAngleView.xaml</DependentUpon>
     </Compile>
@@ -228,6 +229,8 @@
     <Content Include="sharpdx_direct3d11_1_effects_arm.dll" />
     <Content Include="sharpdx_direct3d11_1_effects_x64.dll" />
     <Content Include="sharpdx_direct3d11_1_effects_x86.dll" />
+    <Content Include="x64\d3dcompiler_47.dll" />
+    <Content Include="x86\d3dcompiler_47.dll" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
