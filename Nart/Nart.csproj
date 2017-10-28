@@ -150,41 +150,41 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CameraControl.cs" />
-    <Compile Include="CalcCoord.cs" />
-    <Compile Include="CamParam.cs" />
-    <Compile Include="CraniofacialInfo.cs" />
+    <Compile Include="Model\CameraControl.cs" />
+    <Compile Include="Model\CalcCoord.cs" />
+    <Compile Include="Model\CamParam.cs" />
+    <Compile Include="Model\CraniofacialInfo.cs" />
     <Compile Include="ExtensionMethods\Matrix3DExtension.cs" />
-    <Compile Include="MarkerDatabase.cs" />
+    <Compile Include="Model\MarkerDatabase.cs" />
     <Compile Include="MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ModelSettingView.xaml">
+    <Page Include="View\ModelSettingView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MultiAngleView.xaml">
+    <Page Include="View\MultiAngleView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainViewModel.cs" />
-    <Compile Include="Marker3D.cs" />
-    <Compile Include="ModelData.cs" />
-    <Compile Include="ModelSettingItem.cs" />
-    <Compile Include="ModelSettingView.xaml.cs">
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="Model\Marker3D.cs" />
+    <Compile Include="Model\ModelData.cs" />
+    <Compile Include="Model\ModelSettingItem.cs" />
+    <Compile Include="View\ModelSettingView.xaml.cs">
       <DependentUpon>ModelSettingView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ModelSettingViewModel.cs" />
-    <Compile Include="Model\OSPModel.cs" />
-    <Compile Include="Model\BoneModel.cs" />
-    <Compile Include="MultiAngleView.xaml.cs">
+    <Compile Include="ViewModel\ModelSettingViewModel.cs" />
+    <Compile Include="Model Object\OSPModel.cs" />
+    <Compile Include="Model Object\BoneModel.cs" />
+    <Compile Include="View\MultiAngleView.xaml.cs">
       <DependentUpon>MultiAngleView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MultiAngleViewModel.cs" />
-    <Compile Include="NartServer.cs" />
+    <Compile Include="ViewModel\MultiAngleViewModel.cs" />
+    <Compile Include="Model\NartServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -224,13 +224,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icon\test.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="sharpdx_direct3d11_1_effects_arm.dll" />
-    <Content Include="sharpdx_direct3d11_1_effects_x64.dll" />
-    <Content Include="sharpdx_direct3d11_1_effects_x86.dll" />
-    <Content Include="x64\d3dcompiler_47.dll" />
-    <Content Include="x86\d3dcompiler_47.dll" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
