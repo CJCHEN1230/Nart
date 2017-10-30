@@ -41,7 +41,7 @@ namespace Nart
         ///盧顎面資訊Go Po Or Me...
         /// </summary>
         private CraniofacialInfo _craniofacialInfo;
-        private const double MatchError = 3;
+        private const double MatchError = 5;
         private List<Marker3D> WorldPoints = new List<Marker3D>(10);
         /// <summary>
         ///CT珠子中心座標
@@ -657,7 +657,7 @@ namespace Nart
             {                
                 OSPModel ospModel = MultiAngleViewModel.OSPModelCollection[i] as OSPModel;
 
-                if (ospModel.IsOSP && ospModel.IsLoaded)
+                if (ospModel != null && ospModel.IsLoaded)
                 {
                     if (ospModel.MarkerID == "Head")
                     {
@@ -680,9 +680,12 @@ namespace Nart
 
 
             //頭顱模型的索引值
-            headNormal = headOSP.OSPOriNormal;
+            //headNormal = headOSP.OSPOriNormal;
             //下顎模型的索引值
-            mandibleNormal = mandibleOSP.OSPOriNormal;
+            //mandibleNormal = mandibleOSP.OSPOriNormal;
+            headNormal = headOSP.GetCurrentNormal();
+            mandibleNormal = mandibleOSP.GetCurrentNormal();
+
 
             //Po Or四個點
             Point3D[] PoOr = new Point3D[] { _craniofacialInfo.PoL, _craniofacialInfo.PoR, _craniofacialInfo.OrL, _craniofacialInfo.OrR };            
@@ -750,7 +753,7 @@ namespace Nart
                 {
                     OSPModel ospModel = MultiAngleViewModel.OSPModelCollection[i] as OSPModel;
 
-                    if (ospModel.IsOSP && ospModel.IsLoaded)
+                    if (ospModel!=null && ospModel.IsLoaded)
                     {
                         if (ospModel.MarkerID == "Head")
                         {
@@ -773,8 +776,8 @@ namespace Nart
 
                 Vector3D headNormal;
                 Vector3D mandibleNormal;
-                headNormal = headOSP.OSPCurrentNormal;
-                mandibleNormal = mandibleOSP.OSPCurrentNormal;
+                headNormal = headOSP.GetCurrentNormal();
+                mandibleNormal = mandibleOSP.GetCurrentNormal();
 
                 //先算DA
                 double DA = Math.Acos(Vector3D.DotProduct(headNormal, mandibleNormal)) / Math.PI * 180.0;

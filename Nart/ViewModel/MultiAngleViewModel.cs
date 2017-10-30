@@ -239,6 +239,11 @@ namespace Nart
             get;
             set;
         } = new ObservableCollection<Element3D>();
+        public static ObservableCollection<Element3D> TriangleModelCollection
+        {
+            get;
+            set;
+        } = new ObservableCollection<Element3D>();
 
         /// <summary>
         /// 設定光源Ambientlight顏色、DirectionaLlight顏色        

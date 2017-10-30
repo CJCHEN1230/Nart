@@ -33,6 +33,10 @@ namespace Nart
         /// </summary>
         public BoneModel Bone = new BoneModel();
         /// <summary>
+        /// 導引用的guide
+        /// </summary>
+        public DraggableTriangle Guide = new DraggableTriangle();
+        /// <summary>
         /// 模型名稱
         /// </summary>
         private String boneFilePath;

@@ -12,6 +12,7 @@ using SharpDX;
 
 namespace Nart.Model_Object
 {
+    using System.Windows;
     using Color = System.Windows.Media.Color;
     public class BoneModel : MeshGeometryModel3D
     {
@@ -19,6 +20,8 @@ namespace Nart.Model_Object
         /// 讀檔時存模型的容器，方便之後算BoundingBox
         /// </summary>
         public Model3DGroup ModelContainer;
+
+        public Vector3 ModelCenter;
         /// <summary>
         /// 已從ModelDataCollection中移除則會變成true，在model setting 的頁面中按"-"時會改變成true
         /// </summary>
@@ -27,10 +30,6 @@ namespace Nart.Model_Object
         /// 有被加進去模型清單才為True
         /// </summary>
         public bool IsAdded = false;
-        /// <summary>
-        /// 模型是不是OSP
-        /// </summary>
-        public bool IsOSP = false;
         /// <summary>
         /// 模型有Load進去則為true
         /// </summary>
@@ -80,7 +79,6 @@ namespace Nart.Model_Object
         {
 
         }
-
         public bool Highlight
         {
             set
@@ -102,7 +100,6 @@ namespace Nart.Model_Object
                 return highlight;
             }
         }
-
         public void AddItem(Matrix3D item)
         {
             //數量少於陣列總長度則往後加入
@@ -168,9 +165,15 @@ namespace Nart.Model_Object
             //利用helixtoolkit.wpf裡面提供的StlReader讀檔案，後續要轉成wpf.sharpdx可用的格式
             StLReader reader = new HelixToolkit.Wpf.StLReader();
 
-            this.ModelContainer = reader.Read(FilePath);
+            ModelContainer = reader.Read(FilePath);
 
-            var geometryModel = this.ModelContainer.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
+            Rect3D bound = ModelContainer.Bounds;
+
+            ModelCenter = new Vector3(Convert.ToSingle(bound.X + bound.SizeX / 2.0),
+                Convert.ToSingle(bound.Y + bound.SizeY / 2.0),
+                Convert.ToSingle(bound.Z + bound.SizeZ / 2.0));
+
+            var geometryModel = ModelContainer.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
 
             var mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
 
@@ -189,13 +192,6 @@ namespace Nart.Model_Object
                     , Convert.ToSingle(position.Z)));
             }
 
-
-            modelGeometry.Colors = new Color4Collection();
-            for (int i = 0; i < mesh.Positions.Count; i++)
-            {
-                modelGeometry.Colors.Add(new Color4(0.1f, 0.1f, 0.8f, 0.2f));
-            }
-
             foreach (Vector3D normal in mesh.Normals)
             {
                 modelGeometry.Normals.Add(new Vector3(
@@ -203,9 +199,6 @@ namespace Nart.Model_Object
                     , Convert.ToSingle(normal.Y)
                     , Convert.ToSingle(normal.Z)));
             }
-
-
-
 
             foreach (Int32 triangleindice in mesh.TriangleIndices)
             {
@@ -217,8 +210,6 @@ namespace Nart.Model_Object
             this.Geometry = modelGeometry;
 
             this.Transform = new MatrixTransform3D();
-
-            this.IsOSP = false;
 
             this.IsLoaded = true;
         }

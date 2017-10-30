@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using Nart.Model_Object;
 using HelixToolkit.Wpf.SharpDX;
 using System.Windows.Data;
+using SharpDX;
 
 namespace Nart
 {
@@ -245,8 +246,8 @@ namespace Nart
                 //Load模型檔，內部有防呆防止重複Load
                 ModelSettingCollection[i].Load();
 
-                OSPModel ospModel = ModelSettingCollection[i].OSP as OSPModel;
-                BoneModel boneModel = ModelSettingCollection[i].Bone as BoneModel;
+                OSPModel ospModel = ModelSettingCollection[i].OSP;
+                BoneModel boneModel = ModelSettingCollection[i].Bone;
 
                 //確認有Load過且有沒有被加進去modelDataCollection
                 if (ospModel.IsLoaded && !ospModel.IsAdded) 
@@ -259,6 +260,24 @@ namespace Nart
                 {
                     MultiAngleViewModel.BoneModelCollection.Add(ModelSettingCollection[i].Bone);
                     ModelSettingCollection[i].Bone.IsAdded = true;
+                    //除了頭部以外需要guide
+                    if (!boneModel.MarkerID.Equals("Head"))
+                    {
+                        
+
+                        SharpDX.Matrix translate = SharpDX.Matrix.Translation(boneModel.ModelCenter);
+
+                        SharpDX.Matrix m = /*rotate **/ translate;
+
+                        ModelSettingCollection[i].Guide.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(m.ToMatrix3D());
+
+                        MultiAngleViewModel.TriangleModelCollection.Add(ModelSettingCollection[i].Guide);
+
+                        //var binding = new Binding("Transform");
+                        //binding.Source = boneModel;
+                        //binding.Mode = BindingMode.TwoWay;
+                        //BindingOperations.SetBinding(ModelSettingCollection[i].Guide, Model3D.TransformProperty, binding);
+                    }
                 }
                 //做bone 跟 osp transform的binding
                 if (boneModel.IsLoaded && ospModel.IsAdded)
@@ -268,7 +287,15 @@ namespace Nart
                     binding.Mode = BindingMode.OneWay;
                     BindingOperations.SetBinding(ospModel, Model3D.TransformProperty, binding);
                 }
-             
+
+                if (boneModel.IsLoaded && ModelSettingCollection[i].Guide!=null)
+                {
+                    var binding = new Binding("Transform");
+                    binding.Source = boneModel;
+                    binding.Mode = BindingMode.TwoWay;
+                    BindingOperations.SetBinding(ModelSettingCollection[i].Guide, Model3D.TransformProperty, binding);
+                }
+
             }
             //刪除modelDataCollection中已經從ModelInfoCollection移除的模型，
             for (int i = 0; i < MultiAngleViewModel.BoneModelCollection.Count; i++)
@@ -296,15 +323,18 @@ namespace Nart
                     i--;
                 }
             }
-            DraggableTriangle test = new DraggableTriangle();
-            MultiAngleViewModel.BoneModelCollection.Add(test);
+            
             Console.WriteLine("OSP 數量:"+ MultiAngleViewModel.OSPModelCollection.Count);
             Console.WriteLine("Bone  數量:" + MultiAngleViewModel.BoneModelCollection.Count);
 
 
-            //MultiAngleViewModel.ModelDataCollection = ModelDataCollection; //將此處的ModelDataCollection 指派給MultiAngleViewModel
+
+            //DraggableTriangle guide2 = new DraggableTriangle();
+            //MultiAngleViewModel.BoneModelCollection.Add(guide2);
+
+
             MultiAngleViewModel.ResetCameraPosition();
-            //Console.WriteLine(" 模型總數:  " + ModelDataCollection.Count);
+
             _modelSettingView.Hide();
         }
 

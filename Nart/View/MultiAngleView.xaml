@@ -1,11 +1,12 @@
 ﻿<UserControl x:Class="Nart.MultiAngleView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"             
+             xmlns:local ="clr-namespace:Nart"
+             xmlns:converter="clr-namesapce:MyApp.Converters,aseembly=MyApp"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:ie="http://schemas.microsoft.com/expression/2010/interactions"
-             xmlns:local="clr-namespace:Nart"
              xmlns:sdx="clr-namespace:SharpDX;assembly=SharpDX.Mathematics"
              xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
              mc:Ignorable="d" Height="309.473" Width="637.895">
@@ -28,6 +29,8 @@
             <hx:GroupModel3D ItemsSource="{Binding BoneModelCollection}">
             </hx:GroupModel3D>
             <hx:GroupModel3D ItemsSource="{Binding OSPModelCollection}">
+            </hx:GroupModel3D>
+            <hx:GroupModel3D ItemsSource="{Binding TriangleModelCollection}">
             </hx:GroupModel3D>
             <hx:ItemsModel3D ItemsSource="{Binding ModelDataCollection}">
                 <hx:ItemsModel3D.ItemTemplate>

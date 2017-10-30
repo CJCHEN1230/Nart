@@ -18,7 +18,7 @@ namespace Nart.Model_Object
     using Camera = HelixToolkit.Wpf.SharpDX.Camera;
     using Geometry3D = HelixToolkit.Wpf.SharpDX.Geometry3D;
 
-    class DraggableTriangle : GroupModel3D, IHitable
+    public class DraggableTriangle : GroupModel3D, IHitable
     {
 
         public int length = 100;
@@ -32,7 +32,7 @@ namespace Nart.Model_Object
         private Camera camera;
         private System.Windows.Media.Media3D.Point3D lastHitPos;
         private MatrixTransform3D dragTransform;
-
+        private double InitialAngle = 30;
 
         private static Geometry3D NodeGeometry;
         private static Geometry3D EdgeGeometry;
@@ -55,9 +55,11 @@ namespace Nart.Model_Object
             this.Material = PhongMaterials.White;
             positions = new Vector3[3]
                  {
-            new Vector3(0,length,0),
-            new Vector3(Convert.ToSingle(Math.Sqrt(3)/2.0*length),-0.5f*length,0),
-            new Vector3(Convert.ToSingle(Math.Sqrt(3)/-2.0*length),-0.5f*length,0)
+
+                    new Vector3(Convert.ToSingle(Math.Cos(InitialAngle/180f*Math.PI))*length,Convert.ToSingle(Math.Sin(InitialAngle/180f*Math.PI))*length,0),
+                    new Vector3(Convert.ToSingle(Math.Cos((InitialAngle+120)/180f*Math.PI))*length,Convert.ToSingle(Math.Sin((InitialAngle+120)/180f*Math.PI))*length,0),
+                    new Vector3(Convert.ToSingle(Math.Cos((InitialAngle+240)/180f*Math.PI))*length,Convert.ToSingle(Math.Sin((InitialAngle+240)/180f*Math.PI))*length,0),
+                    
                  };
             for (int i = 0; i < 3; i++)
             {
@@ -86,24 +88,20 @@ namespace Nart.Model_Object
                 {
                     rotateAxis.X = 0; rotateAxis.Y = 0; rotateAxis.Z = 1;
                 }
+
                 float theta = Convert.ToSingle(Math.Acos(Vector3.Dot(xBar, v1) / (v1.Length() * xBar.Length())));
-
-
-
                 Matrix rotateMat = Matrix.RotationAxis(rotateAxis, theta);
-                Matrix m1 = Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(positions[i]);
+                Matrix m = Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(positions[i]);
                 this.edgeHandles[i] = new MeshGeometryModel3D()
                 {
                     Geometry = EdgeGeometry,
                     Material = this.Material,
                     Visibility = Visibility.Visible,
-                    Transform = new MatrixTransform3D(m1.ToMatrix3D())
+                    Transform = new MatrixTransform3D(m.ToMatrix3D())
                 };
                 this.edgeHandles[i].MouseMove3D += OnEdgeMouse3DMove;
                 this.edgeHandles[i].MouseUp3D += OnEdgeMouse3DUp;
                 this.edgeHandles[i].MouseDown3D += OnEdgeMouse3DDown;
-
-
 
 
                 this.Children.Add(cornerHandles[i]);
@@ -204,7 +202,7 @@ namespace Nart.Model_Object
         {
             var cornerTrafos = this.cornerHandles.Select(x => (x.Transform as MatrixTransform3D)).ToArray();
             var cornerMatrix = cornerTrafos.Select(x => (x).Value).ToArray();
-            this.positions = cornerMatrix.Select(x => x.ToMatrix().TranslationVector).ToArray();
+            positions = cornerMatrix.Select(x => x.ToMatrix().TranslationVector).ToArray();
 
             for (int i = 0; i < 3; i++)
             {
@@ -222,9 +220,7 @@ namespace Nart.Model_Object
                 float theta = Convert.ToSingle(Math.Acos(Vector3.Dot(xBar, v1) / (v1.Length() * xBar.Length())));
 
 
-
                 Matrix rotateMat = Matrix.RotationAxis(rotateAxis, theta);
-
 
 
                 var m = Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(positions[i]);
@@ -233,11 +229,7 @@ namespace Nart.Model_Object
                 ((MatrixTransform3D)edgeHandles[i].Transform).Matrix = (m.ToMatrix3D());
 
             }
-
-
-
-
-
+            
         }
 
 

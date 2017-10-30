@@ -28,17 +28,13 @@ namespace Nart.Model_Object
         /// </summary>
         public bool IsAdded = false;
         /// <summary>
-        /// 模型是不是OSP
-        /// </summary>
-        public bool IsOSP = false;
-        /// <summary>
         /// 模型有Load進去則為true
         /// </summary>
         public new bool IsLoaded = false;
-        /// <summary>
-        /// OSP才有的Normal
-        /// </summary>
-        public Vector3D OSPCurrentNormal;
+        ///// <summary>
+        ///// OSP才有的Normal
+        ///// </summary>
+        //public Vector3D OSPCurrentNormal;
         /// <summary>
         /// OSP原始的Normal
         /// </summary>
@@ -58,13 +54,14 @@ namespace Nart.Model_Object
         /// <summary>
         /// 模型路徑
         /// </summary>
-        public String FilePath;      
+        public String FilePath;
         private bool highlight = false;
 
         public OSPModel()
         {
-        }      
-        
+        }
+
+      
         public bool Highlight
         {
             set
@@ -85,6 +82,7 @@ namespace Nart.Model_Object
                 return highlight;
             }
         }        
+        
         public void SetOSPMaterial()
         {
 
@@ -166,10 +164,14 @@ namespace Nart.Model_Object
 
             this.Transform = new MatrixTransform3D();
 
-            this.IsOSP = false;
-
             this.IsLoaded = true;
-        }              
+        }
+        public Vector3D GetCurrentNormal()
+        {
+            Vector3D CurrentNormal = Transform.Transform(OSPOriNormal);
+            CurrentNormal.Normalize();
+            return CurrentNormal;
+        }
         /// <summary>
         /// 重設此類別的Shader
         /// </summary>
