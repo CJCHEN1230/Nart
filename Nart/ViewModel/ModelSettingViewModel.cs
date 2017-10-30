@@ -11,7 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Nart.Model;
+using Nart.Model_Object;
 using HelixToolkit.Wpf.SharpDX;
 using System.Windows.Data;
 
@@ -296,8 +296,8 @@ namespace Nart
                     i--;
                 }
             }
-
-
+            DraggableTriangle test = new DraggableTriangle();
+            MultiAngleViewModel.BoneModelCollection.Add(test);
             Console.WriteLine("OSP 數量:"+ MultiAngleViewModel.OSPModelCollection.Count);
             Console.WriteLine("Bone  數量:" + MultiAngleViewModel.BoneModelCollection.Count);
 

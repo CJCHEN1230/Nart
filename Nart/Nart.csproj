@@ -150,11 +150,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model Object\DraggableTriangle.cs" />
     <Compile Include="Model\CameraControl.cs" />
     <Compile Include="Model\CalcCoord.cs" />
     <Compile Include="Model\CamParam.cs" />
     <Compile Include="Model\CraniofacialInfo.cs" />
-    <Compile Include="ExtensionMethods\Matrix3DExtension.cs" />
+    <Compile Include="ExtensionMethods\Matrix3DExtensions.cs" />
     <Compile Include="Model\MarkerDatabase.cs" />
     <Compile Include="MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>

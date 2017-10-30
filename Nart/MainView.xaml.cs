@@ -25,7 +25,7 @@ using HelixToolkit.Wpf.SharpDX;
 using System.Diagnostics;
 using NartControl.Control;
 using Nart.ExtensionMethods;
-using Nart.Model;
+using Nart.Model_Object;
 
 namespace Nart
 {

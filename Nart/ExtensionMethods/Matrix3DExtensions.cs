@@ -7,7 +7,7 @@ using System.Windows.Media.Media3D;
 
 namespace Nart.ExtensionMethods
 {
-    public static class Matrix3DExtension
+    public static class Matrix3DExtensions
     {
         public static void AddMatrix3D(ref Matrix3D A, ref Matrix3D B)
         {
@@ -23,7 +23,6 @@ namespace Nart.ExtensionMethods
             A.M31 = A.M31 - B.M31; A.M32 = A.M32 - B.M32; A.M33 = A.M33 - B.M33; A.M34 = A.M34 - B.M34;
             A.OffsetX = A.OffsetX - B.OffsetX; A.OffsetY = A.OffsetY - B.OffsetY; A.OffsetZ = A.OffsetZ - B.OffsetZ; A.M44 = A.M44 - B.M44;
         }
-
         public static void DivideMatrix3D(ref Matrix3D A, int divisor, ref Matrix3D result)
         {
             double divisorDouble = Convert.ToDouble(divisor);
@@ -33,6 +32,14 @@ namespace Nart.ExtensionMethods
             result.M31 = A.M31 / divisorDouble; result.M32 = A.M32 / divisorDouble; result.M33 = A.M33 / divisorDouble; result.M34 = A.M34 / divisorDouble;
             result.OffsetX = A.OffsetX / divisorDouble; result.OffsetY = A.OffsetY / divisorDouble; result.OffsetZ = A.OffsetZ / divisorDouble; result.M44 = A.M44 / divisorDouble;
 
+        }
+        public static Matrix3D Translate3D(global::SharpDX.Vector3 v)
+        {
+            var m = Matrix3D.Identity;
+            m.OffsetX = v.X;
+            m.OffsetY = v.Y;
+            m.OffsetZ = v.Z;
+            return m;
         }
     }
 }

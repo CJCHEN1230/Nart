@@ -45,6 +45,7 @@
             </hx:ItemsModel3D>
 
         </hx:ModelContainer3DX>
+        
         <hx:Viewport3DX  x:Name="viewport2"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" 
@@ -71,8 +72,8 @@
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
             <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseLeftButtonDown">
-                    <ie:CallMethodAction MethodName="OnMouseLeftButtonDownHandler" TargetObject="{Binding}" />
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <ie:CallMethodAction MethodName="OnMouseDoubleClickHandler" TargetObject="{Binding}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <hx:DirectionalLight3D
@@ -107,7 +108,7 @@
             </hx:Viewport3DX.InputBindings>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseLeftButtonDown">
-                    <ie:CallMethodAction MethodName="OnMouseLeftButtonDownHandler" TargetObject="{Binding}" />
+                    <ie:CallMethodAction MethodName="OnMouseDoubleClickHandler" TargetObject="{Binding}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <hx:DirectionalLight3D
@@ -143,16 +144,14 @@
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
             </hx:Viewport3DX.InputBindings>
             <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseLeftButtonDown">
-                    <ie:CallMethodAction MethodName="OnMouseLeftButtonDownHandler" TargetObject="{Binding}" />
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <ie:CallMethodAction MethodName="OnMouseDoubleClickHandler" TargetObject="{Binding}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-            
+
             <hx:DirectionalLight3D
                 Direction="{Binding Light1Direction}"
                 Color="{Binding DirectionalLightColor}" />
-
-
         </hx:Viewport3DX>
         <StackPanel  Orientation="Vertical" HorizontalAlignment="Left" Margin="1,2,0,32" Width="165">
             <Label x:Name="DALabel" Content="{Binding DeviationAngle, Mode=OneWay}" Margin="1,1,1,1" FontWeight="Bold" FontSize="18" Foreground="White"/>

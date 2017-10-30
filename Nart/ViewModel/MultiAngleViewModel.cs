@@ -13,7 +13,7 @@ using NartControl;
 
 namespace Nart
 {
-    using Model;
+    using Nart.Model_Object;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
@@ -43,13 +43,12 @@ namespace Nart
         private Vector3D cam2LookDir = new Vector3D();
         private Vector3D cam3LookDir = new Vector3D();      
         private MultiAngleView _multiview;
-        private readonly IList<ModelData> HighlightItems = new List<ModelData>(); //專門放點到的變色物件
+        private readonly IList<BoneModel> HighlightItems = new List<BoneModel>(); //專門放點到的變色物件
 
 
 
         public MultiAngleViewModel(MultiAngleView _multiview)
         {
-
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
             RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Blinn];
             EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
@@ -275,7 +274,7 @@ namespace Nart
             {
                 BoneModel boneModel = BoneModelCollection[i] as BoneModel;
                 //如果選擇多模型但檔名是空或不存在則進不去
-                if (boneModel.ModelContainer != null)
+                if (boneModel != null && boneModel.ModelContainer != null) 
                 {                   
                     modelGroup.Children.Add(boneModel.ModelContainer);
                 }
@@ -336,7 +335,7 @@ namespace Nart
             binding.Mode = mode;
             BindingOperations.SetBinding(dobj, property, binding);
         }
-        public void OnMouseLeftButtonDownHandler(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        public void OnMouseDoubleClickHandler(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             foreach (var item in HighlightItems)
             {
@@ -347,22 +346,26 @@ namespace Nart
             var viewport = sender as Viewport3DX;
             if (viewport == null) { return; }
             var point = e.GetPosition(viewport);
-            Console.WriteLine("\npoint:  " + point);
             var hitTests = viewport.FindHits(point);
-            Console.WriteLine("hit count:  " + hitTests.Count);
             if (hitTests != null && hitTests.Count > 0)
             {
                 var hit = hitTests[0];
-                if (hit.ModelHit.DataContext is ModelData)
+                if (hit.ModelHit.DataContext == this)
                 {
                     System.Windows.Media.Media3D.Point3D TEST = hit.PointHit;
-
-                    var model = hit.ModelHit.DataContext as ModelData;
-                    model.Highlight = true;
-                    HighlightItems.Add(model);
+                    if (hit.ModelHit is BoneModel)
+                    {
+                        BoneModel model = (BoneModel)hit.ModelHit;
+                        //(hit.ModelHit as MeshGeometryModel3D).Material = PhongMaterials.Yellow;
+                        model.Highlight = true;
+                        HighlightItems.Add(model);
+                    }
+                    
+                   
                 }
-              
+
             }
+
         }
         
 

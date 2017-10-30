@@ -10,7 +10,7 @@ using HelixToolkit.Wpf;
 using HelixToolkit.Wpf.SharpDX.Core;
 using SharpDX;
 
-namespace Nart.Model
+namespace Nart.Model_Object
 {
     using Color = System.Windows.Media.Color;
     public class OSPModel : MeshGeometryModel3D
@@ -58,27 +58,7 @@ namespace Nart.Model
         /// <summary>
         /// 模型路徑
         /// </summary>
-        public String FilePath;
-        /// <summary>
-        /// 此Model的最終轉換矩陣
-        /// </summary>
-        private Matrix3D _finalModelTransform = new Matrix3D();
-        /// <summary>
-        /// 用來累加的矩陣
-        /// </summary>
-        private Matrix3D _totalModelTransform = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-        /// <summary>
-        /// 防止抖動，用來存放所有矩陣，10是累積總數量
-        /// </summary>
-        private Matrix3D[] _modelTransformSet = new Matrix3D[10];
-        /// <summary>
-        /// Count是在ModelTransformSet中的累積數量
-        /// </summary>
-        private int Count = 0;
-        /// <summary>
-        /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
-        /// </summary>
-        private int CurrentIndex = 0;
+        public String FilePath;      
         private bool highlight = false;
 
         public OSPModel()
@@ -104,35 +84,7 @@ namespace Nart.Model
             {
                 return highlight;
             }
-        }
-
-        public void AddItem(Matrix3D item)
-        {
-            //數量少於陣列總長度則往後加入
-            if (Count < _modelTransformSet.Length)
-            {
-                Count++;
-
-                Matrix3DExtension.AddMatrix3D(ref _totalModelTransform, ref item);
-
-                Matrix3DExtension.DivideMatrix3D(ref _totalModelTransform, Count, ref _finalModelTransform);
-
-            }
-            else
-            {
-                Matrix3DExtension.SubtractMatrix3D(ref _totalModelTransform, ref _modelTransformSet[CurrentIndex]);
-
-                Matrix3DExtension.AddMatrix3D(ref _totalModelTransform, ref item);
-
-                Matrix3DExtension.DivideMatrix3D(ref _totalModelTransform, Count, ref _finalModelTransform);
-            }
-
-            _modelTransformSet[CurrentIndex] = item;
-
-            CurrentIndex++;
-            CurrentIndex = CurrentIndex % _modelTransformSet.Length;
-
-        }
+        }        
         public void SetOSPMaterial()
         {
 
@@ -217,16 +169,7 @@ namespace Nart.Model
             this.IsOSP = false;
 
             this.IsLoaded = true;
-        }      
-        public void SetTransformMatrix()
-        {
-            this.Transform = new MatrixTransform3D(_finalModelTransform);
-            if (IsOSP)
-            {
-                OSPCurrentNormal = this.Transform.Transform(OSPOriNormal);
-                OSPCurrentNormal.Normalize();
-            }
-        }
+        }              
         /// <summary>
         /// 重設此類別的Shader
         /// </summary>

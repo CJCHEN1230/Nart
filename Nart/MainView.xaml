@@ -27,7 +27,6 @@
         </Grid.RowDefinitions>
 
         <Controls:ImgButton2 x:Name="ImgButton22" ButtonLabel="1234567"  ButtonImageSource="/Icon/test.ico" Margin="2,518,1454,163" Grid.ColumnSpan="2"/>
-        <Button x:Name="button" Command="ApplicationCommands.Open" Content="Open" HorizontalAlignment="Left" Margin="21,24,0,0" VerticalAlignment="Top" Width="56" Height="56" />
         <Button x:Name="button1" Command="{Binding SetModelCommand}" Content="Set Model" HorizontalAlignment="Left" Margin="10,152,0,0" VerticalAlignment="Top" Width="74" Height="54"/>
         <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="10,218,0,0" VerticalAlignment="Top" Width="76" Height="56"/>
         <Button x:Name="button4" Click="TrackingButton_Click" Content="Tracking" HorizontalAlignment="Left" Margin="8,357,0,0" VerticalAlignment="Top" Width="75" Height="54" />

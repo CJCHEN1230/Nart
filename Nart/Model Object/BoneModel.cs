@@ -10,7 +10,7 @@ using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf.SharpDX.Core;
 using SharpDX;
 
-namespace Nart.Model
+namespace Nart.Model_Object
 {
     using Color = System.Windows.Media.Color;
     public class BoneModel : MeshGeometryModel3D
@@ -47,6 +47,10 @@ namespace Nart.Model
         /// 模型路徑
         /// </summary>
         public String FilePath;
+
+
+        public GroupModel3D ballGroup = new GroupModel3D();
+        
         /// <summary>
         /// 此Model的最終轉換矩陣
         /// </summary>
@@ -67,10 +71,36 @@ namespace Nart.Model
         /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
         /// </summary>
         private int CurrentIndex = 0;
+        private bool highlight = false;
+
+
+
 
         public BoneModel()
         {
 
+        }
+
+        public bool Highlight
+        {
+            set
+            {
+                if (highlight == value) { return; }
+                highlight = value;
+                PhongMaterial material = this.Material as PhongMaterial;
+                if (highlight)
+                {
+                    material.EmissiveColor = SharpDX.Color.Yellow;
+                }
+                else
+                {
+                    material.EmissiveColor = SharpDX.Color.Black;
+                }
+            }
+            get
+            {
+                return highlight;
+            }
         }
 
         public void AddItem(Matrix3D item)
@@ -80,18 +110,18 @@ namespace Nart.Model
             {
                 Count++;
 
-                Matrix3DExtension.AddMatrix3D(ref _totalModelTransform, ref item);
+                ExtensionMethods.Matrix3DExtensions.AddMatrix3D(ref _totalModelTransform, ref item);
 
-                Matrix3DExtension.DivideMatrix3D(ref _totalModelTransform, Count, ref _finalModelTransform);
+                ExtensionMethods.Matrix3DExtensions.DivideMatrix3D(ref _totalModelTransform, Count, ref _finalModelTransform);
 
             }
             else
             {
-                Matrix3DExtension.SubtractMatrix3D(ref _totalModelTransform, ref _modelTransformSet[CurrentIndex]);
+                ExtensionMethods.Matrix3DExtensions.SubtractMatrix3D(ref _totalModelTransform, ref _modelTransformSet[CurrentIndex]);
 
-                Matrix3DExtension.AddMatrix3D(ref _totalModelTransform, ref item);
+                ExtensionMethods.Matrix3DExtensions.AddMatrix3D(ref _totalModelTransform, ref item);
 
-                Matrix3DExtension.DivideMatrix3D(ref _totalModelTransform, Count, ref _finalModelTransform);
+                ExtensionMethods.Matrix3DExtensions.DivideMatrix3D(ref _totalModelTransform, Count, ref _finalModelTransform);
             }
 
             _modelTransformSet[CurrentIndex] = item;
@@ -102,14 +132,14 @@ namespace Nart.Model
         }
         public void SetTransformMatrix()
         {
-            Transform = new MatrixTransform3D(_finalModelTransform);          
-        }    
+            Transform = new MatrixTransform3D(_finalModelTransform);
+        }
         /// <summary>
         /// 設定模型材質
         /// </summary>        
         public void SetBoneMaterial()
         {
-            if (DiffuseColor!=null)
+            if (DiffuseColor != null)
             {
                 HelixToolkit.Wpf.SharpDX.PhongMaterial material = new PhongMaterial();
 
@@ -143,7 +173,7 @@ namespace Nart.Model
             var geometryModel = this.ModelContainer.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
 
             var mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
-        
+
             //設定模型幾何形狀
             HelixToolkit.Wpf.SharpDX.MeshGeometry3D modelGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
 
@@ -184,7 +214,7 @@ namespace Nart.Model
 
             SetBoneMaterial();
 
-            this.Geometry= modelGeometry;
+            this.Geometry = modelGeometry;
 
             this.Transform = new MatrixTransform3D();
 
@@ -192,6 +222,6 @@ namespace Nart.Model
 
             this.IsLoaded = true;
         }
-    
+
     }
 }

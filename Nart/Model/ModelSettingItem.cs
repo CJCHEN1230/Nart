@@ -14,7 +14,7 @@ using System.Windows.Media.Media3D;
 
 namespace Nart
 {
-    using Model;
+    using Model_Object;
     using SharpDX.Direct3D11;
     using System.Windows;
     using System.Windows.Data;
