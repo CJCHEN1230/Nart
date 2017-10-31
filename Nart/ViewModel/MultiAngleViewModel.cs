@@ -347,9 +347,10 @@ namespace Nart
                 item.Highlight = false;
             }
             HighlightItems.Clear();
-            //Material = PhongMaterials.White;
-            var viewport = sender as Viewport3DX;
-            if (viewport == null) { return; }
+
+            Viewport3DX viewport = sender as Viewport3DX;
+            if (viewport == null)
+                return; 
             var point = e.GetPosition(viewport);
             var hitTests = viewport.FindHits(point);
             if (hitTests != null && hitTests.Count > 0)
@@ -357,7 +358,7 @@ namespace Nart
                 var hit = hitTests[0];
                 if (hit.ModelHit.DataContext == this)
                 {
-                    System.Windows.Media.Media3D.Point3D TEST = hit.PointHit;
+                   
                     if (hit.ModelHit is BoneModel)
                     {
                         BoneModel model = (BoneModel)hit.ModelHit;

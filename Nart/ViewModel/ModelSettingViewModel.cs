@@ -282,10 +282,9 @@ namespace Nart
                     binding.Mode = BindingMode.OneWay;
                     BindingOperations.SetBinding(ospModel, Model3D.TransformProperty, binding);
                 }
-
+                //做bone 的轉移矩陣綁到 DraggableTriangle的ModelTransform上面
                 if (boneModel.IsLoaded && ModelSettingCollection[i].Guide != null)
                 {
-
                     var binding = new Binding("ModelTransform");
                     binding.Source = ModelSettingCollection[i].Guide;
                     binding.Mode = BindingMode.OneWayToSource;
@@ -329,9 +328,6 @@ namespace Nart
 
             _modelSettingView.Hide();
         }
-
-
-
 
 
 

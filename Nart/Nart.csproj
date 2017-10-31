@@ -176,7 +176,6 @@
   <ItemGroup>
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="Model\Marker3D.cs" />
-    <Compile Include="Model\ModelData.cs" />
     <Compile Include="Model\ModelSettingItem.cs" />
     <Compile Include="View\ModelSettingView.xaml.cs">
       <DependentUpon>ModelSettingView.xaml</DependentUpon>

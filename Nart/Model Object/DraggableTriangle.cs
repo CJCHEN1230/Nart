@@ -60,7 +60,7 @@ namespace Nart.Model_Object
         /// <summary>
         /// 初始三角形角度
         /// </summary>
-        private bool isCaptured;
+        private bool _isCaptured;
         /// <summary>
         /// 當前的viewport，點下Down時候會存下
         /// </summary>
@@ -154,7 +154,7 @@ namespace Nart.Model_Object
         }
 
         /// <summary>
-        /// 這個屬性綁定在 Bone的轉移矩陣上，改變的時候多乘上一個translate給本身的transform
+        /// 這個屬性綁定在 Bone的轉移矩陣上，改變的時候多乘上一個translate給本身的Transform
         /// </summary>
         public MatrixTransform3D ModelTransform
         {         
@@ -168,10 +168,10 @@ namespace Nart.Model_Object
         private void OnNodeMouse3DDown(object sender, RoutedEventArgs e)
         {
             var args = e as Mouse3DEventArgs;
-            if (args == null) return;
-            if (args.Viewport == null) return;
+            if (args == null|| args.Viewport == null)
+                return;
 
-            this.isCaptured = true;
+            this._isCaptured = true;
             this._viewport = args.Viewport;
             this._camera = args.Viewport.Camera;
             this._lastHitPos = args.HitTestResult.PointHit;
@@ -180,7 +180,7 @@ namespace Nart.Model_Object
         private void OnNodeMouse3DUp(object sender, RoutedEventArgs e)
         {
 
-            if (this.isCaptured)
+            if (this._isCaptured)
             {
                 Application.Current.MainWindow.Cursor = Cursors.Arrow;               
             }
@@ -188,7 +188,7 @@ namespace Nart.Model_Object
 
         private void OnNodeMouse3DMove(object sender, RoutedEventArgs e)
         {
-            if (this.isCaptured)
+            if (this._isCaptured)
             {
                 Application.Current.MainWindow.Cursor = Cursors.Hand;
 
@@ -230,10 +230,10 @@ namespace Nart.Model_Object
         private void OnEdgeMouse3DDown(object sender, RoutedEventArgs e)
         {
             var args = e as Mouse3DEventArgs;
-            if (args == null) return;
-            if (args.Viewport == null) return;
+            if (args == null || args.Viewport == null)
+                return;
 
-            this.isCaptured = true;
+            this._isCaptured = true;
             this._viewport = args.Viewport;
             this._camera = args.Viewport.Camera;
             this._lastHitPos = args.HitTestResult.PointHit;
@@ -241,10 +241,10 @@ namespace Nart.Model_Object
 
         private void OnEdgeMouse3DUp(object sender, RoutedEventArgs e)
         {
-            if (this.isCaptured)
+            if (this._isCaptured)
             {
                 Application.Current.MainWindow.Cursor = Cursors.Arrow;
-                this.isCaptured = false;
+                this._isCaptured = false;
                 this._camera = null;
                 this._viewport = null;
             }
@@ -252,7 +252,7 @@ namespace Nart.Model_Object
 
         private void OnEdgeMouse3DMove(object sender, RoutedEventArgs e)
         {
-            if (this.isCaptured)
+            if (this._isCaptured)
             {
                 Application.Current.MainWindow.Cursor = Cursors.SizeAll;
                 Mouse3DEventArgs args = e as Mouse3DEventArgs;
@@ -337,9 +337,7 @@ namespace Nart.Model_Object
             set { this.SetValue(DragZProperty, value); }
         }
 
-     
 
-     
         public Material Material
         {
             get { return (Material)this.GetValue(MaterialProperty); }
