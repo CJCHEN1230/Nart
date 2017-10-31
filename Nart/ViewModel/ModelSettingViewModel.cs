@@ -263,13 +263,21 @@ namespace Nart
                     //除了頭部以外需要guide
                     if (!boneModel.MarkerID.Equals("Head"))
                     {
-                        
+
+                        Vector3 rotateAxis = new Vector3(0, 0, 1);
+
+                        SharpDX.Matrix rotate = SharpDX.Matrix.RotationAxis(rotateAxis, Convert.ToSingle( 20.0/180.0*Math.PI));
+
+
+
 
                         SharpDX.Matrix translate = SharpDX.Matrix.Translation(boneModel.ModelCenter);
 
-                        SharpDX.Matrix m = /*rotate **/ translate;
+                        SharpDX.Matrix m = /*rotate * */translate;
 
                         ModelSettingCollection[i].Guide.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(m.ToMatrix3D());
+
+                        ModelSettingCollection[i].Guide.ModelCenter=boneModel.ModelCenter;
 
                         MultiAngleViewModel.TriangleModelCollection.Add(ModelSettingCollection[i].Guide);
 
@@ -290,10 +298,11 @@ namespace Nart
 
                 if (boneModel.IsLoaded && ModelSettingCollection[i].Guide!=null)
                 {
+
                     var binding = new Binding("Transform");
                     binding.Source = boneModel;
-                    binding.Mode = BindingMode.TwoWay;
-                    BindingOperations.SetBinding(ModelSettingCollection[i].Guide, Model3D.TransformProperty, binding);
+                    binding.Mode = BindingMode.OneWay;
+                    BindingOperations.SetBinding(ModelSettingCollection[i].Guide, GroupModel3D.TransformProperty, binding);
                 }
 
             }

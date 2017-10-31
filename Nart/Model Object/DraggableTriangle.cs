@@ -17,22 +17,28 @@ namespace Nart.Model_Object
     using MeshBuilder = HelixToolkit.Wpf.SharpDX.MeshBuilder;
     using Camera = HelixToolkit.Wpf.SharpDX.Camera;
     using Geometry3D = HelixToolkit.Wpf.SharpDX.Geometry3D;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+    using System.Windows.Data;
 
-    public class DraggableTriangle : GroupModel3D, IHitable
+    public class DraggableTriangle : GroupModel3D, IHitable, INotifyPropertyChanged
     {
 
         public int length = 100;
         //一開始三顆球的初始位置
         private Vector3[] positions;
-        private DraggableGeometryModel3D[] cornerHandles = new DraggableGeometryModel3D[3];
+        private MeshGeometryModel3D[] cornerHandles = new MeshGeometryModel3D[3];
         private MeshGeometryModel3D[] edgeHandles = new MeshGeometryModel3D[3];
 
         private bool isCaptured;
         private Viewport3DX viewport;
+        public Vector3 ModelCenter;
         private Camera camera;
         private System.Windows.Media.Media3D.Point3D lastHitPos;
         private MatrixTransform3D dragTransform;
         private double InitialAngle = 30;
+        private MatrixTransform3D modelTransform = new MatrixTransform3D();
+        
 
         private static Geometry3D NodeGeometry;
         private static Geometry3D EdgeGeometry;
@@ -65,7 +71,7 @@ namespace Nart.Model_Object
             {
                 //平移圓球
                 var translateMat = Matrix3DExtensions.Translate3D(positions[i]);
-                cornerHandles[i] = new DraggableGeometryModel3D()
+                cornerHandles[i] = new MeshGeometryModel3D()
                 {
                     Visibility = Visibility.Visible,
                     Material = this.Material,
@@ -112,9 +118,38 @@ namespace Nart.Model_Object
             cornerHandles[1].Material = PhongMaterials.Green;
             cornerHandles[2].Material = PhongMaterials.Blue;
 
+
+
+            var binding = new Binding("ModelTransform");
+            binding.Source = this;
+            binding.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(this, GroupModel3D.TransformProperty, binding);
+
+
+
             this.dragTransform = new MatrixTransform3D(this.Transform.Value);
         }
 
+        public MatrixTransform3D ModelTransform
+        {
+            get
+            {
+                return modelTransform;
+            }
+            set
+            {
+                if (ModelCenter != null) 
+                {
+                    SharpDX.Matrix translate = SharpDX.Matrix.Translation(ModelCenter);
+
+                    //Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(positions[i]);
+
+                    Matrix temp = translate * value.ToMatrix();
+
+                    SetValue(ref modelTransform, new MatrixTransform3D(temp.ToMatrix3D()));
+                }
+            }
+        }
 
         private void OnNodeMouse3DDown(object sender, RoutedEventArgs e)
         {
@@ -123,6 +158,9 @@ namespace Nart.Model_Object
             if (args.Viewport == null) return;
 
             this.isCaptured = true;
+            this.viewport = args.Viewport;
+            this.camera = args.Viewport.Camera;
+            this.lastHitPos = args.HitTestResult.PointHit;
         }
 
         private void OnNodeMouse3DUp(object sender, RoutedEventArgs e)
@@ -139,6 +177,38 @@ namespace Nart.Model_Object
             if (this.isCaptured)
             {
                 Application.Current.MainWindow.Cursor = Cursors.Hand;
+
+
+                var args = e as Mouse3DEventArgs;
+                   
+                var normal = this.camera.LookDirection;
+                       
+                var newHit = this.viewport.UnProjectOnPlane(args.Position, lastHitPos, normal);
+                if (newHit.HasValue)
+                {
+                    MeshGeometryModel3D corner = sender as MeshGeometryModel3D;
+                    var offset = (newHit.Value - lastHitPos);
+                    var trafo = corner.Transform.Value;
+                    System.Windows.Media.Media3D.Matrix3D groupTransform = this.Transform.Value;
+
+                    groupTransform.Invert();
+                    
+                    offset = groupTransform.Transform(offset);
+
+                    if (this.DragX)
+                        trafo.OffsetX += offset.X;
+
+                    if (this.DragY)
+                        trafo.OffsetY += offset.Y;
+
+                    if (this.DragZ)
+                        trafo.OffsetZ += offset.Z;
+
+                    this.lastHitPos = newHit.Value;
+                    corner.Transform = new MatrixTransform3D(trafo);
+                }
+
+
                 UpdateTransforms(sender);
             }
         }
@@ -219,17 +289,12 @@ namespace Nart.Model_Object
                 }
                 float theta = Convert.ToSingle(Math.Acos(Vector3.Dot(xBar, v1) / (v1.Length() * xBar.Length())));
 
-
                 Matrix rotateMat = Matrix.RotationAxis(rotateAxis, theta);
-
 
                 var m = Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(positions[i]);
 
-
                 ((MatrixTransform3D)edgeHandles[i].Transform).Matrix = (m.ToMatrix3D());
-
-            }
-            
+            }            
         }
 
 
@@ -294,6 +359,24 @@ namespace Nart.Model_Object
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName]string info = "")
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(info));
+            }
+        }
+        protected bool SetValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")//CallerMemberName主要是.net4.5後定義好的caller訊息，能將訊息傳給後者的變數，目的在使用時不用特地傳入"Property"名稱
+        {
+            if (object.Equals(oldValue, newValue))
+            {
+                return false;
+            }
+            oldValue = newValue;
+            this.OnPropertyChanged(propertyName);
+            return true;
+        }
 
     }
 }
