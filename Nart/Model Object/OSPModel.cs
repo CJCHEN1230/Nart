@@ -31,10 +31,6 @@ namespace Nart.Model_Object
         /// 模型有Load進去則為true
         /// </summary>
         public new bool IsLoaded = false;
-        ///// <summary>
-        ///// OSP才有的Normal
-        ///// </summary>
-        //public Vector3D OSPCurrentNormal;
         /// <summary>
         /// OSP原始的Normal
         /// </summary>

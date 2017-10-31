@@ -18,6 +18,8 @@ using SharpDX;
 
 namespace Nart
 {
+    using Matrix3D = System.Windows.Media.Media3D.Matrix3D;
+
     public class ModelSettingViewModel : ObservableObject
     {
         
@@ -262,29 +264,14 @@ namespace Nart
                     ModelSettingCollection[i].Bone.IsAdded = true;
                     //除了頭部以外需要guide
                     if (!boneModel.MarkerID.Equals("Head"))
-                    {
-
-                        Vector3 rotateAxis = new Vector3(0, 0, 1);
-
-                        SharpDX.Matrix rotate = SharpDX.Matrix.RotationAxis(rotateAxis, Convert.ToSingle( 20.0/180.0*Math.PI));
-
-
-
-
-                        SharpDX.Matrix translate = SharpDX.Matrix.Translation(boneModel.ModelCenter);
-
-                        SharpDX.Matrix m = /*rotate * */translate;
-
-                        ModelSettingCollection[i].Guide.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(m.ToMatrix3D());
-
-                        ModelSettingCollection[i].Guide.ModelCenter=boneModel.ModelCenter;
+                    {                        
+                        ModelSettingCollection[i].Guide.TranslateToModelCenter = new Matrix3D(1, 0, 0, 0,
+                                                                                                                                                                    0, 1, 0, 0,
+                                                                                                                                                                    0, 0, 1, 0,
+                                                                        boneModel.ModelCenter.X, boneModel.ModelCenter.Y, boneModel.ModelCenter.Z, 1);
 
                         MultiAngleViewModel.TriangleModelCollection.Add(ModelSettingCollection[i].Guide);
 
-                        //var binding = new Binding("Transform");
-                        //binding.Source = boneModel;
-                        //binding.Mode = BindingMode.TwoWay;
-                        //BindingOperations.SetBinding(ModelSettingCollection[i].Guide, Model3D.TransformProperty, binding);
                     }
                 }
                 //做bone 跟 osp transform的binding
@@ -296,13 +283,13 @@ namespace Nart
                     BindingOperations.SetBinding(ospModel, Model3D.TransformProperty, binding);
                 }
 
-                if (boneModel.IsLoaded && ModelSettingCollection[i].Guide!=null)
+                if (boneModel.IsLoaded && ModelSettingCollection[i].Guide != null)
                 {
 
-                    var binding = new Binding("Transform");
-                    binding.Source = boneModel;
-                    binding.Mode = BindingMode.OneWay;
-                    BindingOperations.SetBinding(ModelSettingCollection[i].Guide, GroupModel3D.TransformProperty, binding);
+                    var binding = new Binding("ModelTransform");
+                    binding.Source = ModelSettingCollection[i].Guide;
+                    binding.Mode = BindingMode.OneWayToSource;
+                    BindingOperations.SetBinding(boneModel, Model3D.TransformProperty, binding);
                 }
 
             }
@@ -337,11 +324,7 @@ namespace Nart
             Console.WriteLine("Bone  數量:" + MultiAngleViewModel.BoneModelCollection.Count);
 
 
-
-            //DraggableTriangle guide2 = new DraggableTriangle();
-            //MultiAngleViewModel.BoneModelCollection.Add(guide2);
-
-
+            
             MultiAngleViewModel.ResetCameraPosition();
 
             _modelSettingView.Hide();

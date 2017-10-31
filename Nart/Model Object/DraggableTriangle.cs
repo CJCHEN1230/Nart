@@ -11,6 +11,8 @@ using System.Windows.Input;
 namespace Nart.Model_Object
 {
     using MatrixTransform3D = System.Windows.Media.Media3D.MatrixTransform3D;
+    using Matrix3D = System.Windows.Media.Media3D.Matrix3D;
+    using Point3D = System.Windows.Media.Media3D.Point3D;
     using Matrix = SharpDX.Matrix;
     using HelixToolkit.Wpf;
     using Matrix3DExtensions = Nart.ExtensionMethods.Matrix3DExtensions;
@@ -21,28 +23,59 @@ namespace Nart.Model_Object
     using System.Runtime.CompilerServices;
     using System.Windows.Data;
 
-    public class DraggableTriangle : GroupModel3D, IHitable, INotifyPropertyChanged
+    public class DraggableTriangle : GroupModel3D, IHitable
     {
-
-        public int length = 100;
-        //一開始三顆球的初始位置
-        private Vector3[] positions;
-        private MeshGeometryModel3D[] cornerHandles = new MeshGeometryModel3D[3];
-        private MeshGeometryModel3D[] edgeHandles = new MeshGeometryModel3D[3];
-
-        private bool isCaptured;
-        private Viewport3DX viewport;
-        public Vector3 ModelCenter;
-        private Camera camera;
-        private System.Windows.Media.Media3D.Point3D lastHitPos;
-        private MatrixTransform3D dragTransform;
-        private double InitialAngle = 30;
-        private MatrixTransform3D modelTransform = new MatrixTransform3D();
-        
-
+        /// <summary>
+        /// 平移到綁定的模型中心
+        /// </summary>
+        public Matrix3D TranslateToModelCenter;
+        /// <summary>
+        /// 單顆球幾何
+        /// </summary>
         private static Geometry3D NodeGeometry;
+        /// <summary>
+        /// 單跟桿子
+        /// </summary>
         private static Geometry3D EdgeGeometry;
-
+        /// <summary>
+        /// 三顆球
+        /// </summary>
+        private MeshGeometryModel3D[] ballHandles = new MeshGeometryModel3D[3];
+        /// <summary>
+        /// 三根桿
+        /// </summary>
+        private MeshGeometryModel3D[] cylinderHandles = new MeshGeometryModel3D[3];
+        /// <summary>
+        /// 一開始三顆球的初始位置
+        /// </summary>
+        private Vector3[] positions;
+        /// <summary>
+        /// 三頂點於中心的距離
+        /// </summary>
+        private int length = 100;
+        /// <summary>
+        /// 初始三角形角度
+        /// </summary>
+        private double InitialAngle = 30;
+        /// <summary>
+        /// 初始三角形角度
+        /// </summary>
+        private bool isCaptured;
+        /// <summary>
+        /// 當前的viewport，點下Down時候會存下
+        /// </summary>
+        private Viewport3DX _viewport;
+        /// <summary>
+        /// 當前的相機，點下Down時候會存下
+        /// </summary>
+        private Camera _camera;
+        /// <summary>
+        /// 紀錄點下Down時的3D座標點
+        /// </summary>
+        private Point3D _lastHitPos;
+        /// <summary>
+        /// 定義球跟桿子
+        /// </summary>
         static DraggableTriangle()
         {
             //建立實體幾何
@@ -55,7 +88,6 @@ namespace Nart.Model_Object
             EdgeGeometry = b2.ToMeshGeometry3D();
         }
 
-    
         public DraggableTriangle()
         {
             this.Material = PhongMaterials.White;
@@ -71,7 +103,7 @@ namespace Nart.Model_Object
             {
                 //平移圓球
                 var translateMat = Matrix3DExtensions.Translate3D(positions[i]);
-                cornerHandles[i] = new MeshGeometryModel3D()
+                ballHandles[i] = new MeshGeometryModel3D()
                 {
                     Visibility = Visibility.Visible,
                     Material = this.Material,
@@ -79,9 +111,9 @@ namespace Nart.Model_Object
                     Transform = new MatrixTransform3D(translateMat),
                 };
                 //定義球的滑鼠事件
-                this.cornerHandles[i].MouseMove3D += OnNodeMouse3DMove;
-                this.cornerHandles[i].MouseUp3D += OnNodeMouse3DUp;
-                this.cornerHandles[i].MouseDown3D += OnNodeMouse3DDown;
+                this.ballHandles[i].MouseMove3D += OnNodeMouse3DMove;
+                this.ballHandles[i].MouseUp3D += OnNodeMouse3DUp;
+                this.ballHandles[i].MouseDown3D += OnNodeMouse3DDown;
 
            
                 //兩點組成向量
@@ -98,56 +130,38 @@ namespace Nart.Model_Object
                 float theta = Convert.ToSingle(Math.Acos(Vector3.Dot(xBar, v1) / (v1.Length() * xBar.Length())));
                 Matrix rotateMat = Matrix.RotationAxis(rotateAxis, theta);
                 Matrix m = Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(positions[i]);
-                this.edgeHandles[i] = new MeshGeometryModel3D()
+                this.cylinderHandles[i] = new MeshGeometryModel3D()
                 {
                     Geometry = EdgeGeometry,
                     Material = this.Material,
                     Visibility = Visibility.Visible,
                     Transform = new MatrixTransform3D(m.ToMatrix3D())
                 };
-                this.edgeHandles[i].MouseMove3D += OnEdgeMouse3DMove;
-                this.edgeHandles[i].MouseUp3D += OnEdgeMouse3DUp;
-                this.edgeHandles[i].MouseDown3D += OnEdgeMouse3DDown;
+                //定義桿子的滑鼠事件
+                this.cylinderHandles[i].MouseMove3D += OnEdgeMouse3DMove;
+                this.cylinderHandles[i].MouseUp3D += OnEdgeMouse3DUp;
+                this.cylinderHandles[i].MouseDown3D += OnEdgeMouse3DDown;
 
 
-                this.Children.Add(cornerHandles[i]);
-                this.Children.Add(edgeHandles[i]);
+                this.Children.Add(ballHandles[i]);
+                this.Children.Add(cylinderHandles[i]);
             }
-
-            cornerHandles[0].Material = PhongMaterials.Red;
-            cornerHandles[1].Material = PhongMaterials.Green;
-            cornerHandles[2].Material = PhongMaterials.Blue;
-
-
-
-            var binding = new Binding("ModelTransform");
-            binding.Source = this;
-            binding.Mode = BindingMode.TwoWay;
-            BindingOperations.SetBinding(this, GroupModel3D.TransformProperty, binding);
-
-
-
-            this.dragTransform = new MatrixTransform3D(this.Transform.Value);
+            //設定三顆球的顏色
+            ballHandles[0].Material = PhongMaterials.Red;
+            ballHandles[1].Material = PhongMaterials.Green;
+            ballHandles[2].Material = PhongMaterials.Blue;
+            
         }
 
+        /// <summary>
+        /// 這個屬性綁定在 Bone的轉移矩陣上，改變的時候多乘上一個translate給本身的transform
+        /// </summary>
         public MatrixTransform3D ModelTransform
-        {
-            get
-            {
-                return modelTransform;
-            }
+        {         
             set
-            {
-                if (ModelCenter != null) 
-                {
-                    SharpDX.Matrix translate = SharpDX.Matrix.Translation(ModelCenter);
-
-                    //Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(positions[i]);
-
-                    Matrix temp = translate * value.ToMatrix();
-
-                    SetValue(ref modelTransform, new MatrixTransform3D(temp.ToMatrix3D()));
-                }
+            {             
+                Matrix3D final = TranslateToModelCenter *  value.Value ;                    
+                this.Transform = new MatrixTransform3D(final);                
             }
         }
 
@@ -158,9 +172,9 @@ namespace Nart.Model_Object
             if (args.Viewport == null) return;
 
             this.isCaptured = true;
-            this.viewport = args.Viewport;
-            this.camera = args.Viewport.Camera;
-            this.lastHitPos = args.HitTestResult.PointHit;
+            this._viewport = args.Viewport;
+            this._camera = args.Viewport.Camera;
+            this._lastHitPos = args.HitTestResult.PointHit;
         }
 
         private void OnNodeMouse3DUp(object sender, RoutedEventArgs e)
@@ -178,38 +192,38 @@ namespace Nart.Model_Object
             {
                 Application.Current.MainWindow.Cursor = Cursors.Hand;
 
-
                 var args = e as Mouse3DEventArgs;
                    
-                var normal = this.camera.LookDirection;
+                var normal = this._camera.LookDirection;
                        
-                var newHit = this.viewport.UnProjectOnPlane(args.Position, lastHitPos, normal);
+                var newHit = this._viewport.UnProjectOnPlane(args.Position, _lastHitPos, normal);
                 if (newHit.HasValue)
                 {
                     MeshGeometryModel3D corner = sender as MeshGeometryModel3D;
-                    var offset = (newHit.Value - lastHitPos);
-                    var trafo = corner.Transform.Value;
-                    System.Windows.Media.Media3D.Matrix3D groupTransform = this.Transform.Value;
+                    var offset = (newHit.Value - _lastHitPos);
+                    var localTransform = corner.Transform.Value;
+                    Matrix3D groupTransform = this.Transform.Value;
+
 
                     groupTransform.Invert();
                     
                     offset = groupTransform.Transform(offset);
 
                     if (this.DragX)
-                        trafo.OffsetX += offset.X;
+                        localTransform.OffsetX += offset.X / groupTransform.M44;
 
                     if (this.DragY)
-                        trafo.OffsetY += offset.Y;
+                        localTransform.OffsetY += offset.Y / groupTransform.M44;
 
                     if (this.DragZ)
-                        trafo.OffsetZ += offset.Z;
+                        localTransform.OffsetZ += offset.Z / groupTransform.M44;
 
-                    this.lastHitPos = newHit.Value;
-                    corner.Transform = new MatrixTransform3D(trafo);
+                    this._lastHitPos = newHit.Value;
+                    corner.Transform = new MatrixTransform3D(localTransform);
                 }
 
 
-                UpdateTransforms(sender);
+                UpdateTransforms();
             }
         }
 
@@ -220,9 +234,9 @@ namespace Nart.Model_Object
             if (args.Viewport == null) return;
 
             this.isCaptured = true;
-            this.viewport = args.Viewport;
-            this.camera = args.Viewport.Camera;
-            this.lastHitPos = args.HitTestResult.PointHit;
+            this._viewport = args.Viewport;
+            this._camera = args.Viewport.Camera;
+            this._lastHitPos = args.HitTestResult.PointHit;
         }
 
         private void OnEdgeMouse3DUp(object sender, RoutedEventArgs e)
@@ -231,8 +245,8 @@ namespace Nart.Model_Object
             {
                 Application.Current.MainWindow.Cursor = Cursors.Arrow;
                 this.isCaptured = false;
-                this.camera = null;
-                this.viewport = null;
+                this._camera = null;
+                this._viewport = null;
             }
         }
 
@@ -244,12 +258,12 @@ namespace Nart.Model_Object
                 Mouse3DEventArgs args = e as Mouse3DEventArgs;
 
 
-                var normal = this.camera.LookDirection;
+                var normal = this._camera.LookDirection;
                 //輸入一個3D點，加一個向量以定義出一個平面，再利用輸入滑鼠新的位置，得到投影在該平面上的新3D做標點
-                var newHit = this.viewport.UnProjectOnPlane(args.Position, lastHitPos, normal);
+                var newHit = this._viewport.UnProjectOnPlane(args.Position, _lastHitPos, normal);
                 if (newHit.HasValue)
                 {
-                    var offset = (newHit.Value - lastHitPos);
+                    var offset = (newHit.Value - _lastHitPos);
                     var trafo = this.Transform.Value;
 
                     if (this.DragX)
@@ -261,16 +275,15 @@ namespace Nart.Model_Object
                     if (this.DragZ)
                         trafo.OffsetZ += offset.Z;
                     
-                    this.dragTransform.Matrix = trafo;
-                    this.Transform = this.dragTransform;
-                    this.lastHitPos = newHit.Value;
+                    this.Transform =new MatrixTransform3D(trafo);
+                    this._lastHitPos = newHit.Value;
                 }
             }
         }
 
-        private void UpdateTransforms(object sender)
+        private void UpdateTransforms()
         {
-            var cornerTrafos = this.cornerHandles.Select(x => (x.Transform as MatrixTransform3D)).ToArray();
+            var cornerTrafos = this.ballHandles.Select(x => (x.Transform as MatrixTransform3D)).ToArray();
             var cornerMatrix = cornerTrafos.Select(x => (x).Value).ToArray();
             positions = cornerMatrix.Select(x => x.ToMatrix().TranslationVector).ToArray();
 
@@ -293,7 +306,7 @@ namespace Nart.Model_Object
 
                 var m = Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(positions[i]);
 
-                ((MatrixTransform3D)edgeHandles[i].Transform).Matrix = (m.ToMatrix3D());
+                ((MatrixTransform3D)cylinderHandles[i].Transform).Matrix = (m.ToMatrix3D());
             }            
         }
 
@@ -326,9 +339,7 @@ namespace Nart.Model_Object
 
      
 
-        /// <summary>
-        /// 
-        /// </summary>
+     
         public Material Material
         {
             get { return (Material)this.GetValue(MaterialProperty); }
@@ -357,25 +368,6 @@ namespace Nart.Model_Object
                     }
                 }
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName]string info = "")
-        {
-            if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
-        }
-        protected bool SetValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")//CallerMemberName主要是.net4.5後定義好的caller訊息，能將訊息傳給後者的變數，目的在使用時不用特地傳入"Property"名稱
-        {
-            if (object.Equals(oldValue, newValue))
-            {
-                return false;
-            }
-            oldValue = newValue;
-            this.OnPropertyChanged(propertyName);
-            return true;
         }
 
     }

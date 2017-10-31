@@ -644,7 +644,9 @@ namespace Nart
 
             }
         }
-
+        /// <summary>
+        /// 計算出FH平片所形成的坐標系
+        /// </summary>
         private void CalcFHCoord()
         {
             int mandibleOSPIndex = -1;
@@ -739,8 +741,10 @@ namespace Nart
             _craniofacialInfo.GoIntersection = new Point3D(X, Y, Z);
 
         }
-
         public int Count = 5;
+        /// <summary>
+        /// 計算出顱面資訊
+        /// </summary>
         public void CalcCraniofacialInfo()
         {
             int mandibleOSPIndex = -1;
