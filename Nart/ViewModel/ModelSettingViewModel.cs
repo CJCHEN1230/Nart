@@ -263,7 +263,7 @@ namespace Nart
                     MultiAngleViewModel.BoneModelCollection.Add(ModelSettingCollection[i].Bone);
                     ModelSettingCollection[i].Bone.IsAdded = true;
                     //除了頭部以外需要guide
-                    if (!boneModel.MarkerID.Equals("Head"))
+                    if (!boneModel.MarkerID.Equals("Head")&& !boneModel.MarkerID.Equals("C"))
                     {                        
                         ModelSettingCollection[i].Guide.TranslateToModelCenter = new Matrix3D(1, 0, 0, 0,
                                                                                                                                                                     0, 1, 0, 0,

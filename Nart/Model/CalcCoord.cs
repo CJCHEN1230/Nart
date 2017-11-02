@@ -782,10 +782,10 @@ namespace Nart
                 Vector3D mandibleNormal;
                 headNormal = headOSP.GetCurrentNormal();
                 mandibleNormal = mandibleOSP.GetCurrentNormal();
+                 
 
                 //先算DA
                 double DA = Math.Acos(Vector3D.DotProduct(headNormal, mandibleNormal)) / Math.PI * 180.0;
-
 
                 Vector3D FHMandibleNormal = FHCoord.Transform(mandibleNormal);
                 double x = FHMandibleNormal.X;
@@ -805,12 +805,17 @@ namespace Nart
                 Point3D Intersection = mandibleOSP.Transform.Transform(_craniofacialInfo.GoIntersection);
                 double PDD = Math.Abs(Vector3D.DotProduct(headNormal, Intersection - headNormalPoint));
 
+                
 
-                MultiAngleViewModel.DeviationAngle = "DA:".PadRight(7) + Math.Round(DA, 4).ToString();
-                MultiAngleViewModel.DeviationDistance = "DD:".PadRight(7) + Math.Round(DD, 3).ToString();
-                MultiAngleViewModel.FrontalDeviationAngle = "FDA:".PadRight(7) + Math.Round(FDA, 2).ToString();
-                MultiAngleViewModel.HorizontalDeviationAngle = "HDA:".PadRight(7) + Math.Round(HDA, 2).ToString();                
-                MultiAngleViewModel.PosteriorDeviationDistance = "PDD:".PadRight(7) + Math.Round(PDD, 3).ToString();
+                string info = "DA:".PadRight(7) + Math.Round(DA, 4).ToString()
+                        + "\n\nDD:".PadRight(7) + Math.Round(DD, 3).ToString()
+                        + "\n\nFDA:".PadRight(7) + Math.Round(FDA, 2).ToString()
+                        + "\n\nHDA:".PadRight(7) + Math.Round(HDA, 2).ToString()
+                        + "\n\nPDD:".PadRight(7) + Math.Round(PDD, 3).ToString();
+
+                MultiAngleViewModel.CraniofacialInfo = info;
+
+
                 Count = 0;
             }
             Count++;

@@ -26,12 +26,8 @@ namespace Nart
     using ProjectionCamera = HelixToolkit.Wpf.SharpDX.ProjectionCamera;
 
     public class MultiAngleViewModel : ObservableObject
-    {          
-        private static string DevAngle; //DeviationAngle
-        private static string DevDist;     //DeviationDistance
-        private static string FrontalDevAngle;//FrontalDeviationAngle
-        private static string HorizontalDevAngle;//HorizontalDeviationAngle
-        private static string PosteriorDevDist;      //PosteriorDeviationDistance
+    {                  
+        private static string craniofacialInfo;
         private static Camera cam1 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
         private static Camera cam2 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
         private static Camera cam3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
@@ -57,47 +53,15 @@ namespace Nart
             SetCamera();
         }
         
-
-        public static string DeviationAngle
+ 
+        public static string CraniofacialInfo
         {
-            get { return DevAngle; }
+            get { return craniofacialInfo; }
             set
             {
-                SetStaticValue(ref DevAngle, value);
+                SetStaticValue(ref craniofacialInfo, value);
             }
         }
-        public static string DeviationDistance
-        {
-            get { return DevDist; }
-            set
-            {
-                SetStaticValue(ref DevDist, value);
-            }
-        }
-        public static string FrontalDeviationAngle
-        {
-            get { return FrontalDevAngle; }
-            set
-            {
-                SetStaticValue(ref FrontalDevAngle, value);
-            }
-        }
-        public static string HorizontalDeviationAngle
-        {
-            get { return HorizontalDevAngle; }
-            set
-            {
-                SetStaticValue(ref HorizontalDevAngle, value);
-            }
-        }
-        public static string PosteriorDeviationDistance
-        {
-            get { return PosteriorDevDist; }
-            set
-            {
-                SetStaticValue(ref PosteriorDevDist, value);
-            }
-        }    
         public static Camera Camera1
         {
             get
