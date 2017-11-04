@@ -33,8 +33,8 @@ namespace NartControl
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action<object> execute, Predicate<object> canExecute)
-        {
+        public RelayCommand(Action<object> execute, Predicate<object> canExecute) //Action是無傳回值的泛型委派      predicate<int> 表示傳入參數為int 返回bool的委託  
+        {                                                                                                                                                      //Predicate 是返回bool型的泛型委派     Predicate是返回bool型的泛型委派  
             if (execute == null)
                 throw new ArgumentNullException("execute");
 

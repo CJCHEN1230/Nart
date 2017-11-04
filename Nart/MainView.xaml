@@ -3,20 +3,33 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
-        xmlns:Controls="clr-namespace:NartControl.Control;assembly=NartControl"
+        xmlns:Controls="clr-namespace:NartControl.Control;assembly=NartControl"        
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:ie="http://schemas.microsoft.com/expression/2010/interactions"
         xmlns:local="clr-namespace:Nart"
         mc:Ignorable="d"        
         xmlns:helix="http://helix-toolkit.org/wpf"
         xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
         Foreground="White"
-        Title="Nart" Height="762" Width="1583.5" WindowState="Maximized" Background="#FF474747" Closed="load_Closed" Loaded="Window_Loaded">
+        Title="Nart" Height="762" Width="1583.5" WindowState="Maximized" Background="#FF474747" >
     <!--<Window.DataContext>
-        <local:MainWindowViewModel/>
+        <local:MainViewModel/>
     </Window.DataContext>-->
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding CloseWindowCommand}" />
+            <!--<ie:CallMethodAction MethodName="OnClosed" TargetObject="{Binding }" />-->
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCmdExecuted"/>
         <CommandBinding Command="ApplicationCommands.New" Executed="NewCmdExecuted"/>
     </Window.CommandBindings>
+
+
+
     <Grid Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20*"/>
@@ -29,7 +42,8 @@
         <Controls:ImgButton2 x:Name="ImgButton22" ButtonLabel="1234567"  ButtonImageSource="/Icon/test.ico" Margin="2,518,1454,163" Grid.ColumnSpan="2"/>
         <Button x:Name="button1" Command="{Binding SetModelCommand}" Content="Set Model" HorizontalAlignment="Left" Margin="10,152,0,0" VerticalAlignment="Top" Width="74" Height="54"/>
         <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="10,218,0,0" VerticalAlignment="Top" Width="76" Height="56"/>
-        <Button x:Name="button4" Click="TrackingButton_Click" Content="Tracking" HorizontalAlignment="Left" Margin="8,357,0,0" VerticalAlignment="Top" Width="75" Height="54" />
+        <Button x:Name="button4" Command="{Binding TrackCommand}"   Content="Tracking" HorizontalAlignment="Left" Margin="8,357,0,0" VerticalAlignment="Top" Width="75" Height="54" />
+        <Button x:Name="RegButton" Command="{Binding RegisterCommand}" Content="Registration" HorizontalAlignment="Left" Margin="10,286,0,0" VerticalAlignment="Top" Width="74" Height="56"/>
         <TabControl x:Name="tabControl" SelectedIndex="{Binding Path = TabIndex}" Margin="0,0,0,0" Background="#FF474747" OpacityMask="Black" Grid.Column="1">
             <TabItem Header="Camera" FontSize="15" >
                 <TabItem.Background>
@@ -49,8 +63,20 @@
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Controls:CameraWrapper x:Name="CamHost1" Grid.Column="0"  Grid.Row="1"  Margin="0,1,0,1" Background="#FF666666" Loaded="CamHost1_Loaded" />
-                    <Controls:CameraWrapper x:Name="CamHost2" Grid.Column="2"  Grid.Row="1"  Margin="0,1,0,1" Background="#FF666666" Loaded="CamHost2_Loaded" />
+                    <Controls:CameraWrapper x:Name="CamHost1" Grid.Column="0"  Grid.Row="1"  Margin="0,1,0,1" Background="#FF666666" >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Loaded">
+                                <i:InvokeCommandAction Command="{Binding CameraOneLoadedCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Controls:CameraWrapper>
+                    <Controls:CameraWrapper x:Name="CamHost2" Grid.Column="2"  Grid.Row="1"  Margin="0,1,0,1" Background="#FF666666" >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Loaded">
+                                <i:InvokeCommandAction Command="{Binding CameraTwoLoadedCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Controls:CameraWrapper>
 
                     <Rectangle Fill="#FF474747" HorizontalAlignment="Center" Grid.Column="1" Margin="0" Stroke="Black" Width="10" RadiusY="61" RadiusX="61" Grid.ColumnSpan="1" Grid.RowSpan="3"/>
 
@@ -69,8 +95,7 @@
             </TabItem>
         </TabControl>
         <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" HorizontalAlignment="Left" Margin="3,484,0,0" VerticalAlignment="Top" Height="46" Width="106" FontSize="20"/>
-        <Button x:Name="RegButton" Content="Registration" HorizontalAlignment="Left" Margin="10,286,0,0" VerticalAlignment="Top" Width="74" Height="56" Click="RegButton_Click"/>
-        <!--Controls:imgbtn2      Margin="52,10,66,760" Grid.Row="1"/-->
+
 
 
     </Grid>

@@ -30,7 +30,7 @@ namespace Nart
         /// </summary>
         public Matrix3D EpipolarCoord;
         /// <summary>
-        /// 基線座標系的旋轉矩陣
+        /// FH平面座標系的旋轉矩陣
         /// </summary>
         public Matrix3D FHCoord;
         /// <summary>
@@ -38,11 +38,13 @@ namespace Nart
         /// </summary>
         private CamParam[] _camParam = new CamParam[2];
         /// <summary>
-        ///盧顎面資訊Go Po Or Me...
+        ///顱顎面資訊Go Po Or Me...
         /// </summary>
         private CraniofacialInfo _craniofacialInfo;
+        /// <summary>
+        ///判斷是不是相同點的pixel容忍值
+        /// </summary>
         private const double MatchError = 5;
-        private List<Marker3D> WorldPoints = new List<Marker3D>(10);
         /// <summary>
         ///CT珠子中心座標
         /// </summary>
@@ -54,7 +56,14 @@ namespace Nart
         /// <summary>
         ///MS點的Marker中心座標
         /// </summary>
-        private Point3D[] MSMarker; 
+        private Point3D[] MSMarker;
+        private Matrix3D CTtoMS;
+        private Matrix3D MStoCT;
+        private Matrix3D OriWorldtoMS;
+        /// <summary>
+        /// 當前點世界座標
+        /// </summary>
+        private List<Marker3D> WorldPoints = new List<Marker3D>(10);
         /// <summary>
         /// 註冊時的點世界座標
         /// </summary>
@@ -63,11 +72,7 @@ namespace Nart
         /// 世界座標轉換到MS的座標
         /// </summary>
         private List<Marker3D> MSWorldPoints = new List<Marker3D>(10);
-        private Matrix3D CTtoMS;
-        private Matrix3D MStoCT;
-        private Matrix3D OriWorldtoMS;        
 
-        
         ///<summary>
         ///頭在註冊資料中引數
         /// </summary>
@@ -302,7 +307,10 @@ namespace Nart
 
                 WorldPoints[i].CompareDatabase(database.MarkerInfo);
             }
-        }        
+        }
+        /// <summary>
+        /// 目前尚未使用這種排序
+        /// </summary>
         private void SortMarker(List<BWMarker>[] OutputMarker)
         {
             Parallel.For(0, 2, Image_Index =>
@@ -379,8 +387,7 @@ namespace Nart
         /// 傳入兩組三個點所組成的座標系，回傳轉換矩陣
         /// </summary>
         private Matrix3D TransformCoordinate(Point3D[] A,Point3D[] B)
-        {
-          
+        {          
             List<Point3D[]> twoPoints = new List<Point3D[]>(2) { A, B };
             Point3D[] Avg = new Point3D[2];
             Vector3D[] u = new Vector3D[2];
@@ -751,7 +758,6 @@ namespace Nart
             int headOSPIndex = -1;
             if (Count == 5)
             {
-
                 //先找出模型引數
                 for (int i = 0; i < MultiAngleViewModel.OSPModelCollection.Count; i++)
                 {

@@ -52,11 +52,16 @@ namespace Nart
             SetLight();
             SetCamera();
         }
-        
- 
+
+        /// <summary>
+        /// 五項指標資訊
+        /// </summary>
         public static string CraniofacialInfo
         {
-            get { return craniofacialInfo; }
+            get
+            {
+                return craniofacialInfo;
+            }
             set
             {
                 SetStaticValue(ref craniofacialInfo, value);

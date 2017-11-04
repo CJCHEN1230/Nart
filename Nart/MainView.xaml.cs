@@ -38,8 +38,10 @@ namespace Nart
         private MainViewModel _mainViewModel = null;
         public MainView()
         {
-            InitializeComponent();
+
           
+            InitializeComponent();
+
             _mainViewModel = new MainViewModel(this);
 
             this.DataContext = _mainViewModel;
@@ -49,8 +51,8 @@ namespace Nart
         
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
-
-
+            
+            //this.Closed
             //Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
     
 
@@ -83,19 +85,8 @@ namespace Nart
             // Console.WriteLine(MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0].X);
 
         }
-        private void RegButton_Click(object sender, RoutedEventArgs e)
-        {
-            CameraControl.RegToggle = !CameraControl.RegToggle;
-        }
-        private void TrackingButton_Click(object sender, RoutedEventArgs e)
-        {
-            CameraControl.TrackToggle = !CameraControl.TrackToggle;
-        }
-        private void load_Closed(object sender, EventArgs e)
-        {
-            //CamCtrl.CameraClose();            
-            System.Windows.Application.Current.Shutdown();
-        }
+     
+    
         private void OpenCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
@@ -138,11 +129,7 @@ namespace Nart
                 CamHost2.IsActivated = true;
             }
         }       
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-           
-        }
-        
+       
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -150,6 +137,6 @@ namespace Nart
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
-      
+        
     }
 }
