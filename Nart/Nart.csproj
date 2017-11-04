@@ -14,24 +14,6 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -43,10 +25,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -54,10 +35,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Cyotek.Drawing.BitmapFont, Version=1.0.0.0, Culture=neutral, PublicKeyToken=58daa28b0b2de221, processorArchitecture=MSIL">
@@ -65,18 +42,19 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="HelixToolkit, Version=1.1.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelixToolkit.1.1.0-unstable0017\lib\portable-net45+win8+wpa81+wp8\HelixToolkit.dll</HintPath>
+      <HintPath>..\packages\HelixToolkit.1.1.0-unstable0023\lib\portable-net45+win8+wpa81+wp8\HelixToolkit.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="HelixToolkit.Wpf, Version=1.1.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelixToolkit.Wpf.1.1.0-unstable0017\lib\net45\HelixToolkit.Wpf.dll</HintPath>
+      <HintPath>..\packages\HelixToolkit.Wpf.1.1.0-unstable0023\lib\net45\HelixToolkit.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="HelixToolkit.Wpf.SharpDX, Version=1.1.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelixToolkit.Wpf.SharpDX.1.1.0-unstable0017\lib\net45\HelixToolkit.Wpf.SharpDX.dll</HintPath>
+      <HintPath>..\packages\HelixToolkit.Wpf.SharpDX.1.1.0-unstable0023\lib\net45\HelixToolkit.Wpf.SharpDX.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="PresentationCore" />
     <Reference Include="PropertyTools, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
       <HintPath>..\packages\PropertyTools.Wpf.2.0.1\lib\net45\PropertyTools.dll</HintPath>
       <Private>True</Private>
@@ -136,15 +114,22 @@
       <HintPath>C:\Program Files\Common Files\IC Imaging Control 3.4\bin\v4.0.30319\x64\TIS.Imaging.ICImagingControl34.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\ModelSettingViewModel.cs" />
+    <Compile Include="ViewModel\MultiAngleViewModel.cs" />
+    <Compile Include="View\ModelSettingView.xaml.cs">
+      <DependentUpon>ModelSettingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MultiAngleView.xaml.cs">
+      <DependentUpon>MultiAngleView.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -153,13 +138,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model Object\DraggableTriangle.cs" />
-    <Compile Include="Model\CameraControl.cs" />
-    <Compile Include="Model\CalcCoord.cs" />
-    <Compile Include="Model\CamParam.cs" />
-    <Compile Include="Model\CraniofacialInfo.cs" />
     <Compile Include="ExtensionMethods\Matrix3DExtensions.cs" />
-    <Compile Include="Model\MarkerDatabase.cs" />
     <Compile Include="MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -174,19 +153,16 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="Model\Marker3D.cs" />
-    <Compile Include="Model\ModelSettingItem.cs" />
-    <Compile Include="View\ModelSettingView.xaml.cs">
-      <DependentUpon>ModelSettingView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModel\ModelSettingViewModel.cs" />
-    <Compile Include="Model Object\OSPModel.cs" />
     <Compile Include="Model Object\BoneModel.cs" />
-    <Compile Include="View\MultiAngleView.xaml.cs">
-      <DependentUpon>MultiAngleView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModel\MultiAngleViewModel.cs" />
+    <Compile Include="Model Object\DraggableTriangle.cs" />
+    <Compile Include="Model Object\OSPModel.cs" />
+    <Compile Include="Model\CalcCoord.cs" />
+    <Compile Include="Model\CameraControl.cs" />
+    <Compile Include="Model\CamParam.cs" />
+    <Compile Include="Model\CraniofacialInfo.cs" />
+    <Compile Include="Model\Marker3D.cs" />
+    <Compile Include="Model\MarkerDatabase.cs" />
+    <Compile Include="Model\ModelSettingItem.cs" />
     <Compile Include="Model\NartServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -205,7 +181,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -216,8 +194,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Icon\test.ico" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
     <ProjectReference Include="..\NartControl\NartControl.csproj">
-      <Project>{485d41ef-60c0-412c-b28f-4f64c27c07d0}</Project>
+      <Project>{9c9659d2-1de1-4446-81e1-8bdf4ed0e2b0}</Project>
       <Name>NartControl</Name>
     </ProjectReference>
     <ProjectReference Include="..\UseCVLibrary\UseCVLibrary.vcxproj">
@@ -225,22 +207,6 @@
       <Name>UseCVLibrary</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icon\test.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

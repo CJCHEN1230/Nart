@@ -16,9 +16,9 @@
                     Value="18" />
         </Style>
     </UserControl.Resources>-->
-    <!--<UserControl.DataContext>
+    <UserControl.DataContext>
         <local:MultiAngleViewModel/>
-    </UserControl.DataContext>-->
+    </UserControl.DataContext>
     <Grid Background="#FFE5E5E5" Margin="1">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>

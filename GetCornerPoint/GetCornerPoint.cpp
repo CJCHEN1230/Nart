@@ -105,12 +105,12 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 	}
 
 
-	
+
 	concurrent_vector<vector<MyPoint>> EachEllipsePoint;//存每個橢圓內部角點
-	
 
 
-	//此平行運算是分別對找到的橢圓計算角點
+
+														//此平行運算是分別對找到的橢圓計算角點
 	parallel_for(0u,/*1u*/ (unsigned int)EllipseSet.size(), [&src1, &mask, &EllipseSet, &EachEllipsePoint](int value)
 	{
 		//分別對橢圓所在的位置擷取成最小方框
@@ -150,7 +150,7 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 			return;
 		}
 
-		
+
 		/// 角點位置精準化參數  
 		Size winSize = Size(5, 5);
 		Size zeroZone = Size(-1, -1);
@@ -160,8 +160,8 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 			0.001);  //epsilon=0.001  
 		cornerSubPix(srcTemp, corners, winSize, zeroZone, criteria);// 計算精準化後的角點位置 
 
-		///這段畫橢圓要畫橢圓再加
-		//ellipse(src1, EllipseSet.at(value), Scalar(255), 1, 8);
+																	///這段畫橢圓要畫橢圓再加
+																	//ellipse(src1, EllipseSet.at(value), Scalar(255), 1, 8);
 
 
 		vector<MyPoint> myPointVec(3);	//轉存成MyPoint的暫存器
@@ -170,15 +170,15 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 		for (vector<Point2f>::iterator it = corners.begin(); it != corners.end(); it++)
 		{
 			circle(src1, Point2f((*it2).x = (*it).x + ROI.x, (*it2).y = (*it).y + ROI.y), 10, Scalar(255), 2, 8, 0);//畫出所有角點位置，並將位置存進MyPoint2f當中
-/*			(*it2).x = (*it).x + ROI.x;
-			(*it2).y = (*it).y + ROI.y;		*/																																																			
+																													/*			(*it2).x = (*it).x + ROI.x;
+																													(*it2).y = (*it).y + ROI.y;		*/
 			it2++;
 		}
 
 		EachEllipsePoint.push_back(myPointVec);
 
 	});
-	
+
 	OutputCornerPoint.reserve(EachEllipsePoint.size());
 
 	OutputCornerPoint.assign(EachEllipsePoint.begin(), EachEllipsePoint.end());
@@ -186,7 +186,7 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 
 
 
-	
+
 	//cout << "\n第一張圖" << OutputCornerPoint.at(0).size() << "個點";
 	//cout << "\n第二張圖" << OutputCornerPoint.at(1).size() << "個點";
 	//if (OutputCornerPoint.at(0).size() == OutputCornerPoint.at(1).size()) {

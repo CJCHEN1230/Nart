@@ -34,12 +34,12 @@ namespace Nart
     /// </summary>
     public partial class MainView : Window
     {
-        
+
         private MainViewModel _mainViewModel = null;
         public MainView()
         {
 
-          
+
             InitializeComponent();
 
             _mainViewModel = new MainViewModel(this);
@@ -47,14 +47,14 @@ namespace Nart
             this.DataContext = _mainViewModel;
 
             AllocConsole();
-        }        
-        
+        }
+
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
-            
+
             //this.Closed
             //Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
-    
+
 
             //BoneModel test = MultiAngleViewModel.BoneModelCollection[0] as BoneModel;
 
@@ -85,33 +85,7 @@ namespace Nart
             // Console.WriteLine(MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0].X);
 
         }
-     
-    
-        private void OpenCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
-            dlg.Title = "New Project";
-            dlg.DefaultExt = ".stl";
-            dlg.Multiselect = true;
-            dlg.Filter = "STL File (.stl)|*.stl";
-
-
-            Nullable<bool> result = dlg.ShowDialog();
-
-            if (result == true)
-            {
-                foreach (String filename in dlg.FileNames)
-                {
-                    
-                }
-
-            }
-        }
-        private void NewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-
-        }       
         private void CamHost1_Loaded(object sender, RoutedEventArgs e)
         {
             if (!CamHost1.IsActivated)
@@ -128,8 +102,8 @@ namespace Nart
                 CamHost1.IsActivated = true;
                 CamHost2.IsActivated = true;
             }
-        }       
-       
+        }
+
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -137,6 +111,6 @@ namespace Nart
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
-        
+
     }
 }

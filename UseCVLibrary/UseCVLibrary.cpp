@@ -7,8 +7,8 @@ using namespace System::Drawing;
 using namespace System::Collections::Generic;
 using namespace System::Windows::Media::Media3D;
 
-UseCVLibrary::NartPoint::NartPoint() 
-{	
+UseCVLibrary::NartPoint::NartPoint()
+{
 	ImagePoint = gcnew PointF();
 
 	//CameraPoint = gcnew Point3D();
@@ -37,12 +37,12 @@ UseCVLibrary::BWMarker::BWMarker()
 
 void UseCVLibrary::BWMarker::sort()
 {
-	
+
 }
 
 int UseCVLibrary::BWMarker::CompareTo(BWMarker^ other)
 {
-	
+
 	if (this->AvgRectifyY - other->AvgRectifyY > 2)
 	{
 		return -1;
@@ -62,10 +62,10 @@ int UseCVLibrary::BWMarker::CompareTo(BWMarker^ other)
 
 
 	/*if (this->AvgRectifyY - other->AvgRectifyY > 0)
-		return 1;
+	return 1;
 	else
-		return -1;*/
-	
+	return -1;*/
+
 }
 
 UseCVLibrary::CornerPointFilter::CornerPointFilter(int number) : CameraNumber(number)

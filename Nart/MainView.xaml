@@ -23,10 +23,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCmdExecuted"/>
-        <CommandBinding Command="ApplicationCommands.New" Executed="NewCmdExecuted"/>
-    </Window.CommandBindings>
+
 
 
 

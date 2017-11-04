@@ -18,17 +18,17 @@ namespace UseCVLibrary {
 	/// </summary>
 	public ref class NartPoint
 	{
-		public: 
-			PointF^ ImagePoint;	//儲存計算出來的影像座標系的點
+	public:
+		PointF^ ImagePoint;	//儲存計算出來的影像座標系的點
 
-			Point4D CameraPoint; //儲存計算出來的相機座標系的點
+		Point4D CameraPoint; //儲存計算出來的相機座標系的點
 
-			double RectifyY;
+		double RectifyY;
 
-			NartPoint();
-			
-			NartPoint(PointF imagePoints);
-			
+		NartPoint();
+
+		NartPoint(PointF imagePoints);
+
 	};
 	/// <summary>
 	/// 每一組Marker
@@ -45,7 +45,7 @@ namespace UseCVLibrary {
 		BWMarker();
 
 		void sort(void);
-		
+
 		virtual int CompareTo(BWMarker^ other);
 
 	};
@@ -64,5 +64,5 @@ namespace UseCVLibrary {
 		List<BWMarker^>^ GetCornerPoint(int width, int height, System::Byte* imageHeadPointer); //純算出像素座標存進ImagePoint
 	};
 
-	
+
 }
