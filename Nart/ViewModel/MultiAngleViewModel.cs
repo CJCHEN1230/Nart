@@ -43,12 +43,12 @@ namespace Nart
 
 
 
-        public MultiAngleViewModel(/*MultiAngleView _multiview*/)
+        public MultiAngleViewModel(MultiAngleView _multiview)
         {
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
             RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Blinn];
             EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
-            //this._multiview = _multiview;           
+            this._multiview = _multiview;           
             SetLight();
             SetCamera();
         }

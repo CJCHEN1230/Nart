@@ -121,14 +121,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Resource\WindowStyle.xaml.cs">
+      <DependentUpon>WindowStyle.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ModelSettingViewModel.cs" />
     <Compile Include="ViewModel\MultiAngleViewModel.cs" />
+    <Compile Include="ViewModel\NavigateViewModel.cs" />
     <Compile Include="View\ModelSettingView.xaml.cs">
       <DependentUpon>ModelSettingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MultiAngleView.xaml.cs">
       <DependentUpon>MultiAngleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\NavigateView.xaml.cs">
+      <DependentUpon>NavigateView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -143,6 +150,10 @@
       <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resource\WindowStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\ModelSettingView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -150,6 +161,10 @@
     <Page Include="View\MultiAngleView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\NavigateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

@@ -25,6 +25,7 @@ namespace Nart
         private static string _pointNumber;
         private static int _tabIndex = 1; //預設tab頁面索引值        
         private ModelSettingView _modelSettingdlg;
+        private NavigateView _navigatedlg;
         private MainView _mainWindow;
         
         public MainViewModel(MainView mainWindow)
@@ -32,10 +33,9 @@ namespace Nart
             _mainWindow = mainWindow;
             SetModelCommand = new RelayCommand(SetModel);
             RegisterCommand = new RelayCommand(Register);
+            SetNavigationCommand = new RelayCommand(SetNavigation);
             TrackCommand = new RelayCommand(Track);
-            CloseWindowCommand = new RelayCommand(obj => this.OnClosed(obj), null);
-            CameraOneLoadedCommand = new RelayCommand(CamOneLoaded);
-            CameraTwoLoadedCommand = new RelayCommand(CamTwoLoaded);
+            CloseWindowCommand = new RelayCommand(obj => this.OnClosed(obj), null);       
         }
                 
         public static int TabIndex
@@ -55,6 +55,7 @@ namespace Nart
             }
         }
         public ICommand SetModelCommand { private set; get; }
+        public ICommand SetNavigationCommand { private set; get; }
         /// <summary>
         /// 註冊按鈕
         /// </summary>
@@ -63,10 +64,12 @@ namespace Nart
         /// 追蹤按鈕
         /// </summary>
         public ICommand TrackCommand { private set; get; }
+        /// <summary>
+        /// 關閉程式
+        /// </summary>
         public ICommand CloseWindowCommand { private set; get; }
 
-        public ICommand CameraOneLoadedCommand { private set; get; }
-        public ICommand CameraTwoLoadedCommand { private set; get; }
+
 
         public void InitCamCtrl()
         {
@@ -87,6 +90,16 @@ namespace Nart
 
             _modelSettingdlg.ShowDialog();
         }
+        private void SetNavigation(object o)
+        {
+            if (_navigatedlg == null)
+            {
+                _navigatedlg = new NavigateView();
+            }
+            _navigatedlg.Owner = _mainWindow;
+
+            _navigatedlg.ShowDialog();
+        }
         private void Register(object o)
         {
             CameraControl.RegToggle = !CameraControl.RegToggle;
@@ -103,23 +116,7 @@ namespace Nart
             }
             System.Windows.Application.Current.Shutdown();
         }
-        private void CamOneLoaded(object o)
-        {
-            if (_mainWindow.CamHost1.IsActivated)
-            {
-                _mainWindow.CamHost1.InitializeCamSetting(_mainWindow.CamHost1.ActualWidth, _mainWindow.CamHost1.ActualHeight);
-            }
-        }
-        private void CamTwoLoaded(object o)
-        {
-            if (_mainWindow.CamHost2.IsActivated)
-            {
-                _mainWindow.CamHost2.InitializeCamSetting(_mainWindow.CamHost2.ActualWidth, _mainWindow.CamHost2.ActualHeight);
-                 InitCamCtrl();
-                _mainWindow.CamHost1.IsActivated = true;
-                _mainWindow.CamHost2.IsActivated = true;
-            }
-        }
+      
 
 
         public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;

@@ -31,8 +31,8 @@ namespace Nart
         public MultiAngleView()
         {
             InitializeComponent();
-            ////_multiAngleViewModel = new MultiAngleViewModel(this);
-            ////this.DataContext = _multiAngleViewModel; //將_multiAngleViewModel的資料環境傳給此DataContext                  
-        }            
+            _multiAngleViewModel = new MultiAngleViewModel(this);
+            this.DataContext = _multiAngleViewModel; //將_multiAngleViewModel的資料環境傳給此DataContext                  
+        }
     }
 }

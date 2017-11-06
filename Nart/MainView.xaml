@@ -11,7 +11,20 @@
         xmlns:helix="http://helix-toolkit.org/wpf"
         xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
         Foreground="White"
-        Title="Nart" Height="762" Width="1583.5" WindowState="Maximized" Background="#FF474747" >
+        WindowState="Maximized" 
+        WindowStyle="None" 
+        ResizeMode="NoResize"
+        MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
+        Title="Nart"  Background="#FF4C4C4C" 
+        Style="{DynamicResource ResourceKey=CustomWindowStyle}" Height="658.5" Width="1717.5">
+        
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resource/WindowStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <!--<Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>-->
@@ -19,7 +32,6 @@
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
             <i:InvokeCommandAction Command="{Binding CloseWindowCommand}" />
-            <!--<ie:CallMethodAction MethodName="OnClosed" TargetObject="{Binding }" />-->
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
@@ -33,15 +45,17 @@
             <ColumnDefinition Width="241*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="499*"/>
         </Grid.RowDefinitions>
 
-        <Controls:ImgButton2 x:Name="ImgButton22" ButtonLabel="1234567"  ButtonImageSource="/Icon/test.ico" Margin="2,518,1454,163" Grid.ColumnSpan="2"/>
-        <Button x:Name="button1" Command="{Binding SetModelCommand}" Content="Set Model" HorizontalAlignment="Left" Margin="10,152,0,0" VerticalAlignment="Top" Width="74" Height="54"/>
-        <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" HorizontalAlignment="Left" Margin="10,218,0,0" VerticalAlignment="Top" Width="76" Height="56"/>
-        <Button x:Name="button4" Command="{Binding TrackCommand}"   Content="Tracking" HorizontalAlignment="Left" Margin="8,357,0,0" VerticalAlignment="Top" Width="75" Height="54" />
-        <Button x:Name="RegButton" Command="{Binding RegisterCommand}" Content="Registration" HorizontalAlignment="Left" Margin="10,286,0,0" VerticalAlignment="Top" Width="74" Height="56"/>
-        <TabControl x:Name="tabControl" SelectedIndex="{Binding Path = TabIndex}" Margin="0,0,0,0" Background="#FF474747" OpacityMask="Black" Grid.Column="1">
+
+        <Controls:ImgButton2 x:Name="ImgButton22" ButtonLabel="1234567"  ButtonImageSource="/Icon/test.ico" Margin="0,433,0,36" Height="Auto" Width="Auto"/>
+        <Button x:Name="button1_Copy" Command="{Binding SetNavigationCommand}" Content="Set Navigation" Margin="0,35,0,0" VerticalAlignment="Top" Height="54"/>
+        <Button x:Name="button1" Command="{Binding SetModelCommand}" Content="Set Model" Margin="0,108,0,0" VerticalAlignment="Top" Height="54" Grid.Row="1"/>
+        <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" Margin="0,174,0,0" VerticalAlignment="Top" Height="56"/>
+        <Button x:Name="button4" Command="{Binding TrackCommand}"   Content="Tracking" Margin="0,318,0,0" VerticalAlignment="Top" Height="54" />
+        <Button x:Name="RegButton" Command="{Binding RegisterCommand}" Content="Registration" Margin="0,242,0,0" VerticalAlignment="Top" Height="56"/>
+        <TabControl x:Name="tabControl" SelectedIndex="{Binding Path = TabIndex}" Margin="0,0,0,0" Background="#FF474747" OpacityMask="Black" Grid.Column="1" Grid.Row="1">
             <TabItem Header="Camera" FontSize="15" >
                 <TabItem.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -60,14 +74,14 @@
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Controls:CameraWrapper x:Name="CamHost1" Grid.Column="0"  Grid.Row="1"  Margin="0,1,0,1" Background="#FF666666" >
+                    <Controls:CameraWrapper x:Name="CamHost1" Grid.Column="0"  Grid.Row="1"  Margin="0,1,0,1" Background="#FF666666" Loaded="CamHost1_Loaded">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Loaded">
                                 <i:InvokeCommandAction Command="{Binding CameraOneLoadedCommand}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Controls:CameraWrapper>
-                    <Controls:CameraWrapper x:Name="CamHost2" Grid.Column="2"  Grid.Row="1"  Margin="0,1,0,1" Background="#FF666666" >
+                    <Controls:CameraWrapper x:Name="CamHost2" Grid.Column="2"  Grid.Row="1"  Margin="0,1,0,1" Background="#FF666666" Loaded="CamHost2_Loaded">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Loaded">
                                 <i:InvokeCommandAction Command="{Binding CameraTwoLoadedCommand}" />
@@ -87,12 +101,12 @@
                     </LinearGradientBrush>
                 </TabItem.Background>
 
-                <local:MultiAngleView x:Name="multiAngleView" Margin="1" Width="Auto" Height="Auto"  />
+                <local:MultiAngleView x:Name="multiAngleView" Margin="0" Width="Auto" Height="Auto"  />
 
             </TabItem>
         </TabControl>
-        <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" HorizontalAlignment="Left" Margin="3,484,0,0" VerticalAlignment="Top" Height="46" Width="106" FontSize="20"/>
-
+        <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" HorizontalAlignment="Left" Margin="3,401,0,0" VerticalAlignment="Top" Height="46" Width="106" FontSize="20" Grid.ColumnSpan="2" Grid.Row="1"/>
+        
 
 
     </Grid>

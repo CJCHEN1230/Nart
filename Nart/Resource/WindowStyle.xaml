@@ -1,0 +1,90 @@
+﻿<ResourceDictionary x:Class="Nart.WindowStyle"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <Style x:Key="CustomWindowStyle" TargetType="{x:Type Window}">
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome CaptionHeight="30"
+                              CornerRadius="4"
+                              GlassFrameThickness="0"
+                              NonClientFrameEdges="None"
+                              ResizeBorderThickness="5"
+                              UseAeroCaptionButtons="True" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush" Value="#FF3F3F46" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Window}">
+                    <Grid>
+                        <Border BorderBrush="Black" BorderThickness="1">
+                                <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="0,30,0,0">
+                                    <AdornerDecorator>
+                                        <ContentPresenter />
+                                    </AdornerDecorator>
+                                </Border>   
+                        </Border>
+                        <DockPanel Height="30"
+                                   VerticalAlignment="Top"
+                                   LastChildFill="False">
+
+                            <TextBlock Margin="15,0,0,0"
+                                       VerticalAlignment="Center"
+                                       DockPanel.Dock="Left"                                       
+                                       FontSize="14"
+                                       Foreground="#FFC7C7C7"                                       
+                                       Text="{TemplateBinding Title}" FontFamily="Microsoft NeoGothic" />
+
+                            <Button x:Name="btnClose"
+                                    Width="20"
+                                    Height="{Binding Path=Width, RelativeSource={RelativeSource Self}}"
+                                    Background="Transparent"
+                                    Foreground="#FFC7C7C7"
+                                    BorderThickness="0"
+                                    FontSize="16"
+                                    Margin="5"
+                                    Click="CloseClick"
+                                    Content="X"
+                                    DockPanel.Dock="Right"
+                                    WindowChrome.IsHitTestVisibleInChrome="True" />
+
+
+                            <Button x:Name="btnRestore"
+                                    Width="20"
+                                    Height="{Binding Path=Width, RelativeSource={RelativeSource Self}}"
+                                    Background="Transparent"
+                                    Foreground="#FFC7C7C7"
+                                    BorderThickness="0"                                    
+                                    FontSize="18"
+                                    Margin="5"
+                                    Click="MaximizeRestoreClick"
+                                    Content="#"
+                                    DockPanel.Dock="Right"
+                                    WindowChrome.IsHitTestVisibleInChrome="True" />
+
+                            <Button x:Name="btnMinimize"
+                                    Width="20"
+                                    Height="{Binding Path=Width, RelativeSource={RelativeSource Self}}"
+                                    Background="Transparent"
+                                    Foreground="#FFC7C7C7"
+                                    BorderThickness="0"                                    
+                                    FontSize="18"
+                                    Margin="5"
+                                    VerticalContentAlignment="Center"
+                                    Click="MinimizeClick"
+                                    Content="-"
+                                    DockPanel.Dock="Right"
+                                    WindowChrome.IsHitTestVisibleInChrome="True" />
+                        </DockPanel>
+
+                    </Grid>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

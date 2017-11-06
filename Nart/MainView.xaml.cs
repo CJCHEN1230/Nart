@@ -38,8 +38,6 @@ namespace Nart
         private MainViewModel _mainViewModel = null;
         public MainView()
         {
-
-
             InitializeComponent();
 
             _mainViewModel = new MainViewModel(this);
@@ -104,7 +102,7 @@ namespace Nart
             }
         }
 
-
+        
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
