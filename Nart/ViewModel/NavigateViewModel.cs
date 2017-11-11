@@ -10,75 +10,73 @@ using System.Threading.Tasks;
 
 namespace Nart
 {
+    using System.IO;
+    using System.Windows;
+    using System.Windows.Input;
+    using Color = System.Windows.Media.Color;
     public class NavigateViewModel : ObservableObject
     {
-        #region intermediate部分
-        /// <summary>
-        /// 中間上顎轉移矩陣
-        /// </summary>
-        private String ITMMaxillaMatrix = "";
-        /// <summary>
-        /// 中間下顎轉移矩陣
-        /// </summary>
-        private String ITMMandibleMatrix = "";
-        /// <summary>
-        /// 中間上顎規劃後模型
-        /// </summary>
-        private String ITMMaxillaPlanModel = "";
-        /// <summary>
-        /// 中間下顎規劃後模型
-        /// </summary>
-        private String ITMMandiblePlanModel = "";
-        #endregion
-        
-        #region final部分
+
+        #region N-Art計畫部分
         /// <summary>
         /// 最後上顎轉移矩陣
         /// </summary>
-        private String finalMaxillaMatrix = "";
+        private String plannedMaxillaMatrix = "../../../data/蔡慧君/原始位置轉到規劃後位置上顎_matrix.txt";
         /// <summary>
         /// 最後下顎轉移矩陣
         /// </summary>
-        private String finalMandibleMatrix = "";
+        private String plannedMandibleMatrix = "../../../data/蔡慧君/原始位置轉到規劃後位置下顎_matrix.txt";
         /// <summary>
         /// 最後上顎規劃後模型
         /// </summary>
-        private String finalMaxillaPlanModel = "";
+        private String plannedMaxilla = "../../../data/蔡慧君/nart規劃後 finalmaxilla.stl";
         /// <summary>
         /// 最後下顎規劃後模型
         /// </summary>
-        private String finalMandiblePlanModel = "";
+        private String plannedMandible = "../../../data/蔡慧君/nart規劃後 finalmandible.stl";
         #endregion
 
-        #region 模型設定部分
+
+        #region 原始模型設定部分
         /// <summary>
         /// 最後上顎轉移矩陣
         /// </summary>
-        private String headModel = "";
-        /// <summary>
-        /// 最後下顎轉移矩陣
-        /// </summary>
-        private String maxillaModel = "";
-        /// <summary>
-        /// 最後上顎規劃後模型
-        /// </summary>
-        private String mandibleModel = "";
-        #endregion
-        
+        private String headModel = "../../../data/蔡慧君/skull.stl";
         /// <summary>
         /// 頭部模型顏色
         /// </summary>
-        private Color headDiffuseColor;
+        private Color headDiffuseColor = Color.FromArgb(255, 40, 181, 187);
+        /// <summary>
+        /// 最後下顎轉移矩陣
+        /// </summary>
+        private String maxillaModel = "../../../data/蔡慧君/original_maxilla.stl";
         /// <summary>
         /// 上顎模型顏色
         /// </summary>
-        private Color maxillaDiffuseColor;
+        private Color maxillaDiffuseColor = Color.FromArgb(255, 40, 181, 187);
+        /// <summary>
+        /// 最後上顎規劃後模型
+        /// </summary>
+        private String mandibleModel = "../../../data/蔡慧君/original_mandible.stl";
         /// <summary>
         /// 下顎模型顏色
         /// </summary>
-        private Color mandibleDiffuseColor;
-        private string firstNavigation;
+        private Color mandibleDiffuseColor = Color.FromArgb(255, 40, 181, 187);
+        #endregion
 
+
+        /// <summary>
+        /// 中間咬板對位的轉移矩陣
+        /// </summary>
+        private String intermediateMaxillaMatrix = "../../../data/蔡慧君/intermediatemoved_Matrix.txt";
+        /// <summary>
+        /// 最後咬板對位的轉移矩陣
+        /// </summary>
+        private String finalMaxillaMatrix = "../../../data/蔡慧君/finalmoved_Matrix.txt";
+        /// <summary>
+        /// 導引順序先開上顎or先開下顎
+        /// </summary>
+        private string firstNavigation = "Maxilla";
 
 
 
@@ -87,114 +85,56 @@ namespace Nart
 
         public NavigateViewModel()
         {
-          
-           
+            ModelSettingCommand = new RelayCommand(LoadSettingModel);
+
         }
 
 
 
-
-
-
-
-        
-        public String IntermediateMaxillaMatrix
+        public String PlannedMaxillaMatrix
         {
             get
             {
-                return ITMMaxillaMatrix;
+                return plannedMaxillaMatrix;
             }
             set
             {
-                SetValue(ref ITMMaxillaMatrix, value);
+                SetValue(ref plannedMaxillaMatrix, value);
             }
         }
-
-        public String IntermediateMandibleMatrix
+        public String PlannedMandibleMatrix
         {
             get
             {
-                return ITMMandibleMatrix;
+                return plannedMandibleMatrix;
             }
             set
             {
-                SetValue(ref ITMMandibleMatrix, value);
+                SetValue(ref plannedMandibleMatrix, value);
             }
         }
-
-        public String IntermediateMaxillaPlanModel
+        public String PlannedMaxilla
         {
             get
             {
-                return ITMMaxillaPlanModel;
+                return plannedMaxilla;
             }
             set
             {
-                SetValue(ref ITMMaxillaPlanModel, value);
+                SetValue(ref plannedMaxilla, value);
             }
         }
-
-
-        public String IntermediateMandiblePlanModel
+        public String PlannedMandible
         {
             get
             {
-                return ITMMandiblePlanModel;
+                return plannedMandible;
             }
             set
             {
-                SetValue(ref ITMMandiblePlanModel, value);
+                SetValue(ref plannedMandible, value);
             }
         }
-
-        public String FinalMaxillaMatrix
-        {
-            get
-            {
-                return finalMaxillaMatrix;
-            }
-            set
-            {
-                SetValue(ref finalMaxillaMatrix, value);
-            }
-        }
-
-        public String FinalMandibleMatrix
-        {
-            get
-            {
-                return finalMandibleMatrix;
-            }
-            set
-            {
-                SetValue(ref finalMandibleMatrix, value);
-            }
-        }
-
-        public String FinalMaxillaPlanModel
-        {
-            get
-            {
-                return finalMaxillaPlanModel;
-            }
-            set
-            {
-                SetValue(ref finalMaxillaPlanModel, value);
-            }
-        }
-
-        public String FinalMandiblePlanModel
-        {
-            get
-            {
-                return finalMandiblePlanModel;
-            }
-            set
-            {
-                SetValue(ref finalMandiblePlanModel, value);
-            }
-        }
-
         public String HeadModel
         {
             get
@@ -206,7 +146,6 @@ namespace Nart
                 SetValue(ref headModel, value);
             }
         }
-
         public String MaxillaModel
         {
             get
@@ -218,7 +157,6 @@ namespace Nart
                 SetValue(ref maxillaModel, value);
             }
         }
-
         public String MandibleModel
         {
             get
@@ -230,7 +168,6 @@ namespace Nart
                 SetValue(ref mandibleModel, value);
             }
         }
-
         public Color HeadDiffuseColor
         {
             get
@@ -242,7 +179,6 @@ namespace Nart
                 SetValue(ref headDiffuseColor, value);
             }
         }
-
         public Color MaxillaDiffuseColor
         {
             get
@@ -254,7 +190,6 @@ namespace Nart
                 SetValue(ref maxillaDiffuseColor, value);
             }
         }
-
         public Color MandibleDiffuseColor
         {
             get
@@ -266,8 +201,28 @@ namespace Nart
                 SetValue(ref mandibleDiffuseColor, value);
             }
         }
-
-
+        public String ITMMaxillaMatrix
+        {
+            get
+            {
+                return intermediateMaxillaMatrix;
+            }
+            set
+            {
+                SetValue(ref intermediateMaxillaMatrix, value);
+            }
+        }
+        public String FinalMaxillaMatrix
+        {
+            get
+            {
+                return finalMaxillaMatrix;
+            }
+            set
+            {
+                SetValue(ref finalMaxillaMatrix, value);
+            }
+        }
         public string FirstNavigation
         {
             get
@@ -279,25 +234,46 @@ namespace Nart
                 SetValue(ref firstNavigation, value);
             }
         }
+        public ICommand ModelSettingCommand { private set; get; }
+
+        public void ReadMatrixFile(string  path)
+        {
+
+            try
+            {
+                string fileContent = File.ReadAllText(path);//"../../../data/CaliR_L.txt"
+                string[] contentArray = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
 
 
-        public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;
-        protected static void OnStaticPropertyChanged([CallerMemberName]string info = "")
-        {
-            if (StaticPropertyChanged != null)
-            {
-                StaticPropertyChanged(null, new PropertyChangedEventArgs(info));
+                
+
+
+                float[] matrixInfo = Array.ConvertAll(contentArray, float.Parse);
+
+                if (matrixInfo.Length!=16)
+                {
+                    throw new Exception();
+
+                }
+               
+
+
+
+             
             }
-        }
-        protected static bool SetStaticValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")//CallerMemberName主要是.net4.5後定義好的caller訊息，能將訊息傳給後者的變數，目的在使用時不用特地傳入"Property"名稱
-        {
-            if (object.Equals(oldValue, newValue))
+            catch
             {
-                return false;
+                MessageBox.Show("矩陣檔案讀取錯誤");
             }
-            oldValue = newValue;
-            OnStaticPropertyChanged(propertyName);
-            return true;
+
+         
         }
+        public void LoadSettingModel(object o)
+        {
+
+            ReadMatrixFile(FinalMaxillaMatrix);
+        }
+
+
     }
 }

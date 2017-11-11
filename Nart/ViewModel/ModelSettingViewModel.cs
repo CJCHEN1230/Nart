@@ -183,6 +183,8 @@ namespace Nart
         /// 設定頁面按下ok後執行的Command
         /// </summary>
         public ICommand ModelSettingCommand { private set; get; }
+        
+        
         /// <summary>
         /// 新增ModelInfo進ModelInfoCollection
         /// </summary>
@@ -349,8 +351,6 @@ namespace Nart
             OnStaticPropertyChanged(propertyName);
             return true;
         }
-
-
 
     }
 }

@@ -24,54 +24,93 @@
                 <Setter Property="VerticalAlignment"     Value="Center"/>
             </Style>
             <Style TargetType="pt:FilePicker">
-                <!--<Setter Property="FlowDirection"     Value="RightToLeft"/>-->
-
+                <Setter Property="FlowDirection"     Value="LeftToRight"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
             </Style>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <Label x:Name="label_Copy3" Content="Nart plan"  VerticalAlignment="Top" Margin="230,13,230,0"/>
+        <Label x:Name="label_Copy3" Content="Nart plan"  VerticalAlignment="Top" Margin="1,13,1,0" HorizontalAlignment="Stretch"/>
 
-        <Border BorderBrush="Black" CornerRadius="5" BorderThickness="1" Height="185" VerticalAlignment="Top" Margin="30,43,30,0">
+        <Border BorderBrush="Black" CornerRadius="5" BorderThickness="1" Height="113" VerticalAlignment="Top" Margin="30,43,30,0">
             <Grid x:Name="Grid" Margin="0,0,0,0">
-                <pt:FilePicker Margin="184,71,195,0"  FlowDirection="RightToLeft" Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Height="22" VerticalAlignment="Top" />
-                <Label x:Name="label" Content="Intermediate Mandible"  Margin="10,72,350,85" Width="159"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.7*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.7*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
 
-                <Label x:Name="label_Copy1" Content="Matrix"  Margin="368,6,34,151" Width="118"/>
-                <pt:FilePicker Margin="341,70,26,0"   FlowDirection="RightToLeft" Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Height="22" VerticalAlignment="Top" />
-                <Label x:Name="label_Copy2" Content="Model"   Margin="194,5,208,153" Width="118"/>
-                <pt:FilePicker Margin="186,139,195,0"  FlowDirection="RightToLeft"  Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Height="22" VerticalAlignment="Top" />
-                <Label x:Name="label_Copy8" Content="Final Mandible"   Margin="32,138,370,1" Width="118"/>
-                <pt:FilePicker Margin="185,107,195,0"  FlowDirection="RightToLeft"  Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Height="22" VerticalAlignment="Top" />
-                <Label x:Name="label_Copy10" Content="Final Maxilla"  Margin="36,106,384,51" Width="99"/>
-                <pt:FilePicker Margin="343,108,27,0"  FlowDirection="RightToLeft"  Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Height="22" VerticalAlignment="Top" />
-                <pt:FilePicker Margin="344,138,26,0"  FlowDirection="RightToLeft"  Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Height="22" VerticalAlignment="Top" />
-                <StackPanel  Orientation="Horizontal" Height="23" VerticalAlignment="Top" Margin="14,32,15,0">
-                    <Label x:Name="label_Copy" Content="Intermediate Maxilla"  Width="148" Margin="0,0,0,0"/>
-                    <pt:FilePicker  Margin="20,0,0,0" FlowDirection="RightToLeft"  Filter="STL File (.stl)|*.stl" HorizontalAlignment="Left" HorizontalContentAlignment="Right" Width="138" />
-                    <pt:FilePicker Margin="20,0,0,0"  FlowDirection="RightToLeft"  Filter="STL File (.stl)|*.stl" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Width="150" />
-                </StackPanel>
+
+
+                <Label x:Name="label_Copy1" Content="Matrix"  Padding="0" Margin="5" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                <Label x:Name="label_Copy2" Content="Model"  Padding="0"  Margin="5" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+
+                <Label x:Name="label_Copy10" Content="Maxilla"  Margin="5" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <pt:FilePicker Margin="5,7"   FilePath="{Binding PlannedMaxilla}" Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" Grid.Row="1" Grid.Column="1" />
+                <pt:FilePicker Margin="5,7"   FilePath="{Binding PlannedMaxillaMatrix}" Filter="Text files (*.txt)|*.txt"  Grid.RowSpan="1" Grid.Row="1" Grid.Column="2" />
+
+                <Label x:Name="label_Copy8" Content="Mandible"   Margin="5" Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                <pt:FilePicker Margin="5,7"   FilePath="{Binding PlannedMandible}"  Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" Grid.Row="2" Grid.Column="1" />
+                <pt:FilePicker Margin="5,7"   FilePath="{Binding PlannedMandibleMatrix}" Filter="Text files (*.txt)|*.txt"  Grid.RowSpan="1"  Grid.Row="2" Grid.Column="2" />
+
             </Grid>
         </Border>
-        <Border BorderBrush="Black" CornerRadius="5" BorderThickness="1" Height="258" VerticalAlignment="Top" Margin="30,253,30,0">
+        <Border BorderBrush="Black" CornerRadius="5" BorderThickness="1" Height="302" VerticalAlignment="Top" Margin="30,209,30,0">
             <Grid x:Name="Grid2">
-                <pt:ColorPicker SelectedColor="{Binding BoneDiffuseColor}" Grid.ColumnSpan="1" Margin="354,43,25,0" Height="26" VerticalAlignment="Top"/>
-                <pt:FilePicker Margin="119,48,205,0" Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Height="22" VerticalAlignment="Top" />
-                <pt:ColorPicker SelectedColor="{Binding BoneDiffuseColor}" Grid.ColumnSpan="1" Margin="356,91,25,0" Height="26" VerticalAlignment="Top"/>
-                <pt:FilePicker Margin="118,96,205,0" Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Height="22" VerticalAlignment="Top" />
-                <pt:ColorPicker SelectedColor="{Binding BoneDiffuseColor}" Grid.ColumnSpan="1" Margin="356,134,26,0" Height="26" VerticalAlignment="Top"/>
-                <pt:FilePicker Margin="119,137,204,0" Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Height="22" VerticalAlignment="Top" />
-                <Label x:Name="label_Copy4" Content="Head" Margin="30,44,442,184" Width="48"/>
-                <Label x:Name="label_Copy6" Content="Maxilla"  Margin="12,94,412,138" Width="96"/>
-                <Label x:Name="label_Copy7" Content="Mandible"  Margin="4,136,398,95" Width="118"/>
-                <Label x:Name="label_Copy9" Content="The first of navigation" Margin="4,193,362,38" Width="154"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.7*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label x:Name="label_Copy" Content="Model"  Padding="0"  Margin="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="1"/>
+                <Label x:Name="label_Copy11" Content="Color"  Padding="0"  Margin="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="3"/>
+                <Label x:Name="label_Copy14" Content="Matrix"  Padding="0"  Margin="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="2"/>
+
+
+                <Label x:Name="label_Copy4" Content="Head" Margin="5" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Label x:Name="label_Copy6" Content="Original Mandible"  Margin="5" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Label x:Name="label_Copy7" Content="Original Maxilla"  Margin="5" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Label x:Name="label_Copy9" Content="The first of navigation" Padding="0"  Margin="0" Grid.Row="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Label x:Name="label_Copy12" Content="Intermediate Maxilla"  Padding="0"  Margin="5" Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Label x:Name="label_Copy13" Content="Final Maxilla"  Padding="0"  Margin="5" Grid.Row="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+
+                <pt:FilePicker Margin="5,9"  FilePath="{Binding HeadModel}"  Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" Grid.Column="1" Grid.Row="1" />
+                <pt:ColorPicker SelectedColor="{Binding HeadDiffuseColor}" Grid.ColumnSpan="1" Margin="5,9" Height="26" VerticalAlignment="Top" Grid.Column="3" Grid.Row="1"/>
+
+                <pt:FilePicker Margin="5,9"  FilePath="{Binding MandibleModel}" Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" Grid.Column="1" Grid.Row="2" />
+                <pt:ColorPicker SelectedColor="{Binding MandibleDiffuseColor}" Grid.ColumnSpan="1" Margin="5,9" Height="26" VerticalAlignment="Top" Grid.Column="3" Grid.Row="2"/>
+
+                <pt:FilePicker Margin="5,9"  FilePath="{Binding MaxillaModel}" Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1"  Grid.Column="1" Grid.Row="3" />
+                <pt:ColorPicker SelectedColor="{Binding MaxillaDiffuseColor}" Grid.ColumnSpan="1" Margin="5,9" Grid.Column="3" Grid.Row="3"/>
+                
+                <pt:FilePicker Margin="5,9" FilePath="{Binding ITMMaxillaMatrix}"  Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.Column="2" Grid.Row="4" />
+                <pt:FilePicker Margin="5,9" FilePath="{Binding FinalMaxillaMatrix}"  Filter="STL File (.stl)|*.stl"  Grid.RowSpan="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.Column="2" Grid.Row="5" />
+
                 <RadioButton x:Name="radioButton" Content="Maxilla " GroupName="RadioGroup" 
-                             IsChecked ="{Binding Path=CurrentOption, Mode=TwoWay, Converter={StaticResource enumConverter},ConverterParameter=Maxilla}" HorizontalAlignment="Left" Margin="230,200,0,0" VerticalAlignment="Top" Height="18" Width="94"/>
+                             IsChecked ="{Binding Path=FirstNavigation, Mode=TwoWay, Converter={StaticResource enumConverter},ConverterParameter=Maxilla}"  VerticalAlignment="Center"  HorizontalAlignment="Center" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="2" />
                 <RadioButton x:Name="radioButton_Copy" Content="Mandible " GroupName="RadioGroup" 
-                              IsChecked="{Binding Path=CurrentOption, Mode=TwoWay, Converter={StaticResource enumConverter},ConverterParameter=Mandible}" HorizontalAlignment="Left" Margin="320,199,0,0" VerticalAlignment="Top" Height="18" Width="94"/>
+                              IsChecked="{Binding Path=FirstNavigation, Mode=TwoWay, Converter={StaticResource enumConverter},ConverterParameter=Mandible}"  VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="2"/>
+
             </Grid>
         </Border>
-        <Label x:Name="label_Copy5" Content="Navigation setting" HorizontalContentAlignment="Center" VerticalAlignment="Top" Margin="230,229,230,0"/>
+        <Label x:Name="label_Copy5" Content="Navigation setting" HorizontalContentAlignment="Center" VerticalAlignment="Top" Margin="1,173,1,0"/>
+        <Button x:Name="okBtn" Content="OK" Command="{Binding ModelSettingCommand}" FontSize="30" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center" Margin="1,0,1,10" Width="100" Height="45" VerticalAlignment="Bottom"/>
 
 
     </Grid>
