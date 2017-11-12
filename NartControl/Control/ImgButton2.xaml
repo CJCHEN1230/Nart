@@ -15,7 +15,7 @@
                    Margin="0,0,0,0"/>
             <Label HorizontalContentAlignment="Stretch" FontSize="15" VerticalContentAlignment="Center"
                    HorizontalAlignment="Stretch"
-                   Content="{Binding ButtonLabel, RelativeSource={RelativeSource AncestorType={x:Type local:ImgButton2}}}" Width="70"/>
+                   Content="{Binding ButtonLabel, RelativeSource={RelativeSource AncestorType=local:ImgButton2}}" Width="70"/>
         </StackPanel>
     </Button.Content>
 </Button>

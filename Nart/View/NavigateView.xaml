@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         WindowStyle="None"
-        Title="Navigate Setting" Height="661" Width="584"
+        Title="Navigate Setting" Height="636" Width="584"
         Style="{DynamicResource ResourceKey=CustomWindowStyle}">
     <Window.Resources>
         <ResourceDictionary>
@@ -110,7 +110,7 @@
             </Grid>
         </Border>
         <Label x:Name="label_Copy5" Content="Navigation setting" HorizontalContentAlignment="Center" VerticalAlignment="Top" Margin="1,173,1,0"/>
-        <Button x:Name="okBtn" Content="OK" Command="{Binding ModelSettingCommand}" FontSize="30" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center" Margin="1,0,1,10" Width="100" Height="45" VerticalAlignment="Bottom"/>
+        <Button x:Name="okBtn" Content="OK" Command="{Binding ModelSettingCommand}" FontSize="30" BorderBrush="Black"  VerticalContentAlignment="Center" Margin="1,0,1,10" Width="100" Height="45" VerticalAlignment="Bottom"/>
 
 
     </Grid>
