@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Nart
 {
+    using Model_Object;
     using System.IO;
     using System.Windows;
     using System.Windows.Input;
@@ -33,7 +34,7 @@ namespace Nart
         /// <summary>
         /// 最後下顎規劃後模型
         /// </summary>
-        private String plannedMandible = "../../../data/蔡慧君/nart規劃後 finalmandible.stl";
+        private String plannedMandible = "D://Desktop//Nart//data//蔡慧君//nart規劃後 finalmandible.stl";
         #endregion
 
 
@@ -77,16 +78,20 @@ namespace Nart
         /// 導引順序先開上顎or先開下顎
         /// </summary>
         private string firstNavigation = "Maxilla";
+        /// <summary>
+        /// View頁面
+        /// </summary>
+        private NavigateView _navigateView;
 
 
 
 
-
-
-        public NavigateViewModel()
+        public NavigateViewModel(NavigateView navigateView)
         {
+            _navigateView = navigateView;
             ModelSettingCommand = new RelayCommand(LoadSettingModel);
 
+            
         }
 
 
@@ -236,34 +241,29 @@ namespace Nart
         }
         public ICommand ModelSettingCommand { private set; get; }
 
-        public void ReadMatrixFile(string  path)
+        public Matrix ReadMatrixFile(string  path)
         {
 
+            
             try
             {
                 string fileContent = File.ReadAllText(path);//"../../../data/CaliR_L.txt"
                 string[] contentArray = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
 
-
-                
-
-
                 float[] matrixInfo = Array.ConvertAll(contentArray, float.Parse);
-
+                
                 if (matrixInfo.Length!=16)
                 {
                     throw new Exception();
-
                 }
-               
+                
 
-
-
-             
+                return new Matrix(matrixInfo);
             }
             catch
             {
                 MessageBox.Show("矩陣檔案讀取錯誤");
+                return new Matrix();
             }
 
          
@@ -271,9 +271,76 @@ namespace Nart
         public void LoadSettingModel(object o)
         {
 
-            ReadMatrixFile(FinalMaxillaMatrix);
-        }
+            BoneModel Bone1 = new BoneModel();
+            Bone1.FilePath = HeadModel;
+            Bone1.MarkerID = "Head";
+            Bone1.DiffuseColor = HeadDiffuseColor;
+            Bone1.LoadModel();
 
+            BoneModel Bone2 = new BoneModel();
+            Bone2.FilePath = PlannedMaxilla;
+            Bone2.MarkerID = "A";
+            Bone2.DiffuseColor = Color.FromArgb(255, 100, 100, 100);
+            Bone2.LoadModel();
+
+            BoneModel Bone3 = new BoneModel();
+            Bone3.FilePath = PlannedMandible;
+            Bone3.MarkerID = "Splint";
+            Bone3.DiffuseColor = Color.FromArgb(255, 100, 100, 100);
+            Bone3.LoadModel();
+
+
+
+            BoneModel Bone4 = new BoneModel();
+            Bone4.FilePath = MaxillaModel;
+            Bone4.MarkerID = "A";
+            Bone4.DiffuseColor = MaxillaDiffuseColor;
+            Bone4.LoadModel();
+            
+
+            BoneModel Bone5 = new BoneModel();
+            Bone5.FilePath = MandibleModel;
+            Bone5.MarkerID = "C";
+            Bone5.DiffuseColor = MandibleDiffuseColor;
+            Bone5.LoadModel();
+
+
+
+            Matrix plannedMatrix = ReadMatrixFile(plannedMaxillaMatrix);
+            Matrix plannedMandible = ReadMatrixFile(plannedMandibleMatrix);
+
+            
+            Bone5.PushMatrix(plannedMandible);
+
+            System.Windows.Media.Media3D.Matrix3D temp = new System.Windows.Media.Media3D.Matrix3D();
+
+            temp.M11 = 1; temp.M12 = 0; temp.M13 = 0; temp.M14 = 0;
+            temp.M21 = 0; temp.M22 = 1; temp.M23 = 0; temp.M24 = 0;
+            temp.M31 = 0; temp.M32 = 0; temp.M33 = 1; temp.M34 = 0;
+            temp.OffsetX = 100; temp.OffsetY = -100; temp.OffsetZ = 100; temp.M44 = 1;
+
+
+            //Bone4.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(temp);
+
+            Bone4.PushMatrix(plannedMatrix);
+
+            MultiAngleViewModel.BoneModelCollection.Add(Bone1);
+          //  MultiAngleViewModel.BoneModelCollection.Add(Bone2);
+            MultiAngleViewModel.BoneModelCollection.Add(Bone3);
+            MultiAngleViewModel.BoneModelCollection.Add(Bone4);
+            MultiAngleViewModel.BoneModelCollection.Add(Bone5);
+
+
+
+
+
+
+
+            MultiAngleViewModel.ResetCameraPosition();
+
+            _navigateView.Hide();
+        }
+        
 
     }
 }

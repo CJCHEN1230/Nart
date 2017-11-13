@@ -43,14 +43,6 @@ namespace NartControl.Control
         public static readonly DependencyProperty MultiselectProperty = DependencyProperty.Register(
             nameof(Multiselect), typeof(bool), typeof(FilePicker), new UIPropertyMetadata(false));
 
-        /// <summary>
-        /// Identifies the <see cref="FileDialogService"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty FileDialogServiceProperty = DependencyProperty.Register(
-            nameof(FileDialogService), typeof(IFileDialogService), typeof(FilePicker), new UIPropertyMetadata(null));
-
-
-
         public static readonly DependencyProperty SafeFileNameProperty = DependencyProperty.Register(
             nameof(SafeFileName),
             typeof(string),
@@ -65,7 +57,7 @@ namespace NartControl.Control
             nameof(FilePath),
             typeof(string),
             typeof(FilePicker),
-            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnFilePathChanged));
 
         /// <summary>
         /// Identifies the <see cref="FilePaths"/> dependency property.
@@ -163,8 +155,15 @@ namespace NartControl.Control
         public FilePicker()
         {
             InitializeComponent();
+
+            this.BrowseCommand = new RelayCommand(Browse);
         }
 
+        /// <summary>
+        /// Gets or sets the browse command.
+        /// </summary>
+        /// <value>The browse command.</value>
+        public ICommand BrowseCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the explore command.
@@ -225,22 +224,7 @@ namespace NartControl.Control
             }
         }
 
-        /// <summary>
-        /// Gets or sets the file dialog service.
-        /// </summary>
-        /// <value>The file dialog service.</value>
-        public IFileDialogService FileDialogService
-        {
-            get
-            {
-                return (IFileDialogService)this.GetValue(FileDialogServiceProperty);
-            }
 
-            set
-            {
-                this.SetValue(FileDialogServiceProperty, value);
-            }
-        }
 
         /// <summary>
         /// Gets or sets the base path.
@@ -286,7 +270,7 @@ namespace NartControl.Control
 
             set
             {
-                this.SetValue(FilePathProperty, value);
+                this.SetValue(FilePathProperty, value);                
             }
         }
 
@@ -414,6 +398,16 @@ namespace NartControl.Control
             }
         }
 
+
+        private static void OnFilePathChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs ea)
+        {
+            var instance = (FilePicker)dependencyObject;
+            if (instance.FilePath != null && instance.FilePath.Length > 0)
+            {
+                instance.SafeFileName = Path.GetFileName(instance.FilePath);              
+            }
+        }
+
         /// <summary>
         /// Ensures synchronization between <see cref="FilePaths" /> and <see cref="FilePath" /> properties when <see cref="Multiselect" /> is enabled
         /// </summary>
@@ -431,7 +425,7 @@ namespace NartControl.Control
         /// <summary>
         /// Shows the open or save file dialog.
         /// </summary>
-        private void Browse()
+        private void Browse(Object o)
         {
             string filename = null;
             string[] filenames = null;
@@ -439,7 +433,6 @@ namespace NartControl.Control
             if (!this.Multiselect)
             {
                 filename = this.GetAbsolutePath(this.FilePath);
-                SafeFileName = filename;
             }
             else
             {
@@ -447,76 +440,47 @@ namespace NartControl.Control
             }
 
             var ok = false;
-            if (this.FileDialogService != null)
+
+
+            // use Microsoft.Win32 dialogs
+            if (this.UseOpenDialog)
             {
-                if (this.UseOpenDialog)
+                var d = new OpenFileDialog
                 {
-                    if (!this.Multiselect)
+                    FileName = this.FilePath,
+                    Filter = this.Filter,
+                    DefaultExt = this.DefaultExtension,
+                    Multiselect = this.Multiselect
+                };
+                if (true == d.ShowDialog())
+                {
+                    if (this.Multiselect)
                     {
-                        if (this.FileDialogService.ShowOpenFileDialog(ref filename, this.Filter, this.DefaultExtension))
-                        {
-                            ok = true;
-                        }
+                        filenames = d.FileNames;
                     }
                     else
                     {
-                        if (this.FileDialogService.ShowOpenFilesDialog(ref filenames, this.Filter, this.DefaultExtension))
-                        {
-                            ok = true;
-                        }
+                        filename = d.FileName;
                     }
-                }
-                else
-                {
-                    if (this.FileDialogService.ShowSaveFileDialog(ref filename, this.Filter, this.DefaultExtension))
-                    {
-                        ok = true;
-                    }
+
+                    ok = true;
                 }
             }
             else
             {
-                // use Microsoft.Win32 dialogs
-                if (this.UseOpenDialog)
+                var d = new SaveFileDialog
                 {
-                    var d = new OpenFileDialog
-                    {
-                        FileName = this.FilePath,
-                        Filter = this.Filter,
-                        DefaultExt = this.DefaultExtension,
-                        Multiselect = this.Multiselect
-                    };
-                    if (true == d.ShowDialog())
-                    {
-                        if (this.Multiselect)
-                        {
-                            filenames = d.FileNames;
-                        }
-                        else
-                        {
-                            filename = d.FileName;
-                            SafeFileName = d.SafeFileName;
-                        }
-
-                        ok = true;
-                    }
-                }
-                else
+                    FileName = this.FilePath,
+                    Filter = this.Filter,
+                    DefaultExt = this.DefaultExtension
+                };
+                if (true == d.ShowDialog())
                 {
-                    var d = new SaveFileDialog
-                    {
-                        FileName = this.FilePath,
-                        Filter = this.Filter,
-                        DefaultExt = this.DefaultExtension
-                    };
-                    if (true == d.ShowDialog())
-                    {
-                        filename = d.FileName;
-                        SafeFileName = d.SafeFileName;
-                        ok = true;
-                    }
+                    filename = d.FileName;
+                    ok = true;
                 }
             }
+
 
             if (ok)
             {
@@ -668,49 +632,6 @@ namespace NartControl.Control
             return filePaths.Select(this.GetRelativePath).ToArray();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Browse();
-        }
     }
 
-
-
-
-
-    public interface IFileDialogService
-    {
-        /// <summary>
-        /// Shows the open file dialog.
-        /// </summary>
-        /// <param name="filename">The filename.</param>
-        /// <param name="filter">The filter.</param>
-        /// <param name="defaultExtension">The default extension.</param>
-        /// <returns>
-        /// True if the user pressed ok.
-        /// </returns>
-        bool ShowOpenFileDialog(ref string filename, string filter, string defaultExtension);
-
-        /// <summary>
-        /// Shows the open files dialog.
-        /// </summary>
-        /// <param name="filenames">The filenames.</param>
-        /// <param name="filter">The filter.</param>
-        /// <param name="defaultExtension">The default extension.</param>
-        /// <returns>
-        /// True if the user pressed ok.
-        /// </returns>
-        bool ShowOpenFilesDialog(ref string[] filenames, string filter, string defaultExtension);
-
-        /// <summary>
-        /// Shows the save file dialog.
-        /// </summary>
-        /// <param name="filename">The filename.</param>
-        /// <param name="filter">The filter.</param>
-        /// <param name="defaultExtension">The default extension.</param>
-        /// <returns>
-        /// True if the user pressed ok.
-        /// </returns>
-        bool ShowSaveFileDialog(ref string filename, string filter, string defaultExtension);
-    }
 }

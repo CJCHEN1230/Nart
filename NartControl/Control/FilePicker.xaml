@@ -11,12 +11,12 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="TB"  Text="{Binding SafeFileName, RelativeSource={RelativeSource AncestorType=local:FilePicker}}" VerticalContentAlignment="Center"/>
+        <TextBox  Text="{Binding SafeFileName,Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:FilePicker}}" VerticalContentAlignment="Center"/>
         <Button Grid.Column="1" MinWidth="40" Margin="4 0 0 0" 
                                 Visibility="Visible"
-                                Content="{Binding BrowseButtonContent}" 
-                                ToolTip="{Binding BrowseButtonToolTip}" 
-                                Click="Button_Click" 
+                                Command="{Binding BrowseCommand, RelativeSource={RelativeSource AncestorType=local:FilePicker}}"
+                                Content="{Binding BrowseButtonContent, RelativeSource={RelativeSource AncestorType=local:FilePicker}}" 
+                                ToolTip="{Binding BrowseButtonToolTip, RelativeSource={RelativeSource AncestorType=local:FilePicker}}"                               
                                 />
 
     </Grid>

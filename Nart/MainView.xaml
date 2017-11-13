@@ -17,7 +17,7 @@
         MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
         Title="Nart"  Background="#FF4C4C4C" 
         Style="{DynamicResource ResourceKey=CustomWindowStyle}" Height="658.5" Width="1717.5">
-        
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -49,7 +49,7 @@
         </Grid.RowDefinitions>
 
 
-        <Controls:ImgButton2 x:Name="ImgButton22" ButtonLabel="1234567"  ButtonImageSource="/Icon/test.ico" Margin="0,433,0,36" Height="Auto" Width="Auto"/>
+        <Controls:ImgButton2 x:Name="ImgButton22" ButtonLabel="1234567"  ButtonImageSource="/Icon/test.ico" Margin="0,533,0,36" Height="Auto" Width="Auto"/>
         <Button x:Name="button1_Copy" Command="{Binding SetNavigationCommand}" Content="Set Navigation" Margin="0,35,0,0" VerticalAlignment="Top" Height="54"/>
         <Button x:Name="button1" Command="{Binding SetModelCommand}" Content="Set Model" Margin="0,108,0,0" VerticalAlignment="Top" Height="54" Grid.Row="1"/>
         <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" Margin="0,174,0,0" VerticalAlignment="Top" Height="56"/>
@@ -105,8 +105,8 @@
 
             </TabItem>
         </TabControl>
-        <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" HorizontalAlignment="Left" Margin="3,401,0,0" VerticalAlignment="Top" Height="46" Width="106" FontSize="20" Grid.ColumnSpan="2" Grid.Row="1"/>
-        
+        <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" HorizontalAlignment="Left" Margin="9,475,0,0" VerticalAlignment="Top" Height="46" Width="106" FontSize="20"/>
+
 
 
     </Grid>

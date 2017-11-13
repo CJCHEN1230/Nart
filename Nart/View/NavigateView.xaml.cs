@@ -24,8 +24,9 @@ namespace Nart
         public NavigateView()
         {
             InitializeComponent();
-            _navigateViewModel = new NavigateViewModel();
+            _navigateViewModel = new NavigateViewModel(this);
             this.DataContext = _navigateViewModel; //將_multiAngleViewModel的資料環境傳給此DataContext  
         }
+
     }
 }

@@ -173,36 +173,38 @@ namespace Nart.Model_Object
                 Convert.ToSingle(bound.Y + bound.SizeY / 2.0),
                 Convert.ToSingle(bound.Z + bound.SizeZ / 2.0));
 
-            var geometryModel = ModelContainer.Children[0] as System.Windows.Media.Media3D.GeometryModel3D;
-
-            var mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
-
-            //設定模型幾何形狀
             HelixToolkit.Wpf.SharpDX.MeshGeometry3D modelGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
 
             modelGeometry.Normals = new Vector3Collection();
             modelGeometry.Positions = new Vector3Collection();
             modelGeometry.Indices = new IntCollection();
-            //將從stlreader讀到的資料轉入
-            foreach (Point3D position in mesh.Positions)
-            {
-                modelGeometry.Positions.Add(new Vector3(
-                      Convert.ToSingle(position.X)
-                    , Convert.ToSingle(position.Y)
-                    , Convert.ToSingle(position.Z)));
-            }
 
-            foreach (Vector3D normal in mesh.Normals)
-            {
-                modelGeometry.Normals.Add(new Vector3(
-                      Convert.ToSingle(normal.X)
-                    , Convert.ToSingle(normal.Y)
-                    , Convert.ToSingle(normal.Z)));
-            }
 
-            foreach (Int32 triangleindice in mesh.TriangleIndices)
+            for (int i = 0; i < ModelContainer.Children.Count; i++) 
             {
-                modelGeometry.Indices.Add(triangleindice);
+                var geometryModel = ModelContainer.Children[i] as System.Windows.Media.Media3D.GeometryModel3D;
+
+                var mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
+
+                //將從stlreader讀到的資料轉入
+                foreach (Point3D position in mesh.Positions)
+                {
+                    modelGeometry.Positions.Add(new Vector3(
+                          Convert.ToSingle(position.X)
+                        , Convert.ToSingle(position.Y)
+                        , Convert.ToSingle(position.Z)));
+                }
+                foreach (Vector3D normal in mesh.Normals)
+                {
+                    modelGeometry.Normals.Add(new Vector3(
+                          Convert.ToSingle(normal.X)
+                        , Convert.ToSingle(normal.Y)
+                        , Convert.ToSingle(normal.Z)));
+                }
+                foreach (Int32 triangleindice in mesh.TriangleIndices)
+                {
+                    modelGeometry.Indices.Add(triangleindice);
+                }
             }
 
             SetBoneMaterial();
