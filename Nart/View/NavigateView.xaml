@@ -11,11 +11,11 @@
         ResizeMode="NoResize"
         WindowStyle="None"
         Title="Navigate Setting" Height="636" Width="584"
-        Style="{DynamicResource ResourceKey=CustomWindowStyle}">
+        Style="{DynamicResource ResourceKey=CustomViewStyle}">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resource/WindowStyle.xaml" />
+                <ResourceDictionary Source="/Resource/SettingViewStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Converter:EnumMatchToBooleanConverter x:Key="enumConverter"/>
             <Style TargetType="Label">

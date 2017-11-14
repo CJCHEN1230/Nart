@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NartControl;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Nart
     {
         public WindowStyle()
         {
-            InitializeComponent();
+            InitializeComponent();           
         }
 
         private void CloseClick(object sender, RoutedEventArgs e)

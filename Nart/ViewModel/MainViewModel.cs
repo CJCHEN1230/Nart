@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using NartControl.Control;
 using System.Windows.Input;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace Nart
 {
@@ -27,7 +28,9 @@ namespace Nart
         private ModelSettingView _modelSettingdlg;
         private NavigateView _navigatedlg;
         private MainView _mainWindow;
-        
+
+
+
         public MainViewModel(MainView mainWindow)
         {
             _mainWindow = mainWindow;
@@ -35,7 +38,10 @@ namespace Nart
             RegisterCommand = new RelayCommand(Register);
             SetNavigationCommand = new RelayCommand(SetNavigation);
             TrackCommand = new RelayCommand(Track);
-            CloseWindowCommand = new RelayCommand(obj => this.OnClosed(obj), null);       
+            CloseWindowCommand = new RelayCommand(obj => this.OnClosed(obj), null);
+
+
+          
         }
                 
         public static int TabIndex

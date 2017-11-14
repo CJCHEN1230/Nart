@@ -26,6 +26,7 @@ using System.Diagnostics;
 using NartControl.Control;
 using Nart.ExtensionMethods;
 using Nart.Model_Object;
+using NartControl;
 
 namespace Nart
 {
@@ -45,6 +46,19 @@ namespace Nart
             this.DataContext = _mainViewModel;
 
             AllocConsole();
+
+
+
+            this.MinimizeCommand = new RelayCommand(MinimizeClick);
+
+
+        }
+
+        public ICommand MinimizeCommand { get; set; } 
+        private void MinimizeClick(object sender)
+        {
+            var window = (Window)((FrameworkElement)sender).TemplatedParent;
+            window.WindowState = System.Windows.WindowState.Minimized;
         }
 
         private void Translate_Click(object sender, RoutedEventArgs e)
