@@ -31,8 +31,17 @@ namespace Nart
         public MultiAngleView()
         {
             InitializeComponent();
+
+            this.viewport1.BackgroundColor = new Color4(1.0f, 1.0f, 1.0f, 1.0f);
+
+
             _multiAngleViewModel = new MultiAngleViewModel(this);
             this.DataContext = _multiAngleViewModel; //將_multiAngleViewModel的資料環境傳給此DataContext                  
+
+
+            SolidColorBrush temp = new SolidColorBrush();
+            
+        
         }
     }
 }

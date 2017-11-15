@@ -40,8 +40,9 @@ namespace Nart
             TrackCommand = new RelayCommand(Track);
             CloseWindowCommand = new RelayCommand(obj => this.OnClosed(obj), null);
 
+            
 
-          
+
         }
                 
         public static int TabIndex

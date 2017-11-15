@@ -46,7 +46,7 @@
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
 
-
+                
 
                 <Label x:Name="label_Copy1" Content="Matrix"  Padding="0" Margin="5" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                 <Label x:Name="label_Copy2" Content="Model"  Padding="0"  Margin="5" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>

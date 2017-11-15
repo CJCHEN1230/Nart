@@ -16,7 +16,7 @@
         ResizeMode="NoResize"
         MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
         Title="Nart"  Background="#FF4C4C4C" 
-        Style="{DynamicResource ResourceKey=CustomWindowStyle}" Height="658.5" Width="1717.5">
+        Style="{DynamicResource ResourceKey=CustomWindowStyle}" Height="643.5" Width="1249.5">
 
     <Window.Resources>
         <ResourceDictionary>
