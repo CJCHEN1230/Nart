@@ -121,11 +121,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Resource\SettingViewStyle.xaml.cs">
-      <DependentUpon>SettingViewStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Resource\WindowStyle.xaml.cs">
-      <DependentUpon>WindowStyle.xaml</DependentUpon>
+    <Compile Include="Resource\DarkTheme.xaml.cs">
+      <DependentUpon>DarkTheme.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ModelSettingViewModel.cs" />
@@ -153,11 +150,7 @@
       <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Resource\SettingViewStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resource\WindowStyle.xaml">
+    <Page Include="Resource\DarkTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -1,20 +1,10 @@
-﻿<ResourceDictionary x:Class="Nart.WindowStyle"
+﻿<ResourceDictionary x:Class="Nart.DarkThemeStyle"
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 
     <Style x:Key="CustomWindowStyle" TargetType="{x:Type Window}">
-        <Setter Property="WindowChrome.WindowChrome">
-            <Setter.Value>
-                <WindowChrome CaptionHeight="30"
-                              CornerRadius="4"
-                              GlassFrameThickness="0"
-                              NonClientFrameEdges="None"
-                              ResizeBorderThickness="5"
-                              UseAeroCaptionButtons="True" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="BorderBrush" Value="#FF3F3F46" />
+        <Setter Property="BorderBrush" Value="#FF2D2D30" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
@@ -94,7 +84,7 @@
                                     DockPanel.Dock="Right"
                                     WindowChrome.IsHitTestVisibleInChrome="True" >
                                 <Button.Style>
-                                    <Style TargetType="{x:Type Button}">
+                                    <Style TargetType="{x:Type Button}"><!--有指定TargetType的話，下面的Property 不用特別指定哪個控制項--> 
                                         <Setter Property="Background" Value="Transparent"/>
                                         <Setter Property="Foreground" Value="White"/>
                                         <Setter Property="Template">
@@ -110,6 +100,82 @@
                                             <Trigger Property="IsMouseOver" Value="True">
                                                 <Trigger.Setters>
                                                     <Setter Property="Background" Value="#FF585859" />
+                                                </Trigger.Setters>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </DockPanel>
+
+                    </Grid>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CustomViewStyle" TargetType="{x:Type Window}">
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome CaptionHeight="30"
+                              CornerRadius="0"
+                              GlassFrameThickness="0"
+                              NonClientFrameEdges="None"
+                              ResizeBorderThickness="5"
+                              UseAeroCaptionButtons="True" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush" Value="#FF3F3F46" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Window}">
+                    <Grid>
+                        <Border BorderBrush="Black" BorderThickness="1">
+                            <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="0,30,0,0">
+                                <AdornerDecorator>
+                                    <ContentPresenter />
+                                </AdornerDecorator>
+                            </Border>
+                        </Border>
+                        <DockPanel Height="30"
+                                   VerticalAlignment="Top"
+                                   LastChildFill="False">
+
+                            <TextBlock Margin="15,0,0,0"
+                                       VerticalAlignment="Center"
+                                       DockPanel.Dock="Left"                                       
+                                       FontSize="14"
+                                       Foreground="#FFC7C7C7"                                       
+                                       Text="{TemplateBinding Title}" FontFamily="Microsoft NeoGothic" />
+
+                            <Button x:Name="btnClose"
+                                    Width="50"
+                                    Height="{Binding Path=Width, RelativeSource={RelativeSource AncestorType=DockPanel, Mode=FindAncestor}}"                                    
+                                    FontWeight="Heavy"                        
+                                    FontSize="18"
+                                    Click="HideViewClick"
+                                    DockPanel.Dock="Right"
+                                    WindowChrome.IsHitTestVisibleInChrome="True">
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                    <Border Background="{TemplateBinding Background}" >
+                                                        <ContentPresenter Content="╳" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Trigger.Setters>
+                                                    <Setter Property="Background" Value="#FFE81123" />
                                                 </Trigger.Setters>
                                             </Trigger>
                                         </Style.Triggers>

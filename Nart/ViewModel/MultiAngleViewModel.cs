@@ -213,7 +213,11 @@ namespace Nart
             get;
             set;
         } = new ObservableCollection<Element3D>();
-
+        public static ObservableCollection<Element3D> NavigationTargetCollection
+        {
+            get;
+            set;
+        } = new ObservableCollection<Element3D>();
         /// <summary>
         /// 設定光源Ambientlight顏色、DirectionaLlight顏色        
         /// </summary>
@@ -238,28 +242,44 @@ namespace Nart
         internal static void ResetCameraPosition()
         {
 
-            //ModelGroup裡面有模型之後才調整相機位置
-            if (BoneModelCollection == null || BoneModelCollection.Count == 0) 
-                return;
-
-            //重新調整模型中心
             Model3DGroup modelGroup = new Model3DGroup();
-            for (int i = 0; i < BoneModelCollection.Count; i++) 
+
+            //ModelGroup裡面有模型之後才調整相機位置
+            if (BoneModelCollection != null && BoneModelCollection.Count != 0)
             {
-                BoneModel boneModel = BoneModelCollection[i] as BoneModel;
-                //如果選擇多模型但檔名是空或不存在則進不去
-                if (boneModel != null && boneModel.ModelContainer != null) 
-                {                   
-                    modelGroup.Children.Add(boneModel.ModelContainer);
+                //重新調整模型中心                
+                for (int i = 0; i < BoneModelCollection.Count; i++)
+                {
+                    BoneModel boneModel = BoneModelCollection[i] as BoneModel;
+                    //如果選擇多模型但檔名是空或不存在則進不去
+                    if (boneModel != null && boneModel.ModelContainer != null)
+                    {
+                        modelGroup.Children.Add(boneModel.ModelContainer);
+                    }
                 }
             }
+
+            if (NavigationTargetCollection != null && NavigationTargetCollection.Count != 0)
+            {
+                for (int i = 0; i < NavigationTargetCollection.Count; i++)
+                {
+                    BoneModel boneModel = NavigationTargetCollection[i] as BoneModel;
+                    //如果選擇多模型但檔名是空或不存在則進不去
+                    if (boneModel != null && boneModel.ModelContainer != null)
+                    {
+                        modelGroup.Children.Add(boneModel.ModelContainer);
+                    }
+                }
+            }
+
+            if (modelGroup.Children.Count == 0)
+                return;
 
 
             Rect3D boundingBox = modelGroup.Bounds;
 
             Point3D modelCenter = new Point3D(boundingBox.X + boundingBox.SizeX / 2.0, boundingBox.Y + boundingBox.SizeY / 2.0, boundingBox.Z + boundingBox.SizeZ / 2.0);
           
-
             OrthographicCamera orthoCam1 = Camera1 as OrthographicCamera;
             orthoCam1.Position = new Point3D(modelCenter.X, modelCenter.Y - (boundingBox.SizeY), modelCenter.Z);
             orthoCam1.UpDirection = new Vector3D(0, 0, 1);

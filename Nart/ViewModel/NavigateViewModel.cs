@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Nart
 {
+    using ExtensionMethods;
     using Model_Object;
     using System.IO;
     using System.Windows;
@@ -277,58 +278,47 @@ namespace Nart
             Bone1.DiffuseColor = HeadDiffuseColor;
             Bone1.LoadModel();
 
+            //讀取原始上下顎 加上 規劃後的轉移矩陣
+            Matrix plannedMatrix = ReadMatrixFile(plannedMaxillaMatrix);
             BoneModel Bone2 = new BoneModel();
-            Bone2.FilePath = PlannedMaxilla;
-            Bone2.MarkerID = "A";
+            Bone2.FilePath = MaxillaModel;
+            Bone2.MarkerID = "";
             Bone2.DiffuseColor = Color.FromArgb(255, 100, 100, 100);
             Bone2.LoadModel();
+            Bone2.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(plannedMatrix.ToMatrix3D()); 
 
+            Matrix plannedMandible = ReadMatrixFile(plannedMandibleMatrix);
             BoneModel Bone3 = new BoneModel();
-            Bone3.FilePath = PlannedMandible;
-            Bone3.MarkerID = "Splint";
+            Bone3.FilePath = MandibleModel;
+            Bone3.MarkerID = "";
             Bone3.DiffuseColor = Color.FromArgb(255, 100, 100, 100);
-            Bone3.LoadModel();
+            Bone3.LoadModel();        
+            Bone3.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(plannedMandible.ToMatrix3D());
+
+            MultiAngleViewModel.NavigationTargetCollection.Add(Bone1);
+            MultiAngleViewModel.NavigationTargetCollection.Add(Bone2);
+            MultiAngleViewModel.NavigationTargetCollection.Add(Bone3);
+
 
 
 
             BoneModel Bone4 = new BoneModel();
             Bone4.FilePath = MaxillaModel;
-            Bone4.MarkerID = "A";
+            Bone4.MarkerID = "Splint";
             Bone4.DiffuseColor = MaxillaDiffuseColor;
             Bone4.LoadModel();
             
-
             BoneModel Bone5 = new BoneModel();
             Bone5.FilePath = MandibleModel;
-            Bone5.MarkerID = "C";
+            Bone5.MarkerID = "Splint";
             Bone5.DiffuseColor = MandibleDiffuseColor;
             Bone5.LoadModel();
 
 
-
-            Matrix plannedMatrix = ReadMatrixFile(plannedMaxillaMatrix);
-            Matrix plannedMandible = ReadMatrixFile(plannedMandibleMatrix);
-
-            
-            Bone5.PushMatrix(plannedMandible);
-
-            System.Windows.Media.Media3D.Matrix3D temp = new System.Windows.Media.Media3D.Matrix3D();
-
-            temp.M11 = 1; temp.M12 = 0; temp.M13 = 0; temp.M14 = 0;
-            temp.M21 = 0; temp.M22 = 1; temp.M23 = 0; temp.M24 = 0;
-            temp.M31 = 0; temp.M32 = 0; temp.M33 = 1; temp.M34 = 0;
-            temp.OffsetX = 100; temp.OffsetY = -100; temp.OffsetZ = 100; temp.M44 = 1;
-
-
-            //Bone4.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(temp);
-
-            Bone4.PushMatrix(plannedMatrix);
-
-            MultiAngleViewModel.BoneModelCollection.Add(Bone1);
-          //  MultiAngleViewModel.BoneModelCollection.Add(Bone2);
-            MultiAngleViewModel.BoneModelCollection.Add(Bone3);
             MultiAngleViewModel.BoneModelCollection.Add(Bone4);
             MultiAngleViewModel.BoneModelCollection.Add(Bone5);
+
+
 
 
 

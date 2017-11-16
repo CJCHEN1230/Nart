@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDX;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,6 +41,27 @@ namespace Nart.ExtensionMethods
             m.OffsetY = v.Y;
             m.OffsetZ = v.Z;
             return m;
+        }
+
+        public static Matrix3D ToMatrix3D(this Matrix m)
+        {
+            return new Matrix3D(
+                (float)m.M11,
+                (float)m.M12,
+                (float)m.M13,
+                (float)m.M14,
+                (float)m.M21,
+                (float)m.M22,
+                (float)m.M23,
+                (float)m.M24,
+                (float)m.M31,
+                (float)m.M32,
+                (float)m.M33,
+                (float)m.M34,
+                (float)m.M41,
+                (float)m.M42,
+                (float)m.M43,
+                (float)m.M44);
         }
     }
 }

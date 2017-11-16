@@ -9,9 +9,9 @@ using System.Windows.Input;
 
 namespace Nart
 {
-    public partial class WindowStyle : ResourceDictionary
+    public partial class DarkThemeStyle : ResourceDictionary
     {
-        public WindowStyle()
+        public DarkThemeStyle()
         {
             InitializeComponent();           
         }
@@ -39,6 +39,12 @@ namespace Nart
         {
             var window = (Window)((FrameworkElement)sender).TemplatedParent;
             window.WindowState = System.Windows.WindowState.Minimized;
-        }       
+        }
+
+        private void HideViewClick(object sender, RoutedEventArgs e)
+        {
+            var window = (Window)((FrameworkElement)sender).TemplatedParent;
+            window.Hide();
+        }
     }
 }

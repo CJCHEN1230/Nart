@@ -20,16 +20,22 @@
     <Grid Margin="1">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
+            <RowDefinition Height="5"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="26*"/>
-            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="1.5*"/>
         </Grid.ColumnDefinitions>
-        <hx:ModelContainer3DX x:Name="sharedContainer"   RenderTechnique="{Binding RenderTechnique}" EffectsManager="{Binding EffectsManager}" Margin="1" Grid.Row="1">
+        <GridSplitter Grid.RowSpan="3" Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+        <GridSplitter Grid.Row="1" Grid.Column="2"  Height="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  />
+        <hx:ModelContainer3DX x:Name="sharedContainer"   RenderTechnique="{Binding RenderTechnique}" EffectsManager="{Binding EffectsManager}" Margin="1" Grid.Row="2" Visibility="Hidden">
             <hx:GroupModel3D ItemsSource="{Binding TriangleModelCollection}">
             </hx:GroupModel3D>
             <hx:GroupModel3D ItemsSource="{Binding BoneModelCollection}">
+            </hx:GroupModel3D>
+            <hx:GroupModel3D ItemsSource="{Binding NavigationTargetCollection}">
             </hx:GroupModel3D>
             <hx:GroupModel3D ItemsSource="{Binding OSPModelCollection}">
             </hx:GroupModel3D>
@@ -52,16 +58,17 @@
 
         <hx:Viewport3DX  x:Name="viewport2"
                         ShowViewCube="True" 
-                        ZoomExtentsWhenLoaded="False" Margin="1,0,0,1" 
+                        ZoomExtentsWhenLoaded="False" Margin="0" 
                         Camera="{Binding Camera2}"
+                         Background="Black" 
                         CameraRotationMode="Trackball"
                         Orthographic="True" 
                         CameraMode="Inspect"                            
                         UseDefaultGestures="True"
-                        EnableSharedModelMode="True"                         
+                        EnableSharedModelMode="True"                               
                         BackgroundColor="{x:Static sdx:Color4.Black}"
                         SharedModelContainer="{Binding ElementName=sharedContainer}"
-                        ShowFrameRate="True" Grid.Column="1">
+                        ShowFrameRate="True" Grid.Column="2">
             <hx:Viewport3DX.InputBindings>
                 <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
                 <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
@@ -86,7 +93,7 @@
         <hx:Viewport3DX  x:Name="viewport3"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" 
-                        Background="Black" Margin="1,1,0,0" 
+                        Background="Black" Margin="0" 
                         Camera="{Binding Camera3}"
                         CameraRotationMode="Trackball"
                         Orthographic="True"
@@ -96,7 +103,7 @@
                         SharedModelContainer="{Binding ElementName=sharedContainer}"
                         BackgroundColor="{x:Static sdx:Color4.Black}"
                         ShowFrameRate="True"
-                        Grid.Column="1" Grid.Row="1">
+                        Grid.Column="2" Grid.Row="2">
             <hx:Viewport3DX.InputBindings>
                 <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
                 <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
@@ -121,7 +128,8 @@
         <hx:Viewport3DX  x:Name="viewport1"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" 
-                        Margin="1,0,0,0"              
+                        Margin="0"              
+                        
                         Camera="{Binding Camera1}"
                         CameraRotationMode="Trackball" 
                         Orthographic="True" 
@@ -131,9 +139,10 @@
                         SharedModelContainer="{Binding ElementName=sharedContainer}"
                         ShowCoordinateSystem="True"
                         CoordinateSystemLabelForeground="White"                         
-                        BackgroundColor="{x:Static sdx:Color4.Black}"
+                         BackgroundColor="{x:Static sdx:Color4.Black}"
+
                         ShowFrameRate="True"
-                        Grid.RowSpan="2" >
+                        Grid.RowSpan="3" Background="Black" >
             <hx:Viewport3DX.InputBindings>
                 <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
                 <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
@@ -157,7 +166,7 @@
                 Color="{Binding DirectionalLightColor}" />
 
         </hx:Viewport3DX>
-        <StackPanel  Orientation="Vertical" HorizontalAlignment="Left" Margin="1,2,0,32" Width="165">
+        <StackPanel  Orientation="Vertical" HorizontalAlignment="Left" Margin="1,2,0,25" Width="165">
             <Label x:Name="CephLabel" Content="{Binding CraniofacialInfo, Mode=OneWay}" Margin="1,1,1,1" FontWeight="Bold" FontSize="20" Foreground="White"/>
         </StackPanel>
     </Grid>

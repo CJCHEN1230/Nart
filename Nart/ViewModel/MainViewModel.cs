@@ -103,7 +103,7 @@ namespace Nart
             {
                 _navigatedlg = new NavigateView();
             }
-            _navigatedlg.Owner = _mainWindow;
+            _navigatedlg.Owner = _mainWindow; 
 
             _navigatedlg.ShowDialog();
         }
