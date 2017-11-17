@@ -67,6 +67,17 @@ namespace Nart
         #endregion
 
 
+        #region OSP部分
+        /// <summary>
+        /// 頭部對稱面
+        /// </summary>
+        private String HeadOSP = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl";
+        /// <summary>
+        /// 下顎對稱面
+        /// </summary>
+        private String MandibleOSP = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl";
+        #endregion
+
         /// <summary>
         /// 中間咬板對位的轉移矩陣
         /// </summary>

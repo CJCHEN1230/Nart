@@ -42,7 +42,7 @@ namespace Nart
         /// </summary>
         private CraniofacialInfo _craniofacialInfo;
         /// <summary>
-        ///判斷是不是相同點的pixel容忍值
+        ///判斷是不是相同點的pixel高度容忍值
         /// </summary>
         private const double MatchError = 5;
         /// <summary>
@@ -56,10 +56,26 @@ namespace Nart
         /// <summary>
         ///MS點的Marker中心座標
         /// </summary>
-        private Point3D[] MSMarker;
+        private Point3D[] MSSplintMarker;
+        /// <summary>
+        ///咬板Marker在CT中的座標
+        /// </summary>
+        private Point3D[] SplintInCT;
+        /// <summary>
+        ///咬板Marker從CT中轉到世界座標
+        /// </summary>
+        private Matrix3D CTtoWorld;
+        /// <summary>
+        ///咬板Marker從CT中轉到世界座標
+        /// </summary>
+        private Matrix3D WorldtoCT;
+
         private Matrix3D CTtoMS;
         private Matrix3D MStoCT;
         private Matrix3D OriWorldtoMS;
+        
+
+
         /// <summary>
         /// 當前點世界座標
         /// </summary>
@@ -304,7 +320,6 @@ namespace Nart
         {
             for (int i = 0; i < WorldPoints.Count; i++)
             {               
-
                 WorldPoints[i].CompareDatabase(database.MarkerInfo);
             }
         }
@@ -443,7 +458,7 @@ namespace Nart
         {
             try
             {
-                string fileContent = File.ReadAllText(path);//"../../../data/CaliR_L.txt"
+                string fileContent = File.ReadAllText(path);
                 string[] contentArray = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
 
                 string[] data = new string[27];
@@ -460,7 +475,7 @@ namespace Nart
                                           new Point3D(regData[12], regData[13], regData[14]),
                                           new Point3D(regData[15], regData[16], regData[17])};
 
-                MSMarker = new Point3D[3] { new Point3D(regData[18], regData[19], regData[20]),
+                MSSplintMarker = new Point3D[3] { new Point3D(regData[18], regData[19], regData[20]),
                                             new Point3D(regData[21], regData[22], regData[23]),
                                             new Point3D(regData[24], regData[25], regData[26])};
               
@@ -484,9 +499,9 @@ namespace Nart
                 }
 
                 Console.WriteLine("\nSplintMarker");
-                for (int i = 0; i < MSMarker.Length; i++)
+                for (int i = 0; i < MSSplintMarker.Length; i++)
                 {
-                    Console.WriteLine(MSMarker[i]);
+                    Console.WriteLine(MSSplintMarker[i]);
                 }
                 Console.WriteLine("  ");
                 return true;
@@ -498,6 +513,36 @@ namespace Nart
                 return false;
             }
         }
+        private bool LoadSplintPoint(string path)
+        {
+            try
+            {
+                string fileContent = File.ReadAllText(path);
+                string[] contentArray = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
+
+                double[] matrixInfo = Array.ConvertAll(contentArray, double.Parse);
+
+                if (matrixInfo.Length != 9)
+                {
+                    throw new Exception();
+                }
+
+                SplintInCT = new Point3D[3] { new Point3D(matrixInfo[0], matrixInfo[1], matrixInfo[2]),
+                                            new Point3D(matrixInfo[3], matrixInfo[4], matrixInfo[5]),
+                                            new Point3D(matrixInfo[6], matrixInfo[7], matrixInfo[8])};
+
+                return true;
+            }
+            catch
+            {
+                MessageBox.Show("找不到咬板於CT座標檔案");
+                return false;
+            }
+        }
+        
+        
+        
+        
         /// <summary>
         /// 輸入點群資料跟指定的Marker(上、下顎、頭)ID，回傳資料庫的索引位置
         /// </summary>
@@ -513,7 +558,7 @@ namespace Nart
             return -1;
         }
         /// <summary>
-        /// 註冊當前狀態的值
+        /// 原Nart的註冊當前狀態的值
         /// </summary>
         public void Registraion()
         {
@@ -526,7 +571,7 @@ namespace Nart
             }
 
             //先判斷當前標記片數量是否過少
-            if (WorldPoints.Count > 1)
+            if (WorldPoints.Count >=2)
             {
                 //取得咬板Marker在WorldPoints中的索引值
                 RegSplintIndex = GetSpecIndex(WorldPoints, "Splint");
@@ -558,7 +603,7 @@ namespace Nart
                     }
 
 
-                    OriWorldtoMS = TransformCoordinate(WorldPoints[RegSplintIndex].ThreePoints, MSMarker);
+                    OriWorldtoMS = TransformCoordinate(WorldPoints[RegSplintIndex].ThreePoints, MSSplintMarker);
 
                     for (int i = 0; i < WorldPoints.Count; i++)
                     {
@@ -567,7 +612,7 @@ namespace Nart
                         OriWorldPoint.MarkerID = WorldPoints[i].MarkerID;
                         WorldPoints[i].ThreePoints.CopyTo(OriWorldPoint.ThreePoints, 0); //將當前世界座標點存進OriWorldPoint當作註冊時的狀態
 
-                        //創建轉成MS座標系的世界座標點
+                        //將所有世界座標點乘上OriWorldtoMS 轉成MS座標
                         Marker3D MSWorldPoint = new Marker3D();
                         MSWorldPoint.MarkerID = WorldPoints[i].MarkerID;
                         OriWorldtoMS.Transform(WorldPoints[i].ThreePoints);
@@ -610,6 +655,99 @@ namespace Nart
             CameraControl.RegToggle = false;
         }
         /// <summary>
+        /// 導航的註冊
+        /// </summary>
+        public void Registraion2()
+        {
+            OriWorldPoints.Clear();
+            MSWorldPoints.Clear();
+
+            if (!LoadSplintPoint("../../../data/蔡慧君測試用.txt"))
+            {
+                return;
+            }
+
+            //先判斷當前標記片數量是否過少
+            if (WorldPoints.Count >=2)
+            {
+                //取得咬板Marker在WorldPoints中的索引值
+                RegSplintIndex = GetSpecIndex(WorldPoints, "Splint");
+                Console.WriteLine("\n\n第" + (RegSplintIndex + 1) + "組點是咬板");
+                //取得頭Marker在WorldPoints中的索引值
+                RegHeadIndex = GetSpecIndex(WorldPoints, "Head");
+                Console.WriteLine("\n\n第" + (RegHeadIndex + 1) + "組點是頭部");
+
+                //註冊需要咬板與頭部標記片
+                if (RegSplintIndex != -1 && RegHeadIndex != -1)
+                {
+
+                    SimplifyDatabase();
+
+                    CalcFHCoord();
+
+                    for (int i = 0; i < database.MarkerInfo.Count; i++)
+                    {
+                        Console.WriteLine("\n\n" + database.MarkerInfo[i].ThreeLength[0] + " " + database.MarkerInfo[i].ThreeLength[1] + " " + database.MarkerInfo[i].ThreeLength[2]);
+                    }
+                    Console.WriteLine("splint:" + database.SplintIndex);
+                    Console.WriteLine("Head:" + database.HeadIndex);
+
+                    MatchRealMarker();//將當前世界座標與資料庫比較並存下於資料庫中的引數
+
+                    for (int i = 0; i < WorldPoints.Count; i++)
+                    {
+                        Console.WriteLine("MarkerID" + i + ":" + WorldPoints[i].MarkerID);
+                    }
+
+                    CTtoWorld = TransformCoordinate(SplintInCT, WorldPoints[RegSplintIndex].ThreePoints);
+                    WorldtoCT = TransformCoordinate(WorldPoints[RegSplintIndex].ThreePoints, SplintInCT);
+
+
+                    for (int i = 0; i < WorldPoints.Count; i++)
+                    {
+                        //創建註冊時的世界座標點
+                        Marker3D OriWorldPoint = new Marker3D();
+                        OriWorldPoint.MarkerID = WorldPoints[i].MarkerID;
+                        WorldPoints[i].ThreePoints.CopyTo(OriWorldPoint.ThreePoints, 0); //將當前世界座標點存進OriWorldPoint當作註冊時的狀態
+
+                        OriWorldPoints.Add(OriWorldPoint);
+                       
+                    }
+
+                    MessageBox.Show("註冊了" + WorldPoints.Count + "組Marker");
+
+                    for (int i = 0; i < OriWorldPoints.Count; i++)
+                    {
+                        Console.WriteLine("\n第" + (i + 1) + "組 世界座標");
+                        Console.WriteLine(OriWorldPoints[i].ThreePoints[0]);
+                        Console.WriteLine(OriWorldPoints[i].ThreePoints[1]);
+                        Console.WriteLine(OriWorldPoints[i].ThreePoints[2]);
+                        Console.WriteLine(OriWorldPoints[i].MarkerID);
+                    }
+                    Console.WriteLine("\n\n\n");
+                   
+                }
+                else
+                {
+                    MessageBox.Show("找不到咬板或頭部Marker");
+                }
+            }
+            else
+            {
+                MessageBox.Show("包括咬板與頭部還需要其他標記片");
+            }
+            CameraControl.RegToggle = false;
+        }
+
+
+
+
+
+
+
+
+
+        /// <summary>
         /// 計算出每個Marker的轉移矩陣
         /// </summary>
         public void CalcModelTransform()
@@ -627,15 +765,15 @@ namespace Nart
                     {
                         int MSandOriIndex = GetSpecIndex(MSWorldPoints, WorldPoints[i].MarkerID);//取得當前世界座標在註冊時的座標索引值是多少
 
-                        Matrix3D level1 = TransformCoordinate(CTBall, MSBall);
+                        //Matrix3D level1 = TransformCoordinate(CTBall, MSBall);
 
                         Matrix3D level2 = TransformCoordinate(MSWorldPoints[MSandOriIndex].ThreePoints, WorldPoints[i].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"
 
                         Matrix3D level3 = TransformCoordinate(WorldPoints[currentHeadIndex].ThreePoints, MSWorldPoints[RegHeadIndex].ThreePoints);
 
-                        Matrix3D level4 = TransformCoordinate(MSBall, CTBall);
+                        //Matrix3D level4 = TransformCoordinate(MSBall, CTBall);
                         
-                        Matrix3D Final = level1 * level2 * level3 * level4;
+                        Matrix3D Final = CTtoMS * level2 * level3 * MStoCT;
 
                       
                        for (int j = 0; j < MultiAngleViewModel.BoneModelCollection.Count; j++)
@@ -651,6 +789,59 @@ namespace Nart
 
             }
         }
+        /// <summary>
+        /// 計算出每個Marker的轉移矩陣
+        /// </summary>
+        public void CalcModelTransform2()
+        {
+            int currentHeadIndex = GetSpecIndex(WorldPoints, "Head");
+
+            //沒有找到頭的Marker
+            if (currentHeadIndex != -1)
+            {
+
+                //Parallel.For(0, WorldPoints.Count, i =>
+                for (int i = 0; i < WorldPoints.Count; i++) 
+                {
+                    //當前Marker找不到或找到的是頭部Marker則跳過
+                    if (WorldPoints[i].MarkerID.Equals("Splint")) 
+                    {
+                  
+                        int SplintMarkerIndex = GetSpecIndex(WorldPoints, "Splint");//取得當前世界座標在註冊時的座標索引值是多少
+                                                
+                        Matrix3D level1 = TransformCoordinate(SplintInCT, WorldPoints[i].ThreePoints);
+
+                        Matrix3D level2 = TransformCoordinate(WorldPoints[currentHeadIndex].ThreePoints, OriWorldPoints[RegHeadIndex].ThreePoints);
+
+                        //Matrix3D level3 = WorldtoCT;
+
+                        Matrix3D Final =  level1 * level2 * WorldtoCT;
+
+
+                        for (int j = 0; j < MultiAngleViewModel.BoneModelCollection.Count; j++)
+                        {
+                            BoneModel boneModel = MultiAngleViewModel.BoneModelCollection[j] as BoneModel;
+                            if (boneModel.MarkerID == WorldPoints[i].MarkerID)
+                            {
+                                boneModel.AddItem(Final);
+                            }
+                        }
+                    }
+                    //});
+                }
+
+            }
+        }
+
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// 計算出FH平片所形成的坐標系
         /// </summary>
