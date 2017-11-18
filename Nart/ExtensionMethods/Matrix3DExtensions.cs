@@ -43,6 +43,28 @@ namespace Nart.ExtensionMethods
             return m;
         }
 
+        public static Matrix ToMatrix(this Matrix3D m)
+        {
+            return new Matrix(
+                (float)m.M11,
+                (float)m.M12,
+                (float)m.M13,
+                (float)m.M14,
+                (float)m.M21,
+                (float)m.M22,
+                (float)m.M23,
+                (float)m.M24,
+                (float)m.M31,
+                (float)m.M32,
+                (float)m.M33,
+                (float)m.M34,
+                (float)m.OffsetX,
+                (float)m.OffsetY,
+                (float)m.OffsetZ,
+                (float)m.M44);
+        }
+
+
         public static Matrix3D ToMatrix3D(this Matrix m)
         {
             return new Matrix3D(

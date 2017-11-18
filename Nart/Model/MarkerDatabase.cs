@@ -11,7 +11,7 @@ namespace Nart
     public class MarkerDatabase
     {
         /// <summary>
-        ///使用一個Class專門記錄三邊長與ID
+        ///使用一個Struct專門記錄三邊長與ID
         /// </summary>
         public struct MarkerData
         {
@@ -39,10 +39,11 @@ namespace Nart
             CreateDatabase();
         }
         /// <summary>
-        /// 輸入Marker的data並將資料存進MarkerDB裡面
+        /// 輸入Marker的data(三邊長)並將資料存進MarkerDB裡面
         /// </summary>
         private void CreateDatabase()
         {
+            
             try
             {
                 XmlDocument doc = new XmlDocument();

@@ -9,7 +9,7 @@
              xmlns:ie="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:sdx="clr-namespace:SharpDX;assembly=SharpDX.Mathematics"
              xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
-             mc:Ignorable="d" Height="309.473" Width="637.895">
+             mc:Ignorable="d" Height="421.973" Width="793.895">
     <!--<UserControl.Resources>
         <Style TargetType="Label">
             <Setter Property="FontSize"
@@ -169,5 +169,7 @@
         <StackPanel  Orientation="Vertical" HorizontalAlignment="Left" Margin="1,2,0,25" Width="165">
             <Label x:Name="CephLabel" Content="{Binding CraniofacialInfo, Mode=OneWay}" Margin="1,1,1,1" FontWeight="Bold" FontSize="20" Foreground="White"/>
         </StackPanel>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="67" Margin="124,141,0,0" Grid.Row="2" Height="58" Background="{x:Null}" Foreground="White"/>
+        <Label x:Name="label" Content="{Binding BallDistance, Mode=OneWay}" VerticalAlignment="Top" Margin="0,16,10,0" FontWeight="Bold" FontSize="20" Foreground="White" Height="60" HorizontalAlignment="Right" Width="80"/>
     </Grid>
 </UserControl>

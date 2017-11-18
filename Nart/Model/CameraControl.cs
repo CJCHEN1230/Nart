@@ -204,6 +204,7 @@ namespace Nart
                 if (_calcCoord.FHCoord!=null)
                 {
                     _calcCoord.CalcCraniofacialInfo();
+                    _calcCoord.CalcBallDistance();
                 }
             }
         

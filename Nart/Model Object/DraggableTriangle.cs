@@ -30,6 +30,18 @@ namespace Nart.Model_Object
         /// </summary>
         public Matrix3D TranslateToModelCenter;
         /// <summary>
+        /// MarkerID 的值
+        /// </summary>
+        public String MarkerID;
+        /// <summary>
+        /// 整個三角形中心位置
+        /// </summary>
+        public Point3D Center;
+        /// <summary>
+        /// 一開始三顆球的初始位置:紅色 綠色 藍色
+        /// </summary>
+        public Vector3[] positions;
+        /// <summary>
         /// 單顆球幾何
         /// </summary>
         private static Geometry3D NodeGeometry;
@@ -45,10 +57,7 @@ namespace Nart.Model_Object
         /// 三根桿
         /// </summary>
         private MeshGeometryModel3D[] cylinderHandles = new MeshGeometryModel3D[3];
-        /// <summary>
-        /// 一開始三顆球的初始位置
-        /// </summary>
-        private Vector3[] positions;
+
         /// <summary>
         /// 三頂點於中心的距離
         /// </summary>
@@ -87,17 +96,25 @@ namespace Nart.Model_Object
             b2.AddCylinder(new Vector3(0, 0, 0), new Vector3(1, 0, 0), 3, 32, true, true);
             EdgeGeometry = b2.ToMeshGeometry3D();
         }
-
         public DraggableTriangle()
+                    : this(new Point3D(0,0,0))
         {
+        }
+        public DraggableTriangle(Vector3 center)
+                    : this(new Point3D(center.X, center.Y, center.Z))
+        {
+        }
+        public DraggableTriangle(Point3D center)
+        {
+            
+            Center = center;
+
             this.Material = PhongMaterials.White;
             positions = new Vector3[3]
                  {
-
-                    new Vector3(Convert.ToSingle(Math.Cos(InitialAngle/180f*Math.PI))*length,Convert.ToSingle(Math.Sin(InitialAngle/180f*Math.PI))*length,0),
-                    new Vector3(Convert.ToSingle(Math.Cos((InitialAngle+120)/180f*Math.PI))*length,Convert.ToSingle(Math.Sin((InitialAngle+120)/180f*Math.PI))*length,0),
-                    new Vector3(Convert.ToSingle(Math.Cos((InitialAngle+240)/180f*Math.PI))*length,Convert.ToSingle(Math.Sin((InitialAngle+240)/180f*Math.PI))*length,0),
-                    
+                    new Vector3(Convert.ToSingle(Center.X+ Math.Cos( InitialAngle/180f*Math.PI)           *length),Convert.ToSingle(Center.Y+ Math.Sin(InitialAngle/180f*Math.PI)             *length),Convert.ToSingle(Center.Z)),
+                    new Vector3(Convert.ToSingle(Center.X+ Math.Cos((InitialAngle+120)/180f*Math.PI)*length),Convert.ToSingle(Center.Y+Math.Sin((InitialAngle+120)/180f*Math.PI)*length),Convert.ToSingle(Center.Z)),
+                    new Vector3(Convert.ToSingle(Center.X+ Math.Cos((InitialAngle+240)/180f*Math.PI)*length),Convert.ToSingle(Center.Y+Math.Sin((InitialAngle+240)/180f*Math.PI)*length),Convert.ToSingle(Center.Z)),
                  };
             for (int i = 0; i < 3; i++)
             {
@@ -220,6 +237,7 @@ namespace Nart.Model_Object
 
                     this._lastHitPos = newHit.Value;
                     corner.Transform = new MatrixTransform3D(localTransform);
+                    
                 }
 
 
@@ -283,8 +301,8 @@ namespace Nart.Model_Object
 
         private void UpdateTransforms()
         {
-            var cornerTrafos = this.ballHandles.Select(x => (x.Transform as MatrixTransform3D)).ToArray();
-            var cornerMatrix = cornerTrafos.Select(x => (x).Value).ToArray();
+            Matrix3D[] cornerMatrix = this.ballHandles.Select(x => (x.Transform.Value)).ToArray();
+            //Matrix3D[] cornerMatrix = cornerTrafos.Select(x => (x).Value).ToArray();
             positions = cornerMatrix.Select(x => x.ToMatrix().TranslationVector).ToArray();
 
             for (int i = 0; i < 3; i++)

@@ -1,4 +1,5 @@
-﻿using Nart.Model_Object;
+﻿using Nart.ExtensionMethods;
+using Nart.Model_Object;
 using SharpDX;
 using System;
 using System.Collections.Generic;
@@ -738,15 +739,6 @@ namespace Nart
             }
             CameraControl.RegToggle = false;
         }
-
-
-
-
-
-
-
-
-
         /// <summary>
         /// 計算出每個Marker的轉移矩陣
         /// </summary>
@@ -821,7 +813,7 @@ namespace Nart
                         for (int j = 0; j < MultiAngleViewModel.BoneModelCollection.Count; j++)
                         {
                             BoneModel boneModel = MultiAngleViewModel.BoneModelCollection[j] as BoneModel;
-                            if (boneModel.MarkerID == WorldPoints[i].MarkerID)
+                            if (boneModel.MarkerID == WorldPoints[i].MarkerID&& boneModel.IsRendering)
                             {
                                 boneModel.AddItem(Final);
                             }
@@ -832,16 +824,6 @@ namespace Nart
 
             }
         }
-
-
-
-
-
-
-
-
-
-
         /// <summary>
         /// 計算出FH平片所形成的坐標系
         /// </summary>
@@ -1000,7 +982,7 @@ namespace Nart
 
 
                 Point3D Intersection = mandibleOSP.Transform.Transform(_craniofacialInfo.GoIntersection);
-                double PDD = Math.Abs(Vector3D.DotProduct(headNormal, Intersection - headNormalPoint));
+                double PDD = Vector3D.DotProduct(headNormal, Intersection - headNormalPoint);
 
                 
 
@@ -1017,5 +999,65 @@ namespace Nart
             }
             Count++;
         }
+
+        public void CalcBallDistance()
+        {
+            if (MultiAngleViewModel.TriangleModelCollection[0] == null)
+                return;
+            DraggableTriangle drag1 = MultiAngleViewModel.TriangleModelCollection[0] as DraggableTriangle;
+            for (int i=1;i< MultiAngleViewModel.TriangleModelCollection.Count; i++)
+            {
+                if (drag1.MarkerID.Equals("Maxilla"))
+                {
+                    
+                    Point3D red = drag1.Transform.Transform(new Point3D(drag1.positions[0].X, drag1.positions[0].Y, drag1.positions[0].Z));
+                    Point3D green = drag1.Transform.Transform(new Point3D(drag1.positions[0].X, drag1.positions[0].Y, drag1.positions[0].Z));
+                    Point3D blue = drag1.Transform.Transform(new Point3D(drag1.positions[0].X, drag1.positions[0].Y, drag1.positions[0].Z));
+
+                    Point3D red2 = drag1.Transform.Transform(new Point3D(drag1.positions[1].X, drag1.positions[1].Y, drag1.positions[1].Z));
+                    Point3D green2 = drag1.Transform.Transform(new Point3D(drag1.positions[1].X, drag1.positions[1].Y, drag1.positions[1].Z));
+                    Point3D blue2 = drag1.Transform.Transform(new Point3D(drag1.positions[1].X, drag1.positions[1].Y, drag1.positions[1].Z));
+
+                    var redVector = new Vector3D(red2.X - red.X, red2.Y - red.Y, red2.Z - red.Z);
+                    var greenVector = new Vector3D(green2.X - green.X, green2.Y - green.Y, green2.Z - green.Z);
+                    var blueVector = new Vector3D(blue2.X - blue.X, blue2.Y - blue.Y, blue2.Z - blue.Z);
+                    double redLength = redVector.Length;
+                    double greenLength = redVector.Length;
+                    double blueLength = redVector.Length;
+
+                    string info = "Red:".PadRight(7) + Math.Round(redLength, 3).ToString()
+                        + "\n\nGreen:".PadRight(7) + Math.Round(greenLength, 3).ToString()
+                        + "\n\nBlue:".PadRight(7) + Math.Round(blueLength, 3).ToString();
+
+                    MultiAngleViewModel.BallDistance = info;
+                }               
+            }
+            //DraggableTriangle drag2 = MultiAngleViewModel.TriangleModelCollection[1] as DraggableTriangle;
+            //for (int i = 2; i < MultiAngleViewModel.TriangleModelCollection.Count; i++)
+            //{
+            //    if (drag2.MarkerID.Equals("Mandible"))
+            //    {
+            //        Point3D red = drag2.Transform.Transform(new Point3D(drag2.positions[0].X, drag2.positions[0].Y, drag2.positions[0].Z));
+            //        Point3D green = drag2.Transform.Transform(new Point3D(drag2.positions[0].X, drag2.positions[0].Y, drag2.positions[0].Z));
+            //        Point3D blue = drag2.Transform.Transform(new Point3D(drag2.positions[0].X, drag2.positions[0].Y, drag2.positions[0].Z));
+
+            //        Point3D red2 = drag2.Transform.Transform(new Point3D(drag2.positions[1].X, drag2.positions[1].Y, drag2.positions[1].Z));
+            //        Point3D green2 = drag2.Transform.Transform(new Point3D(drag2.positions[1].X, drag2.positions[1].Y, drag2.positions[1].Z));
+            //        Point3D blue2 = drag2.Transform.Transform(new Point3D(drag2.positions[1].X, drag2.positions[1].Y, drag2.positions[1].Z));
+
+            //        var redVector = new Vector3D(red2.X - red.X, red2.Y - red.Y, red2.Z - red.Z);
+            //        var greenVector = new Vector3D(green2.X - green.X, green2.Y - green.Y, green2.Z - green.Z);
+            //        var blueVector = new Vector3D(blue2.X - blue.X, blue2.Y - blue.Y, blue2.Z - blue.Z);
+            //        double redLength = redVector.Length;
+            //        double greenLength = redVector.Length;
+            //        double blueLength = redVector.Length;
+
+            //    }
+            //}
+
+
+
+        }
+
     }
 }

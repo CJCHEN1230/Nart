@@ -266,11 +266,8 @@ namespace Nart
                     ModelSettingCollection[i].Bone.IsAdded = true;
                     //除了頭部以外需要guide
                     if (!boneModel.MarkerID.Equals("Head")&& !boneModel.MarkerID.Equals("C"))
-                    {                        
-                        ModelSettingCollection[i].Guide.TranslateToModelCenter = new Matrix3D(1, 0, 0, 0,
-                                                                                                                                                                    0, 1, 0, 0,
-                                                                                                                                                                    0, 0, 1, 0,
-                                                                        boneModel.ModelCenter.X, boneModel.ModelCenter.Y, boneModel.ModelCenter.Z, 1);
+                    {
+                        ModelSettingCollection[i].Guide = new DraggableTriangle(boneModel.ModelCenter);
 
                         MultiAngleViewModel.TriangleModelCollection.Add(ModelSettingCollection[i].Guide);
 
@@ -287,10 +284,10 @@ namespace Nart
                 //做bone 的轉移矩陣綁到 DraggableTriangle的ModelTransform上面
                 if (boneModel.IsLoaded && ModelSettingCollection[i].Guide != null)
                 {
-                    var binding = new Binding("ModelTransform");
-                    binding.Source = ModelSettingCollection[i].Guide;
-                    binding.Mode = BindingMode.OneWayToSource;
-                    BindingOperations.SetBinding(boneModel, Model3D.TransformProperty, binding);
+                    var binding = new Binding("Transform");
+                    binding.Source = boneModel;
+                    binding.Mode = BindingMode.OneWay;
+                    BindingOperations.SetBinding(ModelSettingCollection[i].Guide, HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty, binding);
                 }
 
             }

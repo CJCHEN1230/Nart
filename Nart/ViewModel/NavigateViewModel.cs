@@ -14,7 +14,9 @@ namespace Nart
     using Model_Object;
     using System.IO;
     using System.Windows;
+    using System.Windows.Data;
     using System.Windows.Input;
+    using System.Windows.Media.Media3D;
     using Color = System.Windows.Media.Color;
     public class NavigateViewModel : ObservableObject
     {
@@ -71,11 +73,11 @@ namespace Nart
         /// <summary>
         /// 頭部對稱面
         /// </summary>
-        private String HeadOSP = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl";
+        private String headOSP = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl";
         /// <summary>
         /// 下顎對稱面
         /// </summary>
-        private String MandibleOSP = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl";
+        private String mandibleOSP = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl";
         #endregion
 
         /// <summary>
@@ -89,7 +91,7 @@ namespace Nart
         /// <summary>
         /// 導引順序先開上顎or先開下顎
         /// </summary>
-        private string firstNavigation = "Maxilla";
+        private String firstNavigation = "Maxilla";
         /// <summary>
         /// View頁面
         /// </summary>
@@ -101,9 +103,7 @@ namespace Nart
         public NavigateViewModel(NavigateView navigateView)
         {
             _navigateView = navigateView;
-            ModelSettingCommand = new RelayCommand(LoadSettingModel);
-
-            
+            ModelSettingCommand = new RelayCommand(LoadSettingModel);            
         }
 
 
@@ -240,6 +240,35 @@ namespace Nart
                 SetValue(ref finalMaxillaMatrix, value);
             }
         }
+        public String HeadOSP
+        {
+            get
+            {
+                return headOSP;
+            }
+            set
+            {
+                SetValue(ref headOSP, value);
+            }
+        } 
+     
+        public String MandibleOSP
+        {
+            get
+            {
+                return mandibleOSP;
+            }
+            set
+            {
+                SetValue(ref mandibleOSP, value);
+            }
+        } 
+
+
+
+
+
+
         public string FirstNavigation
         {
             get
@@ -253,6 +282,13 @@ namespace Nart
         }
         public ICommand ModelSettingCommand { private set; get; }
 
+        private void SetBinding(object source, DependencyObject target, string propertyName, DependencyProperty dp, BindingMode mode)
+        {
+            Binding binding = new Binding(propertyName);
+            binding.Source = source;
+            binding.Mode = mode;
+            BindingOperations.SetBinding(target, dp, binding);
+        }
         public Matrix ReadMatrixFile(string  path)
         {
 
@@ -283,60 +319,103 @@ namespace Nart
         public void LoadSettingModel(object o)
         {
 
-            BoneModel Bone1 = new BoneModel();
-            Bone1.FilePath = HeadModel;
-            Bone1.MarkerID = "Head";
-            Bone1.DiffuseColor = HeadDiffuseColor;
-            Bone1.LoadModel();
+            BoneModel Head = new BoneModel();
+            Head.FilePath = HeadModel;
+            Head.MarkerID = "Head";
+            Head.DiffuseColor = HeadDiffuseColor;
+            Head.LoadModel();
 
             //讀取原始上下顎 加上 規劃後的轉移矩陣
             Matrix plannedMatrix = ReadMatrixFile(plannedMaxillaMatrix);
-            BoneModel Bone2 = new BoneModel();
-            Bone2.FilePath = MaxillaModel;
-            Bone2.MarkerID = "";
-            Bone2.DiffuseColor = Color.FromArgb(255, 100, 100, 100);
-            Bone2.LoadModel();
-            Bone2.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(plannedMatrix.ToMatrix3D()); 
+            BoneModel targetMaxilla = new BoneModel();
+            targetMaxilla.FilePath = MaxillaModel;
+            targetMaxilla.MarkerID = "";
+            targetMaxilla.DiffuseColor = Color.FromArgb(255, 100, 100, 100);
+            targetMaxilla.LoadModel();
+            targetMaxilla.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(plannedMatrix.ToMatrix3D()); 
 
             Matrix plannedMandible = ReadMatrixFile(plannedMandibleMatrix);
-            BoneModel Bone3 = new BoneModel();
-            Bone3.FilePath = MandibleModel;
-            Bone3.MarkerID = "";
-            Bone3.DiffuseColor = Color.FromArgb(255, 100, 100, 100);
-            Bone3.LoadModel();        
-            Bone3.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(plannedMandible.ToMatrix3D());
+            BoneModel targetMandible = new BoneModel();
+            targetMandible.FilePath = MandibleModel;
+            targetMandible.MarkerID = "";
+            targetMandible.DiffuseColor = Color.FromArgb(255, 100, 100, 100);
+            targetMandible.LoadModel();        
+            targetMandible.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(plannedMandible.ToMatrix3D());
 
-            MultiAngleViewModel.NavigationTargetCollection.Add(Bone1);
-            MultiAngleViewModel.NavigationTargetCollection.Add(Bone2);
-            MultiAngleViewModel.NavigationTargetCollection.Add(Bone3);
-
-
+            MultiAngleViewModel.NavigationTargetCollection.Add(Head);
+            MultiAngleViewModel.NavigationTargetCollection.Add(targetMaxilla);
+            MultiAngleViewModel.NavigationTargetCollection.Add(targetMandible);
 
 
-            BoneModel Bone4 = new BoneModel();
-            Bone4.FilePath = MaxillaModel;
-            Bone4.MarkerID = "Splint";
-            Bone4.DiffuseColor = MaxillaDiffuseColor;
-            Bone4.LoadModel();
             
-            BoneModel Bone5 = new BoneModel();
-            Bone5.FilePath = MandibleModel;
-            Bone5.MarkerID = "Splint";
-            Bone5.DiffuseColor = MandibleDiffuseColor;
-            Bone5.LoadModel();
+
+            BoneModel oriMaxilla = new BoneModel();
+            oriMaxilla.FilePath = MaxillaModel;
+            oriMaxilla.MarkerID = "Splint";
+            oriMaxilla.DiffuseColor = MaxillaDiffuseColor;
+            oriMaxilla.LoadModel();
+            
+            BoneModel oriMandible = new BoneModel();
+            oriMandible.FilePath = MandibleModel;
+            oriMandible.MarkerID = "Splint";
+            oriMandible.DiffuseColor = MandibleDiffuseColor;
+            oriMandible.LoadModel();
+
+            MultiAngleViewModel.BoneModelCollection.Add(oriMaxilla);
+            MultiAngleViewModel.BoneModelCollection.Add(oriMandible);
 
 
-            MultiAngleViewModel.BoneModelCollection.Add(Bone4);
-            MultiAngleViewModel.BoneModelCollection.Add(Bone5);
+            OSPModel headOSP = new OSPModel();
+            headOSP.MarkerID = "Head";
+            headOSP.FilePath = HeadOSP;
+            headOSP.DiffuseColor = System.Windows.Media.Color.FromArgb(50, 255, 0, 0);
+            headOSP.LoadOSP();
+
+            OSPModel mandibleOSP = new OSPModel();
+            mandibleOSP.MarkerID = "C";
+            mandibleOSP.FilePath = MandibleOSP;
+            mandibleOSP.DiffuseColor = System.Windows.Media.Color.FromArgb(50, 0, 255, 0);
+            mandibleOSP.LoadOSP();
+            SetBinding(oriMandible, mandibleOSP, "Transform", HelixToolkit.Wpf.SharpDX.Model3D.TransformProperty, BindingMode.OneWay);
+
+
+
+            MultiAngleViewModel.OSPModelCollection.Add(headOSP);
+            MultiAngleViewModel.OSPModelCollection.Add(mandibleOSP);
+
+
+            DraggableTriangle maxillaTargetTriangle = new DraggableTriangle(targetMaxilla.ModelCenter);
+            maxillaTargetTriangle.MarkerID = "Maxilla";
+            MultiAngleViewModel.TriangleModelCollection.Add(maxillaTargetTriangle);
+
+
+            DraggableTriangle mandibleTargetTriangle = new DraggableTriangle(targetMandible.ModelCenter);
+            mandibleTargetTriangle.MarkerID = "Mandible";
+            MultiAngleViewModel.TriangleModelCollection.Add(mandibleTargetTriangle);
+
+
+            DraggableTriangle maxillaTriangle = new DraggableTriangle(oriMaxilla.ModelCenter);
+            maxillaTriangle.MarkerID = "Maxilla";
+            SetBinding(oriMaxilla, maxillaTriangle,"Transform" ,HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty,BindingMode.OneWay);
+            MultiAngleViewModel.TriangleModelCollection.Add(maxillaTriangle);
+
+
+            DraggableTriangle mandibleTriangle = new DraggableTriangle(oriMandible.ModelCenter);
+            mandibleTriangle.MarkerID = "Mandible";
+            SetBinding(oriMandible, mandibleTriangle, "Transform", HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty, BindingMode.OneWay);
+            MultiAngleViewModel.TriangleModelCollection.Add(mandibleTriangle);
+
+
+            
 
 
 
 
 
 
-
-
-
+            
+            
+            
             MultiAngleViewModel.ResetCameraPosition();
 
             _navigateView.Hide();

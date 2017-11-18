@@ -95,6 +95,8 @@ namespace Nart
             }
             _modelSettingdlg.Owner = _mainWindow;
 
+            _modelSettingdlg.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+
             _modelSettingdlg.ShowDialog();
         }
         private void SetNavigation(object o)
@@ -103,7 +105,9 @@ namespace Nart
             {
                 _navigatedlg = new NavigateView();
             }
-            _navigatedlg.Owner = _mainWindow; 
+            _navigatedlg.Owner = _mainWindow;
+
+            _navigatedlg.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
 
             _navigatedlg.ShowDialog();
         }

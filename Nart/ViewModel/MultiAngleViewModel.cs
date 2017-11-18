@@ -28,6 +28,7 @@ namespace Nart
     public class MultiAngleViewModel : ObservableObject
     {                  
         private static string craniofacialInfo;
+        private static string ballDistance;
         private static Camera cam1 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
         private static Camera cam2 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
         private static Camera cam3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
@@ -65,6 +66,20 @@ namespace Nart
             set
             {
                 SetStaticValue(ref craniofacialInfo, value);
+            }
+        }
+        /// <summary>
+        /// 計算三球距離
+        /// </summary>
+        public static string BallDistance
+        {
+            get
+            {
+                return ballDistance;
+            }
+            set
+            {
+                SetStaticValue(ref ballDistance, value);
             }
         }
         public static Camera Camera1
@@ -306,29 +321,20 @@ namespace Nart
 
         }
         /// <summary>
-        /// 將自定義的cam1LookDir綁到相機實際的觀看方向
+        /// 將自定義的camLookDir綁到相機實際的觀看方向
         /// </summary>
-        public void SetupCameraBindings(string propertyName, Camera camera )//Camera1, "Cam1LookDir"
+        public void SetupCameraBindings(string propertyName, Camera camera )
         {
 
             if (camera is ProjectionCamera)
             {
-                SetBinding(propertyName, camera, ProjectionCamera.LookDirectionProperty, this);
+                var binding = new Binding(propertyName);
+                binding.Source = this;
+                binding.Mode = BindingMode.OneWayToSource;
+                BindingOperations.SetBinding(camera, ProjectionCamera.LookDirectionProperty, binding);
             }
         }
-        /// <summary>
-        /// path:目標屬性名稱
-        /// dobj:來源屬性
-        /// viewModel
-        /// mode:綁定方向
-        /// </summary>
-        private void SetBinding(string path, DependencyObject dobj, DependencyProperty property, object viewModel, BindingMode mode = BindingMode.TwoWay)
-        {
-            var binding = new Binding(path);
-            binding.Source = viewModel;
-            binding.Mode = mode;
-            BindingOperations.SetBinding(dobj, property, binding);
-        }
+
         public void OnMouseDoubleClickHandler(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             foreach (var item in HighlightItems)
