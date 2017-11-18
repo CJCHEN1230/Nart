@@ -39,6 +39,8 @@
             </hx:GroupModel3D>
             <hx:GroupModel3D ItemsSource="{Binding OSPModelCollection}">
             </hx:GroupModel3D>
+            <hx:GroupModel3D ItemsSource="{Binding NormalModelCollection}">
+            </hx:GroupModel3D>
             <hx:ItemsModel3D ItemsSource="{Binding ModelDataCollection}">
                 <hx:ItemsModel3D.ItemTemplate>
                     <DataTemplate>
@@ -169,7 +171,7 @@
         <StackPanel  Orientation="Vertical" HorizontalAlignment="Left" Margin="1,2,0,25" Width="165">
             <Label x:Name="CephLabel" Content="{Binding CraniofacialInfo, Mode=OneWay}" Margin="1,1,1,1" FontWeight="Bold" FontSize="20" Foreground="White"/>
         </StackPanel>
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="67" Margin="124,141,0,0" Grid.Row="2" Height="58" Background="{x:Null}" Foreground="White"/>
-        <Label x:Name="label" Content="{Binding BallDistance, Mode=OneWay}" VerticalAlignment="Top" Margin="0,16,10,0" FontWeight="Bold" FontSize="20" Foreground="White" Height="60" HorizontalAlignment="Right" Width="80"/>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="67" Margin="124,141,0,0" Grid.Row="2" Height="58" Background="{x:Null}" Foreground="White" Click="button_Click"/>
+        <Label x:Name="label" Content="{Binding BallDistance, Mode=OneWay}" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Margin="0,16,30,0" FontWeight="Bold" FontSize="20" Foreground="White" Height="160" HorizontalAlignment="Right" Width="162"/>
     </Grid>
 </UserControl>

@@ -233,6 +233,11 @@ namespace Nart
             get;
             set;
         } = new ObservableCollection<Element3D>();
+        public static ObservableCollection<Element3D> NormalModelCollection
+        {
+            get;
+            set;
+        } = new ObservableCollection<Element3D>();
         /// <summary>
         /// 設定光源Ambientlight顏色、DirectionaLlight顏色        
         /// </summary>
