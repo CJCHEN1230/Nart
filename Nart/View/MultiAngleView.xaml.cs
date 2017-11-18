@@ -39,15 +39,15 @@ namespace Nart
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-                    DraggableTriangle movedTriangle = MultiAngleViewModel.TriangleModelCollection[0] as DraggableTriangle;
-
+                    DraggableTriangle movedTriangle = MultiAngleViewModel.TriangleModelCollection[2] as DraggableTriangle;
+            DraggableTriangle staTriangle = MultiAngleViewModel.TriangleModelCollection[2] as DraggableTriangle;
             Point3D red2 = movedTriangle.Transform.Transform(new Point3D(movedTriangle.positions[0].X, movedTriangle.positions[0].Y, movedTriangle.positions[0].Z));
             Point3D green2 = movedTriangle.Transform.Transform(new Point3D(movedTriangle.positions[1].X, movedTriangle.positions[1].Y, movedTriangle.positions[1].Z));
             Point3D blue2 = movedTriangle.Transform.Transform(new Point3D(movedTriangle.positions[2].X, movedTriangle.positions[2].Y, movedTriangle.positions[2].Z));
 
-            Point3D red = new Point3D(movedTriangle.positions[0].X, movedTriangle.positions[0].Y, movedTriangle.positions[0].Z);
-            Point3D green = new Point3D(movedTriangle.positions[1].X, movedTriangle.positions[1].Y, movedTriangle.positions[1].Z);
-            Point3D blue = new Point3D(movedTriangle.positions[2].X, movedTriangle.positions[2].Y, movedTriangle.positions[2].Z);
+            Point3D red = new Point3D(staTriangle.positions[0].X, staTriangle.positions[0].Y, staTriangle.positions[0].Z);
+            Point3D green = new Point3D(staTriangle.positions[1].X, staTriangle.positions[1].Y, staTriangle.positions[1].Z);
+            Point3D blue = new Point3D(staTriangle.positions[2].X, staTriangle.positions[2].Y, staTriangle.positions[2].Z);
 
 
             HelixToolkit.Wpf.SharpDX.MeshGeometryModel3D temp = new HelixToolkit.Wpf.SharpDX.MeshGeometryModel3D();

@@ -37,9 +37,9 @@
             </hx:GroupModel3D>
             <hx:GroupModel3D ItemsSource="{Binding NavigationTargetCollection}">
             </hx:GroupModel3D>
-            <hx:GroupModel3D ItemsSource="{Binding OSPModelCollection}">
-            </hx:GroupModel3D>
             <hx:GroupModel3D ItemsSource="{Binding NormalModelCollection}">
+            </hx:GroupModel3D>
+            <hx:GroupModel3D ItemsSource="{Binding OSPModelCollection}">
             </hx:GroupModel3D>
             <hx:ItemsModel3D ItemsSource="{Binding ModelDataCollection}">
                 <hx:ItemsModel3D.ItemTemplate>
