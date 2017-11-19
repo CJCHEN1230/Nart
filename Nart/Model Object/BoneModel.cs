@@ -48,8 +48,11 @@ namespace Nart.Model_Object
         public String FilePath;
 
 
-        public GroupModel3D ballGroup = new GroupModel3D();
-        
+        public string BoneName = "";
+        public string Stage = "";
+        public Matrix3D interMat = new Matrix3D();
+        public Matrix3D finalMat = new Matrix3D();
+
         /// <summary>
         /// 此Model的最終轉換矩陣
         /// </summary>
@@ -129,7 +132,21 @@ namespace Nart.Model_Object
         }
         public void SetTransformMatrix()
         {
-            Transform = new MatrixTransform3D(_finalModelTransform);
+
+            if (BoneName.Equals("Maxilla") && Stage.Equals("intermediate"))
+            {
+                Transform = new MatrixTransform3D(interMat * _finalModelTransform);
+            }
+
+            else if (BoneName.Equals("Maxilla") && Stage.Equals("final")) 
+            {
+                Transform = new MatrixTransform3D(finalMat * _finalModelTransform);
+            }
+            else
+            {
+                Transform = new MatrixTransform3D(_finalModelTransform);
+            }
+
         }
         /// <summary>
         /// 設定模型材質

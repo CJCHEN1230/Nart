@@ -21,31 +21,35 @@ namespace Nart
     public class NavigateViewModel : ObservableObject
     {
 
+        public static bool IsSet = false;
+        public static bool firstStageDone = false;
+        /// <summary>
+        /// 導引順序先開上顎or先開下顎
+        /// </summary>
+        private static String firstNavigation = "Maxilla";
         #region N-Art計畫部分
         /// <summary>
         /// 最後上顎轉移矩陣
         /// </summary>
-        private String plannedMaxillaMatrix = "../../../data/蔡慧君/原始位置轉到規劃後位置上顎_matrix.txt";
+        private String plannedMaxillaMatrix = "../../../data/蔡慧君/plan-maxilla-matrix.txt";
         /// <summary>
         /// 最後下顎轉移矩陣
         /// </summary>
-        private String plannedMandibleMatrix = "../../../data/蔡慧君/原始位置轉到規劃後位置下顎_matrix.txt";
+        private String plannedMandibleMatrix = "../../../data/蔡慧君/plan-mandible-matrix.txt";
         /// <summary>
         /// 最後上顎規劃後模型
         /// </summary>
-        private String plannedMaxilla = "../../../data/蔡慧君/nart規劃後 finalmaxilla.stl";
+        private String plannedMaxilla = "../../../data/蔡慧君/plan-maxilla.stl";
         /// <summary>
         /// 最後下顎規劃後模型
         /// </summary>
-        private String plannedMandible = "D://Desktop//Nart//data//蔡慧君//nart規劃後 finalmandible.stl";
-        #endregion
-
-
+        private String plannedMandible = "../../../data/蔡慧君/plan-mandible.stl";
+        #endregion       
         #region 原始模型設定部分
         /// <summary>
         /// 最後上顎轉移矩陣
         /// </summary>
-        private String headModel = "../../../data/蔡慧君/skull.stl";
+        private String headModel = "../../../data/蔡慧君/head.stl";
         /// <summary>
         /// 頭部模型顏色
         /// </summary>
@@ -53,7 +57,7 @@ namespace Nart
         /// <summary>
         /// 最後下顎轉移矩陣
         /// </summary>
-        private String maxillaModel = "../../../data/蔡慧君/original_maxilla.stl";
+        private String maxillaModel = "../../../data/蔡慧君/pre-maxilla.stl";
         /// <summary>
         /// 上顎模型顏色
         /// </summary>
@@ -61,7 +65,7 @@ namespace Nart
         /// <summary>
         /// 最後上顎規劃後模型
         /// </summary>
-        private String mandibleModel = "../../../data/蔡慧君/original_mandible.stl";
+        private String mandibleModel = "../../../data/蔡慧君/pre-mandible.stl";
         /// <summary>
         /// 下顎模型顏色
         /// </summary>
@@ -83,15 +87,12 @@ namespace Nart
         /// <summary>
         /// 中間咬板對位的轉移矩陣
         /// </summary>
-        private String intermediateMaxillaMatrix = "../../../data/蔡慧君/intermediatemoved_Matrix.txt";
+        private String intermediateMaxillaMatrix = "../../../data/蔡慧君/inter-splint.txt";
         /// <summary>
         /// 最後咬板對位的轉移矩陣
         /// </summary>
-        private String finalMaxillaMatrix = "../../../data/蔡慧君/finalmoved_Matrix.txt";
-        /// <summary>
-        /// 導引順序先開上顎or先開下顎
-        /// </summary>
-        private static String firstNavigation = "Maxilla";
+        private String finalMaxillaMatrix = "../../../data/蔡慧君/final-splint.txt";
+
         /// <summary>
         /// View頁面
         /// </summary>
@@ -329,7 +330,9 @@ namespace Nart
             Matrix plannedMatrix = ReadMatrixFile(plannedMaxillaMatrix);
             BoneModel targetMaxilla = new BoneModel();
             targetMaxilla.FilePath = MaxillaModel;
+            targetMaxilla.IsRendering = false;
             targetMaxilla.MarkerID = "";
+            targetMaxilla.BoneName = "Maxilla";
             targetMaxilla.DiffuseColor = Color.FromArgb(255, 100, 100, 100);
             targetMaxilla.LoadModel();
             targetMaxilla.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(plannedMatrix.ToMatrix3D()); 
@@ -337,7 +340,9 @@ namespace Nart
             Matrix plannedMandible = ReadMatrixFile(plannedMandibleMatrix);
             BoneModel targetMandible = new BoneModel();
             targetMandible.FilePath = MandibleModel;
+            targetMandible.IsRendering = false;
             targetMandible.MarkerID = "";
+            targetMandible.BoneName = "Mandible";
             targetMandible.DiffuseColor = Color.FromArgb(255, 100, 100, 100);
             targetMandible.LoadModel();        
             targetMandible.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(plannedMandible.ToMatrix3D());
@@ -347,16 +352,23 @@ namespace Nart
             MultiAngleViewModel.NavigationTargetCollection.Add(targetMandible);
 
 
-            
+
 
             BoneModel oriMaxilla = new BoneModel();
             oriMaxilla.FilePath = MaxillaModel;
+            oriMaxilla.BoneName = "Maxilla";
             oriMaxilla.MarkerID = "Splint";
             oriMaxilla.DiffuseColor = MaxillaDiffuseColor;
             oriMaxilla.LoadModel();
-            
+            oriMaxilla.interMat = (plannedMatrix * ReadMatrixFile(intermediateMaxillaMatrix)).ToMatrix3D();
+            oriMaxilla.finalMat = (plannedMatrix * ReadMatrixFile(finalMaxillaMatrix)).ToMatrix3D();
+
+
+
+
             BoneModel oriMandible = new BoneModel();
             oriMandible.FilePath = MandibleModel;
+            oriMandible.BoneName = "Mandible";
             oriMandible.MarkerID = "Splint";
             oriMandible.DiffuseColor = MandibleDiffuseColor;
             oriMandible.LoadModel();
@@ -386,37 +398,32 @@ namespace Nart
 
             DraggableTriangle maxillaTargetTriangle = new DraggableTriangle(targetMaxilla.ModelCenter);
             maxillaTargetTriangle.MarkerID = "Maxilla";
+            maxillaTargetTriangle.IsRendering = false;
             MultiAngleViewModel.TriangleModelCollection.Add(maxillaTargetTriangle);
 
 
             DraggableTriangle mandibleTargetTriangle = new DraggableTriangle(targetMandible.ModelCenter);
             mandibleTargetTriangle.MarkerID = "Mandible";
+            mandibleTargetTriangle.IsRendering = false;
             MultiAngleViewModel.TriangleModelCollection.Add(mandibleTargetTriangle);
 
 
             DraggableTriangle maxillaTriangle = new DraggableTriangle(oriMaxilla.ModelCenter);
             maxillaTriangle.MarkerID = "Maxilla";
+            maxillaTriangle.IsRendering = false;
             SetBinding(oriMaxilla, maxillaTriangle,"Transform" ,HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty,BindingMode.OneWay);
             MultiAngleViewModel.TriangleModelCollection.Add(maxillaTriangle);
 
 
             DraggableTriangle mandibleTriangle = new DraggableTriangle(oriMandible.ModelCenter);
             mandibleTriangle.MarkerID = "Mandible";
+            mandibleTriangle.IsRendering = false;
             SetBinding(oriMandible, mandibleTriangle, "Transform", HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty, BindingMode.OneWay);
             MultiAngleViewModel.TriangleModelCollection.Add(mandibleTriangle);
 
-
-            
-
-
-
-
-
-
-            
-            
-            
             MultiAngleViewModel.ResetCameraPosition();
+
+            IsSet = true;
 
             _navigateView.Hide();
         }

@@ -110,12 +110,81 @@ namespace Nart
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            
+            //確定已經註冊的情況
+            if (NavigateViewModel.IsSet&&CameraControl.TrackToggle)
+            {
+                string firstNavigation = NavigateViewModel.FirstNavigation;
+
+                for (int i = 0; i < MultiAngleViewModel.TriangleModelCollection.Count; i++) 
+                {
+                    DraggableTriangle model = MultiAngleViewModel.TriangleModelCollection[i] as DraggableTriangle;
+                    //確保是第一階段的導引物
+                    if (model.MarkerID.Equals(firstNavigation))
+                    {
+                        
+                        model.IsRendering = true;
+                    }
+                }
+
+                for (int i = 0; i < MultiAngleViewModel.BoneModelCollection.Count; i++)
+                {
+                    BoneModel model = MultiAngleViewModel.BoneModelCollection[i] as BoneModel;
+                    //骨骼名稱是上顎
+                    if (model.BoneName.Equals("Maxilla"))
+                    {
+                        model.Stage = "intermediate";
+                    }
+                }
+
+                for (int i = 0; i < MultiAngleViewModel.NavigationTargetCollection.Count; i++)
+                {
+                    BoneModel model = MultiAngleViewModel.NavigationTargetCollection[i] as BoneModel;
+                    //骨骼名稱是上顎
+                    if (model.BoneName.Equals("Maxilla"))
+                    {
+                        model.IsRendering = true;
+                    }
+                }
+                NavigateViewModel.firstStageDone = true;
+            }
         }
 
         private void button_Copy_Click(object sender, RoutedEventArgs e)
         {
+            //確定已經註冊的情況
+            if (NavigateViewModel.IsSet && CameraControl.TrackToggle)
+            {
+                string firstNavigation = NavigateViewModel.FirstNavigation;
 
+                for (int i = 0; i < MultiAngleViewModel.TriangleModelCollection.Count; i++)
+                {
+                    DraggableTriangle model = MultiAngleViewModel.TriangleModelCollection[i] as DraggableTriangle;
+
+                    model.IsRendering = !model.IsRendering;
+                  
+                }
+
+                for (int i = 0; i < MultiAngleViewModel.BoneModelCollection.Count; i++)
+                {
+                    BoneModel model = MultiAngleViewModel.BoneModelCollection[i] as BoneModel;
+                    //骨骼名稱是上顎
+                    if (model.BoneName.Equals("Maxilla"))
+                    {
+                        model.Stage = "final";
+                    }
+                }
+
+                for (int i = 0; i < MultiAngleViewModel.NavigationTargetCollection.Count; i++)
+                {
+
+
+                    BoneModel model = MultiAngleViewModel.NavigationTargetCollection[i] as BoneModel;
+                    if (!model.MarkerID.Equals("Head"))
+                    {
+                        model.IsRendering = !model.IsRendering;
+                    }
+                }
+            }
         }
     }
 }

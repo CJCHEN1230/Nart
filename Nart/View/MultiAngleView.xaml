@@ -166,8 +166,8 @@
                 Color="{Binding DirectionalLightColor}" />
 
         </hx:Viewport3DX>
-        <Button x:Name="button" Content="Button" Margin="124,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Click="button_Click" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67"/>
-        <Button x:Name="button_Copy" Content="Button" Margin="212,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67" Click="button_Copy_Click"/>
+        <Button x:Name="button" Content="Stage1" Margin="124,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Click="button_Click" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67"/>
+        <Button x:Name="button_Copy" Content="Stage2" Margin="212,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67" Click="button_Copy_Click"/>
 
         <Label x:Name="CephLabel" Content="{Binding CraniofacialInfo, Mode=OneWay}" Margin="1,1,0,1" HorizontalAlignment="Left" FontWeight="Bold" FontSize="20" Foreground="White" Width="248"/>
 
