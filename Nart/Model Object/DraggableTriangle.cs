@@ -226,6 +226,7 @@ namespace Nart.Model_Object
                     
                     offset = groupTransform.Transform(offset);
 
+                    //將w正規化為1
                     if (this.DragX)
                         localTransform.OffsetX += offset.X / groupTransform.M44;
 

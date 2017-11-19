@@ -17,7 +17,7 @@
         </Style>
     </UserControl.Resources>-->
 
-    <Grid Margin="1">
+    <Grid Margin="1" AllowDrop="True" Drop="Grid_Drop"  DragEnter="Grid_DragEnter" DragOver="Grid_DragOver">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="5"/>
@@ -130,8 +130,7 @@
         <hx:Viewport3DX  x:Name="viewport1"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" 
-                        Margin="0"              
-                        
+                        Margin="0"                                      
                         Camera="{Binding Camera1}"
                         CameraRotationMode="Trackball" 
                         Orthographic="True" 
@@ -141,9 +140,8 @@
                         SharedModelContainer="{Binding ElementName=sharedContainer}"
                         ShowCoordinateSystem="True"
                         CoordinateSystemLabelForeground="White"                         
-                         BackgroundColor="{x:Static sdx:Color4.Black}"
-
-                        ShowFrameRate="True"
+                        BackgroundColor="{x:Static sdx:Color4.Black}"  
+                        ShowFrameRate="False"
                         Grid.RowSpan="3" Background="Black" >
             <hx:Viewport3DX.InputBindings>
                 <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
@@ -168,10 +166,13 @@
                 Color="{Binding DirectionalLightColor}" />
 
         </hx:Viewport3DX>
-        <StackPanel  Orientation="Vertical" HorizontalAlignment="Left" Margin="1,2,0,25" Width="165">
-            <Label x:Name="CephLabel" Content="{Binding CraniofacialInfo, Mode=OneWay}" Margin="1,1,1,1" FontWeight="Bold" FontSize="20" Foreground="White"/>
-        </StackPanel>
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="67" Margin="124,141,0,0" Grid.Row="2" Height="58" Background="{x:Null}" Foreground="White" Click="button_Click"/>
-        <Label x:Name="label" Content="{Binding BallDistance, Mode=OneWay}" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Margin="0,16,30,0" FontWeight="Bold" FontSize="20" Foreground="White" Height="160" HorizontalAlignment="Right" Width="162"/>
+        <Button x:Name="button" Content="Button" Margin="124,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Click="button_Click" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67"/>
+        <Button x:Name="button_Copy" Content="Button" Margin="212,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67" Click="button_Copy_Click"/>
+
+        <Label x:Name="CephLabel" Content="{Binding CraniofacialInfo, Mode=OneWay}" Margin="1,1,0,1" HorizontalAlignment="Left" FontWeight="Bold" FontSize="20" Foreground="White" Width="248"/>
+
+
+        <Label x:Name="label2" Content="{Binding BallDistance, Mode=OneWay}" Margin="0,0,0,0"  HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontWeight="Bold" FontSize="20" Foreground="White" Width="156"/>
+
     </Grid>
 </UserControl>

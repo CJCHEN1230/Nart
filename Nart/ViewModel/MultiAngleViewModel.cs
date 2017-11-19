@@ -292,6 +292,19 @@ namespace Nart
                 }
             }
 
+            if (NormalModelCollection != null && NormalModelCollection.Count != 0)
+            {
+                for (int i = 0; i < NormalModelCollection.Count; i++)
+                {
+                    BoneModel normalModel = NormalModelCollection[i] as BoneModel;
+                    //如果選擇多模型但檔名是空或不存在則進不去
+                    if (normalModel != null && normalModel.ModelContainer != null)
+                    {
+                        modelGroup.Children.Add(normalModel.ModelContainer);
+                    }
+                }
+            }
+
             if (modelGroup.Children.Count == 0)
                 return;
 
@@ -366,8 +379,7 @@ namespace Nart
                         model.Highlight = true;
                         HighlightItems.Add(model);
                     }
-                    
-                   
+                                       
                 }
 
             }

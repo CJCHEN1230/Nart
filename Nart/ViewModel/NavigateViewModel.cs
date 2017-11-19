@@ -91,7 +91,7 @@ namespace Nart
         /// <summary>
         /// 導引順序先開上顎or先開下顎
         /// </summary>
-        private String firstNavigation = "Maxilla";
+        private static String firstNavigation = "Maxilla";
         /// <summary>
         /// View頁面
         /// </summary>
@@ -269,7 +269,7 @@ namespace Nart
 
 
 
-        public string FirstNavigation
+        public static string FirstNavigation
         {
             get
             {
@@ -277,7 +277,7 @@ namespace Nart
             }
             set
             {
-                SetValue(ref firstNavigation, value);
+                SetStaticValue(ref firstNavigation, value);
             }
         }
         public ICommand ModelSettingCommand { private set; get; }
@@ -420,7 +420,30 @@ namespace Nart
 
             _navigateView.Hide();
         }
-        
+
+
+
+
+
+
+        public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;
+        protected static void OnStaticPropertyChanged([CallerMemberName]string info = "")
+        {
+            if (StaticPropertyChanged != null)
+            {
+                StaticPropertyChanged(null, new PropertyChangedEventArgs(info));
+            }
+        }
+        protected static bool SetStaticValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")//CallerMemberName主要是.net4.5後定義好的caller訊息，能將訊息傳給後者的變數，目的在使用時不用特地傳入"Property"名稱
+        {
+            if (object.Equals(oldValue, newValue))
+            {
+                return false;
+            }
+            oldValue = newValue;
+            OnStaticPropertyChanged(propertyName);
+            return true;
+        }
 
     }
 }

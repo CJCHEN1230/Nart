@@ -48,17 +48,6 @@ namespace Nart
             AllocConsole();
 
 
-
-            this.MinimizeCommand = new RelayCommand(MinimizeClick);
-
-
-        }
-
-        public ICommand MinimizeCommand { get; set; } 
-        private void MinimizeClick(object sender)
-        {
-            var window = (Window)((FrameworkElement)sender).TemplatedParent;
-            window.WindowState = System.Windows.WindowState.Minimized;
         }
 
         private void Translate_Click(object sender, RoutedEventArgs e)
