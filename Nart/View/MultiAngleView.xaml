@@ -11,6 +11,18 @@
              xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
              mc:Ignorable="d" 
              Height="421.973" Width="793.895">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Drop">
+            <ie:CallMethodAction MethodName="OnDrop" TargetObject="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Mode=OneWay}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="DragEnter">
+            <ie:CallMethodAction MethodName="OnDragEnter" TargetObject="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Mode=OneWay}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="DragOver">
+            <ie:CallMethodAction MethodName="OnDragOver" TargetObject="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Mode=OneWay}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid x:Name="grid" Margin="1" AllowDrop="True" >
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -170,7 +182,7 @@
         <Label x:Name="label2" Content="{Binding BallDistance, Mode=OneWay}" Margin="0,0,0,0"  HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontWeight="Bold" FontSize="20" Foreground="White" Width="156"/>
 
     </Grid>
-    <i:Interaction.Triggers>
+    <!--<i:Interaction.Triggers>
         <i:EventTrigger EventName="Drop">
             <ie:CallMethodAction MethodName="OnDrop" TargetObject="{Binding}" />
         </i:EventTrigger>
@@ -180,5 +192,5 @@
         <i:EventTrigger EventName="DragOver">
             <ie:CallMethodAction MethodName="OnDragOver" TargetObject="{Binding }" />
         </i:EventTrigger>
-    </i:Interaction.Triggers>
+    </i:Interaction.Triggers>-->
 </UserControl>

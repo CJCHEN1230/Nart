@@ -35,7 +35,8 @@ namespace Nart
             this.DataContext = _multiAngleViewModel; //將_multiAngleViewModel的資料環境傳給此DataContext                  
 
         }
-        
+
+
         private void button_Click(object sender, RoutedEventArgs e)
         {
             //確定已經註冊的情況
