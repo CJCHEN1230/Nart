@@ -9,15 +9,9 @@
              xmlns:ie="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:sdx="clr-namespace:SharpDX;assembly=SharpDX.Mathematics"
              xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
-             mc:Ignorable="d" Height="421.973" Width="793.895">
-    <!--<UserControl.Resources>
-        <Style TargetType="Label">
-            <Setter Property="FontSize"
-                    Value="18" />
-        </Style>
-    </UserControl.Resources>-->
-
-    <Grid Margin="1" AllowDrop="True" Drop="Grid_Drop"  DragEnter="Grid_DragEnter" DragOver="Grid_DragOver">
+             mc:Ignorable="d" 
+             Height="421.973" Width="793.895">
+    <Grid x:Name="grid" Margin="1" AllowDrop="True" >
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="5"/>
@@ -65,7 +59,7 @@
                          Background="Black" 
                         CameraRotationMode="Trackball"
                         Orthographic="True" 
-                        CameraMode="Inspect"                            
+                        CameraMode="Inspect"                                         
                         UseDefaultGestures="True"
                         EnableSharedModelMode="True"                               
                         BackgroundColor="{x:Static sdx:Color4.Black}"
@@ -166,13 +160,25 @@
                 Color="{Binding DirectionalLightColor}" />
 
         </hx:Viewport3DX>
+        
         <Button x:Name="button" Content="Stage1" Margin="124,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Click="button_Click" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67"/>
+        
         <Button x:Name="button_Copy" Content="Stage2" Margin="212,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67" Click="button_Copy_Click"/>
 
         <Label x:Name="CephLabel" Content="{Binding CraniofacialInfo, Mode=OneWay}" Margin="1,1,0,1" HorizontalAlignment="Left" FontWeight="Bold" FontSize="20" Foreground="White" Width="248"/>
 
-
         <Label x:Name="label2" Content="{Binding BallDistance, Mode=OneWay}" Margin="0,0,0,0"  HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontWeight="Bold" FontSize="20" Foreground="White" Width="156"/>
 
     </Grid>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Drop">
+            <ie:CallMethodAction MethodName="OnDrop" TargetObject="{Binding}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="DragEnter">
+            <ie:CallMethodAction MethodName="OnDragEnter" TargetObject="{Binding}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="DragOver">
+            <ie:CallMethodAction MethodName="OnDragOver" TargetObject="{Binding }" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 </UserControl>

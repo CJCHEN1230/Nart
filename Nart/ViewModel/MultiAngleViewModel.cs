@@ -16,6 +16,7 @@ namespace Nart
     using Nart.Model_Object;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.IO;
     using System.Runtime.CompilerServices;
     using System.Windows;
     using System.Windows.Controls;
@@ -352,7 +353,7 @@ namespace Nart
                 BindingOperations.SetBinding(camera, ProjectionCamera.LookDirectionProperty, binding);
             }
         }
-
+     
         public void OnMouseDoubleClickHandler(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             foreach (var item in HighlightItems)
@@ -385,7 +386,75 @@ namespace Nart
             }
 
         }
-        
+
+        public void OnDrop(object sender, DragEventArgs e)
+        {
+            Console.WriteLine("000");
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                for (int i = 0; i < files.Length; i++)
+                {
+                    string extension = Path.GetExtension(files[i]).ToLower();
+                    if (extension.Equals(".stl"))
+                    {
+
+                        BoneModel model = new BoneModel();
+
+                        model.FilePath = files[i];
+                        model.MarkerID = "";
+                        model.DiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187);
+                        model.LoadModel();
+                        model.Transform = new System.Windows.Media.Media3D.MatrixTransform3D();
+
+                        MultiAngleViewModel.BoneModelCollection.Add(model);
+                    }
+                }
+                MultiAngleViewModel.ResetCameraPosition();
+            }
+        }
+        public void OnDragEnter(object sender, DragEventArgs e)
+        {
+            Console.WriteLine("111");
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                for (int i = 0; i < files.Length; i++)
+                {
+                    string extension = Path.GetExtension(files[i]).ToLower();
+                    if (extension.Equals(".stl"))
+                    {
+                        e.Effects = DragDropEffects.Copy;
+                        e.Handled = true;
+                        return;
+                    }
+                }
+
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
+            }
+        }
+        public void OnDragOver(object sender, DragEventArgs e)
+        {
+            Console.WriteLine("222");
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                for (int i = 0; i < files.Length; i++)
+                {
+                    string extension = Path.GetExtension(files[i]).ToLower();
+                    if (extension.Equals(".stl"))
+                    {
+                        e.Effects = DragDropEffects.Copy;
+                        e.Handled = true;
+                        return;
+                    }
+                }
+
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
+            }
+        }
 
 
 
