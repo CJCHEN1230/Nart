@@ -23,7 +23,8 @@
             <ie:CallMethodAction MethodName="OnDragOver" TargetObject="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Mode=OneWay}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <Grid x:Name="grid" Margin="1" AllowDrop="True" >
+    <Border BorderThickness="2" BorderBrush="#FFF0F0F0" CornerRadius="3">
+        <Grid x:Name="grid" Margin="0" AllowDrop="True" >
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="5"/>
@@ -181,4 +182,6 @@
         <Label x:Name="label2" Content="{Binding BallDistance, Mode=OneWay}" Margin="0,0,0,0"  HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontWeight="Bold" FontSize="20" Foreground="White" Width="156"/>
 
     </Grid>
+
+    </Border>
 </UserControl>

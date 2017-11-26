@@ -53,7 +53,7 @@ namespace Nart
         /// <summary>
         /// 頭部模型顏色
         /// </summary>
-        private Color headDiffuseColor = Color.FromArgb(255, 40, 181, 187);
+        private Color headDiffuseColor = Color.FromArgb(255, 51, 153, 204);
         /// <summary>
         /// 最後下顎轉移矩陣
         /// </summary>
@@ -61,7 +61,7 @@ namespace Nart
         /// <summary>
         /// 上顎模型顏色
         /// </summary>
-        private Color maxillaDiffuseColor = Color.FromArgb(255, 40, 181, 187);
+        private Color maxillaDiffuseColor = Color.FromArgb(255, 51, 153, 204);
         /// <summary>
         /// 最後上顎規劃後模型
         /// </summary>
@@ -69,7 +69,7 @@ namespace Nart
         /// <summary>
         /// 下顎模型顏色
         /// </summary>
-        private Color mandibleDiffuseColor = Color.FromArgb(255, 40, 181, 187);
+        private Color mandibleDiffuseColor = Color.FromArgb(255, 51, 204, 102);
         #endregion
 
 
@@ -363,9 +363,6 @@ namespace Nart
             oriMaxilla.interMat = (plannedMatrix * ReadMatrixFile(intermediateMaxillaMatrix)).ToMatrix3D();
             oriMaxilla.finalMat = (plannedMatrix * ReadMatrixFile(finalMaxillaMatrix)).ToMatrix3D();
 
-
-
-
             BoneModel oriMandible = new BoneModel();
             oriMandible.FilePath = MandibleModel;
             oriMandible.BoneName = "Mandible";
@@ -380,13 +377,13 @@ namespace Nart
             OSPModel headOSP = new OSPModel();
             headOSP.MarkerID = "Head";
             headOSP.FilePath = HeadOSP;
-            headOSP.DiffuseColor = System.Windows.Media.Color.FromArgb(50, 255, 0, 0);
+            headOSP.DiffuseColor = System.Windows.Media.Color.FromArgb(50, 51, 153, 204);
             headOSP.LoadOSP();
 
             OSPModel mandibleOSP = new OSPModel();
             mandibleOSP.MarkerID = "C";
             mandibleOSP.FilePath = MandibleOSP;
-            mandibleOSP.DiffuseColor = System.Windows.Media.Color.FromArgb(50, 0, 255, 0);
+            mandibleOSP.DiffuseColor = System.Windows.Media.Color.FromArgb(50, 51, 204, 102);
             mandibleOSP.LoadOSP();
             SetBinding(oriMandible, mandibleOSP, "Transform", HelixToolkit.Wpf.SharpDX.Model3D.TransformProperty, BindingMode.OneWay);
 

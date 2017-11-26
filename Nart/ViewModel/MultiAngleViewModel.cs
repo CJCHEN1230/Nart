@@ -389,7 +389,6 @@ namespace Nart
 
         public void OnDrop(object sender, DragEventArgs e)
         {
-            Console.WriteLine("000");
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
@@ -415,7 +414,6 @@ namespace Nart
         }
         public void OnDragEnter(object sender, DragEventArgs e)
         {
-            Console.WriteLine("111");
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
@@ -436,7 +434,6 @@ namespace Nart
         }
         public void OnDragOver(object sender, DragEventArgs e)
         {
-            Console.WriteLine("222");
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
