@@ -36,14 +36,6 @@ namespace Nart
         /// 最後下顎轉移矩陣
         /// </summary>
         private String plannedMandibleMatrix = "../../../data/蔡慧君/plan-mandible-matrix.txt";
-        /// <summary>
-        /// 最後上顎規劃後模型
-        /// </summary>
-        private String plannedMaxilla = "../../../data/蔡慧君/plan-maxilla.stl";
-        /// <summary>
-        /// 最後下顎規劃後模型
-        /// </summary>
-        private String plannedMandible = "../../../data/蔡慧君/plan-mandible.stl";
         #endregion       
         #region 原始模型設定部分
         /// <summary>
@@ -53,7 +45,7 @@ namespace Nart
         /// <summary>
         /// 頭部模型顏色
         /// </summary>
-        private Color headDiffuseColor = Color.FromArgb(255, 51, 153, 204);
+        private Color headDiffuseColor = Color.FromArgb(255, 11, 243, 243);
         /// <summary>
         /// 最後下顎轉移矩陣
         /// </summary>
@@ -61,7 +53,7 @@ namespace Nart
         /// <summary>
         /// 上顎模型顏色
         /// </summary>
-        private Color maxillaDiffuseColor = Color.FromArgb(255, 51, 153, 204);
+        private Color maxillaDiffuseColor = Color.FromArgb(255, 11, 243, 243);
         /// <summary>
         /// 最後上顎規劃後模型
         /// </summary>
@@ -69,7 +61,7 @@ namespace Nart
         /// <summary>
         /// 下顎模型顏色
         /// </summary>
-        private Color mandibleDiffuseColor = Color.FromArgb(255, 51, 204, 102);
+        private Color mandibleDiffuseColor = Color.FromArgb(255, 2, 231, 2);
         #endregion
 
 
@@ -83,15 +75,6 @@ namespace Nart
         /// </summary>
         private String mandibleOSP = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl";
         #endregion
-
-        /// <summary>
-        /// 中間咬板對位的轉移矩陣
-        /// </summary>
-        private String intermediateMaxillaMatrix = "../../../data/蔡慧君/inter-splint.txt";
-        /// <summary>
-        /// 最後咬板對位的轉移矩陣
-        /// </summary>
-        private String finalMaxillaMatrix = "../../../data/蔡慧君/final-splint.txt";
 
         /// <summary>
         /// View頁面
@@ -131,28 +114,7 @@ namespace Nart
                 SetValue(ref plannedMandibleMatrix, value);
             }
         }
-        public String PlannedMaxilla
-        {
-            get
-            {
-                return plannedMaxilla;
-            }
-            set
-            {
-                SetValue(ref plannedMaxilla, value);
-            }
-        }
-        public String PlannedMandible
-        {
-            get
-            {
-                return plannedMandible;
-            }
-            set
-            {
-                SetValue(ref plannedMandible, value);
-            }
-        }
+
         public String HeadModel
         {
             get
@@ -219,28 +181,7 @@ namespace Nart
                 SetValue(ref mandibleDiffuseColor, value);
             }
         }
-        public String ITMMaxillaMatrix
-        {
-            get
-            {
-                return intermediateMaxillaMatrix;
-            }
-            set
-            {
-                SetValue(ref intermediateMaxillaMatrix, value);
-            }
-        }
-        public String FinalMaxillaMatrix
-        {
-            get
-            {
-                return finalMaxillaMatrix;
-            }
-            set
-            {
-                SetValue(ref finalMaxillaMatrix, value);
-            }
-        }
+
         public String HeadOSP
         {
             get
@@ -323,6 +264,7 @@ namespace Nart
             BoneModel Head = new BoneModel();
             Head.FilePath = HeadModel;
             Head.MarkerID = "Head";
+            Head.BoneName = "Head";
             Head.DiffuseColor = HeadDiffuseColor;
             Head.LoadModel();
 
@@ -360,8 +302,6 @@ namespace Nart
             oriMaxilla.MarkerID = "Splint";
             oriMaxilla.DiffuseColor = MaxillaDiffuseColor;
             oriMaxilla.LoadModel();
-            oriMaxilla.interMat = (plannedMatrix * ReadMatrixFile(intermediateMaxillaMatrix)).ToMatrix3D();
-            oriMaxilla.finalMat = (plannedMatrix * ReadMatrixFile(finalMaxillaMatrix)).ToMatrix3D();
 
             BoneModel oriMandible = new BoneModel();
             oriMandible.FilePath = MandibleModel;
@@ -373,47 +313,46 @@ namespace Nart
             MultiAngleViewModel.BoneModelCollection.Add(oriMaxilla);
             MultiAngleViewModel.BoneModelCollection.Add(oriMandible);
 
-
+            //載入OSP模型
             OSPModel headOSP = new OSPModel();
             headOSP.MarkerID = "Head";
             headOSP.FilePath = HeadOSP;
-            headOSP.DiffuseColor = System.Windows.Media.Color.FromArgb(50, 51, 153, 204);
+            headOSP.DiffuseColor = System.Windows.Media.Color.FromArgb(50, 11, 243, 243);
             headOSP.LoadOSP();
 
             OSPModel mandibleOSP = new OSPModel();
             mandibleOSP.MarkerID = "C";
             mandibleOSP.FilePath = MandibleOSP;
-            mandibleOSP.DiffuseColor = System.Windows.Media.Color.FromArgb(50, 51, 204, 102);
+            mandibleOSP.DiffuseColor = System.Windows.Media.Color.FromArgb(50, 2, 231, 2);
             mandibleOSP.LoadOSP();
             SetBinding(oriMandible, mandibleOSP, "Transform", HelixToolkit.Wpf.SharpDX.Model3D.TransformProperty, BindingMode.OneWay);
-
-
-
             MultiAngleViewModel.OSPModelCollection.Add(headOSP);
             MultiAngleViewModel.OSPModelCollection.Add(mandibleOSP);
 
-
+            //標記屬於上顎的ID
             DraggableTriangle maxillaTargetTriangle = new DraggableTriangle(targetMaxilla.ModelCenter);
             maxillaTargetTriangle.MarkerID = "Maxilla";
             maxillaTargetTriangle.IsRendering = false;
             MultiAngleViewModel.TriangleModelCollection.Add(maxillaTargetTriangle);
 
-
+            //標記屬於下顎的ID
             DraggableTriangle mandibleTargetTriangle = new DraggableTriangle(targetMandible.ModelCenter);
             mandibleTargetTriangle.MarkerID = "Mandible";
             mandibleTargetTriangle.IsRendering = false;
             MultiAngleViewModel.TriangleModelCollection.Add(mandibleTargetTriangle);
 
-
+            //將導航三角形綁定到導航的上顎
             DraggableTriangle maxillaTriangle = new DraggableTriangle(oriMaxilla.ModelCenter);
             maxillaTriangle.MarkerID = "Maxilla";
+            maxillaTriangle.Transparency = 0.5f;
             maxillaTriangle.IsRendering = false;
             SetBinding(oriMaxilla, maxillaTriangle,"Transform" ,HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty,BindingMode.OneWay);
             MultiAngleViewModel.TriangleModelCollection.Add(maxillaTriangle);
-
-
+      
+            //將導航三角形綁定到導航的下顎
             DraggableTriangle mandibleTriangle = new DraggableTriangle(oriMandible.ModelCenter);
             mandibleTriangle.MarkerID = "Mandible";
+            mandibleTriangle.Transparency = 0.7f;
             mandibleTriangle.IsRendering = false;
             SetBinding(oriMandible, mandibleTriangle, "Transform", HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty, BindingMode.OneWay);
             MultiAngleViewModel.TriangleModelCollection.Add(mandibleTriangle);

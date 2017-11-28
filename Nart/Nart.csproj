@@ -55,6 +55,7 @@
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="PropertyTools, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
       <HintPath>..\packages\PropertyTools.Wpf.2.0.1\lib\net45\PropertyTools.dll</HintPath>
       <Private>True</Private>
@@ -122,6 +123,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\MarkerID.cs" />
+    <Compile Include="Model\ProgramData.cs" />
     <Compile Include="Resource\DarkTheme.xaml.cs">
       <DependentUpon>DarkTheme.xaml</DependentUpon>
     </Compile>

@@ -58,6 +58,9 @@
     <Compile Include="Control\CameraWrapper.xaml.cs">
       <DependentUpon>CameraWrapper.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Control\Expander_Info.xaml.cs">
+      <DependentUpon>Expander_Info.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Control\FilePicker.xaml.cs">
       <DependentUpon>FilePicker.xaml</DependentUpon>
     </Compile>
@@ -100,6 +103,10 @@
     <Page Include="Control\CameraWrapper.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\Expander_Info.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Control\FilePicker.xaml">
       <SubType>Designer</SubType>

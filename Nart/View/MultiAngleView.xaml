@@ -38,8 +38,7 @@
         <GridSplitter Grid.RowSpan="3" Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
         <GridSplitter Grid.Row="1" Grid.Column="2"  Height="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  />
         <hx:ModelContainer3DX x:Name="sharedContainer"   RenderTechnique="{Binding RenderTechnique}" EffectsManager="{Binding EffectsManager}" Margin="1" Grid.Row="2" Visibility="Hidden">
-            <hx:GroupModel3D ItemsSource="{Binding TriangleModelCollection}">
-            </hx:GroupModel3D>
+
             <hx:GroupModel3D ItemsSource="{Binding BoneModelCollection}">
             </hx:GroupModel3D>
             <hx:GroupModel3D ItemsSource="{Binding NavigationTargetCollection}">
@@ -48,7 +47,10 @@
             </hx:GroupModel3D>
             <hx:GroupModel3D ItemsSource="{Binding OSPModelCollection}">
             </hx:GroupModel3D>
-            <hx:ItemsModel3D ItemsSource="{Binding ModelDataCollection}">
+            <hx:GroupModel3D ItemsSource="{Binding TriangleModelCollection}">
+            </hx:GroupModel3D>
+
+                <hx:ItemsModel3D ItemsSource="{Binding ModelDataCollection}">
                 <hx:ItemsModel3D.ItemTemplate>
                     <DataTemplate>
                         <hx:MeshGeometryModel3D                             
@@ -177,7 +179,7 @@
 
         <Button x:Name="button_Copy" Content="Stage2" Margin="212,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67" Click="button_Copy_Click"/>
 
-        <Label x:Name="CephLabel" Content="{Binding CraniofacialInfo, Mode=OneWay}" Margin="1,1,0,1" HorizontalAlignment="Left" FontWeight="Bold" FontSize="20" Foreground="White" Width="248"/>
+        <Label x:Name="CephLabel" Content="{Binding CraniofacialInfo, Mode=OneWay}" ContentStringFormat="" Margin="1,1,0,1" HorizontalAlignment="Left" FontWeight="Bold" FontSize="20" Foreground="White" Width="248"/>
 
         <Label x:Name="label2" Content="{Binding BallDistance, Mode=OneWay}" Margin="0,0,0,0"  HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontWeight="Bold" FontSize="20" Foreground="White" Width="156"/>
 

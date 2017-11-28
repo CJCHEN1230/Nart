@@ -20,7 +20,9 @@ namespace Nart.Model_Object
         /// 讀檔時存模型的容器，方便之後算BoundingBox
         /// </summary>
         public Model3DGroup ModelContainer;
-
+        /// <summary>
+        /// 紀錄模型中心
+        /// </summary>
         public Vector3 ModelCenter;
         /// <summary>
         /// 已從ModelDataCollection中移除則會變成true，在model setting 的頁面中按"-"時會改變成true
@@ -38,6 +40,11 @@ namespace Nart.Model_Object
         /// MarkerID 的值
         /// </summary>
         public String MarkerID;
+
+        /// <summary>
+        /// 所屬綁定的骨頭部位
+        /// </summary>
+        public string BoneName = "";
         /// <summary>
         /// 模型顏色
         /// </summary>
@@ -47,11 +54,6 @@ namespace Nart.Model_Object
         /// </summary>
         public String FilePath;
 
-
-        public string BoneName = "";
-        public string Stage = "";
-        public Matrix3D interMat = new Matrix3D();
-        public Matrix3D finalMat = new Matrix3D();
 
         /// <summary>
         /// 此Model的最終轉換矩陣
@@ -131,22 +133,8 @@ namespace Nart.Model_Object
 
         }
         public void SetTransformMatrix()
-        {
-
-            if (BoneName.Equals("Maxilla") && Stage.Equals("intermediate"))
-            {
-                Transform = new MatrixTransform3D(interMat * _finalModelTransform);
-            }
-
-            else if (BoneName.Equals("Maxilla") && Stage.Equals("final")) 
-            {
-                Transform = new MatrixTransform3D(finalMat * _finalModelTransform);
-            }
-            else
-            {
-                Transform = new MatrixTransform3D(_finalModelTransform);
-            }
-
+        {          
+                Transform = new MatrixTransform3D(_finalModelTransform);            
         }
         /// <summary>
         /// 設定模型材質

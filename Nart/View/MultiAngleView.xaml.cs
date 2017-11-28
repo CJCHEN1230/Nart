@@ -47,7 +47,7 @@ namespace Nart
                 for (int i = 0; i < MultiAngleViewModel.TriangleModelCollection.Count; i++) 
                 {
                     DraggableTriangle model = MultiAngleViewModel.TriangleModelCollection[i] as DraggableTriangle;
-                    //確保是第一階段的導引物
+                    //顯示第一階段的三角導引物
                     if (model.MarkerID.Equals(firstNavigation))
                     {
                         
@@ -59,19 +59,27 @@ namespace Nart
                 {
                     BoneModel model = MultiAngleViewModel.BoneModelCollection[i] as BoneModel;
                     //骨骼名稱是上顎
-                    if (model.BoneName.Equals("Maxilla"))
+                    if (!model.BoneName.Equals(firstNavigation))
                     {
-                        model.Stage = "intermediate";
+                        //model.IsRendering = false;
+                        model.Visibility = Visibility.Hidden;
                     }
                 }
 
                 for (int i = 0; i < MultiAngleViewModel.NavigationTargetCollection.Count; i++)
                 {
                     BoneModel model = MultiAngleViewModel.NavigationTargetCollection[i] as BoneModel;
-                    //骨骼名稱是上顎
-                    if (model.BoneName.Equals("Maxilla"))
+                    if (!model.BoneName.Equals("Head"))
                     {
-                        model.IsRendering = true;
+                        //骨骼名稱是上顎
+                        if (model.BoneName.Equals(firstNavigation))
+                        {
+                            model.IsRendering = true;
+                        }
+                        else
+                        {
+                            model.IsRendering = false;
+                        }
                     }
                 }
                 NavigateViewModel.firstStageDone = true;
@@ -96,22 +104,27 @@ namespace Nart
                 for (int i = 0; i < MultiAngleViewModel.BoneModelCollection.Count; i++)
                 {
                     BoneModel model = MultiAngleViewModel.BoneModelCollection[i] as BoneModel;
-                    //骨骼名稱是上顎
-                    if (model.BoneName.Equals("Maxilla"))
+                    //model.IsRendering = !model.IsRendering;
+                    if (model.Visibility == Visibility.Hidden)
                     {
-                        model.Stage = "final";
+                        model.Visibility = Visibility.Visible;
+                    }
+                    else 
+                    {
+                        model.Visibility = Visibility.Hidden;
                     }
                 }
 
                 for (int i = 0; i < MultiAngleViewModel.NavigationTargetCollection.Count; i++)
                 {
 
-
                     BoneModel model = MultiAngleViewModel.NavigationTargetCollection[i] as BoneModel;
-                    if (!model.MarkerID.Equals("Head"))
+
+                    if (!model.BoneName.Equals("Head"))
                     {
                         model.IsRendering = !model.IsRendering;
                     }
+                   
                 }
             }
         }

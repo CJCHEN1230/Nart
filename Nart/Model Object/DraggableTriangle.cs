@@ -25,10 +25,10 @@ namespace Nart.Model_Object
 
     public class DraggableTriangle : GroupModel3D, IHitable
     {
-        /// <summary>
-        /// 平移到綁定的模型中心
-        /// </summary>
-        public Matrix3D TranslateToModelCenter;
+        public static readonly DependencyProperty DragXProperty = DependencyProperty.Register("DragX", typeof(bool), typeof(DraggableTriangle), new UIPropertyMetadata(true));
+        public static readonly DependencyProperty DragYProperty = DependencyProperty.Register("DragY", typeof(bool), typeof(DraggableTriangle), new UIPropertyMetadata(true));
+        public static readonly DependencyProperty DragZProperty = DependencyProperty.Register("DragZ", typeof(bool), typeof(DraggableTriangle), new UIPropertyMetadata(true));
+        public static readonly DependencyProperty MaterialProperty = DependencyProperty.Register("Material", typeof(Material), typeof(DraggableTriangle), new UIPropertyMetadata(MaterialChanged));
         /// <summary>
         /// MarkerID 的值
         /// </summary>
@@ -46,9 +46,14 @@ namespace Nart.Model_Object
         /// </summary>
         private static Geometry3D NodeGeometry;
         /// <summary>
-        /// 單跟桿子
+        /// 單根桿子
         /// </summary>
         private static Geometry3D EdgeGeometry;
+
+        /// <summary>
+        /// 直接調整透明度
+        /// </summary>
+        private float _transparency = 1.0f;
         /// <summary>
         /// 三顆球
         /// </summary>
@@ -57,7 +62,6 @@ namespace Nart.Model_Object
         /// 三根桿
         /// </summary>
         private MeshGeometryModel3D[] cylinderHandles = new MeshGeometryModel3D[3];
-
         /// <summary>
         /// 三頂點於中心的距離
         /// </summary>
@@ -85,6 +89,7 @@ namespace Nart.Model_Object
         /// <summary>
         /// 定義球跟桿子
         /// </summary>
+        
         static DraggableTriangle()
         {
             //建立實體幾何
@@ -106,10 +111,9 @@ namespace Nart.Model_Object
         }
         public DraggableTriangle(Point3D center)
         {
-            
-            Center = center;
+          
 
-            this.Material = PhongMaterials.White;
+            Center = center;
             positions = new Vector3[3]
                  {
                     new Vector3(Convert.ToSingle(Center.X+ Math.Cos( InitialAngle/180f*Math.PI)           *length),Convert.ToSingle(Center.Y+ Math.Sin(InitialAngle/180f*Math.PI)             *length),Convert.ToSingle(Center.Z)),
@@ -120,10 +124,10 @@ namespace Nart.Model_Object
             {
                 //平移圓球
                 var translateMat = Matrix3DExtensions.Translate3D(positions[i]);
+                //三顆球顏色不同 材料設置在迴圈外面，並沒有在這邊先設置
                 ballHandles[i] = new MeshGeometryModel3D()
                 {
                     Visibility = Visibility.Visible,
-                    Material = this.Material,
                     Geometry = NodeGeometry,
                     Transform = new MatrixTransform3D(translateMat),
                 };
@@ -150,7 +154,7 @@ namespace Nart.Model_Object
                 this.cylinderHandles[i] = new MeshGeometryModel3D()
                 {
                     Geometry = EdgeGeometry,
-                    Material = this.Material,
+                    Material = SetMaterial(Color4.White),
                     Visibility = Visibility.Visible,
                     Transform = new MatrixTransform3D(m.ToMatrix3D())
                 };
@@ -159,33 +163,120 @@ namespace Nart.Model_Object
                 this.cylinderHandles[i].MouseUp3D += OnEdgeMouse3DUp;
                 this.cylinderHandles[i].MouseDown3D += OnEdgeMouse3DDown;
 
-
+            }
+            //因為會畫透明物件，所以在上面迴圈外先將球一次加進去
+            for (int i =0;i<ballHandles.Length ;i++)
+            {
                 this.Children.Add(ballHandles[i]);
+            }
+            //加完球再加桿子
+            for (int i = 0; i < cylinderHandles.Length; i++)
+            {
                 this.Children.Add(cylinderHandles[i]);
             }
+
+
             //設定三顆球的顏色
-            ballHandles[0].Material = PhongMaterials.Red;
-            ballHandles[1].Material = PhongMaterials.Green;
-            ballHandles[2].Material = PhongMaterials.Blue;
-            
+            ballHandles[0].Material = SetMaterial(new Color4(1.0f, 0.0f, 0.0f, 1.0f));
+            ballHandles[1].Material = SetMaterial(new Color4(0.0f, 1.0f, 0.0f, 1.0f));
+            ballHandles[2].Material = SetMaterial(new Color4(0.0f, 0.0f, 1.0f, 1.0f));
+
         }
 
-        /// <summary>
-        /// 這個屬性綁定在 Bone的轉移矩陣上，改變的時候多乘上一個translate給本身的Transform
-        /// </summary>
-        public MatrixTransform3D ModelTransform
-        {         
+
+
+
+
+
+        public float Transparency
+        {
+            get
+            {
+                return _transparency;
+            }
             set
-            {             
-                Matrix3D final = TranslateToModelCenter *  value.Value ;                    
-                this.Transform = new MatrixTransform3D(final);                
+            {
+                if (value != _transparency)
+                {
+                    _transparency = value;
+
+
+                    //foreach (var item in (this.Items))
+                    //{
+                    for (int i=0;i<this.Children.Count ;i++)
+                    {
+                        
+                        var model = this.Children[i] as MeshGeometryModel3D;
+                        if (model != null)
+                        {
+                            PhongMaterial material = model.Material as PhongMaterial;
+                            Color4 color = material.DiffuseColor;
+
+                            color.Alpha = _transparency;
+                            material.DiffuseColor = color;
+                        }
+                        //}
+                    }
+                }
             }
         }
+        public bool DragX
+        {
+            get { return (bool)this.GetValue(DragXProperty); }
+            set { this.SetValue(DragXProperty, value); }
+        }
+        public bool DragY
+        {
+            get { return (bool)this.GetValue(DragYProperty); }
+            set { this.SetValue(DragYProperty, value); }
+        }
+        public bool DragZ
+        {
+            get { return (bool)this.GetValue(DragZProperty); }
+            set { this.SetValue(DragZProperty, value); }
+        }
+        public Material Material
+        {
+            get { return (Material)this.GetValue(MaterialProperty); }
+            set { this.SetValue(MaterialProperty, value); }
+        }
 
+
+        public PhongMaterial SetMaterial(Color4 color)
+        {
+           
+            HelixToolkit.Wpf.SharpDX.PhongMaterial material = new PhongMaterial();
+
+            material.ReflectiveColor = SharpDX.Color.Black;
+            float ambient = 0.0f;
+            material.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
+            material.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
+            int Specular = 90;
+            material.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
+            material.SpecularShininess = 60;
+            material.DiffuseColor = color;
+
+            return material;
+           
+        }
+        private static void MaterialChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is PhongMaterial)
+            {
+                foreach (var item in ((GroupModel3D)d).Items)
+                {
+                    var model = item as MaterialGeometryModel3D;
+                    if (model != null)
+                    {
+                        model.Material = e.NewValue as PhongMaterial;
+                    }
+                }
+            }
+        }
         private void OnNodeMouse3DDown(object sender, RoutedEventArgs e)
         {
             var args = e as Mouse3DEventArgs;
-            if (args == null|| args.Viewport == null)
+            if (args == null || args.Viewport == null)
                 return;
 
             this._isCaptured = true;
@@ -193,16 +284,14 @@ namespace Nart.Model_Object
             this._camera = args.Viewport.Camera;
             this._lastHitPos = args.HitTestResult.PointHit;
         }
-
         private void OnNodeMouse3DUp(object sender, RoutedEventArgs e)
         {
 
             if (this._isCaptured)
             {
-                Application.Current.MainWindow.Cursor = Cursors.Arrow;               
+                Application.Current.MainWindow.Cursor = Cursors.Arrow;
             }
         }
-
         private void OnNodeMouse3DMove(object sender, RoutedEventArgs e)
         {
             if (this._isCaptured)
@@ -210,9 +299,9 @@ namespace Nart.Model_Object
                 Application.Current.MainWindow.Cursor = Cursors.Hand;
 
                 var args = e as Mouse3DEventArgs;
-                   
+
                 var normal = this._camera.LookDirection;
-                       
+
                 var newHit = this._viewport.UnProjectOnPlane(args.Position, _lastHitPos, normal);
                 if (newHit.HasValue)
                 {
@@ -223,7 +312,7 @@ namespace Nart.Model_Object
 
 
                     groupTransform.Invert();
-                    
+
                     offset = groupTransform.Transform(offset);
 
                     //將w正規化為1
@@ -238,14 +327,13 @@ namespace Nart.Model_Object
 
                     this._lastHitPos = newHit.Value;
                     corner.Transform = new MatrixTransform3D(localTransform);
-                    
+
                 }
 
 
                 UpdateTransforms();
             }
         }
-
         private void OnEdgeMouse3DDown(object sender, RoutedEventArgs e)
         {
             var args = e as Mouse3DEventArgs;
@@ -257,7 +345,6 @@ namespace Nart.Model_Object
             this._camera = args.Viewport.Camera;
             this._lastHitPos = args.HitTestResult.PointHit;
         }
-
         private void OnEdgeMouse3DUp(object sender, RoutedEventArgs e)
         {
             if (this._isCaptured)
@@ -268,7 +355,6 @@ namespace Nart.Model_Object
                 this._viewport = null;
             }
         }
-
         private void OnEdgeMouse3DMove(object sender, RoutedEventArgs e)
         {
             if (this._isCaptured)
@@ -293,13 +379,12 @@ namespace Nart.Model_Object
 
                     if (this.DragZ)
                         trafo.OffsetZ += offset.Z;
-                    
-                    this.Transform =new MatrixTransform3D(trafo);
+
+                    this.Transform = new MatrixTransform3D(trafo);
                     this._lastHitPos = newHit.Value;
                 }
             }
         }
-
         private void UpdateTransforms()
         {
             Matrix3D[] cornerMatrix = this.ballHandles.Select(x => (x.Transform.Value)).ToArray();
@@ -326,66 +411,7 @@ namespace Nart.Model_Object
                 var m = Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(positions[i]);
 
                 ((MatrixTransform3D)cylinderHandles[i].Transform).Matrix = (m.ToMatrix3D());
-            }            
-        }
-
-
-        public static readonly DependencyProperty DragXProperty =
-            DependencyProperty.Register("DragX", typeof(bool), typeof(DraggableTriangle), new UIPropertyMetadata(true));
-
-        public static readonly DependencyProperty DragYProperty =
-            DependencyProperty.Register("DragY", typeof(bool), typeof(DraggableTriangle), new UIPropertyMetadata(true));
-
-        public static readonly DependencyProperty DragZProperty =
-            DependencyProperty.Register("DragZ", typeof(bool), typeof(DraggableTriangle), new UIPropertyMetadata(true));
-
-      
-        public bool DragX
-        {
-            get { return (bool)this.GetValue(DragXProperty); }
-            set { this.SetValue(DragXProperty, value); }
-        }
-        public bool DragY
-        {
-            get { return (bool)this.GetValue(DragYProperty); }
-            set { this.SetValue(DragYProperty, value); }
-        }
-        public bool DragZ
-        {
-            get { return (bool)this.GetValue(DragZProperty); }
-            set { this.SetValue(DragZProperty, value); }
-        }
-
-
-        public Material Material
-        {
-            get { return (Material)this.GetValue(MaterialProperty); }
-            set { this.SetValue(MaterialProperty, value); }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public static readonly DependencyProperty MaterialProperty =
-            DependencyProperty.Register("Material", typeof(Material), typeof(DraggableTriangle), new UIPropertyMetadata(MaterialChanged));
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private static void MaterialChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (e.NewValue is PhongMaterial)
-            {
-                foreach (var item in ((GroupModel3D)d).Items)
-                {
-                    var model = item as MaterialGeometryModel3D;
-                    if (model != null)
-                    {
-                        model.Material = e.NewValue as PhongMaterial;
-                    }
-                }
             }
         }
-
     }
 }
