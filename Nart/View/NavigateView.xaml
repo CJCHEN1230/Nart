@@ -15,7 +15,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resource/DarkTheme.xaml"/>
+                <ResourceDictionary Source="../../NartControl/Resource/DarkTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Converter:EnumMatchToBooleanConverter x:Key="enumConverter"/>
             <Style TargetType="Label">

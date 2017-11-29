@@ -40,7 +40,6 @@ namespace Nart.Model_Object
         /// MarkerID 的值
         /// </summary>
         public String MarkerID;
-
         /// <summary>
         /// 所屬綁定的骨頭部位
         /// </summary>
@@ -53,8 +52,6 @@ namespace Nart.Model_Object
         /// 模型路徑
         /// </summary>
         public String FilePath;
-
-
         /// <summary>
         /// 此Model的最終轉換矩陣
         /// </summary>

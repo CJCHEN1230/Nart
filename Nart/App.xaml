@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:Nart"
              StartupUri="MainView.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source=" pack://application:,,,/NartControl;component/Resource/DarkTheme.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

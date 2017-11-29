@@ -1,4 +1,4 @@
-﻿using NartControl;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace Nart
+namespace NartControl
 {
     public partial class DarkThemeStyle : ResourceDictionary
     {

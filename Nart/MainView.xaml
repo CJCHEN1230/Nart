@@ -18,13 +18,13 @@
         Title="Nart"  Background="#FF222222" 
         Style="{DynamicResource ResourceKey=CustomWindowStyle}" Height="643.5" Width="1249.5">
 
-    <Window.Resources>
+    <!--<Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resource/DarkTheme.xaml" />
+                <ResourceDictionary Source="../NartControl/Resource/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </Window.Resources>
+    </Window.Resources>-->
     <!--<Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>-->
@@ -125,7 +125,7 @@
             <Button x:Name="RegButton" Command="{Binding RegisterCommand}" Content="Registration"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
             <Button x:Name="button4" Command="{Binding TrackCommand}"   Content="Tracking"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
         </StackPanel>
-        <ScrollViewer Margin="0" Grid.Row="1"/>
+        <ScrollViewer Margin="0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}" Grid.Row="1"/>
 
 
 
