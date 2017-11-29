@@ -47,6 +47,17 @@ namespace Nart
 
             AllocConsole();
 
+            System.Windows.Controls.Button temp = new System.Windows.Controls.Button();
+            temp.Height = 100;
+            System.Windows.Controls.Button temp1 = new System.Windows.Controls.Button();
+            temp1.Height = 100;
+            System.Windows.Controls.Button temp2 = new System.Windows.Controls.Button();
+            temp2.Height = 100;
+
+            expander_NavigationBalls.expItem.Children.Add(temp);            
+            expander_NavigationBalls.expItem.Children.Add(temp2);
+            expander_NavigationBalls.expItem.Children.Add(temp1);
+
 
         }
 

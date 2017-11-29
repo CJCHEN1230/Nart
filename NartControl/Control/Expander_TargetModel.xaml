@@ -10,18 +10,10 @@
              FontSize="15"
              BorderBrush="Black"
              BorderThickness="1"
-             FontFamily="Microsoft JhengHei">
-             <!--Template="{DynamicResource ResourceKey=StretchyExpanderTemp}"
+             FontFamily="Microsoft JhengHei"
+             Template="{DynamicResource ResourceKey=StretchyExpanderTemp}"
              Height="Auto" Width="Auto"
-             d:DesignHeight="300" d:DesignWidth="300"
-    <Expander.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resource/DarkTheme.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Expander.Resources>
-    
+             d:DesignHeight="300" d:DesignWidth="300">
     <Expander.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FF842E2C" Offset="0"/>
@@ -30,5 +22,5 @@
     </Expander.Background>
     <Grid>
             
-    </Grid>-->
+    </Grid>
 </Expander>

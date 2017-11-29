@@ -16,15 +16,9 @@
         ResizeMode="NoResize"
         MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
         Title="Nart"  Background="#FF222222" 
-        Style="{DynamicResource ResourceKey=CustomWindowStyle}" Height="643.5" Width="1249.5">
+        Style="{DynamicResource ResourceKey=CustomWindowStyle}" 
+        d:DesignHeight="1040" d:DesignWidth="1920">
 
-    <!--<Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../NartControl/Resource/DarkTheme.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>-->
     <!--<Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>-->
@@ -41,8 +35,8 @@
 
     <Grid Margin="0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="97*"/>
-            <ColumnDefinition Width="527*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="6*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="10*"/>
@@ -118,15 +112,35 @@
 
         <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" HorizontalAlignment="Left" Margin="5,409,0,0" VerticalAlignment="Top" Height="46" Width="86" FontSize="20" Grid.Row="1"/>
         <Border BorderBrush="Black" BorderThickness="1" Height="4" Grid.ColumnSpan="2" Background="White" Grid.Row="1" VerticalAlignment="Top"/>
-        <StackPanel Margin="-338,54,338,8" Grid.RowSpan="2">
-            <Button x:Name="button1_Copy" Command="{Binding SetNavigationCommand}" Content="Set Navigation" Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-            <Button x:Name="button1" Command="{Binding SetModelCommand}" Content="Set Model"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-            <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-            <Button x:Name="RegButton" Command="{Binding RegisterCommand}" Content="Registration"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-            <Button x:Name="button4" Command="{Binding TrackCommand}"   Content="Tracking"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-        </StackPanel>
-        <ScrollViewer Margin="0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}" Grid.Row="1"/>
+        <ScrollViewer Margin="-438,12,438,-12"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}" Grid.Row="1">
+            <StackPanel Height="550" Width="194">
+                <Button x:Name="button1_Copy" Command="{Binding SetNavigationCommand}" Content="Set Navigation" Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                <Button x:Name="button1" Command="{Binding SetModelCommand}" Content="Set Model"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                <Button x:Name="RegButton" Command="{Binding RegisterCommand}" Content="Registration"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                <Button x:Name="button4" Command="{Binding TrackCommand}"   Content="Tracking"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+            </StackPanel>
+        </ScrollViewer>
+        <ScrollViewer Margin="0,0,0,0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}" Grid.Row="1">
+            <StackPanel Orientation="Vertical" Height="Auto" Width="Auto" >
+                <Controls:Expander_Info x:Name="expander_Info"   Height="Auto" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,4,0,0"  VerticalAlignment="Top">
+                    <Controls:Expander_Info.Content>
+                        <StackPanel Orientation="Vertical" Margin="40,5,0,0">
+                            <TextBlock  TextWrapping="Wrap" Text="TextBlock"/>
 
+                            <!--<TextBlock x:Name="textBlock1" TextWrapping="Wrap" Text="TextBlock"/>
+
+                            <TextBlock x:Name="textBlock2" TextWrapping="Wrap" Text="TextBlock"/>
+
+                            <TextBlock x:Name="textBlock3" TextWrapping="Wrap" Text="TextBlock"/>-->
+                        </StackPanel>   
+                    </Controls:Expander_Info.Content>
+                </Controls:Expander_Info>
+                <Controls:Expander_NavigationBalls x:Name="expander_NavigationBalls" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="Auto" />
+                <Controls:Expander_TargetModel x:Name="expander_TargetModel" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="Auto" />
+                
+            </StackPanel>
+        </ScrollViewer>
 
 
     </Grid>

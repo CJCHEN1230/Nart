@@ -14,9 +14,6 @@
         Style="{DynamicResource ResourceKey=CustomViewStyle}">
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../NartControl/Resource/DarkTheme.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
             <Converter:EnumMatchToBooleanConverter x:Key="enumConverter"/>
             <Style TargetType="Label">
                 <Setter Property="HorizontalContentAlignment"     Value="Center"/>

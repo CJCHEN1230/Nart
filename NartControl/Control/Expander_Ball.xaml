@@ -4,9 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NartControl.Control"
+             Header="Ball"
+             Foreground="White"
+             FontSize="15"
              mc:Ignorable="d" 
+             Height="Auto" Width="Auto"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
-    </Grid>
+    <Expander.Content>
+            <TextBlock Margin="30,5,0,0">
+            </TextBlock >
+    </Expander.Content>
 </Expander>
