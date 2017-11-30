@@ -515,8 +515,63 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    
-    
+    <!--自製的Setting Button-->
+    <Style x:Key="SettingButton" TargetType="{x:Type Button}">
+        <!--有指定TargetType的話，下面的Property 不用特別指定哪個控制項-->
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Border" HorizontalAlignment="Center" Height="40">
+                        <Grid Background="Transparent" HorizontalAlignment="Center">
+                            <Ellipse Name="Circle"
+                                                        StrokeThickness="3"                                           
+                                                        Stroke="Transparent"
+                                                        Fill="Transparent"
+                                                        Width="80"
+                                                        Height="80"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center" />
+                            <Grid Margin="0,5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Border x:Name="border1" BorderBrush="#FFB4B4B4" BorderThickness="2" CornerRadius="2" Height="Auto" Width="40" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="0"/>
+                                <Border x:Name="border2" BorderBrush="#FFB4B4B4" BorderThickness="2" CornerRadius="2" Height="Auto" Width="40" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1"/>
+                                <Border x:Name="border3" BorderBrush="#FFB4B4B4" BorderThickness="2" CornerRadius="2" Height="Auto" Width="40" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="2"/>
+                            </Grid>
+                            <ContentPresenter x:Name="HeaderContent"
+                                      VerticalAlignment="Center"                                      
+                                      ContentSource="Content" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="BorderThickness"  Value="1" TargetName="border1" />
+                            <Setter Property="BorderThickness"  Value="1" TargetName="border2" />
+                            <Setter Property="BorderThickness"  Value="1" TargetName="border3" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                         
+                            <Setter Property="BorderBrush"  Value="#FF8F8F8F" TargetName="border1" />
+                            <Setter Property="BorderBrush"  Value="#FF8F8F8F" TargetName="border2" />
+                            <Setter Property="BorderBrush"  Value="#FF8F8F8F" TargetName="border3" />
+
+                            <Setter Property="BorderBrush"  Value="#FF8F8F8F" TargetName="border1" />
+                            <Setter Property="BorderBrush"  Value="#FF8F8F8F" TargetName="border2" />
+                            <Setter Property="BorderBrush"  Value="#FF8F8F8F" TargetName="border3" />
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--自製的Scroll viewer-->
     <ControlTemplate x:Key="ScrollViewerControlTemplate" TargetType="{x:Type ScrollViewer}">
         <Grid x:Name="Grid" Background="{TemplateBinding Background}">

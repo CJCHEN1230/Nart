@@ -122,23 +122,35 @@
             </StackPanel>
         </ScrollViewer>
         <ScrollViewer Margin="0,0,0,0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}" Grid.Row="1">
+            <ScrollViewer.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF333333" Offset="0.3"/>
+                    <GradientStop Color="#FF464646" Offset="0.5"/>
+                    <GradientStop Color="#FF333333" Offset="1"/>
+                </LinearGradientBrush>
+            </ScrollViewer.Background>
             <StackPanel Orientation="Vertical" Height="Auto" Width="Auto" >
+                <Border Height="84" Background="#FF1F2834">
+                    <Button x:Name="button" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{DynamicResource ResourceKey=SettingButton}" Width="74" Height="40"/>
+                </Border>
                 <Controls:Expander_Info x:Name="expander_Info"   Height="Auto" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,4,0,0"  VerticalAlignment="Top">
                     <Controls:Expander_Info.Content>
                         <StackPanel Orientation="Vertical" Margin="40,5,0,0">
-                            <TextBlock  TextWrapping="Wrap" Text="TextBlock"/>
+                            <TextBlock  TextWrapping="Wrap" Text="{Binding Path = PointNumber}"/>
+                            <TextBlock  TextWrapping="Wrap" Text="{Binding Path = PointNumber}"/>
+                            <TextBlock  TextWrapping="Wrap" Text="{Binding Path = PointNumber}"/>
 
                             <!--<TextBlock x:Name="textBlock1" TextWrapping="Wrap" Text="TextBlock"/>
 
                             <TextBlock x:Name="textBlock2" TextWrapping="Wrap" Text="TextBlock"/>
 
                             <TextBlock x:Name="textBlock3" TextWrapping="Wrap" Text="TextBlock"/>-->
-                        </StackPanel>   
+                        </StackPanel>
                     </Controls:Expander_Info.Content>
                 </Controls:Expander_Info>
                 <Controls:Expander_NavigationBalls x:Name="expander_NavigationBalls" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="Auto" />
                 <Controls:Expander_TargetModel x:Name="expander_TargetModel" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="Auto" />
-                
+
             </StackPanel>
         </ScrollViewer>
 

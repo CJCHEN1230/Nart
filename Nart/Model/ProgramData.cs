@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Nart
 {
-    static class ProgramData
+    public class ProgramData
     {
-
+        public string Name = "";
+        public string ID = "";
+        public string Institute = "";
 
     }
 }
