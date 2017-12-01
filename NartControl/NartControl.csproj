@@ -30,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework.Aero" />
@@ -56,36 +57,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Control\CameraWrapper.xaml.cs">
-      <DependentUpon>CameraWrapper.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Control\Expander_Ball.xaml.cs">
-      <DependentUpon>Expander_Ball.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Control\Expander_Info.xaml.cs">
-      <DependentUpon>Expander_Info.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Control\Expander_NavigationBalls.xaml.cs">
-      <DependentUpon>Expander_NavigationBalls.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Control\Expander_TargetModel.xaml.cs">
-      <DependentUpon>Expander_TargetModel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Control\FilePicker.xaml.cs">
-      <DependentUpon>FilePicker.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Control\ImgButton.xaml.cs">
-      <DependentUpon>ImgButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Control\ImgButton2.xaml.cs">
-      <DependentUpon>ImgButton2.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Converter\NartConverter.cs" />
     <Compile Include="ObservableObject.cs" />
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="Resource\DarkTheme.xaml.cs">
-      <DependentUpon>DarkTheme.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -112,44 +86,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Page Include="Control\CameraWrapper.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Control\Expander_Ball.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Control\Expander_Info.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Control\Expander_NavigationBalls.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Control\Expander_TargetModel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Control\FilePicker.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Control\ImgButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Control\ImgButton2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resource\DarkTheme.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

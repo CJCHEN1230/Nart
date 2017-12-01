@@ -1,23 +1,27 @@
-﻿<Expander x:Class="NartControl.Control.Expander_Info"
+﻿<Expander x:Class="Nart.Control.Expander_TargetModel"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:NartControl.Control"
+             xmlns:local="clr-namespace:Nart.Control"
              mc:Ignorable="d" 
-             Header="Patient Information"    
+             Header="Target Model"
              Foreground="White"
-             FontSize="15"
+             FontSize="18"
              BorderBrush="Black"
              BorderThickness="1"
              FontFamily="Microsoft JhengHei"
              Template="{DynamicResource ResourceKey=StretchyExpanderTemp}"
              Height="Auto" Width="Auto"
              d:DesignHeight="300" d:DesignWidth="300">
+
     <Expander.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-            <GradientStop Color="#FF2674B2" Offset="0"/>
-            <GradientStop Color="#FF2067A5" Offset="1"/>
+            <GradientStop Color="#FF842E2C" Offset="0"/>
+            <GradientStop Color="#FF782625" Offset="1"/>
         </LinearGradientBrush>
     </Expander.Background>
+    <Grid>
+            
+    </Grid>
 </Expander>

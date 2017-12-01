@@ -1,13 +1,13 @@
-﻿<Expander x:Class="NartControl.Control.Expander_TargetModel"
+﻿<Expander x:Class="Nart.Control.Expander_NavigationBalls"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:NartControl.Control"
+             xmlns:local="clr-namespace:Nart.Control"
              mc:Ignorable="d" 
-             Header="Target Model"
+             Header="Navigation balls"    
              Foreground="White"
-             FontSize="15"
+             FontSize="18"
              BorderBrush="Black"
              BorderThickness="1"
              FontFamily="Microsoft JhengHei"
@@ -16,11 +16,13 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Expander.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-            <GradientStop Color="#FF842E2C" Offset="0"/>
-            <GradientStop Color="#FF782625" Offset="1"/>
+            <GradientStop Color="#FF436D3C" Offset="0"/>
+            <GradientStop Color="#FF3B6335" Offset="1"/>
         </LinearGradientBrush>
     </Expander.Background>
-    <Grid>
-            
-    </Grid>
+    <Expander.Content>
+        <StackPanel  x:Name="expItem" x:FieldModifier="public" Height="Auto"  Orientation="Vertical">
+            <Button  Height="200"/>
+        </StackPanel>
+    </Expander.Content>
 </Expander>

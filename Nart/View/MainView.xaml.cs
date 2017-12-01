@@ -23,7 +23,6 @@ using System.Threading;
 using System.ComponentModel;
 using HelixToolkit.Wpf.SharpDX;
 using System.Diagnostics;
-using NartControl.Control;
 using Nart.ExtensionMethods;
 using Nart.Model_Object;
 using NartControl;
@@ -53,10 +52,16 @@ namespace Nart
             temp1.Height = 100;
             System.Windows.Controls.Button temp2 = new System.Windows.Controls.Button();
             temp2.Height = 100;
+            System.Windows.Controls.Button temp3 = new System.Windows.Controls.Button();
+            temp3.Height = 100;
+            System.Windows.Controls.Button temp4 = new System.Windows.Controls.Button();
+            temp4.Height = 100;
 
             expander_NavigationBalls.expItem.Children.Add(temp);            
             expander_NavigationBalls.expItem.Children.Add(temp2);
             expander_NavigationBalls.expItem.Children.Add(temp1);
+            expander_NavigationBalls.expItem.Children.Add(temp3);
+            expander_NavigationBalls.expItem.Children.Add(temp4);
 
 
         }

@@ -15,7 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TIS.Imaging;
 
-namespace NartControl.Control
+namespace Nart.Control
 {
     /// <summary>
     /// CameraWrapper.xaml 的互動邏輯

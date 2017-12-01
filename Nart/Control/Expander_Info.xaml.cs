@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NartControl.Control
+namespace Nart.Control
 {
     /// <summary>
     /// Expander_Info.xaml 的互動邏輯
@@ -23,6 +23,12 @@ namespace NartControl.Control
         public Expander_Info()
         {
             InitializeComponent();
+        }
+
+        public void SetInformation(/*ProgramData*/ )
+        {
+
+
         }
     }
 }

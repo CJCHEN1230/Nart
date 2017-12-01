@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace NartControl
+namespace Nart.Resource
 {
     public partial class DarkThemeStyle : ResourceDictionary
     {

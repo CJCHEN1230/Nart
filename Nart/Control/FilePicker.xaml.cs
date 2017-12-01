@@ -13,9 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NartControl.Control
+
+namespace Nart.Control
 {
     using Microsoft.Win32;
+    using NartControl;
     using System.ComponentModel;
     using System.IO;
     using System.Runtime.CompilerServices;

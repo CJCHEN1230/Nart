@@ -1,9 +1,9 @@
-﻿<Expander x:Class="NartControl.Control.Expander_Ball"
+﻿<Expander x:Class="Nart.Control.Expander_Ball"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:NartControl.Control"
+             xmlns:local="clr-namespace:Nart.Control"
              Header="Ball"
              Foreground="White"
              FontSize="15"
@@ -11,7 +11,7 @@
              Height="Auto" Width="Auto"
              d:DesignHeight="300" d:DesignWidth="300">
     <Expander.Content>
-            <TextBlock Margin="30,5,0,0">
+            <TextBlock Margin="30,5,0,0" Text="12345">
             </TextBlock >
     </Expander.Content>
 </Expander>

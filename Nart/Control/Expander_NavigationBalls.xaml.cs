@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NartControl.Control
+namespace Nart.Control
 {
     /// <summary>
-    /// Expander_Ball.xaml 的互動邏輯
+    /// Expander_NavigationBalls.xaml 的互動邏輯
     /// </summary>
-    public partial class Expander_Ball : Expander
+    public partial class Expander_NavigationBalls : Expander
     {
-        public Expander_Ball()
+        public Expander_NavigationBalls()
         {
             InitializeComponent();
         }

@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
 using NartControl;
 using System.Collections.ObjectModel;
-using NartControl.Control;
 using System.Windows.Input;
 using System.Runtime.CompilerServices;
 using System.Windows;
