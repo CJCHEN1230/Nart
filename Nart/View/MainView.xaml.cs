@@ -26,6 +26,7 @@ using System.Diagnostics;
 using Nart.ExtensionMethods;
 using Nart.Model_Object;
 using NartControl;
+using System.Windows.Media.Animation;
 
 namespace Nart
 {
@@ -42,6 +43,11 @@ namespace Nart
 
             _mainViewModel = new MainViewModel(this);
 
+            Thickness margin = buttonList.Margin;
+            margin.Left = 0;
+            margin.Right = 0;
+            buttonList.Margin = margin;
+
             this.DataContext = _mainViewModel;
 
             AllocConsole();
@@ -57,11 +63,11 @@ namespace Nart
             System.Windows.Controls.Button temp4 = new System.Windows.Controls.Button();
             temp4.Height = 100;
 
-            expander_NavigationBalls.expItem.Children.Add(temp);            
-            expander_NavigationBalls.expItem.Children.Add(temp2);
-            expander_NavigationBalls.expItem.Children.Add(temp1);
-            expander_NavigationBalls.expItem.Children.Add(temp3);
-            expander_NavigationBalls.expItem.Children.Add(temp4);
+            expander_TargetModel.expItem.Children.Add(temp);
+            expander_TargetModel.expItem.Children.Add(temp2);
+            expander_TargetModel.expItem.Children.Add(temp1);
+            expander_TargetModel.expItem.Children.Add(temp3);
+            expander_TargetModel.expItem.Children.Add(temp4);
 
 
         }
@@ -128,6 +134,26 @@ namespace Nart
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            GridLengthAnimation animation = new GridLengthAnimation();
+            animation.From = new GridLength(0D);
+            animation.To = Col1.Width;
+            animation.Duration = new Duration( TimeSpan.FromSeconds(0.2));
+
+            Storyboard.SetTargetProperty(animation, new PropertyPath(Grid.WidthProperty));
+            Storyboard.SetTarget(animation, Col0);
+
+            var storyboard = new Storyboard();
+            storyboard.Children.Add(animation);
+
+
+            //GridLengthAnimation animation2 = new GridLengthAnimation();
+            //animation2.From = Col1.Width;
+            //animation2.To = Col0.Width;
+            //animation2.Duration = new Duration(TimeSpan.FromMilliseconds(200));
+            //Col1.BeginAnimation(System.Windows.Controls.Button.WidthProperty, animation2);
+        }
         
     }
 }

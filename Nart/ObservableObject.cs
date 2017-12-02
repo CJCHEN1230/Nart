@@ -1,6 +1,6 @@
 ﻿
 
-namespace NartControl
+namespace Nart
 {
     using System;
     using System.ComponentModel;

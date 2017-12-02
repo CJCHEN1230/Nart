@@ -25,10 +25,25 @@ namespace Nart.Control
             InitializeComponent();
         }
 
-        public void SetInformation(/*ProgramData*/ )
+        public void SetInformation(Projectata data)
         {
 
+            SetBinding(data, NameTB, "Name", TextBlock.TextProperty, BindingMode.TwoWay);
+            SetBinding(data, IDTB, "ID", TextBlock.TextProperty, BindingMode.TwoWay);
+            SetBinding(data, InstitutionTB, "Institution", TextBlock.TextProperty, BindingMode.TwoWay);
 
         }
+
+        private void SetBinding(object source, DependencyObject target, string propertyName, DependencyProperty dp, BindingMode mode)
+        {
+            Binding binding = new Binding(propertyName);
+            binding.Source = source;
+            binding.Mode = mode;
+            BindingOperations.SetBinding(target, dp, binding);
+        }
+
+
+
+            
     }
 }

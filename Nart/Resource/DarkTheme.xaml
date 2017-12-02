@@ -519,6 +519,7 @@
     <Style x:Key="SettingButton" TargetType="{x:Type Button}">
         <!--有指定TargetType的話，下面的Property 不用特別指定哪個控制項-->
         <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -553,6 +554,7 @@
                             <!--<Setter Property="BorderThickness"  Value="1" TargetName="border1" />
                             <Setter Property="BorderThickness"  Value="1" TargetName="border2" />
                             <Setter Property="BorderThickness"  Value="1" TargetName="border3" />-->
+                            <Setter Property="Cursor" Value="Hand"/>
                             <Setter Property="BorderBrush"  Value="#FFC9BFBF" TargetName="border1" />
                             <Setter Property="BorderBrush"  Value="#FFC9BFBF" TargetName="border2" />
                             <Setter Property="BorderBrush"  Value="#FFC9BFBF" TargetName="border3" />

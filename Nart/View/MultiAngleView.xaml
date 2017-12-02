@@ -50,7 +50,7 @@
             <hx:GroupModel3D ItemsSource="{Binding TriangleModelCollection}">
             </hx:GroupModel3D>
 
-                <hx:ItemsModel3D ItemsSource="{Binding ModelDataCollection}">
+            <hx:ItemsModel3D ItemsSource="{Binding ModelDataCollection}">
                 <hx:ItemsModel3D.ItemTemplate>
                     <DataTemplate>
                         <hx:MeshGeometryModel3D                             
@@ -65,7 +65,7 @@
                 </hx:ItemsModel3D.ItemTemplate>
             </hx:ItemsModel3D>
 
-        </hx:ModelContainer3DX>
+            </hx:ModelContainer3DX>
 
         <hx:Viewport3DX  x:Name="viewport2"
                         ShowViewCube="True" 

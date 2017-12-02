@@ -33,18 +33,21 @@
 
 
 
-    <Grid Margin="0">
+    <Grid Margin="0,-30,0,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="6*"/>
+
+            <ColumnDefinition x:Name="Col0" Width="0*"/>
+            <ColumnDefinition x:Name="Col1" Width="1*"/>
+            <ColumnDefinition  Width="5"/>
+            <ColumnDefinition x:Name="Col2" Width="5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="101*"/>
+            <RowDefinition Height="1*"/>
             <RowDefinition Height="4"/>
-            <RowDefinition Height="805*"/>
+            <RowDefinition Height="8*"/>
         </Grid.RowDefinitions>
 
-        <TabControl x:Name="tabControl" SelectedIndex="{Binding Path = TabIndex}"  Margin="0,0,0,0" OpacityMask="Black" Grid.Column="1" Grid.Row="2" BorderThickness="0">
+        <TabControl x:Name="tabControl" SelectedIndex="{Binding Path = TabIndex}"  Margin="0,0,0,0" OpacityMask="Black" Grid.Column="2" Grid.Row="2" BorderThickness="0" Grid.ColumnSpan="2">
             <TabControl.Background>
                 <!--Black-->
                 <RadialGradientBrush GradientOrigin="0.5,0.5">
@@ -110,19 +113,9 @@
             </TabItem>
         </TabControl>
 
-
-        <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" HorizontalAlignment="Left" Margin="5,406,0,0" VerticalAlignment="Top" Height="46" Width="86" FontSize="20" Grid.Row="2"/>
-        <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="2" Background="White" Grid.Row="1" Margin="0"/>
-        <ScrollViewer Margin="-438,9,438,-12"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}" Grid.Row="2">
-            <StackPanel Height="550" Width="194">
-                <Button x:Name="button1_Copy" Command="{Binding SetNavigationCommand}" Content="Set Navigation" Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                <Button x:Name="button1" Command="{Binding SetModelCommand}" Content="Set Model"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                <Button x:Name="RegButton" Command="{Binding RegisterCommand}" Content="Registration"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                <Button x:Name="button4" Command="{Binding TrackCommand}"   Content="Tracking"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-            </StackPanel>
-        </ScrollViewer>
-        <ScrollViewer Margin="0,0,0,0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Grid.Row="2">
+        <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" HorizontalAlignment="Left" Margin="5,406,0,0" VerticalAlignment="Top" Height="46" Width="86" FontSize="20" Grid.Row="2" Grid.ColumnSpan="2"/>
+        <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="4" Background="White" Grid.Row="1" Margin="0"/>
+        <ScrollViewer Margin="0,0,0,0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Grid.Column="1" Grid.Row="2" >
             <ScrollViewer.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF333333" Offset="0.3"/>
@@ -130,19 +123,77 @@
                     <GradientStop Color="#FF333333" Offset="1"/>
                 </LinearGradientBrush>
             </ScrollViewer.Background>
-            <StackPanel Orientation="Vertical" Height="Auto" Width="Auto" >
-                <Border Height="65" Background="Transparent">
-                    <Button x:Name="button" HorizontalAlignment="Center" Style="{DynamicResource ResourceKey=SettingButton}" Width="44" Height="36" VerticalAlignment="Center"/>
-                </Border>
-                <Controls:Expander_Info x:Name="expander_Info"  FontSize="18" IsExpanded="True" Height="Auto" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,1,0,0"  VerticalAlignment="Top">
-                </Controls:Expander_Info>
-                <Controls:Expander_NavigationBalls x:Name="expander_NavigationBalls" IsExpanded="False" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="Auto" />
-                <Controls:Expander_TargetModel x:Name="expander_TargetModel" IsExpanded="False" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="Auto" />
-                <!--<local:ImgButton  ButtonImageSource="./Icon/test.ico" ButtonLabel="1" HorizontalContentAlignment="Center" Height="61" Width="53"/>-->
-
+            <StackPanel Orientation="Vertical" Margin="0" >
+                <Border Height="65" Background="Transparent"/>
+                <Controls:Expander_Info x:Name="expander_Info"  FontSize="18" IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,1,0,0"  VerticalAlignment="Top" Height="Auto"/>
+                <Controls:Expander_NavigationBalls x:Name="expander_NavigationBalls" IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,1,0" VerticalAlignment="Top" Height="Auto" />
+                <Controls:Expander_TargetModel x:Name="expander_TargetModel" IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,1,0" VerticalAlignment="Top" Height="Auto" />
             </StackPanel>
         </ScrollViewer>
+        <ScrollViewer x:Name="buttonList" Margin="-500,0,83,0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}" Grid.RowSpan="3">
+            <ScrollViewer.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF1C1C1C" Offset="0.3"/>
+                    <GradientStop Color="#FF1C1C1C" Offset="0.5"/>
+                    <GradientStop Color="#FF1C1C1C" Offset="1"/>
+                </LinearGradientBrush>
+            </ScrollViewer.Background>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="4"/>
+                    <RowDefinition Height="8*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.RowSpan="3" BorderBrush="Black" BorderThickness="1"></Border>
+                <Button  x:Name="settingButton2" HorizontalAlignment="Center" Style="{DynamicResource ResourceKey=SettingButton}" Width="40" Height="40" VerticalAlignment="Center"  Grid.Row="0" Grid.Column="1" Margin="0,30">
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="ButtonBase.Click">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <local:GridLengthAnimation
+                                      Storyboard.TargetName="Col0"
+                                      Storyboard.TargetProperty="Width"
+                                      From="{Binding Width,ElementName=Col0}" To="{Binding Width,ElementName=Col1}"  Duration="0:0:0.2" />
+                                    <local:GridLengthAnimation
+                                      Storyboard.TargetName="Col1"
+                                      Storyboard.TargetProperty="Width"
+                                      From="{Binding Width,ElementName=Col1}" To="{Binding Width,ElementName=Col0}" Duration="0:0:0.2" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Button.Triggers>
+                </Button>
 
+                <StackPanel Margin="0" Grid.Row="2">
+
+                    <Button x:Name="button1_Copy" Command="{Binding SetNavigationCommand}" Content="Set Navigation" Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                    <Button x:Name="button1" Command="{Binding SetModelCommand}" Content="Set Model"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                    <Button x:Name="button2" Click="Translate_Click" Content="TranlateBtn" Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                    <Button x:Name="RegButton" Command="{Binding RegisterCommand}" Content="Registration"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                    <Button x:Name="button4" Command="{Binding TrackCommand}"   Content="Tracking"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+        <Button x:Name="settingButton1" HorizontalAlignment="Center" Style="{DynamicResource ResourceKey=SettingButton}" Width="40" Height="40" VerticalAlignment="Center"  Grid.Column="1">
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="ButtonBase.Click">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <local:GridLengthAnimation
+                                      Storyboard.TargetName="Col0"
+                                      Storyboard.TargetProperty="Width"
+                                      From="{Binding Width,ElementName=Col0}" To="{Binding Width,ElementName=Col1}"  Duration="0:0:0.2" />
+                            <local:GridLengthAnimation
+                                      Storyboard.TargetName="Col1"
+                                      Storyboard.TargetProperty="Width"
+                                      From="{Binding Width,ElementName=Col1}" To="{Binding Width,ElementName=Col0}" Duration="0:0:0.2" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Button.Triggers>
+        </Button>
+
+        <!--<GridSplitter Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch"  Background="Transparent" Margin="0"/>-->
 
     </Grid>
 </Window>

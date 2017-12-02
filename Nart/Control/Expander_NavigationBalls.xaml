@@ -14,15 +14,34 @@
              Template="{DynamicResource ResourceKey=StretchyExpanderTemp}"
              Height="Auto" Width="Auto"
              d:DesignHeight="300" d:DesignWidth="300">
+    <Expander.Resources>
+        <ControlTemplate x:Key="NoScroll">
+            <ItemsPresenter></ItemsPresenter>
+        </ControlTemplate>
+        <DataTemplate x:Key="ballTemplate">
+            <Expander
+             Header="{Binding BallName}"
+             Foreground="White"
+             FontSize="15"
+             Height="Auto" Width="Auto">
+                <Expander.Content>
+                    <TextBlock Margin="30,5,0,0"  Text="{Binding BallInfo}"/>
+                </Expander.Content>
+            </Expander>
+        </DataTemplate>
+    </Expander.Resources>
     <Expander.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-            <GradientStop Color="#FF436D3C" Offset="0"/>
-            <GradientStop Color="#FF3B6335" Offset="1"/>
+            <GradientStop Color="#FF32572B" Offset="0"/>
+            <GradientStop Color="#FF32572B" Offset="0.5"/>
+            <GradientStop Color="#FF32572B" Offset="1"/>
         </LinearGradientBrush>
     </Expander.Background>
     <Expander.Content>
-        <StackPanel  x:Name="expItem" x:FieldModifier="public" Height="Auto"  Orientation="Vertical">
-            <Button  Height="200"/>
-        </StackPanel>
+        <ListView  BorderThickness="0" x:Name="ModelListView"  ScrollViewer.IsDeferredScrollingEnabled="False" ScrollViewer.VerticalScrollBarVisibility="Disabled"  Background="Transparent" Margin="30,5,0,0"
+                  Template="{StaticResource NoScroll}"
+                  ItemTemplate="{StaticResource ballTemplate}"
+                  ItemsSource = "{Binding BallCollection}"
+                   Height="350"/>
     </Expander.Content>
 </Expander>

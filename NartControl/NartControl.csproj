@@ -58,8 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter\NartConverter.cs" />
-    <Compile Include="ObservableObject.cs" />
-    <Compile Include="RelayCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

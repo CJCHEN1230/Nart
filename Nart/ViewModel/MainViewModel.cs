@@ -19,7 +19,7 @@ namespace Nart
     /// </summary>
     public class MainViewModel : ObservableObject
     {
-
+        public static Projectata data = new Projectata();
         public CameraControl CamCtrl;
         public NartServer Server= new NartServer();
         private static string _pointNumber;
@@ -39,14 +39,17 @@ namespace Nart
             TrackCommand = new RelayCommand(Track);
             CloseWindowCommand = new RelayCommand(obj => this.OnClosed(obj), null);
 
-            
+            mainWindow.expander_Info.SetInformation(data);
 
 
         }
                 
         public static int TabIndex
         {
-            get { return _tabIndex; }
+            get
+            {
+                return _tabIndex;
+            }
             set
             {
                 SetStaticValue(ref _tabIndex, value);
