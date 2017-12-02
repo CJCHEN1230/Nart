@@ -15,6 +15,18 @@ namespace Nart
         private string institution = "成大";
         private  ObservableCollection<BallModel> ballCollection=  new ObservableCollection<BallModel>();
 
+        public Projectata()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                BallModel ball = new BallModel();
+                ball.BallName = i.ToString() /*+ "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"*/;
+                ball.BallInfo = "!!!!!!!!!!!!!!!!!!!!!!!!!!";
+                BallCollection.Add(ball);
+            }
+        }
+
+
         public string Name
         {
             get

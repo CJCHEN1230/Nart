@@ -272,7 +272,7 @@
         </Setter>
     </Style>
 
-    <!--  +-號版本的toggle button  -->
+    <!--  +-號版本的toggle button 應用於Expander裡面的Toggle -->
     <ControlTemplate x:Key="SimpleExpanderButtonTemp"
                          TargetType="{x:Type ToggleButton}">
         <Border x:Name="ExpanderButtonBorder"
@@ -370,6 +370,117 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
+
+
+
+    <ControlTemplate x:Key="NormalExpanderButtonTemp"
+                         TargetType="{x:Type ToggleButton}">
+        <Border x:Name="ExpanderButtonBorder"                
+                    CornerRadius="2"
+                    Margin="0"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    Padding="{TemplateBinding Padding}"
+                    HorizontalAlignment="Stretch"
+                    >
+            <Grid Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Rectangle Fill="Transparent"
+                               Grid.ColumnSpan="2" />
+                <Ellipse Name="Circle"
+                             Grid.Column="0"
+                             Fill="White"
+                             Stroke="Black"
+                             Width="20"
+                             Height="20"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center" />
+                <Path x:Name="Arrow"
+                          Grid.Column="0"
+                          Data="M 1,1.5 L 4.5,5 8,1.5"
+                          Stroke="Black"
+                          StrokeThickness="2"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <RotateTransform Angle="0" />
+                    </Path.RenderTransform>
+                </Path>
+                <ContentPresenter x:Name="HeaderContent"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      Grid.Column="1"
+                                      Margin="4,0,0,0"
+                                      ContentSource="Content" />
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked"
+                         Value="True">
+                <Setter Property="Data"
+                            TargetName="Arrow"
+                            Value="M 1,3.5 L 4.5,0 8,3.5"  />
+            </Trigger>
+
+            <Trigger Property="IsMouseOver"
+                         Value="true">
+                <Setter Property="Stroke"
+                            Value="#FF3C7FB1"
+                            TargetName="Circle" />
+                <Setter Property="Stroke"
+                            Value="#222"
+                            TargetName="Arrow" />
+            </Trigger>
+            <Trigger Property="IsPressed"
+                         Value="true">
+                <Setter Property="Stroke"
+                            Value="#FF526C7B"
+                            TargetName="Circle" />
+                <Setter Property="StrokeThickness"
+                            Value="1.5"
+                            TargetName="Circle" />
+                <Setter Property="Stroke"
+                            Value="#FF003366"
+                            TargetName="Arrow" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <ControlTemplate x:Key="SimpleExpanderTemp2"
+                         TargetType="{x:Type Expander}">
+        <DockPanel>
+            <ToggleButton x:Name="ExpanderButton"
+                              Background="{TemplateBinding Background}"
+                              BorderBrush="{TemplateBinding BorderBrush}"                                          
+                              BorderThickness="{TemplateBinding BorderThickness}"
+                              DockPanel.Dock="Top"
+                              Template="{StaticResource NormalExpanderButtonTemp}"
+                              Content="{TemplateBinding Header}"
+                              IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                              OverridesDefaultStyle="True"
+                              Padding="1.5,0">
+            </ToggleButton>
+            <ContentPresenter x:Name="ExpanderContent"
+                                  Grid.Row="1"
+                                  Visibility="Collapsed"
+                                  DockPanel.Dock="Bottom" />
+        </DockPanel>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsExpanded"
+                         Value="True">
+                <Setter TargetName="ExpanderContent"
+                            Property="Visibility"
+                            Value="Visible" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+
+
     <!-- Animated Expander Button's Template-->
     <ControlTemplate x:Key="AnimatedExpanderButtonTemp"
                          TargetType="{x:Type ToggleButton}">
@@ -585,8 +696,8 @@
             </Grid.RowDefinitions>
             <Rectangle x:Name="Corner" Grid.Column="1" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Grid.Row="1"/>
             <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.RowSpan="2" Margin="{TemplateBinding Padding}" Grid.ColumnSpan="2"/>
-            <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Width="8"/>
-            <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}" Height="8"/>
+            <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Hand" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Width="8"/>
+            <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Hand" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}" Height="8"/>
         </Grid>
     </ControlTemplate>
     <Style x:Key="ScrollBarPageButton" TargetType="{x:Type RepeatButton}">

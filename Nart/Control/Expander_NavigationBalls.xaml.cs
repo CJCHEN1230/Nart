@@ -22,55 +22,36 @@ namespace Nart.Control
     /// <summary>
     /// Expander_NavigationBalls.xaml 的互動邏輯
     /// </summary>
-    public partial class Expander_NavigationBalls : Expander, INotifyPropertyChanged
+    public partial class Expander_NavigationBalls : Expander
     {
-        private ObservableCollection<BallModel> ballCollection = new ObservableCollection<BallModel>();
+    
         public Expander_NavigationBalls()
         {
             InitializeComponent();
-
-            for (int i =0;i<5 ;i++)
-            {
-                BallModel ball = new BallModel();
-                ball.BallName = i.ToString();
-                ball.BallInfo = "!!!!!!!!!!!!!!!!!!!!!!!!!!";
-                BallCollection.Add(ball);
-            }
-          
-
             this.DataContext = this;
         }
 
-        public ObservableCollection<BallModel> BallCollection
+     
+
+        public void BindBallCollection(Projectata data)
         {
-            get
-            {
-                return ballCollection;
-            }
-            set
-            {
-                SetValue(ref ballCollection, value);
-            }
+            Binding binding = new Binding("BallCollection");
+
+            binding.Source = data;
+            binding.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(BallListView, ItemsControl.ItemsSourceProperty, binding);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName]string info = "")
+        void OnStretchedHeaderTemplateLoaded(object sender, RoutedEventArgs e)
         {
-            if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
+            Border rootElem = sender as Border;
+
+            ContentPresenter contentPres =
+                rootElem.TemplatedParent as ContentPresenter;
+
+            contentPres.HorizontalAlignment = HorizontalAlignment.Stretch;
         }
-        protected bool SetValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")
-        {
-            if (object.Equals(oldValue, newValue))
-            {
-                return false;
-            }
-            oldValue = newValue;
-            this.OnPropertyChanged(propertyName);
-            return true;
-        }
+
     }
 }
 

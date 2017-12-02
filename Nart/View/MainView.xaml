@@ -144,7 +144,6 @@
                     <RowDefinition Height="4"/>
                     <RowDefinition Height="8*"/>
                 </Grid.RowDefinitions>
-                <Border Grid.RowSpan="3" BorderBrush="Black" BorderThickness="1"></Border>
                 <Button  x:Name="settingButton2" HorizontalAlignment="Center" Style="{DynamicResource ResourceKey=SettingButton}" Width="40" Height="40" VerticalAlignment="Center"  Grid.Row="0" Grid.Column="1" Margin="0,30">
                     <Button.Triggers>
                         <EventTrigger RoutedEvent="ButtonBase.Click">
@@ -172,6 +171,7 @@
                     <Button x:Name="RegButton" Command="{Binding RegisterCommand}" Content="Registration"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
                     <Button x:Name="button4" Command="{Binding TrackCommand}"   Content="Tracking"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
                 </StackPanel>
+                <Border Grid.RowSpan="3" BorderBrush="Black" BorderThickness="1"/>
             </Grid>
         </ScrollViewer>
         <Button x:Name="settingButton1" HorizontalAlignment="Center" Style="{DynamicResource ResourceKey=SettingButton}" Width="40" Height="40" VerticalAlignment="Center"  Grid.Column="1">

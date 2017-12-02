@@ -24,29 +24,28 @@
         </LinearGradientBrush>
     </Expander.Background>
     <Expander.Content>
-        <Grid Margin="30,0,0,0"  Height="130">
+        <Grid Margin="30,0,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="43*"/>
-                <RowDefinition Height="44*"/>
-                <RowDefinition Height="43*"/>
-                <RowDefinition Height="36*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="textBlock1" TextWrapping="Wrap" Text="Patient Name:" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.Column="0" Grid.Row="0"/>
+            <TextBlock x:Name="textBlock1" TextWrapping="Wrap" Text="Patient Name:" Margin="0,10" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.Column="0" Grid.Row="0"/>
 
-            <TextBlock x:Name="textBlock2" TextWrapping="Wrap" Text="Patient ID:" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1"/>
+            <TextBlock x:Name="textBlock2" TextWrapping="Wrap" Text="Patient ID:" Margin="0,10" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1"/>
 
-            <TextBlock x:Name="textBlock3" TextWrapping="Wrap" Text="Institution:" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.Column="0" Grid.Row="2"/>
+            <TextBlock x:Name="textBlock3" TextWrapping="Wrap" Text="Institution:" Margin="0,10" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.Column="0" Grid.Row="2"/>
 
-            <TextBlock x:Name="NameTB"  TextWrapping="Wrap" Text="蔡慧君" Margin="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <TextBlock x:Name="NameTB"  TextWrapping="Wrap" Text="蔡慧君" Margin="0,10" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
-            <TextBlock x:Name="IDTB" TextWrapping="Wrap" Text="A12345678" Margin="0"  Grid.Row="1"  Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <TextBlock x:Name="IDTB" TextWrapping="Wrap" Text="A12345678" Margin="0,10"  Grid.Row="1"  Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
-            <TextBlock x:Name="InstitutionTB" TextWrapping="Wrap" Text="" Margin="0" Grid.Row="2" Grid.Column="1"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBlock x:Name="InstitutionTB" TextWrapping="Wrap" Text="" Margin="0,10" Grid.Row="2" Grid.Column="1"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
         </Grid>
     </Expander.Content>

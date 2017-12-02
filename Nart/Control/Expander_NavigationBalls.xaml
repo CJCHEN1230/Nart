@@ -15,17 +15,18 @@
              Height="Auto" Width="Auto"
              d:DesignHeight="300" d:DesignWidth="300">
     <Expander.Resources>
+        <!--不讓ListView採用這個template會造成外層ScrollViewer無法收到滾輪事件-->
         <ControlTemplate x:Key="NoScroll">
             <ItemsPresenter></ItemsPresenter>
         </ControlTemplate>
         <DataTemplate x:Key="ballTemplate">
             <Expander
-             Header="{Binding BallName}"
-             Foreground="White"
-             FontSize="15"
-             Height="Auto" Width="Auto">
+                 Foreground="White"                 
+                 Margin="0"
+                 FontSize="18"
+                 Header="{Binding BallName}">
                 <Expander.Content>
-                    <TextBlock Margin="30,5,0,0"  Text="{Binding BallInfo}"/>
+                    <TextBlock  TextWrapping="Wrap" Margin="30,8,0,0"  Text="{Binding BallInfo}"/>
                 </Expander.Content>
             </Expander>
         </DataTemplate>
@@ -37,11 +38,19 @@
             <GradientStop Color="#FF32572B" Offset="1"/>
         </LinearGradientBrush>
     </Expander.Background>
+
+    
     <Expander.Content>
-        <ListView  BorderThickness="0" x:Name="ModelListView"  ScrollViewer.IsDeferredScrollingEnabled="False" ScrollViewer.VerticalScrollBarVisibility="Disabled"  Background="Transparent" Margin="30,5,0,0"
+        <ListView  BorderThickness="0"  x:Name="BallListView" ScrollViewer.VerticalScrollBarVisibility="Disabled"  Background="Transparent" Margin="30,5,0,0"
                   Template="{StaticResource NoScroll}"
                   ItemTemplate="{StaticResource ballTemplate}"
-                  ItemsSource = "{Binding BallCollection}"
-                   Height="350"/>
+                  ItemsSource = "{Binding BallCollection}">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Delete">
+                    </MenuItem>
+                </ContextMenu>
+            </ListView.ContextMenu>
+        </ListView>
     </Expander.Content>
 </Expander>

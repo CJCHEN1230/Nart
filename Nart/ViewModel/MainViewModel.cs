@@ -39,7 +39,8 @@ namespace Nart
             TrackCommand = new RelayCommand(Track);
             CloseWindowCommand = new RelayCommand(obj => this.OnClosed(obj), null);
 
-            mainWindow.expander_Info.SetInformation(data);
+            mainWindow.expander_Info.BindPatientInfo(data);
+            mainWindow.expander_NavigationBalls .BindBallCollection(data);
 
 
         }
@@ -84,7 +85,7 @@ namespace Nart
         {
 
             CamCtrl = new CameraControl(new TIS.Imaging.ICImagingControl[2] { _mainWindow.CamHost1.icImagingControl, _mainWindow.CamHost2.icImagingControl });
-            CamCtrl.CameraStart();
+            //CamCtrl.CameraStart();
         }
         /// <summary>
         /// 顯示設置好的各項模型資訊，按下Set Model 之後並且按ok後會走到這

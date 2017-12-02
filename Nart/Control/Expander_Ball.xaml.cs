@@ -24,5 +24,8 @@ namespace Nart.Control
         {
             InitializeComponent();
         }
+
+        
+    
     }
 }
