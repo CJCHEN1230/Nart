@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -24,7 +25,8 @@ namespace Nart.Control
     /// </summary>
     public partial class Expander_NavigationBalls : Expander
     {
-    
+
+      
         public Expander_NavigationBalls()
         {
             InitializeComponent();
@@ -32,26 +34,25 @@ namespace Nart.Control
         }
 
      
-
+        
         public void BindBallCollection(Projectata data)
         {
             Binding binding = new Binding("BallCollection");
-
             binding.Source = data;
             binding.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(BallListView, ItemsControl.ItemsSourceProperty, binding);
+
+            Binding binding2 = new Binding("CanSelectPoints");
+            binding2.Source = data;
+            binding2.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(SelectTB, ToggleButton.IsCheckedProperty, binding2);
+
+            Binding binding3 = new Binding("SelectPointState");
+            binding3.Source = data;
+            binding3.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(stateTB, TextBlock.TextProperty, binding3);
+
         }
-
-        void OnStretchedHeaderTemplateLoaded(object sender, RoutedEventArgs e)
-        {
-            Border rootElem = sender as Border;
-
-            ContentPresenter contentPres =
-                rootElem.TemplatedParent as ContentPresenter;
-
-            contentPres.HorizontalAlignment = HorizontalAlignment.Stretch;
-        }
-
     }
 }
 

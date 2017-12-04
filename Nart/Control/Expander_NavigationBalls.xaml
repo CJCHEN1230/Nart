@@ -23,8 +23,10 @@
             <Expander
                  Foreground="White"                 
                  Margin="0"
-                 FontSize="18"
-                 Header="{Binding BallName}">
+                 FontSize="18">
+                <Expander.Header>
+                    <TextBox  TextWrapping="Wrap" Margin="10,0,0,0"  Text="{Binding BallName , UpdateSourceTrigger=LostFocus}" Background="Transparent" Foreground="White" BorderThickness="0"/>
+                </Expander.Header>
                 <Expander.Content>
                     <TextBlock  TextWrapping="Wrap" Margin="30,8,0,0"  Text="{Binding BallInfo}"/>
                 </Expander.Content>
@@ -38,19 +40,24 @@
             <GradientStop Color="#FF32572B" Offset="1"/>
         </LinearGradientBrush>
     </Expander.Background>
-
-    
     <Expander.Content>
-        <ListView  BorderThickness="0"  x:Name="BallListView" ScrollViewer.VerticalScrollBarVisibility="Disabled"  Background="Transparent" Margin="30,5,0,0"
-                  Template="{StaticResource NoScroll}"
-                  ItemTemplate="{StaticResource ballTemplate}"
-                  ItemsSource = "{Binding BallCollection}">
-            <ListView.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Delete">
-                    </MenuItem>
-                </ContextMenu>
-            </ListView.ContextMenu>
-        </ListView>
+        <StackPanel Orientation="Vertical" Margin="0">
+            <StackPanel Orientation="Horizontal" Margin="5,5">
+                <TextBlock Text="Select Points" VerticalAlignment="Center" Margin="30,0,10,0"/>
+                <ToggleButton x:Name="SelectTB" IsChecked="{Binding CanSelectPoints}" Style="{StaticResource AnimatedToggleSwitch3}"  VerticalAlignment="Center" Height="30" Width="80" HorizontalAlignment="Left" Margin="0,0,0,0"/>
+                <TextBlock x:Name="stateTB" Width="50" Text="OFF" VerticalAlignment="Center" Margin="10,0"/>
+            </StackPanel>
+            <ListView x:Name="BallListView"   BorderThickness="0"   ScrollViewer.VerticalScrollBarVisibility="Disabled"  Background="Transparent" Margin="30,5,0,0"
+                              Template="{StaticResource NoScroll}"
+                              ItemTemplate="{StaticResource ballTemplate}"
+                              ItemsSource = "{Binding BallCollection}">
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Delete">
+                        </MenuItem>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ListView>
+        </StackPanel>
     </Expander.Content>
 </Expander>

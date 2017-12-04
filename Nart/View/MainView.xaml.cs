@@ -154,6 +154,73 @@ namespace Nart
             //animation2.Duration = new Duration(TimeSpan.FromMilliseconds(200));
             //Col1.BeginAnimation(System.Windows.Controls.Button.WidthProperty, animation2);
         }
-        
+
+        private void settingButton1_Click(object sender, RoutedEventArgs e)
+        {
+            //// double ratio = Col1.ActualWidth / (mainGrid.ActualWidth - Col3.ActualWidth);
+            //double ratio = Col1.ActualWidth * 5 / Col2.ActualWidth;
+            //GridLengthAnimation gla = new GridLengthAnimation();
+            //gla.From = Col0.Width;
+            //gla.To = /*Col1.Width*/ new GridLength(ratio, GridUnitType.Star);
+            //gla.Duration = new TimeSpan(0, 0, 0, 0, 200);
+            //gla.FillBehavior = FillBehavior.Stop;
+            //gla.Completed += (s, e1) =>
+            //{
+            //    Col0.Width = gla.To;
+            //};
+            //mainGrid.ColumnDefinitions[0].BeginAnimation(ColumnDefinition.WidthProperty, gla);
+
+
+            //GridLengthAnimation gla2 = new GridLengthAnimation();
+            //gla2.From = Col1.Width;
+            ////gla2.To = Col0.Width;
+            //gla2.To = new GridLength(0, GridUnitType.Star);
+            //gla2.Duration = new TimeSpan(0, 0, 0, 0, 200);
+            //gla2.FillBehavior = FillBehavior.Stop;
+            //gla2.Completed += (s, e1) =>
+            //{
+            //    Col1.Width = gla2.To;
+            //};
+            //mainGrid.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla2);
+
+        }
+
+        private void settingButton2_Click(object sender, RoutedEventArgs e)
+        {
+
+            
+            //GridLengthAnimation gla = new GridLengthAnimation();
+            //gla.From = Col0.Width;
+            //gla.To =new GridLength(0, GridUnitType.Star);
+            //gla.Duration = new TimeSpan(0, 0, 0, 0, 200);
+            //gla.FillBehavior = FillBehavior.Stop;
+            //gla.Completed += (s, e1) =>
+            //{
+            //    Col0.Width = gla.To;
+            //};
+            //mainGrid.ColumnDefinitions[0].BeginAnimation(ColumnDefinition.WidthProperty, gla);
+
+
+            //GridLengthAnimation gla2 = new GridLengthAnimation();
+            //gla2.From = Col1.Width;
+            //gla2.To = new GridLength(0, GridUnitType.Auto);
+            //gla2.Duration = new TimeSpan(0, 0, 0, 0, 200);
+            //gla2.FillBehavior = FillBehavior.Stop;
+            //gla2.Completed += (s, e1) =>
+            //{
+            //    Col1.Width = gla2.To;
+            //};
+            //mainGrid.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla2);
+        }
+
+        private void button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("\n\n\nCol0  Width:" + Col0.Width);            
+            Console.WriteLine("\nCol0  ActualWidth:" + Col0.ActualWidth);
+            Console.WriteLine("\nCol1  Width:" + Col1.Width);
+            Console.WriteLine("\nCol1  ActualWidth:" + Col1.ActualWidth);
+            Console.WriteLine("\nCol2  Width:" + Col2.Width);
+            Console.WriteLine("\nCol2  ActualWidth:" + Col2.ActualWidth);
+        }
     }
 }

@@ -53,6 +53,12 @@ namespace Nart
             this._multiview = _multiview;           
             SetLight();
             SetCamera();
+
+            
+            Binding binding = new Binding("BallCollection");
+            binding.Source = MainViewModel.data;
+            binding.Mode = BindingMode.OneWay;
+            BindingOperations.SetBinding(_multiview.BallCollection, ItemsModel3D.ItemsSourceProperty, binding);
         }
 
         /// <summary>
@@ -293,18 +299,18 @@ namespace Nart
                 }
             }
 
-            if (NormalModelCollection != null && NormalModelCollection.Count != 0)
-            {
-                for (int i = 0; i < NormalModelCollection.Count; i++)
-                {
-                    BoneModel normalModel = NormalModelCollection[i] as BoneModel;
-                    //如果選擇多模型但檔名是空或不存在則進不去
-                    if (normalModel != null && normalModel.ModelContainer != null)
-                    {
-                        modelGroup.Children.Add(normalModel.ModelContainer);
-                    }
-                }
-            }
+            //if (NormalModelCollection != null && NormalModelCollection.Count != 0)
+            //{
+            //    for (int i = 0; i < NormalModelCollection.Count; i++)
+            //    {
+            //        BoneModel normalModel = NormalModelCollection[i] as BoneModel;
+            //        //如果選擇多模型但檔名是空或不存在則進不去
+            //        if (normalModel != null && normalModel.ModelContainer != null)
+            //        {
+            //            modelGroup.Children.Add(normalModel.ModelContainer);
+            //        }
+            //    }
+            //}
 
             if (modelGroup.Children.Count == 0)
                 return;
@@ -366,21 +372,66 @@ namespace Nart
             if (viewport == null)
                 return; 
             var point = e.GetPosition(viewport);
+
+            
+
             var hitTests = viewport.FindHits(point);
+
+            //hitTests[0].PointHit
+
             if (hitTests != null && hitTests.Count > 0)
             {
                 var hit = hitTests[0];
                 if (hit.ModelHit.DataContext == this)
                 {
-                   
+
+                    //if (hit.ModelHit is BoneModel)
+                    //{
+                    //    BoneModel model = (BoneModel)hit.ModelHit;
+                    //    //(hit.ModelHit as MeshGeometryModel3D).Material = PhongMaterials.Yellow;
+                    //    model.Highlight = true;
+                    //    HighlightItems.Add(model);
+                    //}
                     if (hit.ModelHit is BoneModel)
                     {
-                        BoneModel model = (BoneModel)hit.ModelHit;
-                        //(hit.ModelHit as MeshGeometryModel3D).Material = PhongMaterials.Yellow;
-                        model.Highlight = true;
-                        HighlightItems.Add(model);
+                        Point3D center = hit.PointHit;
+
+
+                        BallModel ball = new BallModel();
+                        ball.BallName = "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
+                        ball.BallInfo = "!!!!!!!!!!!!!!!!!!!!!!!!!!";
+
+
+                        var b1 = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+
+                        Vector3 center2 = new Vector3(Convert.ToSingle(center.X), Convert.ToSingle(center.Y), Convert.ToSingle(center.Z));
+                        ball.ModelCenter = center2;
+                        b1.AddSphere(center2,2);
+                        ball.Geometry = b1.ToMeshGeometry3D();
+
+
+                        HelixToolkit.Wpf.SharpDX.PhongMaterial material = new PhongMaterial();
+
+                        material.ReflectiveColor = SharpDX.Color.Black;
+                        float ambient = 0.0f;
+                        material.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
+                        material.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
+                        int Specular = 90;
+                        material.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
+                        material.SpecularShininess = 60;
+                        material.DiffuseColor = new Color4();
+                        
+
+
+
+
+
+                        ball.Material = PhongMaterials.Silver;
+                        ball.Transform = new System.Windows.Media.Media3D.MatrixTransform3D();
+
+                        MainViewModel.data.BallCollection.Add(ball);
                     }
-                                       
+
                 }
 
             }

@@ -1,4 +1,5 @@
 ﻿using HelixToolkit.Wpf.SharpDX;
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +12,10 @@ namespace Nart.Model_Object
 {
     public class BallModel : MeshGeometryModel3D ,  INotifyPropertyChanged
     {
-
+        /// <summary>
+        /// 紀錄模型中心
+        /// </summary>
+        public Vector3 ModelCenter;
         private string ballName;
         private string ballInfo;
         public BallModel()

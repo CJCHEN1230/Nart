@@ -49,18 +49,16 @@
             </hx:GroupModel3D>
             <hx:GroupModel3D ItemsSource="{Binding TriangleModelCollection}">
             </hx:GroupModel3D>
+            <!--<hx:GroupModel3D  x:Name="BallCollection">
+            </hx:GroupModel3D>-->
 
-            <hx:ItemsModel3D ItemsSource="{Binding ModelDataCollection}">
+            <hx:ItemsModel3D x:Name="BallCollection">
                 <hx:ItemsModel3D.ItemTemplate>
                     <DataTemplate>
-                        <hx:MeshGeometryModel3D                             
-                            CullMode="{Binding CMode}" 
-                            InvertNormal="{Binding IvtNormal}" 
-                            FrontCounterClockwise="{Binding FrontCounterClockwise}"                             
-                            Geometry="{Binding ModelGeometry}"                            
-                            Material="{Binding ModelMaterial}"
-                            Transform="{Binding ModelTransform}"
-                            ReuseVertexArrayBuffer="True"/>
+                        <hx:MeshGeometryModel3D                        
+                            Geometry="{Binding Geometry}"                            
+                            Material="{Binding Material}"
+                            Transform="{Binding Transform}"/>
                     </DataTemplate>
                 </hx:ItemsModel3D.ItemTemplate>
             </hx:ItemsModel3D>
