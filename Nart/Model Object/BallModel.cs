@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Media3D;
 
 namespace Nart.Model_Object
 {
@@ -15,10 +16,19 @@ namespace Nart.Model_Object
         /// <summary>
         /// 紀錄模型中心
         /// </summary>
-        public Vector3 ModelCenter;
-        private string ballName;
-        private string ballInfo;
+        public Vector3 Center;
+        private string _ballName;
+        private string _ballInfo;
+
         public BallModel()
+                    : this(new Point3D(0,0,0))
+        {
+        }
+        public BallModel(Vector3 center)
+                    : this(new Point3D(center.X, center.Y, center.Z))
+        {
+        }
+        public BallModel(Point3D center)
         {
            
         }
@@ -27,22 +37,22 @@ namespace Nart.Model_Object
         {
             get
             {
-                return ballName;
+                return _ballName;
             }
             set
             {
-                SetValue(ref ballName, value);
+                SetValue(ref _ballName, value);
             }
         }
         public string BallInfo
         {
             get
             {
-                return ballInfo;
+                return _ballInfo;
             }
             set
             {
-                SetValue(ref ballInfo, value);
+                SetValue(ref _ballInfo, value);
             }
         }
 

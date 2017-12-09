@@ -19,7 +19,7 @@ namespace Nart
     /// </summary>
     public class MainViewModel : ObservableObject
     {
-        public static Projectata data = new Projectata();
+        public static Projectata Data = new Projectata();
         public CameraControl CamCtrl;
         public NartServer Server= new NartServer();
         private static string _pointNumber;
@@ -39,8 +39,8 @@ namespace Nart
             TrackCommand = new RelayCommand(Track);
             CloseWindowCommand = new RelayCommand(obj => this.OnClosed(obj), null);
 
-            mainWindow.expander_Info.BindPatientInfo(data);
-            mainWindow.expander_NavigationBalls .BindBallCollection(data);
+            mainWindow.expander_Info.BindPatientInfo(Data);
+            mainWindow.expander_NavigationBalls .BindBallCollection(Data);
 
 
         }
@@ -84,8 +84,8 @@ namespace Nart
         public void InitCamCtrl()
         {
 
-            CamCtrl = new CameraControl(new TIS.Imaging.ICImagingControl[2] { _mainWindow.CamHost1.icImagingControl, _mainWindow.CamHost2.icImagingControl });
-            //CamCtrl.CameraStart();
+            CamCtrl = new CameraControl(new TIS.Imaging.ICImagingControl[2] { _mainWindow.CamHost1.IcImagingControl, _mainWindow.CamHost2.IcImagingControl });
+            CamCtrl.CameraStart();
         }
         /// <summary>
         /// 顯示設置好的各項模型資訊，按下Set Model 之後並且按ok後會走到這

@@ -10,28 +10,28 @@ namespace Nart.ExtensionMethods
 {
     public static class Matrix3DExtensions
     {
-        public static void AddMatrix3D(ref Matrix3D A, ref Matrix3D B)
+        public static void AddMatrix3D(ref Matrix3D a, ref Matrix3D b)
         {
-            A.M11 = A.M11 + B.M11; A.M12 = A.M12 + B.M12; A.M13 = A.M13 + B.M13; A.M14 = A.M14 + B.M14;
-            A.M21 = A.M21 + B.M21; A.M22 = A.M22 + B.M22; A.M23 = A.M23 + B.M23; A.M24 = A.M24 + B.M24;
-            A.M31 = A.M31 + B.M31; A.M32 = A.M32 + B.M32; A.M33 = A.M33 + B.M33; A.M34 = A.M34 + B.M34;
-            A.OffsetX = A.OffsetX + B.OffsetX; A.OffsetY = A.OffsetY + B.OffsetY; A.OffsetZ = A.OffsetZ + B.OffsetZ; A.M44 = A.M44 + B.M44;
+            a.M11 = a.M11 + b.M11; a.M12 = a.M12 + b.M12; a.M13 = a.M13 + b.M13; a.M14 = a.M14 + b.M14;
+            a.M21 = a.M21 + b.M21; a.M22 = a.M22 + b.M22; a.M23 = a.M23 + b.M23; a.M24 = a.M24 + b.M24;
+            a.M31 = a.M31 + b.M31; a.M32 = a.M32 + b.M32; a.M33 = a.M33 + b.M33; a.M34 = a.M34 + b.M34;
+            a.OffsetX = a.OffsetX + b.OffsetX; a.OffsetY = a.OffsetY + b.OffsetY; a.OffsetZ = a.OffsetZ + b.OffsetZ; a.M44 = a.M44 + b.M44;
         }
-        public static void SubtractMatrix3D(ref Matrix3D A, ref Matrix3D B)
+        public static void SubtractMatrix3D(ref Matrix3D a, ref Matrix3D b)
         {
-            A.M11 = A.M11 - B.M11; A.M12 = A.M12 - B.M12; A.M13 = A.M13 - B.M13; A.M14 = A.M14 - B.M14;
-            A.M21 = A.M21 - B.M21; A.M22 = A.M22 - B.M22; A.M23 = A.M23 - B.M23; A.M24 = A.M24 - B.M24;
-            A.M31 = A.M31 - B.M31; A.M32 = A.M32 - B.M32; A.M33 = A.M33 - B.M33; A.M34 = A.M34 - B.M34;
-            A.OffsetX = A.OffsetX - B.OffsetX; A.OffsetY = A.OffsetY - B.OffsetY; A.OffsetZ = A.OffsetZ - B.OffsetZ; A.M44 = A.M44 - B.M44;
+            a.M11 = a.M11 - b.M11; a.M12 = a.M12 - b.M12; a.M13 = a.M13 - b.M13; a.M14 = a.M14 - b.M14;
+            a.M21 = a.M21 - b.M21; a.M22 = a.M22 - b.M22; a.M23 = a.M23 - b.M23; a.M24 = a.M24 - b.M24;
+            a.M31 = a.M31 - b.M31; a.M32 = a.M32 - b.M32; a.M33 = a.M33 - b.M33; a.M34 = a.M34 - b.M34;
+            a.OffsetX = a.OffsetX - b.OffsetX; a.OffsetY = a.OffsetY - b.OffsetY; a.OffsetZ = a.OffsetZ - b.OffsetZ; a.M44 = a.M44 - b.M44;
         }
-        public static void DivideMatrix3D(ref Matrix3D A, int divisor, ref Matrix3D result)
+        public static void DivideMatrix3D(ref Matrix3D a, int divisor, ref Matrix3D result)
         {
             double divisorDouble = Convert.ToDouble(divisor);
 
-            result.M11 = A.M11 / divisorDouble; result.M12 = A.M12 / divisorDouble; result.M13 = A.M13 / divisorDouble; result.M14 = A.M14 / divisorDouble;
-            result.M21 = A.M21 / divisorDouble; result.M22 = A.M22 / divisorDouble; result.M23 = A.M23 / divisorDouble; result.M24 = A.M24 / divisorDouble;
-            result.M31 = A.M31 / divisorDouble; result.M32 = A.M32 / divisorDouble; result.M33 = A.M33 / divisorDouble; result.M34 = A.M34 / divisorDouble;
-            result.OffsetX = A.OffsetX / divisorDouble; result.OffsetY = A.OffsetY / divisorDouble; result.OffsetZ = A.OffsetZ / divisorDouble; result.M44 = A.M44 / divisorDouble;
+            result.M11 = a.M11 / divisorDouble; result.M12 = a.M12 / divisorDouble; result.M13 = a.M13 / divisorDouble; result.M14 = a.M14 / divisorDouble;
+            result.M21 = a.M21 / divisorDouble; result.M22 = a.M22 / divisorDouble; result.M23 = a.M23 / divisorDouble; result.M24 = a.M24 / divisorDouble;
+            result.M31 = a.M31 / divisorDouble; result.M32 = a.M32 / divisorDouble; result.M33 = a.M33 / divisorDouble; result.M34 = a.M34 / divisorDouble;
+            result.OffsetX = a.OffsetX / divisorDouble; result.OffsetY = a.OffsetY / divisorDouble; result.OffsetZ = a.OffsetZ / divisorDouble; result.M44 = a.M44 / divisorDouble;
 
         }
         public static Matrix3D Translate3D(global::SharpDX.Vector3 v)

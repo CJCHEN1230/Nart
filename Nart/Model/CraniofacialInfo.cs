@@ -35,36 +35,36 @@ namespace Nart
             {
                 string fileContent = File.ReadAllText(path);
 
-                string[] Data = new string[7] { "PoL", "PoR", "OrL", "OrR", "Me", "GoL", "GoR" };
+                string[] data = new string[7] { "PoL", "PoR", "OrL", "OrR", "Me", "GoL", "GoR" };
 
-                Point3D[] PointData = new Point3D[7] { this.PoL, this.PoR, this.OrL, this.OrR, this.Me, this.GoL, this.GoR };
+                Point3D[] pointData = new Point3D[7] { this.PoL, this.PoR, this.OrL, this.OrR, this.Me, this.GoL, this.GoR };
 
                 int comma1 = -1;
                 int comma2 = -1;
                 int comma3 = -1;
                 int lineTerminator = -1;
 
-                for (int i = 0; i < PointData.Length; i++)
+                for (int i = 0; i < pointData.Length; i++)
                 {
-                    int DataIndex = fileContent.IndexOf(Data[i]);
+                    int dataIndex = fileContent.IndexOf(data[i]);
 
-                    comma1 = fileContent.IndexOf(", ", DataIndex);
+                    comma1 = fileContent.IndexOf(", ", dataIndex);
                     comma2 = fileContent.IndexOf(", ", comma1 + 1);
                     comma3 = fileContent.IndexOf(", ", comma2 + 1);
                     lineTerminator = fileContent.IndexOf("\r\n", comma3 + 1);
-                    PointData[i].X = Convert.ToDouble(fileContent.Substring(comma1 + 2, comma2 - comma1 - 2));
-                    PointData[i].Y = Convert.ToDouble(fileContent.Substring(comma2 + 2, comma3 - comma2 - 2));
-                    PointData[i].Z = Convert.ToDouble(fileContent.Substring(comma3 + 2, lineTerminator - comma3 - 2));                    
+                    pointData[i].X = Convert.ToDouble(fileContent.Substring(comma1 + 2, comma2 - comma1 - 2));
+                    pointData[i].Y = Convert.ToDouble(fileContent.Substring(comma2 + 2, comma3 - comma2 - 2));
+                    pointData[i].Z = Convert.ToDouble(fileContent.Substring(comma3 + 2, lineTerminator - comma3 - 2));                    
                 }
 
 
-                this.PoL = PointData[0];
-                this.PoR = PointData[1];
-                this.OrL = PointData[2];
-                this.OrR = PointData[3];
-                this.Me = PointData[4];
-                this.GoL = PointData[5];
-                this.GoR = PointData[6];
+                this.PoL = pointData[0];
+                this.PoR = pointData[1];
+                this.OrL = pointData[2];
+                this.OrR = pointData[3];
+                this.Me = pointData[4];
+                this.GoL = pointData[5];
+                this.GoR = pointData[6];
                 
             }
             catch

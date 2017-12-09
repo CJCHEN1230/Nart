@@ -19,11 +19,11 @@ namespace Nart
          /// <summary>
         /// 儲存兩相機的點資料
         /// </summary>
-        private List<BWMarker>[] OutputMarker = new List<BWMarker>[2];
+        private List<BWMarker>[] _outputMarker = new List<BWMarker>[2];
         /// <summary>
         /// 雙相機控制項
         /// </summary>
-        internal TIS.Imaging.ICImagingControl[] icImagingControl = new TIS.Imaging.ICImagingControl[2];
+        internal TIS.Imaging.ICImagingControl[] IcImagingControl = new TIS.Imaging.ICImagingControl[2];
         /// <summary>
         /// 雙相機Buffer
         /// </summary>
@@ -39,7 +39,7 @@ namespace Nart
         /// <summary>
         /// 顯示畫面的函數實作
         /// </summary>
-        internal Thread _displayThread ;
+        internal Thread DisplayThread ;
         /// <summary>
         /// 管理Thread通行
         /// </summary>
@@ -63,7 +63,7 @@ namespace Nart
         /// <summary>
         /// 管理相機通過與否
         /// </summary>
-        private bool[] CameraToggle = new bool[2] {true,true};
+        private bool[] _cameraToggle = new bool[2] {true,true};
         /// <summary>
         /// 傳進來的width跟height決定inImageControl的長寬
         /// </summary>      
@@ -72,7 +72,7 @@ namespace Nart
           
             _calcCoord = new CalcCoord();
 
-            icImagingControl = cam;
+            IcImagingControl = cam;
 
             _are[0] = new AutoResetEvent(false);
             _are[1] = new AutoResetEvent(false);
@@ -80,17 +80,17 @@ namespace Nart
             _corPtFltr[0] = new CornerPointFilter(0);
             _corPtFltr[1] = new CornerPointFilter(1);
 
-            OutputMarker[0] = new List<BWMarker>(10);// 儲存的Marker空間，預設10個
-            OutputMarker[1] = new List<BWMarker>(10);
+            _outputMarker[0] = new List<BWMarker>(10);// 儲存的Marker空間，預設10個
+            _outputMarker[1] = new List<BWMarker>(10);
 
            
-            icImagingControl[0].ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl1_ImageAvailable);
-            icImagingControl[1].ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl2_ImageAvailable);
+            IcImagingControl[0].ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl1_ImageAvailable);
+            IcImagingControl[1].ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl2_ImageAvailable);
           
             LoadCamSetting();
 
-            _displayThread = new Thread(DisplayLoop);
-            _displayThread.IsBackground = true;
+            DisplayThread = new Thread(DisplayLoop);
+            DisplayThread.IsBackground = true;
 
         }            
         /// <summary>
@@ -100,8 +100,8 @@ namespace Nart
         {
             try
             {
-                icImagingControl[0].LoadDeviceStateFromFile("../../../data/Cam1.xml", true);
-                icImagingControl[1].LoadDeviceStateFromFile("../../../data/Cam2.xml", true);
+                IcImagingControl[0].LoadDeviceStateFromFile("../../../data/Cam1.xml", true);
+                IcImagingControl[1].LoadDeviceStateFromFile("../../../data/Cam2.xml", true);
             }
             catch (Exception)
             {
@@ -115,49 +115,49 @@ namespace Nart
         public void CameraStart()
         {
             //確認裝置有沒有效
-            if (!icImagingControl[0].DeviceValid)
+            if (!IcImagingControl[0].DeviceValid)
             {
-                icImagingControl[0].ShowDeviceSettingsDialog();
+                IcImagingControl[0].ShowDeviceSettingsDialog();
 
-                if (!icImagingControl[0].DeviceValid)
+                if (!IcImagingControl[0].DeviceValid)
                 {
                     System.Windows.Forms.MessageBox.Show("No device was selected.", "Grabbing an Image",
                                      MessageBoxButtons.OK, MessageBoxIcon.Information);                    
                 }
             }
-            if (!icImagingControl[1].DeviceValid)
+            if (!IcImagingControl[1].DeviceValid)
             {
-                icImagingControl[1].ShowDeviceSettingsDialog();
+                IcImagingControl[1].ShowDeviceSettingsDialog();
 
-                if (!icImagingControl[1].DeviceValid)
+                if (!IcImagingControl[1].DeviceValid)
                 {
                     System.Windows.Forms.MessageBox.Show("No device was selected.", "Grabbing an Image",
                                      MessageBoxButtons.OK, MessageBoxIcon.Information);                    
                 }
             }
-            if (icImagingControl[0].DeviceValid && icImagingControl[1].DeviceValid) 
+            if (IcImagingControl[0].DeviceValid && IcImagingControl[1].DeviceValid) 
             {
-                _displayThread.Start();
+                DisplayThread.Start();
                 
 
                 Parallel.For(0, 2, i =>
                 {
-                    icImagingControl[i].LiveStart();
+                    IcImagingControl[i].LiveStart();
                 });
             }
         }
         public void CameraClose()
         {
-            _displayThread.Abort();
+            DisplayThread.Abort();
 
-            if (icImagingControl[0].LiveVideoRunning)
+            if (IcImagingControl[0].LiveVideoRunning)
             {
                 
-                icImagingControl[0].LiveStop();
+                IcImagingControl[0].LiveStop();
             }
-            if (icImagingControl[1].LiveVideoRunning)
+            if (IcImagingControl[1].LiveVideoRunning)
             {
-                icImagingControl[1].LiveStop();
+                IcImagingControl[1].LiveStop();
             }
             
         }
@@ -179,13 +179,13 @@ namespace Nart
             {
                 Parallel.For(0, 2, i =>
                 {                    
-                    icImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
+                    IcImagingControl[i].DisplayImageBuffer(_displayBuffer[i]);
                 });
             }
 
-            _calcCoord.Rectify(OutputMarker);
+            _calcCoord.Rectify(_outputMarker);
           
-            _calcCoord.MatchAndCalc3D(OutputMarker);
+            _calcCoord.MatchAndCalc3D(_outputMarker);
             
             _calcCoord.MatchRealMarker();//比對當前世界座標與資料庫並存下引數與Marker的ID
 
@@ -209,25 +209,25 @@ namespace Nart
             }
         
 
-            CameraToggle[0] = true;
-            CameraToggle[1] = true;           
+            _cameraToggle[0] = true;
+            _cameraToggle[1] = true;           
         }
         /// <summary>
         /// 相機拍攝的所觸發的事件函數
         /// </summary>  
         private void icImagingControl1_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
         {
-            if (CameraToggle[0])
+            if (_cameraToggle[0])
             {
-                CameraToggle[0] = false;
-                _displayBuffer[0] = icImagingControl[0].ImageBuffers[e.bufferIndex];
+                _cameraToggle[0] = false;
+                _displayBuffer[0] = IcImagingControl[0].ImageBuffers[e.bufferIndex];
 
                 unsafe
                 {
 
                     byte* data = _displayBuffer[0].Ptr;
 
-                    OutputMarker[0] = _corPtFltr[0].GetCornerPoint(icImagingControl[0].ImageSize.Width, icImagingControl[0].ImageSize.Height, data);
+                    _outputMarker[0] = _corPtFltr[0].GetCornerPoint(IcImagingControl[0].ImageSize.Width, IcImagingControl[0].ImageSize.Height, data);
 
                     _count.Signal();
 
@@ -242,17 +242,17 @@ namespace Nart
         /// </summary>
         private void icImagingControl2_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
         {
-            if (CameraToggle[1])
+            if (_cameraToggle[1])
             {
-                CameraToggle[1] = false;
-                _displayBuffer[1] = icImagingControl[1].ImageBuffers[e.bufferIndex];
+                _cameraToggle[1] = false;
+                _displayBuffer[1] = IcImagingControl[1].ImageBuffers[e.bufferIndex];
 
                 unsafe
                 {
 
                     byte* data = _displayBuffer[1].Ptr;
 
-                    OutputMarker[1] = _corPtFltr[1].GetCornerPoint(icImagingControl[0].ImageSize.Width, icImagingControl[0].ImageSize.Height, data);
+                    _outputMarker[1] = _corPtFltr[1].GetCornerPoint(IcImagingControl[0].ImageSize.Width, IcImagingControl[0].ImageSize.Height, data);
                  
                     _count.Signal();
 

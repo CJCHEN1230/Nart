@@ -23,18 +23,48 @@ namespace Nart.Control
     /// <summary>
     /// Expander_NavigationBalls.xaml 的互動邏輯
     /// </summary>
-    public partial class Expander_NavigationBalls : Expander
+    public partial class ExpanderNavigationBalls : Expander
     {
 
       
-        public Expander_NavigationBalls()
+        public ExpanderNavigationBalls()
         {
             InitializeComponent();
             this.DataContext = this;
         }
 
-     
-        
+
+        public void DeleteItem(object sender, RoutedEventArgs e)
+        {
+            if (BallListView.SelectedItem != null)
+            {
+                //選擇的BallModel
+                BallModel selectedModelItem = (BallModel)BallListView.SelectedItem;
+
+                int temp = BallListView.SelectedIndex;
+
+                ObservableCollection<BallModel> ballCollection = MainViewModel.Data.BallCollection;
+
+                ballCollection.Remove(selectedModelItem);
+
+                //刪減之後數量若跟舊的索引值一樣，代表選項在最後一個
+                if (ballCollection.Count == temp)
+                {
+                    BallListView.SelectedIndex = ballCollection.Count - 1;
+                }
+                else//不是的話則維持原索引值
+                {
+                    BallListView.SelectedIndex = temp;
+                }
+
+                ListViewItem item = BallListView.ItemContainerGenerator.ContainerFromIndex(BallListView.SelectedIndex) as ListViewItem;
+                if (item != null)
+                {
+                    item.Focus();
+                }
+
+            }
+        }
         public void BindBallCollection(Projectata data)
         {
             Binding binding = new Binding("BallCollection");

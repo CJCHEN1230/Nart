@@ -11,8 +11,8 @@ namespace Nart
 {
     class CamParam
     {
-        public Matrix3D extParam; //exteranl parameters
-        public Matrix3D invExtParam; //exteranl parameters inverse
+        public Matrix3D ExtParam; //exteranl parameters
+        public Matrix3D InvExtParam; //exteranl parameters inverse
         public Matrix3D RotationInvert;
         
 
@@ -22,19 +22,19 @@ namespace Nart
         public double Cy;
         public double Sx;
 
-        public double dx;//0.00375
-        public double dy;//0.00375
+        public double Dx;//0.00375
+        public double Dy;//0.00375
         public double Ncx;//1296
         public double Nfx;//1280
-        public double dpx;
+        public double Dpx;
 
         public CamParam(string path)
         {
-            dx = 0.0044;//0.00375
-            dy = 0.0044;//0.00375
+            Dx = 0.0044;//0.00375
+            Dy = 0.0044;//0.00375
             Ncx = 1628;//1296
             Nfx = 1600;//1280
-            dpx = dx * Ncx / Nfx;
+            Dpx = Dx * Ncx / Nfx;
             LoadCalibrationFile(path);
             
         }
@@ -52,16 +52,16 @@ namespace Nart
 
                 double[] cameraData = Array.ConvertAll(data, double.Parse);
 
-                extParam = new Matrix3D(cameraData[0], cameraData[3], cameraData[6], 0,
+                ExtParam = new Matrix3D(cameraData[0], cameraData[3], cameraData[6], 0,
                                        cameraData[1], cameraData[4], cameraData[7], 0,
                                        cameraData[2], cameraData[5], cameraData[8], 0,
                                        cameraData[9], cameraData[10], cameraData[11], 1);
 
-                invExtParam = new Matrix3D(cameraData[0], cameraData[3], cameraData[6], 0,
+                InvExtParam = new Matrix3D(cameraData[0], cameraData[3], cameraData[6], 0,
                                        cameraData[1], cameraData[4], cameraData[7], 0,
                                        cameraData[2], cameraData[5], cameraData[8], 0,
                                        cameraData[9], cameraData[10], cameraData[11], 1);
-                invExtParam.Invert();
+                InvExtParam.Invert();
 
 
 
@@ -83,7 +83,7 @@ namespace Nart
                 MessageBox.Show("校正檔案路徑錯誤");
             }
 
-            Console.WriteLine(extParam);
+            Console.WriteLine(ExtParam);
             Console.WriteLine(FocalLength);
             Console.WriteLine(Kappa1);
             Console.WriteLine(Cx);

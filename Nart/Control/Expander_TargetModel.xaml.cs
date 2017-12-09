@@ -18,10 +18,10 @@ namespace Nart.Control
     /// <summary>
     /// Expander_TargetModel.xaml 的互動邏輯
     /// </summary>
-    public partial class Expander_TargetModel : Expander
+    public partial class ExpanderTargetModel : Expander
     {
 
-        public Expander_TargetModel()
+        public ExpanderTargetModel()
         {
             InitializeComponent();
         }

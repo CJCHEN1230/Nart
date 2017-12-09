@@ -23,7 +23,7 @@ namespace Nart.Control
     public partial class CameraWrapper : UserControl
     {
 
-        public TIS.Imaging.ICImagingControl icImagingControl = new TIS.Imaging.ICImagingControl();
+        public TIS.Imaging.ICImagingControl IcImagingControl = new TIS.Imaging.ICImagingControl();
         public bool IsActivated = false;        
         public CameraWrapper()
         {
@@ -32,30 +32,30 @@ namespace Nart.Control
 
         public void InitializeCamSetting(double width , double height)
         {
-            defaultControlSetting(width, height);
-            this.CamHost.Child = icImagingControl;
+            DefaultControlSetting(width, height);
+            this.CamHost.Child = IcImagingControl;
         }
         /// <summary>
         /// 相機控制項的初始化設定
         /// </summary>
-        private void defaultControlSetting(double width, double height)
+        private void DefaultControlSetting(double width, double height)
         {
-            ((System.ComponentModel.ISupportInitialize)(icImagingControl)).BeginInit();
-            icImagingControl.Size = new System.Drawing.Size((int)width, (int)height);
-            icImagingControl.DeviceListChangedExecutionMode = TIS.Imaging.EventExecutionMode.Invoke;
-            icImagingControl.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
-            icImagingControl.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
-            icImagingControl.LiveDisplayPosition = new System.Drawing.Point(0,0);
-            icImagingControl.ImageRingBufferSize = 8;
-            icImagingControl.BackColor = System.Drawing.Color.Black;
-            icImagingControl.LiveDisplayDefault = false; //如果設定為true，將無法改變顯示視窗大小，所以下面的icImagingControl.Height將無法使用
-            icImagingControl.LiveCaptureContinuous = true; //LiveCaptureContinuous = True means that every frame is copied to the ring buffer.
-            icImagingControl.LiveCaptureLastImage = false;
-            icImagingControl.LiveDisplay = false; //設定為false才能將影像處理顯示在control
-            icImagingControl.LiveDisplayHeight = icImagingControl.Height;
-            icImagingControl.LiveDisplayWidth = icImagingControl.Width;
-            icImagingControl.MemoryCurrentGrabberColorformat = ICImagingControlColorformats.ICY800;
-            ((System.ComponentModel.ISupportInitialize)(icImagingControl)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(IcImagingControl)).BeginInit();
+            IcImagingControl.Size = new System.Drawing.Size((int)width, (int)height);
+            IcImagingControl.DeviceListChangedExecutionMode = TIS.Imaging.EventExecutionMode.Invoke;
+            IcImagingControl.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
+            IcImagingControl.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
+            IcImagingControl.LiveDisplayPosition = new System.Drawing.Point(0,0);
+            IcImagingControl.ImageRingBufferSize = 8;
+            IcImagingControl.BackColor = System.Drawing.Color.Black;
+            IcImagingControl.LiveDisplayDefault = false; //如果設定為true，將無法改變顯示視窗大小，所以下面的icImagingControl.Height將無法使用
+            IcImagingControl.LiveCaptureContinuous = true; //LiveCaptureContinuous = True means that every frame is copied to the ring buffer.
+            IcImagingControl.LiveCaptureLastImage = false;
+            IcImagingControl.LiveDisplay = false; //設定為false才能將影像處理顯示在control
+            IcImagingControl.LiveDisplayHeight = IcImagingControl.Height;
+            IcImagingControl.LiveDisplayWidth = IcImagingControl.Width;
+            IcImagingControl.MemoryCurrentGrabberColorformat = ICImagingControlColorformats.ICY800;
+            ((System.ComponentModel.ISupportInitialize)(IcImagingControl)).EndInit();
         }
     }
 }

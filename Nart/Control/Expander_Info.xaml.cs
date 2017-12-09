@@ -18,9 +18,9 @@ namespace Nart.Control
     /// <summary>
     /// Expander_Info.xaml 的互動邏輯
     /// </summary>
-    public partial class Expander_Info : Expander
+    public partial class ExpanderInfo : Expander
     {
-        public Expander_Info()
+        public ExpanderInfo()
         {
             InitializeComponent();
         }

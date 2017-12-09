@@ -26,13 +26,13 @@ namespace Nart
     /// </summary>
     public partial class MultiAngleView : UserControl
     {
-        public MultiAngleViewModel _multiAngleViewModel;
+        public MultiAngleViewModel MultiAngleViewModel;
 
         public MultiAngleView()
         {
             InitializeComponent();         
-            _multiAngleViewModel = new MultiAngleViewModel(this);
-            this.DataContext = _multiAngleViewModel; //將_multiAngleViewModel的資料環境傳給此DataContext                  
+            MultiAngleViewModel = new MultiAngleViewModel(this);
+            this.DataContext = MultiAngleViewModel; //將_multiAngleViewModel的資料環境傳給此DataContext                  
 
         }
 
@@ -48,7 +48,7 @@ namespace Nart
                 {
                     DraggableTriangle model = MultiAngleViewModel.TriangleModelCollection[i] as DraggableTriangle;
                     //顯示第一階段的三角導引物
-                    if (model.MarkerID.Equals(firstNavigation))
+                    if (model.MarkerId.Equals(firstNavigation))
                     {
                         
                         model.IsRendering = true;
@@ -82,7 +82,7 @@ namespace Nart
                         }
                     }
                 }
-                NavigateViewModel.firstStageDone = true;
+                NavigateViewModel.FirstStageDone = true;
             }
         }
 

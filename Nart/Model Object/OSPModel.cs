@@ -13,7 +13,7 @@ using SharpDX;
 namespace Nart.Model_Object
 {
     using Color = System.Windows.Media.Color;
-    public class OSPModel : MeshGeometryModel3D
+    public class OspModel : MeshGeometryModel3D
     {
         /// <summary>
         /// 讀檔時存模型的容器，方便之後算BoundingBox
@@ -34,15 +34,15 @@ namespace Nart.Model_Object
         /// <summary>
         /// OSP原始的Normal
         /// </summary>
-        public Vector3D OSPOriNormal;
+        public Vector3D OspOriNormal;
         /// <summary>
         /// OSP才有的平面點
         /// </summary>
-        public Point3D OSPPlanePoint;
+        public Point3D OspPlanePoint;
         /// <summary>
         /// MarkerID 的值
         /// </summary>
-        public String MarkerID;
+        public String MarkerId;
         /// <summary>
         /// 模型顏色
         /// </summary>
@@ -51,9 +51,9 @@ namespace Nart.Model_Object
         /// 模型路徑
         /// </summary>
         public String FilePath;
-        private bool highlight = false;
+        private bool _highlight = false;
 
-        public OSPModel()
+        public OspModel()
         {
         }
 
@@ -62,9 +62,9 @@ namespace Nart.Model_Object
         {
             set
             {
-                if (highlight == value) { return; }
-                highlight = value;
-                if (highlight)
+                if (_highlight == value) { return; }
+                _highlight = value;
+                if (_highlight)
                 {                   
                     this.Material = new PhongMaterial { EmissiveColor = SharpDX.Color.Yellow };
                 }
@@ -75,28 +75,28 @@ namespace Nart.Model_Object
             }
             get
             {
-                return highlight;
+                return _highlight;
             }
         }        
         
-        public void SetOSPMaterial()
+        public void SetOspMaterial()
         {
 
             if (DiffuseColor != null)
             {
                 this.Material = new PhongMaterial();
                
-                Color4Collection Colors = new Color4Collection();
+                Color4Collection colors = new Color4Collection();
 
                 for (int i = 0; i < this.Geometry.Positions.Count; i++)
                 {
-                    Colors.Add(DiffuseColor.ToColor4());
+                    colors.Add(DiffuseColor.ToColor4());
                 }
 
-                this.Geometry.Colors = Colors;
+                this.Geometry.Colors = colors;
             }   
         }
-        public void LoadOSP()
+        public void LoadOsp()
         {
             //ModelGeometry已經有幾何模型存在內部 及 阻擋檔案不存在的情況
             if (this.IsLoaded || !System.IO.File.Exists(FilePath))
@@ -112,9 +112,9 @@ namespace Nart.Model_Object
 
             var mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
 
-            this.OSPOriNormal = new Vector3D(mesh.Normals[0].X, mesh.Normals[0].Y, mesh.Normals[0].Z);
-            this.OSPOriNormal.Normalize();//將上述向量正規化
-            this.OSPPlanePoint = mesh.Positions[0];
+            this.OspOriNormal = new Vector3D(mesh.Normals[0].X, mesh.Normals[0].Y, mesh.Normals[0].Z);
+            this.OspOriNormal.Normalize();//將上述向量正規化
+            this.OspPlanePoint = mesh.Positions[0];
 
             //設定模型幾何形狀
             HelixToolkit.Wpf.SharpDX.MeshGeometry3D modelGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
@@ -156,7 +156,7 @@ namespace Nart.Model_Object
 
             this.Geometry = modelGeometry;
 
-            SetOSPMaterial();
+            SetOspMaterial();
 
             this.Transform = new MatrixTransform3D();
 
@@ -164,9 +164,9 @@ namespace Nart.Model_Object
         }
         public Vector3D GetCurrentNormal()
         {
-            Vector3D CurrentNormal = Transform.Transform(OSPOriNormal);
-            CurrentNormal.Normalize();
-            return CurrentNormal;
+            Vector3D currentNormal = Transform.Transform(OspOriNormal);
+            currentNormal.Normalize();
+            return currentNormal;
         }
         /// <summary>
         /// 重設此類別的Shader

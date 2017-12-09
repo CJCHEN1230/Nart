@@ -124,9 +124,9 @@
             </ScrollViewer.Background>
             <StackPanel Orientation="Vertical" Margin="0" >
                 <Border Height="65" Background="Transparent"/>
-                <Controls:Expander_Info x:Name="expander_Info"  FontSize="18" IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,1,0,0"  VerticalAlignment="Top" Height="Auto"/>
-                <Controls:Expander_NavigationBalls x:Name="expander_NavigationBalls" IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,1,0" VerticalAlignment="Top" Height="Auto" />
-                <Controls:Expander_TargetModel x:Name="expander_TargetModel" IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,1,0" VerticalAlignment="Top" Height="Auto" />
+                <Controls:ExpanderInfo x:Name="expander_Info"  FontSize="18" IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,1,0,0"  VerticalAlignment="Top" Height="Auto"/>
+                <Controls:ExpanderNavigationBalls x:Name="expander_NavigationBalls" IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,1,0" VerticalAlignment="Top" Height="Auto" />
+                <Controls:ExpanderTargetModel x:Name="expander_TargetModel" IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,1,0" VerticalAlignment="Top" Height="Auto" />
 
             </StackPanel>
         </ScrollViewer>
@@ -154,11 +154,11 @@
                                     <local:GridLengthAnimation
                                       Storyboard.TargetName="Col0"
                                       Storyboard.TargetProperty="Width"
-                                      From="{Binding Width, ElementName=Col0}" To="{Binding Width, ElementName=Col1}"  Duration="0:0:0.2" />
+                                      From="{Binding Width, ElementName=Col0}" To="{Binding Width, ElementName=Col1}"  Duration="0:0:0.15" />
                                     <local:GridLengthAnimation
                                       Storyboard.TargetName="Col1"
                                       Storyboard.TargetProperty="Width"
-                                      From="{Binding Width, ElementName=Col1}" To="{Binding Width, ElementName=Col0}" Duration="0:0:0.2" />
+                                      From="{Binding Width, ElementName=Col1}" To="{Binding Width, ElementName=Col0}" Duration="0:0:0.15" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
@@ -185,13 +185,13 @@
                                       Storyboard.TargetProperty="Width"                                       
                                       From="{Binding Width,ElementName=Col0}" 
                                       To="{Binding Width,ElementName=Col1}"  
-                                      Duration="0:0:0.1" />
+                                      Duration="0:0:0.15" />
                             <local:GridLengthAnimation
                                       Storyboard.TargetName="Col1"
                                       Storyboard.TargetProperty="Width"
                                       From="{Binding Width,ElementName=Col1}"  
                                       To="{Binding Width,ElementName=Col0}" 
-                                      Duration="0:0:0.1" />
+                                      Duration="0:0:0.15" />
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>

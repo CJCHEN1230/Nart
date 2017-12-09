@@ -26,23 +26,23 @@ namespace Nart
         /// <summary>
         /// 項目中每個Item的資料集合
         /// </summary>       
-        private static ObservableCollection<ModelSettingItem> modelSettingCollection;      
+        private static ObservableCollection<ModelSettingItem> _modelSettingCollection;      
         /// <summary>
         /// 病人名字
         /// </summary>
-        private static String patientName = "蔡X君";        
+        private static String _patientName = "蔡X君";        
         /// <summary>
         /// 病人ID
         /// </summary>
-        private static String patientID;        
+        private static String _patientId;        
         /// <summary>
         /// 醫院名字
         /// </summary>
-        private static String hospital;        
+        private static String _hospital;        
         /// <summary>
         /// 註冊檔名
         /// </summary>
-        private static String regPath = "../../../data/reg20170713.txt";
+        private static String _regPath = "../../../data/reg20170713.txt";
         /// <summary>
         /// ModelSettingView的物件
         /// </summary>
@@ -70,13 +70,13 @@ namespace Nart
 
                 ModelSettingCollection.Add(new ModelSettingItem
                 {
-                    MarkerID = "Head"
+                    MarkerId = "Head"
                                                                                 ,
                     BoneFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\skull_wo_maxilla_w_ramus_BVRO_4.stl"
                                                                                 ,
-                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
+                    OspFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl"
                                                                                 ,
-                    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(50, 255, 0, 0)
+                    OspDiffuseColor = System.Windows.Media.Color.FromArgb(50, 255, 0, 0)
                                                                                 ,
                     BoneDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
                 });
@@ -84,16 +84,16 @@ namespace Nart
                 ModelSettingCollection.Add(new ModelSettingItem
                 {
                  
-                    MarkerID = "C"
+                    MarkerId = "C"
                                                                                 ,
                     BoneFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\mandible_digital_segment_BVRO_0.4.stl"
                     //ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
                                                                                ,
-                    OSPFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl"
+                    OspFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl"
                                                                                 ,
                     BoneDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187)
                                                                                 ,
-                    OSPDiffuseColor = System.Windows.Media.Color.FromArgb(50, 0, 255, 0)
+                    OspDiffuseColor = System.Windows.Media.Color.FromArgb(50, 0, 255, 0)
 
                 });
 
@@ -101,7 +101,7 @@ namespace Nart
                 ModelSettingCollection.Add(new ModelSettingItem
                 {
 
-                    MarkerID = "A"
+                    MarkerId = "A"
                                                                                 ,
                     BoneFilePath = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\maxilla_0.4.stl"
                     // ModelFilePath = "D:\\Desktop\\c2lpk7avgum8-E-45-Aircraft\\E-45-Aircraft\\E 45 Aircraft_stl.stl"
@@ -120,55 +120,55 @@ namespace Nart
         {
             get
             {
-                return modelSettingCollection;
+                return _modelSettingCollection;
             }
             set
             {
-                SetStaticValue(ref modelSettingCollection, value);
+                SetStaticValue(ref _modelSettingCollection, value);
             }
         }
         public static String PatientName
         {
             get
             {
-                return patientName;
+                return _patientName;
             }
             set
             {
-                SetStaticValue(ref patientName, value);
+                SetStaticValue(ref _patientName, value);
             }
         }
-        public static String PatientID
+        public static String PatientId
         {
             get
             {
-                return patientID;
+                return _patientId;
             }
             set
             {
-                SetStaticValue(ref patientID, value);                
+                SetStaticValue(ref _patientId, value);                
             }
         }
         public static String Hospital
         {
             get
             {
-                return hospital;
+                return _hospital;
             }
             set
             {
-                SetStaticValue(ref hospital, value);
+                SetStaticValue(ref _hospital, value);
             }
         }
         public static String RegPath
         {
             get
             {
-                return regPath;
+                return _regPath;
             }
             set
             {
-                SetStaticValue(ref regPath, value);
+                SetStaticValue(ref _regPath, value);
             }
         }
         /// <summary>
@@ -209,15 +209,15 @@ namespace Nart
             if (_modelSettingView.ModelListView.SelectedItem != null)
             {
                 //選擇的ModelItem
-                ModelSettingItem SelectedModelItem = (ModelSettingItem)_modelSettingView.ModelListView.SelectedItem;
+                ModelSettingItem selectedModelItem = (ModelSettingItem)_modelSettingView.ModelListView.SelectedItem;
 
                 //設定所選模型物件為"已移除"，按下OK之後會刪除
-                SelectedModelItem.Bone.IsRemoved = true;
-                SelectedModelItem.OSP.IsRemoved = true;
+                selectedModelItem.Bone.IsRemoved = true;
+                selectedModelItem.Osp.IsRemoved = true;
 
                 int temp = _modelSettingView.ModelListView.SelectedIndex;
 
-                ModelSettingCollection.Remove(SelectedModelItem);
+                ModelSettingCollection.Remove(selectedModelItem);
 
                 //刪減之後數量若跟舊的索引值一樣，代表選項在最後一個
                 if (ModelSettingCollection.Count == temp)
@@ -250,14 +250,14 @@ namespace Nart
                 //Load模型檔，內部有防呆防止重複Load
                 ModelSettingCollection[i].Load();
 
-                OSPModel ospModel = ModelSettingCollection[i].OSP;
+                OspModel ospModel = ModelSettingCollection[i].Osp;
                 BoneModel boneModel = ModelSettingCollection[i].Bone;
 
                 //確認有Load過且有沒有被加進去modelDataCollection
                 if (ospModel.IsLoaded && !ospModel.IsAdded) 
                 {
-                    MultiAngleViewModel.OSPModelCollection.Add(ModelSettingCollection[i].OSP);
-                    ModelSettingCollection[i].OSP.IsAdded = true;
+                    MultiAngleViewModel.OspModelCollection.Add(ModelSettingCollection[i].Osp);
+                    ModelSettingCollection[i].Osp.IsAdded = true;
                 }
                 //確認有Load過且有沒有被加進去modelDataCollection
                 if (boneModel.IsLoaded && !boneModel.IsAdded) 
@@ -265,7 +265,7 @@ namespace Nart
                     MultiAngleViewModel.BoneModelCollection.Add(ModelSettingCollection[i].Bone);
                     ModelSettingCollection[i].Bone.IsAdded = true;
                     //除了頭部以外需要guide
-                    if (!boneModel.MarkerID.Equals("Head")&& !boneModel.MarkerID.Equals("C"))
+                    if (!boneModel.MarkerId.Equals("Head")&& !boneModel.MarkerId.Equals("C"))
                     {
                         ModelSettingCollection[i].Guide = new DraggableTriangle(boneModel.ModelCenter);
 
@@ -306,19 +306,19 @@ namespace Nart
 
 
             //刪除modelDataCollection中已經從ModelInfoCollection移除的模型，
-            for (int i = 0; i < MultiAngleViewModel.OSPModelCollection.Count; i++)
+            for (int i = 0; i < MultiAngleViewModel.OspModelCollection.Count; i++)
             {
-                OSPModel ospModel = MultiAngleViewModel.OSPModelCollection[i] as OSPModel;
+                OspModel ospModel = MultiAngleViewModel.OspModelCollection[i] as OspModel;
                 //模型如果透過 - 移除 或是 因為換錯誤檔名造成IsLoaded 為false則直接移除
                 if (ospModel.IsRemoved || !ospModel.IsLoaded)
                 {
-                    MultiAngleViewModel.OSPModelCollection.RemoveAt(i);
+                    MultiAngleViewModel.OspModelCollection.RemoveAt(i);
                     ospModel.IsAdded = false;
                     i--;
                 }
             }
             
-            Console.WriteLine("OSP 數量:"+ MultiAngleViewModel.OSPModelCollection.Count);
+            Console.WriteLine("OSP 數量:"+ MultiAngleViewModel.OspModelCollection.Count);
             Console.WriteLine("Bone  數量:" + MultiAngleViewModel.BoneModelCollection.Count);
 
 

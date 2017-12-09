@@ -24,7 +24,7 @@ namespace Nart
         /// <summary>
         /// 記錄在資料庫中對應的MarkerID
         /// </summary>
-        public String MarkerID = "";
+        public String MarkerId = "";
         public Marker3D()
         {
             ThreePoints = new Point3D[3];
@@ -38,7 +38,7 @@ namespace Nart
         {
             //第幾組點
 
-            double[] Length = new double[3];
+            double[] length = new double[3];
             Vector3D a = new Vector3D(ThreePoints[0].X - ThreePoints[1].X, ThreePoints[0].Y - ThreePoints[1].Y, ThreePoints[0].Z - ThreePoints[1].Z);
 
             Vector3D b = new Vector3D(ThreePoints[1].X - ThreePoints[2].X, ThreePoints[1].Y - ThreePoints[2].Y, ThreePoints[1].Z - ThreePoints[2].Z);
@@ -46,78 +46,78 @@ namespace Nart
             Vector3D c = new Vector3D(ThreePoints[2].X - ThreePoints[0].X, ThreePoints[2].Y - ThreePoints[0].Y, ThreePoints[2].Z - ThreePoints[0].Z);
 
 
-            Length[0] = a.Length;
+            length[0] = a.Length;
 
-            Length[1] = b.Length;
+            length[1] = b.Length;
 
-            Length[2] = c.Length;
+            length[2] = c.Length;
 
 
-            int[] Index = new int[3];
+            int[] index = new int[3];
 
-            if (Length[0] > Length[1] && Length[1] > Length[2])
+            if (length[0] > length[1] && length[1] > length[2])
             {
-                Index[0] = 0;
-                Index[1] = 1;
-                Index[2] = 2;
-                ThreeLength[0] = Length[0];
-                ThreeLength[1] = Length[1];
-                ThreeLength[2] = Length[2];
+                index[0] = 0;
+                index[1] = 1;
+                index[2] = 2;
+                ThreeLength[0] = length[0];
+                ThreeLength[1] = length[1];
+                ThreeLength[2] = length[2];
             }
 
-            else if (Length[0] > Length[2] && Length[2] > Length[1])
+            else if (length[0] > length[2] && length[2] > length[1])
             {
-                Index[0] = 1;
-                Index[1] = 0;
-                Index[2] = 2;
-                ThreeLength[0] = Length[0];
-                ThreeLength[1] = Length[2];
-                ThreeLength[2] = Length[1];
+                index[0] = 1;
+                index[1] = 0;
+                index[2] = 2;
+                ThreeLength[0] = length[0];
+                ThreeLength[1] = length[2];
+                ThreeLength[2] = length[1];
             }
 
-            else if (Length[1] > Length[0] && Length[0] > Length[2])
+            else if (length[1] > length[0] && length[0] > length[2])
             {
-                Index[0] = 2;
-                Index[1] = 1;
-                Index[2] = 0;
-                ThreeLength[0] = Length[1];
-                ThreeLength[1] = Length[0];
-                ThreeLength[2] = Length[2];
+                index[0] = 2;
+                index[1] = 1;
+                index[2] = 0;
+                ThreeLength[0] = length[1];
+                ThreeLength[1] = length[0];
+                ThreeLength[2] = length[2];
             }
 
-            else if (Length[1] > Length[2] && Length[2] > Length[0])
+            else if (length[1] > length[2] && length[2] > length[0])
             {
-                Index[0] = 1;
-                Index[1] = 2;
-                Index[2] = 0;
-                ThreeLength[0] = Length[1];
-                ThreeLength[1] = Length[2];
-                ThreeLength[2] = Length[0];
+                index[0] = 1;
+                index[1] = 2;
+                index[2] = 0;
+                ThreeLength[0] = length[1];
+                ThreeLength[1] = length[2];
+                ThreeLength[2] = length[0];
             }
 
-            else if (Length[2] > Length[1] && Length[1] > Length[0])
+            else if (length[2] > length[1] && length[1] > length[0])
             {
-                Index[0] = 0;
-                Index[1] = 2;
-                Index[2] = 1;
-                ThreeLength[0] = Length[2];
-                ThreeLength[1] = Length[1];
-                ThreeLength[2] = Length[0];
+                index[0] = 0;
+                index[1] = 2;
+                index[2] = 1;
+                ThreeLength[0] = length[2];
+                ThreeLength[1] = length[1];
+                ThreeLength[2] = length[0];
             }
 
-            else if (Length[2] > Length[0] && Length[0] > Length[1])
+            else if (length[2] > length[0] && length[0] > length[1])
             {
-                Index[0] = 2;
-                Index[1] = 0;
-                Index[2] = 1;
-                ThreeLength[0] = Length[2];
-                ThreeLength[1] = Length[0];
-                ThreeLength[2] = Length[1];
+                index[0] = 2;
+                index[1] = 0;
+                index[2] = 1;
+                ThreeLength[0] = length[2];
+                ThreeLength[1] = length[0];
+                ThreeLength[2] = length[1];
             }
 
-            Point3D tempA = new Point3D(ThreePoints[Index[0]].X, ThreePoints[Index[0]].Y, ThreePoints[Index[0]].Z);
-            Point3D tempB = new Point3D(ThreePoints[Index[1]].X, ThreePoints[Index[1]].Y, ThreePoints[Index[1]].Z);
-            Point3D tempC = new Point3D(ThreePoints[Index[2]].X, ThreePoints[Index[2]].Y, ThreePoints[Index[2]].Z);
+            Point3D tempA = new Point3D(ThreePoints[index[0]].X, ThreePoints[index[0]].Y, ThreePoints[index[0]].Z);
+            Point3D tempB = new Point3D(ThreePoints[index[1]].X, ThreePoints[index[1]].Y, ThreePoints[index[1]].Z);
+            Point3D tempC = new Point3D(ThreePoints[index[2]].X, ThreePoints[index[2]].Y, ThreePoints[index[2]].Z);
 
             ThreePoints[0] = tempA;
             ThreePoints[1] = tempB;
@@ -127,20 +127,20 @@ namespace Nart
         /// <summary>
         /// 輸入資料庫，並存下對應的索引值到DatabaseIndex
         /// </summary>
-        public void CompareDatabase(List<MarkerData> MarkerDB)
+        public void CompareDatabase(List<MarkerData> markerDb)
         {
            
-            for (int i = 0; i < MarkerDB.Count; i++)
+            for (int i = 0; i < markerDb.Count; i++)
             {
                 
-                double diff1 = ThreeLength[0] - MarkerDB[i].ThreeLength[0];
-                double diff2 = ThreeLength[1] - MarkerDB[i].ThreeLength[1];
-                double diff3 = ThreeLength[2] - MarkerDB[i].ThreeLength[2];
+                double diff1 = ThreeLength[0] - markerDb[i].ThreeLength[0];
+                double diff2 = ThreeLength[1] - markerDb[i].ThreeLength[1];
+                double diff3 = ThreeLength[2] - markerDb[i].ThreeLength[2];
 
                 
                 if (Math.Abs(diff1) < 1 && Math.Abs(diff2) < 1 && Math.Abs(diff3) < 1) 
                 {                   
-                    this.MarkerID = MarkerDB[i].ID;
+                    this.MarkerId = markerDb[i].Id;
                     return;
                 }
 

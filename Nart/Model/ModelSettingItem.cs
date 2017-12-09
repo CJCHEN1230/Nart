@@ -26,7 +26,7 @@ namespace Nart
         /// <summary>
         /// 設置列當中的OSP模型
         /// </summary>
-        public OSPModel OSP = new OSPModel();
+        public OspModel Osp = new OspModel();
         /// <summary>
         /// 設置列當中的Bone模型
         /// </summary>
@@ -38,33 +38,29 @@ namespace Nart
         /// <summary>
         /// 模型名稱
         /// </summary>
-        private String boneFilePath;
+        private string _boneFilePath;
         /// <summary>
         /// OSP名稱
         /// </summary>
-        private String ospFilePath;
+        private string _ospFilePath;
         /// <summary>
         /// Model 顏色
         /// </summary>
-        private Color boneDiffuseColor;
+        private Color _boneDiffuseColor;
         /// <summary>
         /// OSP 顏色
         /// </summary>
-        private Color ospDiffuseColor;
+        private Color _ospDiffuseColor;
         /// <summary>
         /// MarkerID 的值
         /// </summary>
-        private String markerID;
+        private string _markerId;
         /// <summary>
         /// combobox選項的內容
         /// </summary>
-        private List<String> comboboxList = MarkerDatabase.MarkerIDList;
+        private List<string> _comboboxList = MarkerDatabase.MarkerIdList;
 
 
-        public ModelSettingItem()
-        {
-
-        }
         /// <summary>
         /// 設定好模型之後Load進去模型資料所用
         /// </summary>
@@ -72,15 +68,15 @@ namespace Nart
         {
             
             Bone.FilePath = BoneFilePath;
-            Bone.MarkerID = MarkerID;
+            Bone.MarkerId = MarkerId;
             Bone.DiffuseColor = BoneDiffuseColor;
 
-            OSP.FilePath = OSPFilePath;
-            OSP.MarkerID = MarkerID;
-            OSP.DiffuseColor = OSPDiffuseColor;
-            if (!OSP.IsLoaded)
+            Osp.FilePath = OspFilePath;
+            Osp.MarkerId = MarkerId;
+            Osp.DiffuseColor = OspDiffuseColor;
+            if (!Osp.IsLoaded)
             {
-                OSP.LoadOSP();
+                Osp.LoadOsp();
             }
 
             if (!Bone.IsLoaded)
@@ -90,51 +86,50 @@ namespace Nart
 
         }
 
-        public String BoneFilePath
+        public string BoneFilePath
         {
             get
             {
-                return boneFilePath;
+                return _boneFilePath;
             }
             set
             {
-                SetValue(ref boneFilePath, value);
+                SetValue(ref _boneFilePath, value);
                 Bone.IsLoaded = false;                
             }
         }
-        public String OSPFilePath
+        public string OspFilePath
         {
             get
             {
-                return ospFilePath;
+                return _ospFilePath;
             }
             set
             {
-                SetValue(ref ospFilePath, value);
-                OSP.IsLoaded = false;
+                SetValue(ref _ospFilePath, value);
+                Osp.IsLoaded = false;
             }
         }
         public Color BoneDiffuseColor
         {
             get
             {
-                return boneDiffuseColor;
+                return _boneDiffuseColor;
             }
             set
             {
-                SetValue(ref boneDiffuseColor, value);
-                if (Bone.IsLoaded == true)
-                {
-                    Bone.DiffuseColor = boneDiffuseColor;
-                    Bone.SetBoneMaterial();
-                }
+                SetValue(ref _boneDiffuseColor, value);
+                if (Bone.IsLoaded != true)
+                    return;
+                Bone.DiffuseColor = _boneDiffuseColor;
+                Bone.SetBoneMaterial();
             }
         }
-        public Color OSPDiffuseColor
+        public Color OspDiffuseColor
         {
             get
             {
-                return ospDiffuseColor;
+                return _ospDiffuseColor;
             }
             set
             {
@@ -143,34 +138,33 @@ namespace Nart
                 {
                     value.A = 50;
                 }
-                SetValue(ref ospDiffuseColor, value);
-                if (OSP.IsLoaded == true)
-                {
-                    OSP.DiffuseColor = ospDiffuseColor;
-                    OSP.SetOSPMaterial();
-                }
+                SetValue(ref _ospDiffuseColor, value);
+                if (Osp.IsLoaded != true)
+                    return;
+                Osp.DiffuseColor = _ospDiffuseColor;
+                Osp.SetOspMaterial();
             }
         }
-        public String MarkerID
+        public string MarkerId
         {
             get
             {
-                return markerID;
+                return _markerId;
             }
             set
             {
-                SetValue(ref markerID, value);
+                SetValue(ref _markerId, value);
             }
         }
-        public List<String> ComboBoxList
+        public List<string> ComboBoxList
         {
             get
             {
-                return comboboxList;
+                return _comboboxList;
             }
             set
             {
-                SetValue(ref comboboxList, value);
+                SetValue(ref _comboboxList, value);
             }
         }
     }

@@ -39,7 +39,7 @@ namespace Nart.Model_Object
         /// <summary>
         /// MarkerID 的值
         /// </summary>
-        public String MarkerID;
+        public String MarkerId;
         /// <summary>
         /// 所屬綁定的骨頭部位
         /// </summary>
@@ -67,12 +67,12 @@ namespace Nart.Model_Object
         /// <summary>
         /// Count是在ModelTransformSet中的累積數量
         /// </summary>
-        private int Count = 0;
+        private int _count = 0;
         /// <summary>
         /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
         /// </summary>
-        private int CurrentIndex = 0;
-        private bool highlight = false;
+        private int _currentIndex = 0;
+        private bool _highlight = false;
 
 
 
@@ -85,10 +85,10 @@ namespace Nart.Model_Object
         {
             set
             {
-                if (highlight == value) { return; }
-                highlight = value;
+                if (_highlight == value) { return; }
+                _highlight = value;
                 PhongMaterial material = this.Material as PhongMaterial;
-                if (highlight)
+                if (_highlight)
                 {
                     material.EmissiveColor = SharpDX.Color.Yellow;
                 }
@@ -99,34 +99,34 @@ namespace Nart.Model_Object
             }
             get
             {
-                return highlight;
+                return _highlight;
             }
         }
         public void AddItem(Matrix3D item)
         {
             //數量少於陣列總長度則往後加入
-            if (Count < _modelTransformSet.Length)
+            if (_count < _modelTransformSet.Length)
             {
-                Count++;
+                _count++;
 
                 ExtensionMethods.Matrix3DExtensions.AddMatrix3D(ref _totalModelTransform, ref item);
 
-                ExtensionMethods.Matrix3DExtensions.DivideMatrix3D(ref _totalModelTransform, Count, ref _finalModelTransform);
+                ExtensionMethods.Matrix3DExtensions.DivideMatrix3D(ref _totalModelTransform, _count, ref _finalModelTransform);
 
             }
             else
             {
-                ExtensionMethods.Matrix3DExtensions.SubtractMatrix3D(ref _totalModelTransform, ref _modelTransformSet[CurrentIndex]);
+                ExtensionMethods.Matrix3DExtensions.SubtractMatrix3D(ref _totalModelTransform, ref _modelTransformSet[_currentIndex]);
 
                 ExtensionMethods.Matrix3DExtensions.AddMatrix3D(ref _totalModelTransform, ref item);
 
-                ExtensionMethods.Matrix3DExtensions.DivideMatrix3D(ref _totalModelTransform, Count, ref _finalModelTransform);
+                ExtensionMethods.Matrix3DExtensions.DivideMatrix3D(ref _totalModelTransform, _count, ref _finalModelTransform);
             }
 
-            _modelTransformSet[CurrentIndex] = item;
+            _modelTransformSet[_currentIndex] = item;
 
-            CurrentIndex++;
-            CurrentIndex = CurrentIndex % _modelTransformSet.Length;
+            _currentIndex++;
+            _currentIndex = _currentIndex % _modelTransformSet.Length;
 
         }
         public void SetTransformMatrix()
@@ -146,8 +146,8 @@ namespace Nart.Model_Object
                 float ambient = 0.0f;
                 material.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
                 material.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
-                int Specular = 90;
-                material.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
+                int specular = 90;
+                material.SpecularColor = new SharpDX.Color(specular, specular, specular, 255);
                 material.SpecularShininess = 60;
                 material.DiffuseColor = DiffuseColor.ToColor4();
 

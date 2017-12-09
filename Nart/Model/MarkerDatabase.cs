@@ -16,7 +16,7 @@ namespace Nart
         public struct MarkerData
         {
             public double[] ThreeLength;
-            public string ID;
+            public string Id;
         }
         /// <summary>
         ///使用一個List儲存Marker的三邊長與ID
@@ -33,7 +33,7 @@ namespace Nart
         /// <summary>
         /// Marker的ID資料組成的List
         /// </summary>
-        public static List<String> MarkerIDList = new List<String>();
+        public static List<String> MarkerIdList = new List<String>();
         public MarkerDatabase()
         {            
             CreateDatabase();
@@ -51,31 +51,31 @@ namespace Nart
 
                 //挑出Maxilla下面的Marker element
                 XmlNodeList markerList = doc.SelectNodes("BWMarker/Marker");
-                foreach (XmlNode OneNode in markerList)
+                foreach (XmlNode oneNode in markerList)
                 {
-                    String ID = OneNode.Attributes["ID"].Value;
+                    String id = oneNode.Attributes["ID"].Value;
                     //將新讀到的MarkerID加到清單裡面
-                    MarkerIDList.Add(ID);
+                    MarkerIdList.Add(id);
 
-                    XmlNodeList markerLength = OneNode.ChildNodes;
+                    XmlNodeList markerLength = oneNode.ChildNodes;
 
                     double[] lengthData = new double[3] { Convert.ToDouble(markerLength[0].InnerText)
                                                   , Convert.ToDouble(markerLength[1].InnerText)
                                                   , Convert.ToDouble(markerLength[2].InnerText)};
                     //存下Head Marker在Database中的Index
-                    if (ID.Equals("Head"))
+                    if (id.Equals("Head"))
                     {
                         HeadIndex = MarkerInfo.Count;
                     }
                     //存下Head Marker在Database中的Index
-                    if (ID.Equals("Splint"))
+                    if (id.Equals("Splint"))
                     {
                         SplintIndex = MarkerInfo.Count;
                     }
 
                     MarkerData markerdata = new MarkerData();
                     markerdata.ThreeLength = lengthData;
-                    markerdata.ID = ID;
+                    markerdata.Id = id;
                     MarkerInfo.Add(markerdata);
                 }
             }
@@ -95,12 +95,12 @@ namespace Nart
             for (int i = 0; i < MarkerInfo.Count; i++)
             {
                 //存下Head Marker在Database中的Index
-                if (MarkerInfo[i].ID.Equals("Head"))
+                if (MarkerInfo[i].Id.Equals("Head"))
                 {
                     HeadIndex = i;
                 }
                 //存下Head Marker在Database中的Index
-                if (MarkerInfo[i].ID.Equals("Splint"))
+                if (MarkerInfo[i].Id.Equals("Splint"))
                 {
                     SplintIndex = i;
                 }

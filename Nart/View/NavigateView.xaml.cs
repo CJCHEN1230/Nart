@@ -20,12 +20,12 @@ namespace Nart
     public partial class NavigateView : Window
     {
 
-        public NavigateViewModel _navigateViewModel;
+        public NavigateViewModel NavigateViewModel;
         public NavigateView()
         {
             InitializeComponent();
-            _navigateViewModel = new NavigateViewModel(this);
-            this.DataContext = _navigateViewModel; //將_multiAngleViewModel的資料環境傳給此DataContext  
+            NavigateViewModel = new NavigateViewModel(this);
+            this.DataContext = NavigateViewModel; //將_multiAngleViewModel的資料環境傳給此DataContext  
         }
 
     }

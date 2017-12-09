@@ -12,39 +12,39 @@ namespace Nart
 {
     public class Projectata : ObservableObject
     {
-        private string name = "蔡慧君";
-        private string id = "123456";
-        private string institution = "成大";
-        private bool canSelectPoints = false;
-        private string selectPointState = "OFF";
-        private  ObservableCollection<BallModel> ballCollection=  new ObservableCollection<BallModel>();
+        private string _name = "蔡慧君";
+        private string _id = "123456";
+        private string _institution = "成大";
+        private bool _canSelectPoints = false;
+        private string _selectPointState = "OFF";
+        private  ObservableCollection<BallModel> _ballCollection=  new ObservableCollection<BallModel>();
 
         public Projectata()
         {
 
-            Random crandom = new Random();
-            for (int i = 0; i < 5; i++)
-            {
-                BallModel ball = new BallModel();
-                ball.BallName = i.ToString() /*+ "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"*/;
-                ball.BallInfo = "!!!!!!!!!!!!!!!!!!!!!!!!!!";
+            //Random crandom = new Random();
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    BallModel ball = new BallModel();
+            //    ball.BallName = i.ToString() /*+ "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"*/;
+            //    ball.BallInfo = "!!!!!!!!!!!!!!!!!!!!!!!!!!";
 
-                var b1 = new MeshBuilder();
+            //    var b1 = new MeshBuilder();
 
-                int a =crandom.Next() % 100;
-                int b = crandom.Next() % 100;
-                int c = crandom.Next() % 100;
-                ball.ModelCenter = new Vector3(a, b, c);
-                b1.AddSphere(new Vector3(a, b, c), 5);
-                ball.Geometry = b1.ToMeshGeometry3D();
-                ball.Material =PhongMaterials.White;
-                ball.Transform = new System.Windows.Media.Media3D.MatrixTransform3D();
+            //    int a =crandom.Next() % 100;
+            //    int b = crandom.Next() % 100;
+            //    int c = crandom.Next() % 100;
+            //    ball.ModelCenter = new Vector3(a, b, c);
+            //    b1.AddSphere(new Vector3(a, b, c), 5);
+            //    ball.Geometry = b1.ToMeshGeometry3D();
+            //    ball.Material =PhongMaterials.White;
+            //    ball.Transform = new System.Windows.Media.Media3D.MatrixTransform3D();
                 
 
-                //MultiAngleViewModel.NormalModelCollection.Add(ball);
+            //    //MultiAngleViewModel.NormalModelCollection.Add(ball);
 
-                BallCollection.Add(ball);
-            }
+            //    BallCollection.Add(ball);
+            //}
         }
 
 
@@ -52,45 +52,45 @@ namespace Nart
         {
             get
             {
-                return name;
+                return _name;
             }
             set
             {
-                SetValue(ref name, value);
+                SetValue(ref _name, value);
             }
         }
-        public string ID
+        public string Id
         {
             get
             {
-                return id;
+                return _id;
             }
             set
             {
-                SetValue(ref id, value);
+                SetValue(ref _id, value);
             }
         }
         public string Institution
         {
             get
             {
-                return institution;
+                return _institution;
             }
             set
             {
-                SetValue(ref institution, value);
+                SetValue(ref _institution, value);
             }
         }
         public bool CanSelectPoints
         {
             get
             {
-                return canSelectPoints;
+                return _canSelectPoints;
             }
             set
             {
-                SetValue(ref canSelectPoints, value);
-                if (canSelectPoints)
+                SetValue(ref _canSelectPoints, value);
+                if (_canSelectPoints)
                 {
                     SelectPointState = "ON";
                 }
@@ -104,22 +104,22 @@ namespace Nart
         {
             get
             {
-                return selectPointState;
+                return _selectPointState;
             }
             set
             {
-                SetValue(ref selectPointState, value);
+                SetValue(ref _selectPointState, value);
             }
         }
         public  ObservableCollection<BallModel> BallCollection
         {
             get
             {
-                return ballCollection;
+                return _ballCollection;
             }
             set
             {
-                SetValue(ref ballCollection, value);
+                SetValue(ref _ballCollection, value);
             }
         } 
 

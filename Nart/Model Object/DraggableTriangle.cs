@@ -32,7 +32,7 @@ namespace Nart.Model_Object
         /// <summary>
         /// MarkerID 的值
         /// </summary>
-        public String MarkerID;
+        public String MarkerId;
         /// <summary>
         /// 整個三角形中心位置
         /// </summary>
@@ -40,15 +40,15 @@ namespace Nart.Model_Object
         /// <summary>
         /// 一開始三顆球的初始位置:紅色 綠色 藍色
         /// </summary>
-        public Vector3[] positions;
+        public Vector3[] Positions;
         /// <summary>
         /// 單顆球幾何
         /// </summary>
-        private static Geometry3D NodeGeometry;
+        private static Geometry3D _nodeGeometry;
         /// <summary>
         /// 單根桿子
         /// </summary>
-        private static Geometry3D EdgeGeometry;
+        private static Geometry3D _edgeGeometry;
 
         /// <summary>
         /// 直接調整透明度
@@ -57,19 +57,19 @@ namespace Nart.Model_Object
         /// <summary>
         /// 三顆球
         /// </summary>
-        private MeshGeometryModel3D[] ballHandles = new MeshGeometryModel3D[3];
+        private MeshGeometryModel3D[] _ballHandles = new MeshGeometryModel3D[3];
         /// <summary>
         /// 三根桿
         /// </summary>
-        private MeshGeometryModel3D[] cylinderHandles = new MeshGeometryModel3D[3];
+        private MeshGeometryModel3D[] _cylinderHandles = new MeshGeometryModel3D[3];
         /// <summary>
         /// 三頂點於中心的距離
         /// </summary>
-        private int length = 100;
+        private int _length = 100;
         /// <summary>
         /// 初始三角形角度
         /// </summary>
-        private double InitialAngle = 30;
+        private double _initialAngle = 30;
         /// <summary>
         /// 初始三角形角度
         /// </summary>
@@ -95,11 +95,11 @@ namespace Nart.Model_Object
             //建立實體幾何
             var b1 = new MeshBuilder();
             b1.AddSphere(new Vector3(0.0f, 0.0f, 0), 8);
-            NodeGeometry = b1.ToMeshGeometry3D();
+            _nodeGeometry = b1.ToMeshGeometry3D();
 
             var b2 = new MeshBuilder();
             b2.AddCylinder(new Vector3(0, 0, 0), new Vector3(1, 0, 0), 3, 32, true, true);
-            EdgeGeometry = b2.ToMeshGeometry3D();
+            _edgeGeometry = b2.ToMeshGeometry3D();
         }
         public DraggableTriangle()
                     : this(new Point3D(0,0,0))
@@ -114,31 +114,31 @@ namespace Nart.Model_Object
           
 
             Center = center;
-            positions = new Vector3[3]
+            Positions = new Vector3[3]
                  {
-                    new Vector3(Convert.ToSingle(Center.X+ Math.Cos( InitialAngle/180f*Math.PI)           *length),Convert.ToSingle(Center.Y+ Math.Sin(InitialAngle/180f*Math.PI)             *length),Convert.ToSingle(Center.Z)),
-                    new Vector3(Convert.ToSingle(Center.X+ Math.Cos((InitialAngle+120)/180f*Math.PI)*length),Convert.ToSingle(Center.Y+Math.Sin((InitialAngle+120)/180f*Math.PI)*length),Convert.ToSingle(Center.Z)),
-                    new Vector3(Convert.ToSingle(Center.X+ Math.Cos((InitialAngle+240)/180f*Math.PI)*length),Convert.ToSingle(Center.Y+Math.Sin((InitialAngle+240)/180f*Math.PI)*length),Convert.ToSingle(Center.Z)),
+                    new Vector3(Convert.ToSingle(Center.X+ Math.Cos( _initialAngle/180f*Math.PI)           *_length),Convert.ToSingle(Center.Y+ Math.Sin(_initialAngle/180f*Math.PI)             *_length),Convert.ToSingle(Center.Z)),
+                    new Vector3(Convert.ToSingle(Center.X+ Math.Cos((_initialAngle+120)/180f*Math.PI)*_length),Convert.ToSingle(Center.Y+Math.Sin((_initialAngle+120)/180f*Math.PI)*_length),Convert.ToSingle(Center.Z)),
+                    new Vector3(Convert.ToSingle(Center.X+ Math.Cos((_initialAngle+240)/180f*Math.PI)*_length),Convert.ToSingle(Center.Y+Math.Sin((_initialAngle+240)/180f*Math.PI)*_length),Convert.ToSingle(Center.Z)),
                  };
             for (int i = 0; i < 3; i++)
             {
                 //平移圓球
-                var translateMat = Matrix3DExtensions.Translate3D(positions[i]);
+                var translateMat = Matrix3DExtensions.Translate3D(Positions[i]);
                 //三顆球顏色不同 材料設置在迴圈外面，並沒有在這邊先設置
-                ballHandles[i] = new MeshGeometryModel3D()
+                _ballHandles[i] = new MeshGeometryModel3D()
                 {
                     Visibility = Visibility.Visible,
-                    Geometry = NodeGeometry,
+                    Geometry = _nodeGeometry,
                     Transform = new MatrixTransform3D(translateMat),
                 };
                 //定義球的滑鼠事件
-                this.ballHandles[i].MouseMove3D += OnNodeMouse3DMove;
-                this.ballHandles[i].MouseUp3D += OnNodeMouse3DUp;
-                this.ballHandles[i].MouseDown3D += OnNodeMouse3DDown;
+                this._ballHandles[i].MouseMove3D += OnNodeMouse3DMove;
+                this._ballHandles[i].MouseUp3D += OnNodeMouse3DUp;
+                this._ballHandles[i].MouseDown3D += OnNodeMouse3DDown;
 
            
                 //兩點組成向量
-                Vector3 v1 = positions[(i + 1) % 3] - positions[i];
+                Vector3 v1 = Positions[(i + 1) % 3] - Positions[i];
                 //圓柱初始擺放位置在X軸上，所以向量為X
                 Vector3 xBar = new Vector3(1, 0, 0);
                 Vector3 rotateAxis = Vector3.Cross(xBar, v1);
@@ -150,36 +150,36 @@ namespace Nart.Model_Object
 
                 float theta = Convert.ToSingle(Math.Acos(Vector3.Dot(xBar, v1) / (v1.Length() * xBar.Length())));
                 Matrix rotateMat = Matrix.RotationAxis(rotateAxis, theta);
-                Matrix m = Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(positions[i]);
-                this.cylinderHandles[i] = new MeshGeometryModel3D()
+                Matrix m = Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(Positions[i]);
+                this._cylinderHandles[i] = new MeshGeometryModel3D()
                 {
-                    Geometry = EdgeGeometry,
+                    Geometry = _edgeGeometry,
                     Material = SetMaterial(Color4.White),
                     Visibility = Visibility.Visible,
                     Transform = new MatrixTransform3D(m.ToMatrix3D())
                 };
                 //定義桿子的滑鼠事件
-                this.cylinderHandles[i].MouseMove3D += OnEdgeMouse3DMove;
-                this.cylinderHandles[i].MouseUp3D += OnEdgeMouse3DUp;
-                this.cylinderHandles[i].MouseDown3D += OnEdgeMouse3DDown;
+                this._cylinderHandles[i].MouseMove3D += OnEdgeMouse3DMove;
+                this._cylinderHandles[i].MouseUp3D += OnEdgeMouse3DUp;
+                this._cylinderHandles[i].MouseDown3D += OnEdgeMouse3DDown;
 
             }
             //因為會畫透明物件，所以在上面迴圈外先將球一次加進去
-            for (int i =0;i<ballHandles.Length ;i++)
+            for (int i =0;i<_ballHandles.Length ;i++)
             {
-                this.Children.Add(ballHandles[i]);
+                this.Children.Add(_ballHandles[i]);
             }
             //加完球再加桿子
-            for (int i = 0; i < cylinderHandles.Length; i++)
+            for (int i = 0; i < _cylinderHandles.Length; i++)
             {
-                this.Children.Add(cylinderHandles[i]);
+                this.Children.Add(_cylinderHandles[i]);
             }
 
 
             //設定三顆球的顏色
-            ballHandles[0].Material = SetMaterial(new Color4(1.0f, 0.0f, 0.0f, 1.0f));
-            ballHandles[1].Material = SetMaterial(new Color4(0.0f, 1.0f, 0.0f, 1.0f));
-            ballHandles[2].Material = SetMaterial(new Color4(0.0f, 0.0f, 1.0f, 1.0f));
+            _ballHandles[0].Material = SetMaterial(new Color4(1.0f, 0.0f, 0.0f, 1.0f));
+            _ballHandles[1].Material = SetMaterial(new Color4(0.0f, 1.0f, 0.0f, 1.0f));
+            _ballHandles[2].Material = SetMaterial(new Color4(0.0f, 0.0f, 1.0f, 1.0f));
 
         }
 
@@ -251,8 +251,8 @@ namespace Nart.Model_Object
             float ambient = 0.0f;
             material.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
             material.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
-            int Specular = 90;
-            material.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
+            int specular = 90;
+            material.SpecularColor = new SharpDX.Color(specular, specular, specular, 255);
             material.SpecularShininess = 60;
             material.DiffuseColor = color;
 
@@ -387,15 +387,15 @@ namespace Nart.Model_Object
         }
         private void UpdateTransforms()
         {
-            Matrix3D[] cornerMatrix = this.ballHandles.Select(x => (x.Transform.Value)).ToArray();
+            Matrix3D[] cornerMatrix = this._ballHandles.Select(x => (x.Transform.Value)).ToArray();
             //Matrix3D[] cornerMatrix = cornerTrafos.Select(x => (x).Value).ToArray();
-            positions = cornerMatrix.Select(x => x.ToMatrix().TranslationVector).ToArray();
+            Positions = cornerMatrix.Select(x => x.ToMatrix().TranslationVector).ToArray();
 
             for (int i = 0; i < 3; i++)
             {
-                var translateMat = Matrix3DExtensions.Translate3D(positions[i]);
+                var translateMat = Matrix3DExtensions.Translate3D(Positions[i]);
 
-                Vector3 v1 = positions[(i + 1) % 3] - positions[i];
+                Vector3 v1 = Positions[(i + 1) % 3] - Positions[i];
                 Vector3 xBar = new Vector3(1, 0, 0);
                 Vector3 rotateAxis = Vector3.Cross(xBar, v1);
                 rotateAxis.Normalize();
@@ -408,9 +408,9 @@ namespace Nart.Model_Object
 
                 Matrix rotateMat = Matrix.RotationAxis(rotateAxis, theta);
 
-                var m = Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(positions[i]);
+                var m = Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(Positions[i]);
 
-                ((MatrixTransform3D)cylinderHandles[i].Transform).Matrix = (m.ToMatrix3D());
+                ((MatrixTransform3D)_cylinderHandles[i].Transform).Matrix = (m.ToMatrix3D());
             }
         }
     }

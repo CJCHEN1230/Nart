@@ -28,37 +28,37 @@ namespace Nart
 
     public class MultiAngleViewModel : ObservableObject
     {                  
-        private static string craniofacialInfo;
-        private static string ballDistance;
-        private static Camera cam1 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
-        private static Camera cam2 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
-        private static Camera cam3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
-        private RenderTechnique renderTechnique;
-        private Vector3 light1Direction = new Vector3();
-        private Vector3 light2Direction = new Vector3();
-        private Vector3 light3Direction = new Vector3();
-        private Vector3D cam1LookDir = new Vector3D();
-        private Vector3D cam2LookDir = new Vector3D();
-        private Vector3D cam3LookDir = new Vector3D();      
+        private static string _craniofacialInfo;
+        private static string _ballDistance;
+        private static Camera _cam1 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+        private static Camera _cam2 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+        private static Camera _cam3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
+        private RenderTechnique _renderTechnique;
+        private Vector3 _light1Direction = new Vector3();
+        private Vector3 _light2Direction = new Vector3();
+        private Vector3 _light3Direction = new Vector3();
+        private Vector3D _cam1LookDir = new Vector3D();
+        private Vector3D _cam2LookDir = new Vector3D();
+        private Vector3D _cam3LookDir = new Vector3D();      
         private MultiAngleView _multiview;
-        private readonly IList<BoneModel> HighlightItems = new List<BoneModel>(); //專門放點到的變色物件
+        //private readonly IList<BoneModel> HighlightItems = new List<BoneModel>(); //專門放點到的變色物件
 
 
 
-        public MultiAngleViewModel(MultiAngleView _multiview)
+        public MultiAngleViewModel(MultiAngleView multiview)
         {
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
             RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Blinn];
             EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
-            this._multiview = _multiview;           
+            this._multiview = multiview;           
             SetLight();
             SetCamera();
 
             
             Binding binding = new Binding("BallCollection");
-            binding.Source = MainViewModel.data;
+            binding.Source = MainViewModel.Data;
             binding.Mode = BindingMode.OneWay;
-            BindingOperations.SetBinding(_multiview.BallCollection, ItemsModel3D.ItemsSourceProperty, binding);
+            BindingOperations.SetBinding(multiview.BallCollection, ItemsModel3D.ItemsSourceProperty, binding);
         }
 
         /// <summary>
@@ -68,11 +68,11 @@ namespace Nart
         {
             get
             {
-                return craniofacialInfo;
+                return _craniofacialInfo;
             }
             set
             {
-                SetStaticValue(ref craniofacialInfo, value);
+                SetStaticValue(ref _craniofacialInfo, value);
             }
         }
         /// <summary>
@@ -82,128 +82,128 @@ namespace Nart
         {
             get
             {
-                return ballDistance;
+                return _ballDistance;
             }
             set
             {
-                SetStaticValue(ref ballDistance, value);
+                SetStaticValue(ref _ballDistance, value);
             }
         }
         public static Camera Camera1
         {
             get
             {
-                return cam1;
+                return _cam1;
             }
 
             private set
             {
-                SetStaticValue(ref cam1, value);
+                SetStaticValue(ref _cam1, value);
             }
         }
         public static Camera Camera2
         {
             get
             {
-                return cam2;
+                return _cam2;
             }
 
             private set
             {
-                SetStaticValue(ref cam2, value);
+                SetStaticValue(ref _cam2, value);
             }
         }
         public static Camera Camera3
         {
             get
             {
-                return cam3;
+                return _cam3;
             }
 
             private set
             {
-                SetStaticValue(ref cam3, value);
+                SetStaticValue(ref _cam3, value);
             }
         }
         public Vector3 Light1Direction
         {
             get
             {
-                return light1Direction;
+                return _light1Direction;
             }
             set
             {
-                SetValue(ref light1Direction, value);
+                SetValue(ref _light1Direction, value);
             }
         }
         public Vector3 Light2Direction
         {
             get
             {
-                return light2Direction;
+                return _light2Direction;
             }
             set
             {
-                SetValue(ref light2Direction, value);
+                SetValue(ref _light2Direction, value);
             }
         }
         public Vector3 Light3Direction
         {
             get
             {
-                return light3Direction;
+                return _light3Direction;
             }
             set
             {
-                SetValue(ref light3Direction, value);
+                SetValue(ref _light3Direction, value);
             }
         }
         public Vector3D Cam1LookDir
         {
             set
             {
-                if (cam1LookDir != value)
+                if (_cam1LookDir != value)
                 {
-                    cam1LookDir = value;
+                    _cam1LookDir = value;
                     OnPropertyChanged();
                     Light1Direction = value.ToVector3();
                 }
             }
             get
             {
-                return cam1LookDir;
+                return _cam1LookDir;
             }
         }
         public Vector3D Cam2LookDir
         {
             set
             {
-                if (cam2LookDir != value)
+                if (_cam2LookDir != value)
                 {
-                    cam2LookDir = value;
+                    _cam2LookDir = value;
                     OnPropertyChanged();
                     Light2Direction = value.ToVector3();
                 }
             }
             get
             {
-                return cam2LookDir;
+                return _cam2LookDir;
             }
         }
         public Vector3D Cam3LookDir
         {
             set
             {
-                if (cam3LookDir != value)
+                if (_cam3LookDir != value)
                 {
-                    cam3LookDir = value;
+                    _cam3LookDir = value;
                     OnPropertyChanged();
                     Light3Direction = value.ToVector3();
                 }
             }
             get
             {
-                return cam3LookDir;
+                return _cam3LookDir;
             }
         }
         public Color4 DirectionalLightColor { get; set; }
@@ -211,11 +211,11 @@ namespace Nart
         {
             get
             {
-                return renderTechnique;
+                return _renderTechnique;
             }
             set
             {
-                SetValue(ref renderTechnique, value);
+                SetValue(ref _renderTechnique, value);
             }
         }
         public IEffectsManager EffectsManager { get; protected set; }
@@ -225,7 +225,7 @@ namespace Nart
             get;
             set;
         } = new ObservableCollection<Element3D>();
-        public static ObservableCollection<Element3D> OSPModelCollection
+        public static ObservableCollection<Element3D> OspModelCollection
         {
             get;
             set;
@@ -250,7 +250,7 @@ namespace Nart
         /// </summary>
         internal void SetLight()
         {         
-            this.DirectionalLightColor = (Color4)Color.White;
+            DirectionalLightColor = Color.White;
         }
         /// <summary>
         /// 初始化相機參數，並綁定相機觀看方向
@@ -275,11 +275,11 @@ namespace Nart
             if (BoneModelCollection != null && BoneModelCollection.Count != 0)
             {
                 //重新調整模型中心                
-                for (int i = 0; i < BoneModelCollection.Count; i++)
+                foreach (Element3D model in BoneModelCollection)
                 {
-                    BoneModel boneModel = BoneModelCollection[i] as BoneModel;
+                    BoneModel boneModel = model as BoneModel;
                     //如果選擇多模型但檔名是空或不存在則進不去
-                    if (boneModel != null && boneModel.ModelContainer != null)
+                    if (boneModel?.ModelContainer != null)
                     {
                         modelGroup.Children.Add(boneModel.ModelContainer);
                     }
@@ -292,7 +292,7 @@ namespace Nart
                 {
                     BoneModel boneModel = NavigationTargetCollection[i] as BoneModel;
                     //如果選擇多模型但檔名是空或不存在則進不去
-                    if (boneModel != null && boneModel.ModelContainer != null)
+                    if (boneModel?.ModelContainer != null)
                     {
                         modelGroup.Children.Add(boneModel.ModelContainer);
                     }
@@ -321,92 +321,83 @@ namespace Nart
             Point3D modelCenter = new Point3D(boundingBox.X + boundingBox.SizeX / 2.0, boundingBox.Y + boundingBox.SizeY / 2.0, boundingBox.Z + boundingBox.SizeZ / 2.0);
           
             OrthographicCamera orthoCam1 = Camera1 as OrthographicCamera;
-            orthoCam1.Position = new Point3D(modelCenter.X, modelCenter.Y - (boundingBox.SizeY), modelCenter.Z);
-            orthoCam1.UpDirection = new Vector3D(0, 0, 1);
-            orthoCam1.LookDirection = new Vector3D(0, boundingBox.SizeY, 0);
-            orthoCam1.NearPlaneDistance = -1000;
-            orthoCam1.FarPlaneDistance = 1e15;
-            orthoCam1.Width = boundingBox.SizeX + 110;
+            if (orthoCam1 != null)
+            {
+                orthoCam1.Position = new Point3D(modelCenter.X, modelCenter.Y - (boundingBox.SizeY), modelCenter.Z);
+                orthoCam1.UpDirection = new Vector3D(0, 0, 1);
+                orthoCam1.LookDirection = new Vector3D(0, boundingBox.SizeY, 0);
+                orthoCam1.NearPlaneDistance = -1000;
+                orthoCam1.FarPlaneDistance = 1e15;
+                orthoCam1.Width = boundingBox.SizeX + 110;
+            }
 
             OrthographicCamera orthoCam2 = Camera2 as OrthographicCamera;
-            orthoCam2.Position = new Point3D(modelCenter.X, modelCenter.Y, modelCenter.Z - (boundingBox.SizeZ));
-            orthoCam2.UpDirection = new Vector3D(0, 1, 0);
-            orthoCam2.LookDirection = new Vector3D(0, 0, boundingBox.SizeZ);
-            orthoCam2.NearPlaneDistance = -1000;
-            orthoCam2.FarPlaneDistance = 1e15;
-            orthoCam2.Width = boundingBox.SizeX + 110;
+            if (orthoCam2 != null)
+            {
+                orthoCam2.Position = new Point3D(modelCenter.X, modelCenter.Y, modelCenter.Z - (boundingBox.SizeZ));
+                orthoCam2.UpDirection = new Vector3D(0, 1, 0);
+                orthoCam2.LookDirection = new Vector3D(0, 0, boundingBox.SizeZ);
+                orthoCam2.NearPlaneDistance = -1000;
+                orthoCam2.FarPlaneDistance = 1e15;
+                orthoCam2.Width = boundingBox.SizeX + 110;
+            }
 
             OrthographicCamera orthoCam3 = Camera3 as OrthographicCamera;
-            orthoCam3.Position = new Point3D(modelCenter.X - (boundingBox.SizeX), modelCenter.Y, modelCenter.Z);
-            orthoCam3.UpDirection = new Vector3D(0, 0, 1);
-            orthoCam3.LookDirection = new Vector3D(boundingBox.SizeX, 0, 0);
-            orthoCam3.NearPlaneDistance = -1000;
-            orthoCam3.FarPlaneDistance = 1e15;
-            orthoCam3.Width = boundingBox.SizeX + 110;
-
+            if (orthoCam3 != null)
+            {
+                orthoCam3.Position = new Point3D(modelCenter.X - (boundingBox.SizeX), modelCenter.Y, modelCenter.Z);
+                orthoCam3.UpDirection = new Vector3D(0, 0, 1);
+                orthoCam3.LookDirection = new Vector3D(boundingBox.SizeX, 0, 0);
+                orthoCam3.NearPlaneDistance = -1000;
+                orthoCam3.FarPlaneDistance = 1e15;
+                orthoCam3.Width = boundingBox.SizeX + 110;
+            }
         }
         /// <summary>
         /// 將自定義的camLookDir綁到相機實際的觀看方向
         /// </summary>
         public void SetupCameraBindings(string propertyName, Camera camera )
         {
-
-            if (camera is ProjectionCamera)
-            {
-                var binding = new Binding(propertyName);
-                binding.Source = this;
-                binding.Mode = BindingMode.OneWayToSource;
-                BindingOperations.SetBinding(camera, ProjectionCamera.LookDirectionProperty, binding);
-            }
+            if (!(camera is ProjectionCamera))
+                return;
+            var binding = new Binding(propertyName);
+            binding.Source = this;
+            binding.Mode = BindingMode.OneWayToSource;
+            BindingOperations.SetBinding(camera, ProjectionCamera.LookDirectionProperty, binding);
         }
      
         public void OnMouseDoubleClickHandler(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            foreach (var item in HighlightItems)
-            {
-                item.Highlight = false;
-            }
-            HighlightItems.Clear();
+
+            if (!MainViewModel.Data.CanSelectPoints)
+                return;
 
             Viewport3DX viewport = sender as Viewport3DX;
             if (viewport == null)
                 return; 
             var point = e.GetPosition(viewport);
-
-            
-
             var hitTests = viewport.FindHits(point);
-
-            //hitTests[0].PointHit
 
             if (hitTests != null && hitTests.Count > 0)
             {
-                var hit = hitTests[0];
-                if (hit.ModelHit.DataContext == this)
-                {
 
-                    //if (hit.ModelHit is BoneModel)
-                    //{
-                    //    BoneModel model = (BoneModel)hit.ModelHit;
-                    //    //(hit.ModelHit as MeshGeometryModel3D).Material = PhongMaterials.Yellow;
-                    //    model.Highlight = true;
-                    //    HighlightItems.Add(model);
-                    //}
+                foreach (var hit in hitTests)
+                {
                     if (hit.ModelHit is BoneModel)
                     {
                         Point3D center = hit.PointHit;
 
 
                         BallModel ball = new BallModel();
-                        ball.BallName = "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
-                        ball.BallInfo = "!!!!!!!!!!!!!!!!!!!!!!!!!!";
+                        ball.BallName = "!!!!!";
+                        ball.BallInfo = "!!!!!";
 
 
                         var b1 = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
 
                         Vector3 center2 = new Vector3(Convert.ToSingle(center.X), Convert.ToSingle(center.Y), Convert.ToSingle(center.Z));
-                        ball.ModelCenter = center2;
-                        b1.AddSphere(center2,2);
+                        ball.Center = center2;
+                        b1.AddSphere(center2, 2);
                         ball.Geometry = b1.ToMeshGeometry3D();
 
 
@@ -416,11 +407,11 @@ namespace Nart
                         float ambient = 0.0f;
                         material.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
                         material.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
-                        int Specular = 90;
-                        material.SpecularColor = new SharpDX.Color(Specular, Specular, Specular, 255);
+                        int specular = 90;
+                        material.SpecularColor = new SharpDX.Color(specular, specular, specular, 255);
                         material.SpecularShininess = 60;
                         material.DiffuseColor = new Color4();
-                        
+
 
 
 
@@ -429,10 +420,12 @@ namespace Nart
                         ball.Material = PhongMaterials.Silver;
                         ball.Transform = new System.Windows.Media.Media3D.MatrixTransform3D();
 
-                        MainViewModel.data.BallCollection.Add(ball);
+                        MainViewModel.Data.BallCollection.Add(ball);
+                        break;
                     }
 
                 }
+
 
             }
 
@@ -452,7 +445,7 @@ namespace Nart
                         BoneModel model = new BoneModel();
 
                         model.FilePath = files[i];
-                        model.MarkerID = "";
+                        model.MarkerId = "";
                         model.DiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187);
                         model.LoadModel();
                         model.Transform = new System.Windows.Media.Media3D.MatrixTransform3D();
@@ -509,10 +502,7 @@ namespace Nart
         public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;
         protected static void OnStaticPropertyChanged([CallerMemberName]string info = "")
         {
-            if (StaticPropertyChanged != null)
-            {
-                StaticPropertyChanged(null, new PropertyChangedEventArgs(info));
-            }
+            StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(info));
         }
         protected static bool SetStaticValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")//CallerMemberName主要是.net4.5後定義好的caller訊息，能將訊息傳給後者的變數，目的在使用時不用特地傳入"Property"名稱
         {

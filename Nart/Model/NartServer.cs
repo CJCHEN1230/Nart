@@ -15,15 +15,15 @@ namespace Nart
         /// <summary>
         /// client端的連線列表
         /// </summary>
-        private List<Socket> clientSockets;
+        private List<Socket> _clientSockets;
         /// <summary>
         /// client端的buffer列表
         /// </summary>
-        private List<byte[]> bufferList;
+        private List<byte[]> _bufferList;
         /// <summary>
         ///本地端的socket
         /// </summary>
-        private Socket serverSocket;
+        private Socket _serverSocket;
         /// <summary>
         ///開啟Server
         /// </summary>
@@ -31,12 +31,12 @@ namespace Nart
         {
             try
             {
-                clientSockets = new List<Socket>();
-                bufferList = new List<byte[]>();
-                serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                serverSocket.Bind(new IPEndPoint(IPAddress.Any, 59979));//IPEndPoint為一個定義完整的server位置，包含ip跟port
-                serverSocket.Listen(10);//一個等待連線的queue長度，不是只能10個連線
-                serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), serverSocket); //AsyncCallback(AcceptCallback),一旦連接上後的回調函數為AcceptCallback。當系統調用這個函數時，自動賦予的輸入參數為IAsyncResult類型變量ar。
+                _clientSockets = new List<Socket>();
+                _bufferList = new List<byte[]>();
+                _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                _serverSocket.Bind(new IPEndPoint(IPAddress.Any, 59979));//IPEndPoint為一個定義完整的server位置，包含ip跟port
+                _serverSocket.Listen(10);//一個等待連線的queue長度，不是只能10個連線
+                _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), _serverSocket); //AsyncCallback(AcceptCallback),一旦連接上後的回調函數為AcceptCallback。當系統調用這個函數時，自動賦予的輸入參數為IAsyncResult類型變量ar。
             }
             catch (SocketException ex)
             {
@@ -50,18 +50,18 @@ namespace Nart
         /// <summary>
         ///accept的callback內容
         /// </summary>
-        private void AcceptCallback(IAsyncResult AR)
+        private void AcceptCallback(IAsyncResult ar)
         {
             try
             {
-                var clientSocket = serverSocket.EndAccept(AR); //完成連接，並返回此時的socket通道
-                clientSockets.Add(clientSocket);
+                var clientSocket = _serverSocket.EndAccept(ar); //完成連接，並返回此時的socket通道
+                _clientSockets.Add(clientSocket);
 
                 byte[]  buffer = new byte[clientSocket.ReceiveBufferSize];
-                bufferList.Add(buffer);
+                _bufferList.Add(buffer);
 
                 clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), clientSocket);
-                serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
+                _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
 
                 Console.WriteLine("收到一客戶端");
             }
@@ -78,38 +78,38 @@ namespace Nart
         /// <summary>
         ///receive的callback內容
         /// </summary>
-        private void ReceiveCallback(IAsyncResult AR)
+        private void ReceiveCallback(IAsyncResult ar)
         {
-            Socket current = (Socket)AR.AsyncState;
-            CheckIfConnected(clientSockets);
+            Socket current = (Socket)ar.AsyncState;
+            CheckIfConnected(_clientSockets);
             try
             {
-                MyCallback callback = new MyCallback(UpdataTB);
-                int received = current.EndReceive(AR);// 結束非同步讀取，並回傳收到幾個Byte                                
+                MyCallback callback = new MyCallback(UpdataTb);
+                int received = current.EndReceive(ar);// 結束非同步讀取，並回傳收到幾個Byte                                
                 if (received == 0)
                 {
                     return;
                 }
-                int index = clientSockets.IndexOf(current);//取得此client是列表中的哪個
-                int code = BitConverter.ToInt16(bufferList[index], 0);
+                int index = _clientSockets.IndexOf(current);//取得此client是列表中的哪個
+                int code = BitConverter.ToInt16(_bufferList[index], 0);
 
                 //加車
                 if (code == -70)
                 {
                     Point point = new Point();
-                    point.X = BitConverter.ToInt16(bufferList[index], 2);
-                    point.Y = BitConverter.ToInt16(bufferList[index], 4);
+                    point.X = BitConverter.ToInt16(_bufferList[index], 2);
+                    point.Y = BitConverter.ToInt16(_bufferList[index], 4);
 
                 }
                 Console.WriteLine("接收到東西");
-                bufferList[index] = new byte[current.ReceiveBufferSize];
-                current.BeginReceive(bufferList[index], 0, bufferList[index].Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), current);
+                _bufferList[index] = new byte[current.ReceiveBufferSize];
+                current.BeginReceive(_bufferList[index], 0, _bufferList[index].Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), current);
             }
             catch (SocketException ex)
             {
                 ShowErrorDialog(ex.Message);
                 current.Close();
-                clientSockets.Remove(current);
+                _clientSockets.Remove(current);
                 return;
             }
             catch (ObjectDisposedException ex)
@@ -120,12 +120,12 @@ namespace Nart
         /// <summary>
         ///send的callback內容
         /// </summary>
-        private void SendCallback(IAsyncResult AR)
+        private void SendCallback(IAsyncResult ar)
         {
-            Socket current = (Socket)AR.AsyncState;
+            Socket current = (Socket)ar.AsyncState;
             try
             {
-                current.EndSend(AR);//終止Send
+                current.EndSend(ar);//終止Send
             }
             catch (SocketException ex)
             {
@@ -148,9 +148,9 @@ namespace Nart
 
             //byte[] byData = System.Text.Encoding.ASCII.GetBytes("un:" + username + ";pw:" + password);
 
-            foreach (Socket EachSocket in clientSockets)
+            foreach (Socket eachSocket in _clientSockets)
             {            
-               EachSocket.BeginSend(sendData, 0, sendData.Length, SocketFlags.None, new AsyncCallback(SendCallback), EachSocket/*nullptr*/);                
+               eachSocket.BeginSend(sendData, 0, sendData.Length, SocketFlags.None, new AsyncCallback(SendCallback), eachSocket/*nullptr*/);                
             }
         }        
         /// <summary>
@@ -177,7 +177,7 @@ namespace Nart
             }
         }
         public delegate void MyCallback(String message);
-        public void UpdataTB(String message)
+        public void UpdataTb(String message)
         {
             //ChatRoomTB->AppendText(message + Environment::NewLine);
             //KeyInTB.Clear();

@@ -52,22 +52,22 @@ namespace Nart
 
             AllocConsole();
 
-            System.Windows.Controls.Button temp = new System.Windows.Controls.Button();
-            temp.Height = 100;
-            System.Windows.Controls.Button temp1 = new System.Windows.Controls.Button();
-            temp1.Height = 100;
-            System.Windows.Controls.Button temp2 = new System.Windows.Controls.Button();
-            temp2.Height = 100;
-            System.Windows.Controls.Button temp3 = new System.Windows.Controls.Button();
-            temp3.Height = 100;
-            System.Windows.Controls.Button temp4 = new System.Windows.Controls.Button();
-            temp4.Height = 100;
+            //System.Windows.Controls.Button temp = new System.Windows.Controls.Button();
+            //temp.Height = 100;
+            //System.Windows.Controls.Button temp1 = new System.Windows.Controls.Button();
+            //temp1.Height = 100;
+            //System.Windows.Controls.Button temp2 = new System.Windows.Controls.Button();
+            //temp2.Height = 100;
+            //System.Windows.Controls.Button temp3 = new System.Windows.Controls.Button();
+            //temp3.Height = 100;
+            //System.Windows.Controls.Button temp4 = new System.Windows.Controls.Button();
+            //temp4.Height = 100;
 
-            expander_TargetModel.expItem.Children.Add(temp);
-            expander_TargetModel.expItem.Children.Add(temp2);
-            expander_TargetModel.expItem.Children.Add(temp1);
-            expander_TargetModel.expItem.Children.Add(temp3);
-            expander_TargetModel.expItem.Children.Add(temp4);
+            //expander_TargetModel.expItem.Children.Add(temp);
+            //expander_TargetModel.expItem.Children.Add(temp2);
+            //expander_TargetModel.expItem.Children.Add(temp1);
+            //expander_TargetModel.expItem.Children.Add(temp3);
+            //expander_TargetModel.expItem.Children.Add(temp4);
 
 
         }

@@ -22,46 +22,46 @@ namespace Nart
     {
 
         public static bool IsSet = false;
-        public static bool firstStageDone = false;
+        public static bool FirstStageDone = false;
         /// <summary>
         /// 導引順序先開上顎or先開下顎
         /// </summary>
-        private static String firstNavigation = "Maxilla";
+        private static String _firstNavigation = "Maxilla";
         #region N-Art計畫部分
         /// <summary>
         /// 最後上顎轉移矩陣
         /// </summary>
-        private String plannedMaxillaMatrix = "../../../data/蔡慧君/plan-maxilla-matrix.txt";
+        private String _plannedMaxillaMatrix = "../../../data/蔡慧君/plan-maxilla-matrix.txt";
         /// <summary>
         /// 最後下顎轉移矩陣
         /// </summary>
-        private String plannedMandibleMatrix = "../../../data/蔡慧君/plan-mandible-matrix.txt";
+        private String _plannedMandibleMatrix = "../../../data/蔡慧君/plan-mandible-matrix.txt";
         #endregion       
         #region 原始模型設定部分
         /// <summary>
         /// 最後上顎轉移矩陣
         /// </summary>
-        private String headModel = "../../../data/蔡慧君/head.stl";
+        private String _headModel = "../../../data/蔡慧君/head.stl";
         /// <summary>
         /// 頭部模型顏色
         /// </summary>
-        private Color headDiffuseColor = Color.FromArgb(255, 11, 243, 243);
+        private Color _headDiffuseColor = Color.FromArgb(255, 11, 243, 243);
         /// <summary>
         /// 最後下顎轉移矩陣
         /// </summary>
-        private String maxillaModel = "../../../data/蔡慧君/pre-maxilla.stl";
+        private String _maxillaModel = "../../../data/蔡慧君/pre-maxilla.stl";
         /// <summary>
         /// 上顎模型顏色
         /// </summary>
-        private Color maxillaDiffuseColor = Color.FromArgb(255, 11, 243, 243);
+        private Color _maxillaDiffuseColor = Color.FromArgb(255, 11, 243, 243);
         /// <summary>
         /// 最後上顎規劃後模型
         /// </summary>
-        private String mandibleModel = "../../../data/蔡慧君/pre-mandible.stl";
+        private String _mandibleModel = "../../../data/蔡慧君/pre-mandible.stl";
         /// <summary>
         /// 下顎模型顏色
         /// </summary>
-        private Color mandibleDiffuseColor = Color.FromArgb(255, 2, 231, 2);
+        private Color _mandibleDiffuseColor = Color.FromArgb(255, 2, 231, 2);
         #endregion
 
 
@@ -69,17 +69,17 @@ namespace Nart
         /// <summary>
         /// 頭部對稱面
         /// </summary>
-        private String headOSP = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl";
+        private String _headOsp = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl";
         /// <summary>
         /// 下顎對稱面
         /// </summary>
-        private String mandibleOSP = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl";
+        private String _mandibleOsp = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl";
         #endregion
 
         /// <summary>
         /// View頁面
         /// </summary>
-        private NavigateView _navigateView;
+        private readonly NavigateView _navigateView;
 
 
 
@@ -96,22 +96,22 @@ namespace Nart
         {
             get
             {
-                return plannedMaxillaMatrix;
+                return _plannedMaxillaMatrix;
             }
             set
             {
-                SetValue(ref plannedMaxillaMatrix, value);
+                SetValue(ref _plannedMaxillaMatrix, value);
             }
         }
         public String PlannedMandibleMatrix
         {
             get
             {
-                return plannedMandibleMatrix;
+                return _plannedMandibleMatrix;
             }
             set
             {
-                SetValue(ref plannedMandibleMatrix, value);
+                SetValue(ref _plannedMandibleMatrix, value);
             }
         }
 
@@ -119,90 +119,90 @@ namespace Nart
         {
             get
             {
-                return headModel;
+                return _headModel;
             }
             set
             {
-                SetValue(ref headModel, value);
+                SetValue(ref _headModel, value);
             }
         }
         public String MaxillaModel
         {
             get
             {
-                return maxillaModel;
+                return _maxillaModel;
             }
             set
             {
-                SetValue(ref maxillaModel, value);
+                SetValue(ref _maxillaModel, value);
             }
         }
         public String MandibleModel
         {
             get
             {
-                return mandibleModel;
+                return _mandibleModel;
             }
             set
             {
-                SetValue(ref mandibleModel, value);
+                SetValue(ref _mandibleModel, value);
             }
         }
         public Color HeadDiffuseColor
         {
             get
             {
-                return headDiffuseColor;
+                return _headDiffuseColor;
             }
             set
             {
-                SetValue(ref headDiffuseColor, value);
+                SetValue(ref _headDiffuseColor, value);
             }
         }
         public Color MaxillaDiffuseColor
         {
             get
             {
-                return maxillaDiffuseColor;
+                return _maxillaDiffuseColor;
             }
             set
             {
-                SetValue(ref maxillaDiffuseColor, value);
+                SetValue(ref _maxillaDiffuseColor, value);
             }
         }
         public Color MandibleDiffuseColor
         {
             get
             {
-                return mandibleDiffuseColor;
+                return _mandibleDiffuseColor;
             }
             set
             {
-                SetValue(ref mandibleDiffuseColor, value);
+                SetValue(ref _mandibleDiffuseColor, value);
             }
         }
 
-        public String HeadOSP
+        public String HeadOsp
         {
             get
             {
-                return headOSP;
+                return _headOsp;
             }
             set
             {
-                SetValue(ref headOSP, value);
+                SetValue(ref _headOsp, value);
             }
         } 
      
-        public String MandibleOSP
+        public String MandibleOsp
         {
             get
             {
-                return mandibleOSP;
+                return _mandibleOsp;
             }
             set
             {
-                SetValue(ref mandibleOSP, value);
+                SetValue(ref _mandibleOsp, value);
             }
         } 
 
@@ -215,11 +215,11 @@ namespace Nart
         {
             get
             {
-                return firstNavigation;
+                return _firstNavigation;
             }
             set
             {
-                SetStaticValue(ref firstNavigation, value);
+                SetStaticValue(ref _firstNavigation, value);
             }
         }
         public ICommand ModelSettingCommand { private set; get; }
@@ -261,99 +261,123 @@ namespace Nart
         public void LoadSettingModel(object o)
         {
 
-            BoneModel Head = new BoneModel();
-            Head.FilePath = HeadModel;
-            Head.MarkerID = "Head";
-            Head.BoneName = "Head";
-            Head.DiffuseColor = HeadDiffuseColor;
-            Head.LoadModel();
+            BoneModel head = new BoneModel
+            {
+                FilePath = HeadModel,
+                MarkerId = "Head",
+                BoneName = "Head",
+                DiffuseColor = HeadDiffuseColor
+            };
+            head.LoadModel();
 
             //讀取原始上下顎 加上 規劃後的轉移矩陣
-            Matrix plannedMatrix = ReadMatrixFile(plannedMaxillaMatrix);
-            BoneModel targetMaxilla = new BoneModel();
-            targetMaxilla.FilePath = MaxillaModel;
-            targetMaxilla.IsRendering = false;
-            targetMaxilla.MarkerID = "";
-            targetMaxilla.BoneName = "Maxilla";
-            targetMaxilla.DiffuseColor = Color.FromArgb(255, 100, 100, 100);
+            Matrix plannedMatrix = ReadMatrixFile(_plannedMaxillaMatrix);
+            BoneModel targetMaxilla = new BoneModel
+            {
+                FilePath = MaxillaModel,
+                IsRendering = false,
+                MarkerId = "",
+                BoneName = "Maxilla",
+                DiffuseColor = Color.FromArgb(255, 100, 100, 100)
+            };
             targetMaxilla.LoadModel();
             targetMaxilla.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(plannedMatrix.ToMatrix3D()); 
 
-            Matrix plannedMandible = ReadMatrixFile(plannedMandibleMatrix);
-            BoneModel targetMandible = new BoneModel();
-            targetMandible.FilePath = MandibleModel;
-            targetMandible.IsRendering = false;
-            targetMandible.MarkerID = "";
-            targetMandible.BoneName = "Mandible";
-            targetMandible.DiffuseColor = Color.FromArgb(255, 100, 100, 100);
+            Matrix plannedMandible = ReadMatrixFile(_plannedMandibleMatrix);
+            BoneModel targetMandible = new BoneModel
+            {
+                FilePath = MandibleModel,
+                IsRendering = false,
+                MarkerId = "",
+                BoneName = "Mandible",
+                DiffuseColor = Color.FromArgb(255, 100, 100, 100)
+            };
             targetMandible.LoadModel();        
             targetMandible.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(plannedMandible.ToMatrix3D());
 
-            MultiAngleViewModel.NavigationTargetCollection.Add(Head);
+            MultiAngleViewModel.NavigationTargetCollection.Add(head);
             MultiAngleViewModel.NavigationTargetCollection.Add(targetMaxilla);
             MultiAngleViewModel.NavigationTargetCollection.Add(targetMandible);
 
 
 
 
-            BoneModel oriMaxilla = new BoneModel();
-            oriMaxilla.FilePath = MaxillaModel;
-            oriMaxilla.BoneName = "Maxilla";
-            oriMaxilla.MarkerID = "Splint";
-            oriMaxilla.DiffuseColor = MaxillaDiffuseColor;
+            BoneModel oriMaxilla = new BoneModel
+            {
+                FilePath = MaxillaModel,
+                BoneName = "Maxilla",
+                MarkerId = "Splint",
+                DiffuseColor = MaxillaDiffuseColor
+            };
             oriMaxilla.LoadModel();
 
-            BoneModel oriMandible = new BoneModel();
-            oriMandible.FilePath = MandibleModel;
-            oriMandible.BoneName = "Mandible";
-            oriMandible.MarkerID = "Splint";
-            oriMandible.DiffuseColor = MandibleDiffuseColor;
+            BoneModel oriMandible = new BoneModel
+            {
+                FilePath = MandibleModel,
+                BoneName = "Mandible",
+                MarkerId = "Splint",
+                DiffuseColor = MandibleDiffuseColor
+            };
             oriMandible.LoadModel();
 
             MultiAngleViewModel.BoneModelCollection.Add(oriMaxilla);
             MultiAngleViewModel.BoneModelCollection.Add(oriMandible);
 
             //載入OSP模型
-            OSPModel headOSP = new OSPModel();
-            headOSP.MarkerID = "Head";
-            headOSP.FilePath = HeadOSP;
-            headOSP.DiffuseColor = System.Windows.Media.Color.FromArgb(50, 11, 243, 243);
-            headOSP.LoadOSP();
+            OspModel headOsp = new OspModel
+            {
+                MarkerId = "Head",
+                FilePath = HeadOsp,
+                DiffuseColor = System.Windows.Media.Color.FromArgb(50, 11, 243, 243)
+            };
+            headOsp.LoadOsp();
 
-            OSPModel mandibleOSP = new OSPModel();
-            mandibleOSP.MarkerID = "C";
-            mandibleOSP.FilePath = MandibleOSP;
-            mandibleOSP.DiffuseColor = System.Windows.Media.Color.FromArgb(50, 2, 231, 2);
-            mandibleOSP.LoadOSP();
-            SetBinding(oriMandible, mandibleOSP, "Transform", HelixToolkit.Wpf.SharpDX.Model3D.TransformProperty, BindingMode.OneWay);
-            MultiAngleViewModel.OSPModelCollection.Add(headOSP);
-            MultiAngleViewModel.OSPModelCollection.Add(mandibleOSP);
+            OspModel mandibleOsp = new OspModel
+            {
+                MarkerId = "C",
+                FilePath = MandibleOsp,
+                DiffuseColor = System.Windows.Media.Color.FromArgb(50, 2, 231, 2)
+            };
+            mandibleOsp.LoadOsp();
+            SetBinding(oriMandible, mandibleOsp, "Transform", HelixToolkit.Wpf.SharpDX.Model3D.TransformProperty, BindingMode.OneWay);
+            MultiAngleViewModel.OspModelCollection.Add(headOsp);
+            MultiAngleViewModel.OspModelCollection.Add(mandibleOsp);
 
             //標記屬於上顎的ID
-            DraggableTriangle maxillaTargetTriangle = new DraggableTriangle(targetMaxilla.ModelCenter);
-            maxillaTargetTriangle.MarkerID = "Maxilla";
-            maxillaTargetTriangle.IsRendering = false;
+            DraggableTriangle maxillaTargetTriangle =
+                new DraggableTriangle(targetMaxilla.ModelCenter)
+                {
+                    MarkerId = "Maxilla",
+                    IsRendering = false
+                };
             MultiAngleViewModel.TriangleModelCollection.Add(maxillaTargetTriangle);
 
             //標記屬於下顎的ID
-            DraggableTriangle mandibleTargetTriangle = new DraggableTriangle(targetMandible.ModelCenter);
-            mandibleTargetTriangle.MarkerID = "Mandible";
-            mandibleTargetTriangle.IsRendering = false;
+            DraggableTriangle mandibleTargetTriangle =
+                new DraggableTriangle(targetMandible.ModelCenter)
+                {
+                    MarkerId = "Mandible",
+                    IsRendering = false
+                };
             MultiAngleViewModel.TriangleModelCollection.Add(mandibleTargetTriangle);
 
             //將導航三角形綁定到導航的上顎
-            DraggableTriangle maxillaTriangle = new DraggableTriangle(oriMaxilla.ModelCenter);
-            maxillaTriangle.MarkerID = "Maxilla";
-            maxillaTriangle.Transparency = 0.5f;
-            maxillaTriangle.IsRendering = false;
+            DraggableTriangle maxillaTriangle = new DraggableTriangle(oriMaxilla.ModelCenter)
+            {
+                MarkerId = "Maxilla",
+                Transparency = 0.5f,
+                IsRendering = false
+            };
             SetBinding(oriMaxilla, maxillaTriangle,"Transform" ,HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty,BindingMode.OneWay);
             MultiAngleViewModel.TriangleModelCollection.Add(maxillaTriangle);
       
             //將導航三角形綁定到導航的下顎
-            DraggableTriangle mandibleTriangle = new DraggableTriangle(oriMandible.ModelCenter);
-            mandibleTriangle.MarkerID = "Mandible";
-            mandibleTriangle.Transparency = 0.7f;
-            mandibleTriangle.IsRendering = false;
+            DraggableTriangle mandibleTriangle = new DraggableTriangle(oriMandible.ModelCenter)
+            {
+                MarkerId = "Mandible",
+                Transparency = 0.7f,
+                IsRendering = false
+            };
             SetBinding(oriMandible, mandibleTriangle, "Transform", HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty, BindingMode.OneWay);
             MultiAngleViewModel.TriangleModelCollection.Add(mandibleTriangle);
 
@@ -372,10 +396,7 @@ namespace Nart
         public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;
         protected static void OnStaticPropertyChanged([CallerMemberName]string info = "")
         {
-            if (StaticPropertyChanged != null)
-            {
-                StaticPropertyChanged(null, new PropertyChangedEventArgs(info));
-            }
+            StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(info));
         }
         protected static bool SetStaticValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")//CallerMemberName主要是.net4.5後定義好的caller訊息，能將訊息傳給後者的變數，目的在使用時不用特地傳入"Property"名稱
         {
