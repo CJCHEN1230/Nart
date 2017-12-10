@@ -7,8 +7,6 @@ using HelixToolkit.Wpf;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf.SharpDX;
 using SharpDX;
-using HelixToolkit.Wpf.SharpDX.Core;
-using NartControl;
 
 
 namespace Nart
@@ -23,23 +21,19 @@ namespace Nart
     using System.Windows.Data;
     using Camera = HelixToolkit.Wpf.SharpDX.Camera;
     using OrthographicCamera = HelixToolkit.Wpf.SharpDX.OrthographicCamera;
-    using PerspectiveCamera = HelixToolkit.Wpf.SharpDX.PerspectiveCamera;
     using ProjectionCamera = HelixToolkit.Wpf.SharpDX.ProjectionCamera;
 
     public class MultiAngleViewModel : ObservableObject
     {                  
         private static string _craniofacialInfo;
         private static string _ballDistance;
-        private static Camera _cam1 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
-        private static Camera _cam2 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
-        private static Camera _cam3 = new HelixToolkit.Wpf.SharpDX.OrthographicCamera();
         private RenderTechnique _renderTechnique;
-        private Vector3 _light1Direction = new Vector3();
-        private Vector3 _light2Direction = new Vector3();
-        private Vector3 _light3Direction = new Vector3();
-        private Vector3D _cam1LookDir = new Vector3D();
-        private Vector3D _cam2LookDir = new Vector3D();
-        private Vector3D _cam3LookDir = new Vector3D();      
+        private Vector3 _light1Direction;
+        private Vector3 _light2Direction;
+        private Vector3 _light3Direction;
+        private Vector3D _cam1LookDir;
+        private Vector3D _cam2LookDir;
+        private Vector3D _cam3LookDir;
         private MultiAngleView _multiview;
         //private readonly IList<BoneModel> HighlightItems = new List<BoneModel>(); //專門放點到的變色物件
 
@@ -50,7 +44,7 @@ namespace Nart
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
             RenderTechnique = RenderTechniquesManager.RenderTechniques[DefaultRenderTechniqueNames.Blinn];
             EffectsManager = new DefaultEffectsManager(RenderTechniquesManager);
-            this._multiview = multiview;           
+            _multiview = multiview;           
             SetLight();
             SetCamera();
 
@@ -76,7 +70,7 @@ namespace Nart
             }
         }
         /// <summary>
-        /// 計算三球距離
+        /// 顯示三球距離的string
         /// </summary>
         public static string BallDistance
         {
@@ -91,40 +85,16 @@ namespace Nart
         }
         public static Camera Camera1
         {
-            get
-            {
-                return _cam1;
-            }
-
-            private set
-            {
-                SetStaticValue(ref _cam1, value);
-            }
-        }
+            get;
+        } = new OrthographicCamera();
         public static Camera Camera2
         {
-            get
-            {
-                return _cam2;
-            }
-
-            private set
-            {
-                SetStaticValue(ref _cam2, value);
-            }
-        }
+            get;
+        } = new OrthographicCamera();
         public static Camera Camera3
         {
-            get
-            {
-                return _cam3;
-            }
-
-            private set
-            {
-                SetStaticValue(ref _cam3, value);
-            }
-        }
+            get;
+        } = new OrthographicCamera();
         public Vector3 Light1Direction
         {
             get
@@ -162,12 +132,11 @@ namespace Nart
         {
             set
             {
-                if (_cam1LookDir != value)
-                {
-                    _cam1LookDir = value;
-                    OnPropertyChanged();
-                    Light1Direction = value.ToVector3();
-                }
+                if (_cam1LookDir == value)
+                    return;
+                _cam1LookDir = value;
+                OnPropertyChanged();
+                Light1Direction = value.ToVector3();
             }
             get
             {
@@ -178,12 +147,11 @@ namespace Nart
         {
             set
             {
-                if (_cam2LookDir != value)
-                {
-                    _cam2LookDir = value;
-                    OnPropertyChanged();
-                    Light2Direction = value.ToVector3();
-                }
+                if (_cam2LookDir == value)
+                    return;
+                _cam2LookDir = value;
+                OnPropertyChanged();
+                Light2Direction = value.ToVector3();
             }
             get
             {
@@ -194,12 +162,11 @@ namespace Nart
         {
             set
             {
-                if (_cam3LookDir != value)
-                {
-                    _cam3LookDir = value;
-                    OnPropertyChanged();
-                    Light3Direction = value.ToVector3();
-                }
+                if (_cam3LookDir == value)
+                    return;
+                _cam3LookDir = value;
+                OnPropertyChanged();
+                Light3Direction = value.ToVector3();
             }
             get
             {
@@ -266,12 +233,12 @@ namespace Nart
         /// <summary>
         /// 重設相機觀向位置
         /// </summary>
-        internal static void ResetCameraPosition()
+        public static void ResetCameraPosition()
         {
 
             Model3DGroup modelGroup = new Model3DGroup();
 
-            //ModelGroup裡面有模型之後才調整相機位置
+            //一般的BoneModel放置的位置，目前暫定放原始位置
             if (BoneModelCollection != null && BoneModelCollection.Count != 0)
             {
                 //重新調整模型中心                
@@ -286,11 +253,12 @@ namespace Nart
                 }
             }
 
+            //NavigationTargetCollection 放置上下顎的目標位置
             if (NavigationTargetCollection != null && NavigationTargetCollection.Count != 0)
             {
-                for (int i = 0; i < NavigationTargetCollection.Count; i++)
+                foreach (Element3D model in NavigationTargetCollection)
                 {
-                    BoneModel boneModel = NavigationTargetCollection[i] as BoneModel;
+                    BoneModel boneModel = model as BoneModel;
                     //如果選擇多模型但檔名是空或不存在則進不去
                     if (boneModel?.ModelContainer != null)
                     {
@@ -298,19 +266,20 @@ namespace Nart
                     }
                 }
             }
-
-            //if (NormalModelCollection != null && NormalModelCollection.Count != 0)
-            //{
-            //    for (int i = 0; i < NormalModelCollection.Count; i++)
-            //    {
-            //        BoneModel normalModel = NormalModelCollection[i] as BoneModel;
-            //        //如果選擇多模型但檔名是空或不存在則進不去
-            //        if (normalModel != null && normalModel.ModelContainer != null)
-            //        {
-            //            modelGroup.Children.Add(normalModel.ModelContainer);
-            //        }
-            //    }
-            //}
+            //NormalModelCollection 放置拖拉進來的模型位置
+            if (NormalModelCollection != null && NormalModelCollection.Count != 0)
+            {
+                foreach (Element3D model in NormalModelCollection)
+                {
+                    BoneModel normalModel = model as BoneModel;
+                    //如果選擇多模型但檔名是空或不存在則進不去
+                    //if (normalModel != null && normalModel.ModelContainer != null)
+                    if (normalModel?.ModelContainer != null)
+                    {
+                        modelGroup.Children.Add(normalModel.ModelContainer);
+                    }
+                }
+            }
 
             if (modelGroup.Children.Count == 0)
                 return;
@@ -378,124 +347,119 @@ namespace Nart
             var point = e.GetPosition(viewport);
             var hitTests = viewport.FindHits(point);
 
-            if (hitTests != null && hitTests.Count > 0)
+            //null或是點到的東西為少於零個
+            if (hitTests == null || hitTests.Count <= 0)
+                return;
+
+            foreach (var hit in hitTests)
             {
+                //不是BoneModel的話換下一個模型
+                if (!(hit.ModelHit is BoneModel))
+                    continue;
 
-                foreach (var hit in hitTests)
+                Point3D center = hit.PointHit;
+                Vector3D normal = hit.NormalAtHit;
+                normal.Normalize();
+
+
+                BallModel ball = new BallModel
                 {
-                    if (hit.ModelHit is BoneModel)
-                    {
-                        Point3D center = hit.PointHit;
+                    BallName = "!!!!!",
+                    BallInfo = "!!!!!"
+                };
 
 
-                        BallModel ball = new BallModel
-                        {
-                            BallName = "!!!!!",
-                            BallInfo = "!!!!!"
-                        };
+                var b1 = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+
+                Vector3 center2 = new Vector3(Convert.ToSingle(center.X), Convert.ToSingle(center.Y), Convert.ToSingle(center.Z));
+                ball.Center = center2;
+                b1.AddSphere(center2, 1.5);
+                //b1.AddPipe(,,2,5,4);
 
 
-                        var b1 = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
-
-                        Vector3 center2 = new Vector3(Convert.ToSingle(center.X), Convert.ToSingle(center.Y), Convert.ToSingle(center.Z));
-                        ball.Center = center2;
-                        b1.AddSphere(center2, 2);
-                        ball.Geometry = b1.ToMeshGeometry3D();
+                ball.Geometry = b1.ToMeshGeometry3D();
 
 
-                        HelixToolkit.Wpf.SharpDX.PhongMaterial material = new PhongMaterial();
-
-                        material.ReflectiveColor = SharpDX.Color.Black;
-                        float ambient = 0.0f;
-                        material.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
-                        material.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
-                        int specular = 90;
-                        material.SpecularColor = new SharpDX.Color(specular, specular, specular, 255);
-                        material.SpecularShininess = 60;
-                        material.DiffuseColor = new Color4();
+                      
 
 
+                ball.Material = PhongMaterials.Silver;
+                ball.Transform = new MatrixTransform3D();
 
-
-
-
-                        ball.Material = PhongMaterials.Silver;
-                        ball.Transform = new System.Windows.Media.Media3D.MatrixTransform3D();
-
-                        MainViewModel.Data.BallCollection.Add(ball);
-                        break;
-                    }
-
-                }
-
-
+                MainViewModel.Data.BallCollection.Add(ball);
+                break;
             }
-
         }
 
         public void OnDrop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
+                return;
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files != null)
             {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                for (int i = 0; i < files.Length; i++)
+                foreach (string file in files)
                 {
-                    string extension = Path.GetExtension(files[i]).ToLower();
-                    if (!extension.Equals(".stl")) continue;
+                    string extension = Path.GetExtension(file)?.ToLower();
+                    //判斷當前的檔案副檔名是否為stl，不是的話則跳過
+                    if (extension != null && !extension.Equals(".stl"))
+                        continue;
                     BoneModel model = new BoneModel
                     {
-                        FilePath = files[i],
+                        FilePath = file,
                         MarkerId = "",
                         DiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187),
-                        Transform = new System.Windows.Media.Media3D.MatrixTransform3D()
+                        Transform = new MatrixTransform3D()
                     };
-
                     model.LoadModel();
-
                     MultiAngleViewModel.BoneModelCollection.Add(model);
                 }
-                MultiAngleViewModel.ResetCameraPosition();
             }
+            MultiAngleViewModel.ResetCameraPosition();
         }
         public void OnDragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
+                return;
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files != null)
             {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                for (int i = 0; i < files.Length; i++)
+                foreach (string file in files)
                 {
-                    string extension = Path.GetExtension(files[i]).ToLower();
-                    if (extension.Equals(".stl"))
-                    {
-                        e.Effects = DragDropEffects.Copy;
-                        e.Handled = true;
-                        return;
-                    }
+                    string extension = Path.GetExtension(file)?.ToLower();
+                    //判斷當前的檔案副檔名是否為stl，不是的話則跳過
+                    if (extension != null && !extension.Equals(".stl"))
+                        continue;
+                    //當有一個是時候直接允許拖"放"
+                    e.Effects = DragDropEffects.Copy;
+                    e.Handled = true;
+                    return;
                 }
-
-                e.Effects = DragDropEffects.None;
-                e.Handled = true;
             }
+            e.Effects = DragDropEffects.None;
+            e.Handled = true;
         }
         public void OnDragOver(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                for (int i = 0; i < files.Length; i++)
-                {
-                    string extension = Path.GetExtension(files[i]).ToLower();
-                    if (extension.Equals(".stl"))
-                    {
-                        e.Effects = DragDropEffects.Copy;
-                        e.Handled = true;
-                        return;
-                    }
-                }
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
+                return;
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                e.Effects = DragDropEffects.None;
-                e.Handled = true;
+            if (files != null)
+            {
+                foreach (string file in files)
+                {
+                    string extension = Path.GetExtension(file)?.ToLower();
+                    if (extension == null || !extension.Equals(".stl"))
+                        continue;
+                    e.Effects = DragDropEffects.Copy;
+                    e.Handled = true;
+                    return;
+                }
             }
+
+            e.Effects = DragDropEffects.None;
+            e.Handled = true;
         }
 
 
@@ -507,7 +471,7 @@ namespace Nart
         }
         protected static bool SetStaticValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")//CallerMemberName主要是.net4.5後定義好的caller訊息，能將訊息傳給後者的變數，目的在使用時不用特地傳入"Property"名稱
         {
-            if (object.Equals(oldValue, newValue))
+            if (Equals(oldValue, newValue))
             {
                 return false;
             }

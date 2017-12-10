@@ -143,21 +143,19 @@ namespace Nart.Model_Object
         /// </summary>        
         public void SetBoneMaterial()
         {
-            if (DiffuseColor != null)
-            {
-                HelixToolkit.Wpf.SharpDX.PhongMaterial material = new PhongMaterial();
+          
+            HelixToolkit.Wpf.SharpDX.PhongMaterial material = new PhongMaterial();
 
-                material.ReflectiveColor = SharpDX.Color.Black;
-                float ambient = 0.0f;
-                material.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
-                material.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
-                int specular = 90;
-                material.SpecularColor = new SharpDX.Color(specular, specular, specular, 255);
-                material.SpecularShininess = 60;
-                material.DiffuseColor = DiffuseColor.ToColor4();
+            material.ReflectiveColor = SharpDX.Color.Black;
+            float ambient = 0.0f;
+            material.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
+            material.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
+            int specular = 90;
+            material.SpecularColor = new SharpDX.Color(specular, specular, specular, 255);
+            material.SpecularShininess = 60;
+            material.DiffuseColor = DiffuseColor.ToColor4();
 
-                this.Material = material;
-            }
+            this.Material = material;
         }
         /// <summary>
         /// load進模型檔案
@@ -165,12 +163,12 @@ namespace Nart.Model_Object
         public void LoadModel()
         {
             //ModelGeometry已經有幾何模型存在內部 及 阻擋檔案不存在的情況
-            if (this.IsLoaded || !System.IO.File.Exists(FilePath))
+            if (IsLoaded || !File.Exists(FilePath))
             {
                 return;
             }
             //利用helixtoolkit.wpf裡面提供的StlReader讀檔案，後續要轉成wpf.sharpdx可用的格式
-            StLReader reader = new HelixToolkit.Wpf.StLReader();
+            StLReader reader = new StLReader();
 
             ModelContainer = reader.Read(FilePath);
 
@@ -191,7 +189,7 @@ namespace Nart.Model_Object
 
             foreach (Model3D model in ModelContainer.Children)
             {
-                var geometryModel = model as System.Windows.Media.Media3D.GeometryModel3D;
+                var geometryModel = model as GeometryModel3D;
 
                 MeshGeometry3D mesh = geometryModel?.Geometry as MeshGeometry3D;
 
@@ -258,10 +256,10 @@ namespace Nart.Model_Object
 
             GeometryModel3D model = new GeometryModel3D
             {
-                Geometry = mesh
+                Geometry = mesh,
+                Transform = Transform
             };
 
-            model.Transform = Transform;
 
             StlExporter export = new StlExporter();
             string name = Path.GetFileName(FilePath);
