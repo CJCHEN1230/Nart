@@ -261,6 +261,7 @@ namespace Nart.Model_Object
                 Geometry = mesh
             };
 
+            model.Transform = Transform;
 
             StlExporter export = new StlExporter();
             string name = Path.GetFileName(FilePath);
