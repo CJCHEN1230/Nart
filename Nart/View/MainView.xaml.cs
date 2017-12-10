@@ -222,5 +222,17 @@ namespace Nart
             Console.WriteLine("\nCol2  Width:" + Col2.Width);
             Console.WriteLine("\nCol2  ActualWidth:" + Col2.ActualWidth);
         }
+
+        private void button_Click_2(object sender, RoutedEventArgs e)
+        {
+            BoneModel bone = MultiAngleViewModel.BoneModelCollection[0] as BoneModel;
+            BoneModel bone1 = MultiAngleViewModel.BoneModelCollection[1] as BoneModel;
+            //BoneModel bone2= MultiAngleViewModel.BoneModelCollection[2] as BoneModel;
+
+
+            bone?.SaveModel();
+            bone1?.SaveModel();
+            //bone2?.SaveModel();
+        }
     }
 }

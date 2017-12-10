@@ -388,9 +388,11 @@ namespace Nart
                         Point3D center = hit.PointHit;
 
 
-                        BallModel ball = new BallModel();
-                        ball.BallName = "!!!!!";
-                        ball.BallInfo = "!!!!!";
+                        BallModel ball = new BallModel
+                        {
+                            BallName = "!!!!!",
+                            BallInfo = "!!!!!"
+                        };
 
 
                         var b1 = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
@@ -439,19 +441,18 @@ namespace Nart
                 for (int i = 0; i < files.Length; i++)
                 {
                     string extension = Path.GetExtension(files[i]).ToLower();
-                    if (extension.Equals(".stl"))
+                    if (!extension.Equals(".stl")) continue;
+                    BoneModel model = new BoneModel
                     {
+                        FilePath = files[i],
+                        MarkerId = "",
+                        DiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187),
+                        Transform = new System.Windows.Media.Media3D.MatrixTransform3D()
+                    };
 
-                        BoneModel model = new BoneModel();
+                    model.LoadModel();
 
-                        model.FilePath = files[i];
-                        model.MarkerId = "";
-                        model.DiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187);
-                        model.LoadModel();
-                        model.Transform = new System.Windows.Media.Media3D.MatrixTransform3D();
-
-                        MultiAngleViewModel.BoneModelCollection.Add(model);
-                    }
+                    MultiAngleViewModel.BoneModelCollection.Add(model);
                 }
                 MultiAngleViewModel.ResetCameraPosition();
             }

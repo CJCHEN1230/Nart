@@ -9,10 +9,15 @@ using HelixToolkit.Wpf;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf.SharpDX.Core;
 using SharpDX;
+using GeometryModel3D = System.Windows.Media.Media3D.GeometryModel3D;
+using MeshGeometry3D = System.Windows.Media.Media3D.MeshGeometry3D;
+using Model3D = System.Windows.Media.Media3D.Model3D;
 
 namespace Nart.Model_Object
 {
+    using System.IO;
     using System.Windows;
+    using System.Windows.Media;
     using Color = System.Windows.Media.Color;
     public class BoneModel : MeshGeometryModel3D
     {
@@ -39,7 +44,7 @@ namespace Nart.Model_Object
         /// <summary>
         /// MarkerID 的值
         /// </summary>
-        public String MarkerId;
+        public string MarkerId;
         /// <summary>
         /// 所屬綁定的骨頭部位
         /// </summary>
@@ -51,7 +56,7 @@ namespace Nart.Model_Object
         /// <summary>
         /// 模型路徑
         /// </summary>
-        public String FilePath;
+        public string FilePath;
         /// <summary>
         /// 此Model的最終轉換矩陣
         /// </summary>
@@ -175,31 +180,36 @@ namespace Nart.Model_Object
                 Convert.ToSingle(bound.Y + bound.SizeY / 2.0),
                 Convert.ToSingle(bound.Z + bound.SizeZ / 2.0));
 
-            HelixToolkit.Wpf.SharpDX.MeshGeometry3D modelGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometry3D();
+            HelixToolkit.Wpf.SharpDX.MeshGeometry3D modelGeometry =new HelixToolkit.Wpf.SharpDX.MeshGeometry3D
+                {
+                    Normals = new Vector3Collection(),
+                    Positions = new Vector3Collection(),
+                    Indices = new IntCollection()
+                };
 
-            modelGeometry.Normals = new Vector3Collection();
-            modelGeometry.Positions = new Vector3Collection();
-            modelGeometry.Indices = new IntCollection();
 
 
-            for (int i = 0; i < ModelContainer.Children.Count; i++) 
+            foreach (Model3D model in ModelContainer.Children)
             {
-                var geometryModel = ModelContainer.Children[i] as System.Windows.Media.Media3D.GeometryModel3D;
+                var geometryModel = model as System.Windows.Media.Media3D.GeometryModel3D;
 
-                var mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
+                MeshGeometry3D mesh = geometryModel?.Geometry as MeshGeometry3D;
+
+                if (mesh == null)
+                    continue;
 
                 //將從stlreader讀到的資料轉入
                 foreach (Point3D position in mesh.Positions)
                 {
                     modelGeometry.Positions.Add(new Vector3(
-                          Convert.ToSingle(position.X)
+                        Convert.ToSingle(position.X)
                         , Convert.ToSingle(position.Y)
                         , Convert.ToSingle(position.Z)));
                 }
                 foreach (Vector3D normal in mesh.Normals)
                 {
                     modelGeometry.Normals.Add(new Vector3(
-                          Convert.ToSingle(normal.X)
+                        Convert.ToSingle(normal.X)
                         , Convert.ToSingle(normal.Y)
                         , Convert.ToSingle(normal.Z)));
                 }
@@ -211,12 +221,56 @@ namespace Nart.Model_Object
 
             SetBoneMaterial();
 
-            this.Geometry = modelGeometry;
+            Geometry = modelGeometry;
 
-            this.Transform = new MatrixTransform3D();
+            Transform = new MatrixTransform3D();
 
-            this.IsLoaded = true;
+            IsLoaded = true;
         }
 
+        public void SaveModel()
+        {
+            HelixToolkit.Wpf.SharpDX.MeshGeometry3D geometry= Geometry as HelixToolkit.Wpf.SharpDX.MeshGeometry3D;
+
+            if (geometry == null)
+                return;
+
+
+            MeshGeometry3D mesh = new MeshGeometry3D
+            {
+                Positions = new Point3DCollection(),
+                Normals = new Vector3DCollection(),
+                TriangleIndices = new Int32Collection()
+            };
+
+            foreach (Vector3 position in geometry.Positions)
+            {
+                mesh.Positions.Add(new Point3D(position.X,position.Y,position.Z));                
+            }
+            foreach (Vector3 normal in geometry.Normals)
+            {
+                mesh.Normals.Add(new Vector3D(normal.X, normal.Y, normal.Z));
+            }
+            foreach (int triangleindice in geometry.TriangleIndices)
+            {
+                mesh.TriangleIndices.Add(triangleindice);
+            }
+
+            GeometryModel3D model = new GeometryModel3D
+            {
+                Geometry = mesh
+            };
+
+
+            StlExporter export = new StlExporter();
+            string name = Path.GetFileName(FilePath);
+            using (var fileStream = File.Create("D:\\Desktop\\test\\"+ name+".stl"))
+            {
+                export.Export(model, fileStream);
+            }
+
+       
+
+        }
     }
 }
