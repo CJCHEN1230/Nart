@@ -357,10 +357,16 @@ namespace Nart
                 if (!(hit.ModelHit is BoneModel))
                     continue;
 
-                Point3D center = hit.PointHit;
+                Point3D pointHit = hit.PointHit;
                 Vector3D normal = hit.NormalAtHit;
                 normal.Normalize();
+                double temp1 = 1;
+                double temp2 = 4;
 
+                Vector3 point1 = new Vector3(Convert.ToSingle(pointHit.X - temp1 * normal.X), Convert.ToSingle(pointHit.Y - temp1 * normal.Y), Convert.ToSingle(pointHit.Z - temp1 * normal.Z));
+                Vector3 point2 = new Vector3(Convert.ToSingle(pointHit.X + temp2 * normal.X), Convert.ToSingle(pointHit.Y + temp2 * normal.Y), Convert.ToSingle(pointHit.Z + temp2 * normal.Z));
+                   
+                
 
                 BallModel ball = new BallModel
                 {
@@ -369,21 +375,46 @@ namespace Nart
                 };
 
 
-                var b1 = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
-
-                Vector3 center2 = new Vector3(Convert.ToSingle(center.X), Convert.ToSingle(center.Y), Convert.ToSingle(center.Z));
-                ball.Center = center2;
-                b1.AddSphere(center2, 1.5);
-                //b1.AddPipe(,,2,5,4);
+                var all = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+                var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+                var cylinderContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
 
 
-                ball.Geometry = b1.ToMeshGeometry3D();
+                double theta = Math.Acos(1.0/1.5);
+                double length = 1.5 * Math.Sin(theta);
+                Vector3 ballCenter = new Vector3(Convert.ToSingle(point2.X + length * normal.X),
+                    Convert.ToSingle(point2.Y + length * normal.Y), Convert.ToSingle(point2.Z + length * normal.Z));
+                ball.Center = ballCenter;
+
+                
+                ballContainer.AddSphere(ballCenter, 1.5);
+                cylinderContainer.AddPipe(point1, point2, 2, 5, 200);
+
+                all.AddSphere(ballCenter, 1.5);
+                all.AddPipe(point1, point2, 2, 5, 200);
+                //將球跟管分開儲存
+                ball.ballGeometry = ballContainer.ToMeshGeometry3D();
+                ball.pipeGeometry = cylinderContainer.ToMeshGeometry3D();
+
+                ball.Geometry = all.ToMeshGeometry3D();
 
 
-                      
+                HelixToolkit.Wpf.SharpDX.PhongMaterial material = new PhongMaterial();
+
+                material.ReflectiveColor = SharpDX.Color.Black;
+                float ambient = 0.0f;
+                material.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
+                material.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
+                int specular = 90;
+                material.SpecularColor = new SharpDX.Color(specular, specular, specular, 255);
+                material.SpecularShininess = 60;
+                material.DiffuseColor = new Color4(1.0f, 1.0f, 1.0f, 0.8f);
+
+            
 
 
-                ball.Material = PhongMaterials.Silver;
+                ball.Material = material;
+                //ball.Material = PhongMaterials.Silver;
                 ball.Transform = new MatrixTransform3D();
 
                 MainViewModel.Data.BallCollection.Add(ball);

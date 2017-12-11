@@ -1,12 +1,15 @@
-﻿using HelixToolkit.Wpf.SharpDX;
+﻿using HelixToolkit.Wpf;
+using HelixToolkit.Wpf.SharpDX;
 using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Media3D;
 
 namespace Nart.Model_Object
@@ -19,6 +22,9 @@ namespace Nart.Model_Object
         public Vector3 Center;
         private string _ballName;
         private string _ballInfo;
+
+        public HelixToolkit.Wpf.SharpDX.MeshGeometry3D ballGeometry;
+        public HelixToolkit.Wpf.SharpDX.MeshGeometry3D pipeGeometry;
 
         public BallModel()
                     : this(new Point3D(0,0,0))
@@ -56,13 +62,14 @@ namespace Nart.Model_Object
             }
         }
 
+        
+
+
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName]string info = "")
         {
-            if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
         }
         protected bool SetValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")
         {

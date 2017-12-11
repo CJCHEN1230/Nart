@@ -27,6 +27,8 @@ using Nart.ExtensionMethods;
 using Nart.Model_Object;
 using NartControl;
 using System.Windows.Media.Animation;
+using SharpDX;
+using System.IO;
 
 namespace Nart
 {
@@ -225,14 +227,109 @@ namespace Nart
 
         private void button_Click_2(object sender, RoutedEventArgs e)
         {
-            BoneModel bone = MultiAngleViewModel.BoneModelCollection[0] as BoneModel;
-            BoneModel bone1 = MultiAngleViewModel.BoneModelCollection[1] as BoneModel;
-            //BoneModel bone2= MultiAngleViewModel.BoneModelCollection[2] as BoneModel;
+            //ball的模型
+            Model3DGroup ballGroup = new Model3DGroup();
+            foreach (BallModel model in MainViewModel.Data.BallCollection)
+            {
+                System.Windows.Media.Media3D.MeshGeometry3D ballMesh = new System.Windows.Media.Media3D.MeshGeometry3D
+                {
+                    Positions = new Point3DCollection(),
+                    Normals = new Vector3DCollection(),
+                    TriangleIndices = new Int32Collection()
+                };
+                HelixToolkit.Wpf.SharpDX.MeshGeometry3D geometry = model.ballGeometry as HelixToolkit.Wpf.SharpDX.MeshGeometry3D;
+
+                if (geometry == null)
+                    return;
+
+                foreach (Vector3 position in geometry.Positions)
+                {
+                    ballMesh.Positions.Add(new Point3D(position.X, position.Y, position.Z));
+                }
+                foreach (Vector3 normal in geometry.Normals)
+                {
+                    ballMesh.Normals.Add(new Vector3D(normal.X, normal.Y, normal.Z));
+                }
+                foreach (int triangleindice in geometry.TriangleIndices)
+                {
+                    ballMesh.TriangleIndices.Add(triangleindice);
+                }
+                System.Windows.Media.Media3D.GeometryModel3D ballModel = new System.Windows.Media.Media3D.GeometryModel3D
+                {
+                    Geometry = ballMesh,
+                };
+
+                ballGroup.Children.Add(ballModel);
+            }
+        
+            StlExporter export1 = new StlExporter();
+            string name1 = "ball.stl";
+            using (var fileStream = File.Create("D:\\Desktop\\test\\" + name1))
+            {
+                export1.Export(ballGroup, fileStream);
+            }
 
 
-            bone?.SaveModel();
-            bone1?.SaveModel();
-            //bone2?.SaveModel();
-        }
+
+            //cylinder的模型
+            Model3DGroup pipeGroup = new Model3DGroup();
+            foreach (BallModel model in MainViewModel.Data.BallCollection)
+            {
+                System.Windows.Media.Media3D.MeshGeometry3D pipeMesh = new System.Windows.Media.Media3D.MeshGeometry3D
+                {
+                    Positions = new Point3DCollection(),
+                    Normals = new Vector3DCollection(),
+                    TriangleIndices = new Int32Collection()
+                };
+                HelixToolkit.Wpf.SharpDX.MeshGeometry3D geometry = model.pipeGeometry as HelixToolkit.Wpf.SharpDX.MeshGeometry3D;
+
+                if (geometry == null)
+                    return;
+
+                foreach (Vector3 position in geometry.Positions)
+                {
+                    pipeMesh.Positions.Add(new Point3D(position.X, position.Y, position.Z));
+                }
+                foreach (Vector3 normal in geometry.Normals)
+                {
+                    pipeMesh.Normals.Add(new Vector3D(normal.X, normal.Y, normal.Z));
+                }
+                foreach (int triangleindice in geometry.TriangleIndices)
+                {
+                    pipeMesh.TriangleIndices.Add(triangleindice);
+                }
+                System.Windows.Media.Media3D.GeometryModel3D pipeModel = new System.Windows.Media.Media3D.GeometryModel3D
+                {
+                    Geometry = pipeMesh,
+                };
+
+                pipeGroup.Children.Add(pipeModel);
+            }
+
+            StlExporter export2 = new StlExporter();
+            string name2 = "pipe.stl";
+            using (var fileStream = File.Create("D:\\Desktop\\test\\" + name2))
+            {
+                export2.Export(pipeGroup, fileStream);
+            }
+
+
+            //存球資料
+            FileStream fs = new FileStream("D:\\Desktop\\test\\balldata.txt", FileMode.Create);
+            StreamWriter sw = new StreamWriter(fs);
+            foreach (BallModel model in MainViewModel.Data.BallCollection)
+            {               
+                
+               sw.Write(model.Center.X+" "+model.Center.Y+" "+ model.Center.Z+"\r\n");
+            }
+            //清空緩衝區
+             sw.Flush();
+              //關閉流
+              sw.Close();
+              fs.Close();
+             
+
+
+}
     }
 }

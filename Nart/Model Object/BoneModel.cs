@@ -228,6 +228,7 @@ namespace Nart.Model_Object
 
         public void SaveModel()
         {
+
             HelixToolkit.Wpf.SharpDX.MeshGeometry3D geometry= Geometry as HelixToolkit.Wpf.SharpDX.MeshGeometry3D;
 
             if (geometry == null)

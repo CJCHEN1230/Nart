@@ -296,8 +296,8 @@ namespace Nart
             targetMandible.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(plannedMandible.ToMatrix3D());
 
             MultiAngleViewModel.NavigationTargetCollection.Add(head);
-            MultiAngleViewModel.NavigationTargetCollection.Add(targetMaxilla);
-            MultiAngleViewModel.NavigationTargetCollection.Add(targetMandible);
+            //MultiAngleViewModel.NavigationTargetCollection.Add(targetMaxilla);
+            //MultiAngleViewModel.NavigationTargetCollection.Add(targetMandible);
 
 
 
@@ -320,8 +320,8 @@ namespace Nart
             };
             oriMandible.LoadModel();
 
-            MultiAngleViewModel.BoneModelCollection.Add(oriMaxilla);
-            MultiAngleViewModel.BoneModelCollection.Add(oriMandible);
+            //MultiAngleViewModel.BoneModelCollection.Add(oriMaxilla);
+            //MultiAngleViewModel.BoneModelCollection.Add(oriMandible);
 
             //載入OSP模型
             OspModel headOsp = new OspModel
