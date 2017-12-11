@@ -21,27 +21,30 @@ namespace Nart
     public class NavigateViewModel : ObservableObject
     {
 
-        public static bool IsSet = false;
-        public static bool FirstStageDone = false;
+        /// <summary>
+        /// NavigateView頁面
+        /// </summary>
+        private readonly NavigateView _navigateView;
         /// <summary>
         /// 導引順序先開上顎or先開下顎
         /// </summary>
-        private static String _firstNavigation = "Maxilla";
+        private  string _firstNavigation = "Maxilla";
+
         #region N-Art計畫部分
         /// <summary>
         /// 最後上顎轉移矩陣
         /// </summary>
-        private String _plannedMaxillaMatrix = "../../../data/蔡慧君/plan-maxilla-matrix.txt";
+        private string _plannedMaxillaMatrix = "../../../data/蔡慧君/plan-maxilla-matrix.txt";
         /// <summary>
         /// 最後下顎轉移矩陣
         /// </summary>
-        private String _plannedMandibleMatrix = "../../../data/蔡慧君/plan-mandible-matrix.txt";
+        private string _plannedMandibleMatrix = "../../../data/蔡慧君/plan-mandible-matrix.txt";
         #endregion       
         #region 原始模型設定部分
         /// <summary>
         /// 最後上顎轉移矩陣
         /// </summary>
-        private String _headModel = "../../../data/蔡慧君/head.stl";
+        private string _headModel = "../../../data/蔡慧君/head.stl";
         /// <summary>
         /// 頭部模型顏色
         /// </summary>
@@ -49,7 +52,7 @@ namespace Nart
         /// <summary>
         /// 最後下顎轉移矩陣
         /// </summary>
-        private String _maxillaModel = "../../../data/蔡慧君/pre-maxilla.stl";
+        private string _maxillaModel = "../../../data/蔡慧君/pre-maxilla.stl";
         /// <summary>
         /// 上顎模型顏色
         /// </summary>
@@ -57,29 +60,24 @@ namespace Nart
         /// <summary>
         /// 最後上顎規劃後模型
         /// </summary>
-        private String _mandibleModel = "../../../data/蔡慧君/pre-mandible.stl";
+        private string _mandibleModel = "../../../data/蔡慧君/pre-mandible.stl";
         /// <summary>
         /// 下顎模型顏色
         /// </summary>
         private Color _mandibleDiffuseColor = Color.FromArgb(255, 2, 231, 2);
         #endregion
-
-
         #region OSP部分
         /// <summary>
         /// 頭部對稱面
         /// </summary>
-        private String _headOsp = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl";
+        private string _headOsp = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl";
         /// <summary>
         /// 下顎對稱面
         /// </summary>
-        private String _mandibleOsp = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl";
+        private string _mandibleOsp = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl";
         #endregion
 
-        /// <summary>
-        /// View頁面
-        /// </summary>
-        private readonly NavigateView _navigateView;
+        
 
 
 
@@ -92,7 +90,7 @@ namespace Nart
 
 
 
-        public String PlannedMaxillaMatrix
+        public string PlannedMaxillaMatrix
         {
             get
             {
@@ -103,7 +101,7 @@ namespace Nart
                 SetValue(ref _plannedMaxillaMatrix, value);
             }
         }
-        public String PlannedMandibleMatrix
+        public string PlannedMandibleMatrix
         {
             get
             {
@@ -114,8 +112,7 @@ namespace Nart
                 SetValue(ref _plannedMandibleMatrix, value);
             }
         }
-
-        public String HeadModel
+        public string HeadModel
         {
             get
             {
@@ -126,7 +123,7 @@ namespace Nart
                 SetValue(ref _headModel, value);
             }
         }
-        public String MaxillaModel
+        public string MaxillaModel
         {
             get
             {
@@ -137,7 +134,7 @@ namespace Nart
                 SetValue(ref _maxillaModel, value);
             }
         }
-        public String MandibleModel
+        public string MandibleModel
         {
             get
             {
@@ -181,8 +178,7 @@ namespace Nart
                 SetValue(ref _mandibleDiffuseColor, value);
             }
         }
-
-        public String HeadOsp
+        public string HeadOsp
         {
             get
             {
@@ -192,9 +188,8 @@ namespace Nart
             {
                 SetValue(ref _headOsp, value);
             }
-        } 
-     
-        public String MandibleOsp
+        }      
+        public string MandibleOsp
         {
             get
             {
@@ -205,13 +200,7 @@ namespace Nart
                 SetValue(ref _mandibleOsp, value);
             }
         } 
-
-
-
-
-
-
-        public static string FirstNavigation
+        public string FirstNavigation
         {
             get
             {
@@ -219,10 +208,12 @@ namespace Nart
             }
             set
             {
-                SetStaticValue(ref _firstNavigation, value);
+                SetValue(ref _firstNavigation, value);
+                //更新先導航順序
+                MainViewModel.Data.FirstNavigation = value;
             }
         }
-        public ICommand ModelSettingCommand { private set; get; }
+        public ICommand ModelSettingCommand { get; }
 
         private void SetBinding(object source, DependencyObject target, string propertyName, DependencyProperty dp, BindingMode mode)
         {
@@ -232,22 +223,17 @@ namespace Nart
             BindingOperations.SetBinding(target, dp, binding);
         }
         public Matrix ReadMatrixFile(string  path)
-        {
-
-            
+        {            
             try
             {
-                string fileContent = File.ReadAllText(path);//"../../../data/CaliR_L.txt"
+                string fileContent = File.ReadAllText(path);
                 string[] contentArray = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
-
-                float[] matrixInfo = Array.ConvertAll(contentArray, float.Parse);
-                
+                float[] matrixInfo = Array.ConvertAll(contentArray, float.Parse);                
                 if (matrixInfo.Length!=16)
                 {
                     throw new Exception();
                 }
                 
-
                 return new Matrix(matrixInfo);
             }
             catch
@@ -260,12 +246,11 @@ namespace Nart
         }
         public void LoadSettingModel(object o)
         {
-
             BoneModel head = new BoneModel
             {
                 FilePath = HeadModel,
                 MarkerId = "Head",
-                BoneName = "Head",
+                BoneType = "Head",
                 DiffuseColor = HeadDiffuseColor
             };
             head.LoadModel();
@@ -277,11 +262,11 @@ namespace Nart
                 FilePath = MaxillaModel,
                 IsRendering = false,
                 MarkerId = "",
-                BoneName = "Maxilla",
-                DiffuseColor = Color.FromArgb(255, 100, 100, 100)
+                BoneType = "Maxilla",
+                DiffuseColor = Color.FromArgb(255, 100, 100, 100),
+                Transform = new MatrixTransform3D(plannedMatrix.ToMatrix3D())
             };
             targetMaxilla.LoadModel();
-            targetMaxilla.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(plannedMatrix.ToMatrix3D()); 
 
             Matrix plannedMandible = ReadMatrixFile(_plannedMandibleMatrix);
             BoneModel targetMandible = new BoneModel
@@ -289,15 +274,15 @@ namespace Nart
                 FilePath = MandibleModel,
                 IsRendering = false,
                 MarkerId = "",
-                BoneName = "Mandible",
-                DiffuseColor = Color.FromArgb(255, 100, 100, 100)
+                BoneType = "Mandible",
+                DiffuseColor = Color.FromArgb(255, 100, 100, 100),
+                Transform = new MatrixTransform3D(plannedMandible.ToMatrix3D())
             };
             targetMandible.LoadModel();        
-            targetMandible.Transform = new System.Windows.Media.Media3D.MatrixTransform3D(plannedMandible.ToMatrix3D());
 
-            MultiAngleViewModel.NavigationTargetCollection.Add(head);
-            //MultiAngleViewModel.NavigationTargetCollection.Add(targetMaxilla);
-            //MultiAngleViewModel.NavigationTargetCollection.Add(targetMandible);
+            MultiAngleViewModel.TargetCollection.Add(head);
+            MultiAngleViewModel.TargetCollection.Add(targetMaxilla);
+            MultiAngleViewModel.TargetCollection.Add(targetMandible);
 
 
 
@@ -305,7 +290,7 @@ namespace Nart
             BoneModel oriMaxilla = new BoneModel
             {
                 FilePath = MaxillaModel,
-                BoneName = "Maxilla",
+                BoneType = "Maxilla",
                 MarkerId = "Splint",
                 DiffuseColor = MaxillaDiffuseColor
             };
@@ -314,21 +299,21 @@ namespace Nart
             BoneModel oriMandible = new BoneModel
             {
                 FilePath = MandibleModel,
-                BoneName = "Mandible",
+                BoneType = "Mandible",
                 MarkerId = "Splint",
                 DiffuseColor = MandibleDiffuseColor
             };
             oriMandible.LoadModel();
-
-            //MultiAngleViewModel.BoneModelCollection.Add(oriMaxilla);
-            //MultiAngleViewModel.BoneModelCollection.Add(oriMandible);
+            
+            MainViewModel.Data.BoneCollection.Add(oriMaxilla);
+            MainViewModel.Data.BoneCollection.Add(oriMandible);
 
             //載入OSP模型
             OspModel headOsp = new OspModel
             {
                 MarkerId = "Head",
                 FilePath = HeadOsp,
-                DiffuseColor = System.Windows.Media.Color.FromArgb(50, 11, 243, 243)
+                DiffuseColor = Color.FromArgb(50, 11, 243, 243)
             };
             headOsp.LoadOsp();
 
@@ -336,29 +321,29 @@ namespace Nart
             {
                 MarkerId = "C",
                 FilePath = MandibleOsp,
-                DiffuseColor = System.Windows.Media.Color.FromArgb(50, 2, 231, 2)
+                DiffuseColor = Color.FromArgb(50, 2, 231, 2)
             };
             mandibleOsp.LoadOsp();
+
+            //綁定下顎對稱面到下顎模型
             SetBinding(oriMandible, mandibleOsp, "Transform", HelixToolkit.Wpf.SharpDX.Model3D.TransformProperty, BindingMode.OneWay);
             MultiAngleViewModel.OspModelCollection.Add(headOsp);
             MultiAngleViewModel.OspModelCollection.Add(mandibleOsp);
 
             //標記屬於上顎的ID
-            DraggableTriangle maxillaTargetTriangle =
-                new DraggableTriangle(targetMaxilla.ModelCenter)
-                {
-                    MarkerId = "Maxilla",
-                    IsRendering = false
-                };
+            DraggableTriangle maxillaTargetTriangle =new DraggableTriangle(targetMaxilla.ModelCenter)                
+            {
+                MarkerId = "Maxilla",
+                IsRendering = false
+            };
             MultiAngleViewModel.TriangleModelCollection.Add(maxillaTargetTriangle);
 
             //標記屬於下顎的ID
-            DraggableTriangle mandibleTargetTriangle =
-                new DraggableTriangle(targetMandible.ModelCenter)
-                {
-                    MarkerId = "Mandible",
-                    IsRendering = false
-                };
+            DraggableTriangle mandibleTargetTriangle =new DraggableTriangle(targetMandible.ModelCenter)                
+            {
+                MarkerId = "Mandible",
+                IsRendering = false
+            };
             MultiAngleViewModel.TriangleModelCollection.Add(mandibleTargetTriangle);
 
             //將導航三角形綁定到導航的上顎
@@ -381,33 +366,15 @@ namespace Nart
             SetBinding(oriMandible, mandibleTriangle, "Transform", HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty, BindingMode.OneWay);
             MultiAngleViewModel.TriangleModelCollection.Add(mandibleTriangle);
 
+
+
             MultiAngleViewModel.ResetCameraPosition();
 
-            IsSet = true;
+            MainViewModel.Data.IsSet = true;
 
             _navigateView.Hide();
         }
 
-
-
-
-
-
-        public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;
-        protected static void OnStaticPropertyChanged([CallerMemberName]string info = "")
-        {
-            StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(info));
-        }
-        protected static bool SetStaticValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")//CallerMemberName主要是.net4.5後定義好的caller訊息，能將訊息傳給後者的變數，目的在使用時不用特地傳入"Property"名稱
-        {
-            if (object.Equals(oldValue, newValue))
-            {
-                return false;
-            }
-            oldValue = newValue;
-            OnStaticPropertyChanged(propertyName);
-            return true;
-        }
-
+        
     }
 }

@@ -130,9 +130,6 @@
     <Compile Include="Control\CameraWrapper.xaml.cs">
       <DependentUpon>CameraWrapper.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Control\Expander_Ball.xaml.cs">
-      <DependentUpon>Expander_Ball.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Control\Expander_Info.xaml.cs">
       <DependentUpon>Expander_Info.xaml</DependentUpon>
     </Compile>
@@ -173,10 +170,6 @@
       <DependentUpon>NavigateView.xaml</DependentUpon>
     </Compile>
     <Page Include="Control\CameraWrapper.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Control\Expander_Ball.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

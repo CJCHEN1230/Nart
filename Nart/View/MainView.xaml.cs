@@ -148,13 +148,6 @@ namespace Nart
 
             var storyboard = new Storyboard();
             storyboard.Children.Add(animation);
-
-
-            //GridLengthAnimation animation2 = new GridLengthAnimation();
-            //animation2.From = Col1.Width;
-            //animation2.To = Col0.Width;
-            //animation2.Duration = new Duration(TimeSpan.FromMilliseconds(200));
-            //Col1.BeginAnimation(System.Windows.Controls.Button.WidthProperty, animation2);
         }
 
         private void settingButton1_Click(object sender, RoutedEventArgs e)

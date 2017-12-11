@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Nart.Control"
              mc:Ignorable="d" 
-             Header="Patient Information"    
              IsExpanded="True"
              Foreground="White"
              FontSize="18"

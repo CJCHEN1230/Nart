@@ -163,9 +163,8 @@ namespace Nart
         }
         private void MoveModel()
         {
-            for (int i = 0; i < MultiAngleViewModel.BoneModelCollection.Count; i++)
+            foreach (BoneModel boneModel in MainViewModel.Data.BoneCollection)
             {
-                BoneModel boneModel = MultiAngleViewModel.BoneModelCollection[i] as BoneModel;
                 boneModel.SetTransformMatrix();
             }
         }

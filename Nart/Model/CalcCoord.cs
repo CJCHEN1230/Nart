@@ -769,10 +769,9 @@ namespace Nart
                         
                         Matrix3D final = _CTtoMS * level2 * level3 * _MStoCT;
 
-                      
-                       foreach (Element3D model in MultiAngleViewModel.BoneModelCollection)
-                       {
-                           BoneModel boneModel = model as BoneModel;
+                        var boneCollection = MainViewModel.Data.BoneCollection;
+                       foreach (BoneModel boneModel in boneCollection)
+                       {                          
                            if (boneModel != null && boneModel.MarkerId == _worldPoints[i].MarkerId)
                            {
                                boneModel.AddItem(final);
@@ -811,10 +810,10 @@ namespace Nart
 
                         Matrix3D final =  level1 * level2 * _worldtoCT;
 
-
-                        for (int j = 0; j < MultiAngleViewModel.BoneModelCollection.Count; j++)
+                        var boneCollection = MainViewModel.Data.BoneCollection;
+                        foreach (BoneModel boneModel in boneCollection)
                         {
-                            BoneModel boneModel = MultiAngleViewModel.BoneModelCollection[j] as BoneModel;
+                           
                             if (boneModel.MarkerId == _worldPoints[i].MarkerId&& boneModel.IsRendering)
                             {
                                 boneModel.AddItem(final);
@@ -1010,11 +1009,11 @@ namespace Nart
                     return;
 
 
-                if (NavigateViewModel.FirstStageDone)
+                if (MainViewModel.Data.FirstStageDone)
                 {
                     DraggableTriangle targetTriangle;
                     DraggableTriangle movedTriangle;
-                    if (NavigateViewModel.FirstNavigation.Equals("Maxilla"))
+                    if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
                     {
                         targetTriangle = MultiAngleViewModel.TriangleModelCollection[0] as DraggableTriangle;
                         movedTriangle = MultiAngleViewModel.TriangleModelCollection[2] as DraggableTriangle;

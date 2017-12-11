@@ -40,9 +40,9 @@ namespace Nart
         private void button_Click(object sender, RoutedEventArgs e)
         {
             //確定已經註冊的情況
-            if (NavigateViewModel.IsSet&&CameraControl.TrackToggle)
+            if (MainViewModel.Data.IsSet&&CameraControl.TrackToggle)
             {
-                string firstNavigation = NavigateViewModel.FirstNavigation;
+                string firstNavigation = MainViewModel.Data.FirstNavigation;
 
                 for (int i = 0; i < MultiAngleViewModel.TriangleModelCollection.Count; i++) 
                 {
@@ -55,24 +55,25 @@ namespace Nart
                     }
                 }
 
-                for (int i = 0; i < MultiAngleViewModel.BoneModelCollection.Count; i++)
+                var boneCollection = MainViewModel.Data.BoneCollection;
+                for (int i = 0; i < boneCollection.Count; i++)
                 {
-                    BoneModel model = MultiAngleViewModel.BoneModelCollection[i] as BoneModel;
+                    BoneModel model = boneCollection[i] as BoneModel;
                     //骨骼名稱是上顎
-                    if (!model.BoneName.Equals(firstNavigation))
+                    if (!model.BoneType.Equals(firstNavigation))
                     {
                         //model.IsRendering = false;
                         model.Visibility = Visibility.Hidden;
                     }
                 }
 
-                for (int i = 0; i < MultiAngleViewModel.NavigationTargetCollection.Count; i++)
+                for (int i = 0; i < MultiAngleViewModel.TargetCollection.Count; i++)
                 {
-                    BoneModel model = MultiAngleViewModel.NavigationTargetCollection[i] as BoneModel;
-                    if (!model.BoneName.Equals("Head"))
+                    BoneModel model = MultiAngleViewModel.TargetCollection[i] as BoneModel;
+                    if (!model.BoneType.Equals("Head"))
                     {
                         //骨骼名稱是上顎
-                        if (model.BoneName.Equals(firstNavigation))
+                        if (model.BoneType.Equals(firstNavigation))
                         {
                             model.IsRendering = true;
                         }
@@ -82,16 +83,16 @@ namespace Nart
                         }
                     }
                 }
-                NavigateViewModel.FirstStageDone = true;
+                MainViewModel.Data.FirstStageDone = true;
             }
         }
 
         private void button_Copy_Click(object sender, RoutedEventArgs e)
         {
             //確定已經註冊的情況
-            if (NavigateViewModel.IsSet && CameraControl.TrackToggle)
+            if (MainViewModel.Data.IsSet && CameraControl.TrackToggle)
             {
-                string firstNavigation = NavigateViewModel.FirstNavigation;
+                string firstNavigation = MainViewModel.Data.FirstNavigation;
 
                 for (int i = 0; i < MultiAngleViewModel.TriangleModelCollection.Count; i++)
                 {
@@ -100,10 +101,11 @@ namespace Nart
                     model.IsRendering = !model.IsRendering;
                   
                 }
+                var boneCollection = MainViewModel.Data.BoneCollection;
 
-                for (int i = 0; i < MultiAngleViewModel.BoneModelCollection.Count; i++)
+                for (int i = 0; i < boneCollection.Count; i++)
                 {
-                    BoneModel model = MultiAngleViewModel.BoneModelCollection[i] as BoneModel;
+                    BoneModel model = boneCollection[i] as BoneModel;
                     //model.IsRendering = !model.IsRendering;
                     if (model.Visibility == Visibility.Hidden)
                     {
@@ -115,12 +117,12 @@ namespace Nart
                     }
                 }
 
-                for (int i = 0; i < MultiAngleViewModel.NavigationTargetCollection.Count; i++)
+                for (int i = 0; i < MultiAngleViewModel.TargetCollection.Count; i++)
                 {
 
-                    BoneModel model = MultiAngleViewModel.NavigationTargetCollection[i] as BoneModel;
+                    BoneModel model = MultiAngleViewModel.TargetCollection[i] as BoneModel;
 
-                    if (!model.BoneName.Equals("Head"))
+                    if (!model.BoneType.Equals("Head"))
                     {
                         model.IsRendering = !model.IsRendering;
                     }

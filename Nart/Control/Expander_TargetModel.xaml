@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Nart.Control"
              mc:Ignorable="d" 
-             Header="Target Model"
              Foreground="White"
              FontSize="18"
              BorderBrush="Black"
@@ -14,7 +13,19 @@
              Template="{DynamicResource ResourceKey=StretchyExpanderTemp}"
              Height="Auto" Width="Auto"
              d:DesignHeight="300" d:DesignWidth="300">
-
+    <Expander.Resources>
+        <!--不讓ListView採用這個template會造成外層ScrollViewer無法收到滾輪事件-->
+        <ControlTemplate x:Key="NoScroll">
+            <ItemsPresenter></ItemsPresenter>
+        </ControlTemplate>
+        <DataTemplate x:Key="boneTemplate">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Margin="2" IsChecked="{Binding IsRendering}" VerticalAlignment="Center"/>
+                <Ellipse Margin="2,0" Stroke="Black" StrokeThickness="2" Width="25" Height="25" VerticalAlignment="Center"/>
+                <TextBox Margin="2,0" Foreground="White"  FontSize="18" Background="Transparent" Text="{Binding BoneName}" VerticalContentAlignment="Center" MinWidth="80" VerticalAlignment="Center"/>
+            </StackPanel>
+        </DataTemplate>
+    </Expander.Resources>
     <Expander.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FF842E2C" Offset="0"/>
@@ -23,7 +34,18 @@
         </LinearGradientBrush>
     </Expander.Background>
     <Expander.Content>
-        <StackPanel x:Name="expItem" x:FieldModifier="public" Orientation="Vertical">
+        <StackPanel Orientation="Vertical" Margin="0">
+            <ListView x:Name="BoneListView"   BorderThickness="0"   ScrollViewer.VerticalScrollBarVisibility="Disabled"  Background="Transparent" Margin="30,5,0,0"
+                      Template="{StaticResource NoScroll}"
+                      ItemTemplate="{StaticResource boneTemplate}"
+                      ItemsSource = "{Binding BallCollection}">
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Delete" Click="DeleteItem" ToolTip="Delete from the project">
+                        </MenuItem>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ListView>
         </StackPanel>
     </Expander.Content>
 </Expander>

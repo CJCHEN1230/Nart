@@ -22,11 +22,12 @@ namespace Nart
         public static Projectata Data = new Projectata();
         public CameraControl CamCtrl;
         public NartServer Server= new NartServer();
+        private readonly MainView _mainWindow;
         private static string _pointNumber;
         private static int _tabIndex = 1; //預設tab頁面索引值        
         private ModelSettingView _modelSettingdlg;
         private NavigateView _navigatedlg;
-        private MainView _mainWindow;
+        
 
 
 
@@ -37,11 +38,11 @@ namespace Nart
             RegisterCommand = new RelayCommand(Register);
             SetNavigationCommand = new RelayCommand(SetNavigation);
             TrackCommand = new RelayCommand(Track);
-            CloseWindowCommand = new RelayCommand(obj => this.OnClosed(obj), null);
+            CloseWindowCommand = new RelayCommand(this.OnClosed, null);
 
-            mainWindow.expander_Info.BindPatientInfo(Data);
-            mainWindow.expander_NavigationBalls .BindBallCollection(Data);
-
+            mainWindow.ExpanderInfo.BindPatientInfo(Data);
+            mainWindow.ExpanderNavigationBalls .BindBallCollection(Data);
+            mainWindow.ExpanderTargetModel.BindBoneCollection(Data);
 
         }
                 

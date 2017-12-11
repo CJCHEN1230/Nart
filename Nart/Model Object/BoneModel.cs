@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using HelixToolkit.Wpf.SharpDX;
@@ -16,10 +18,9 @@ using Model3D = System.Windows.Media.Media3D.Model3D;
 namespace Nart.Model_Object
 {
     using System.IO;
-    using System.Windows;
     using System.Windows.Media;
     using Color = System.Windows.Media.Color;
-    public class BoneModel : MeshGeometryModel3D
+    public class BoneModel : MeshGeometryModel3D,  INotifyPropertyChanged
     {
         /// <summary>
         /// 讀檔時存模型的容器，方便之後算BoundingBox
@@ -48,19 +49,19 @@ namespace Nart.Model_Object
         /// <summary>
         /// 所屬綁定的骨頭部位
         /// </summary>
-        public string BoneName = "";
+        public string BoneType = "";
+        /// <summary>
+        /// 模型路徑
+        /// </summary>
+        public string _filePath;
         /// <summary>
         /// 模型顏色
         /// </summary>
         public Color DiffuseColor;
         /// <summary>
-        /// 模型路徑
-        /// </summary>
-        public string FilePath;
-        /// <summary>
         /// 此Model的最終轉換矩陣
         /// </summary>
-        private Matrix3D _finalModelTransform = new Matrix3D();
+        private Matrix3D _finalModelTransform;
         /// <summary>
         /// 用來累加的矩陣
         /// </summary>
@@ -77,14 +78,26 @@ namespace Nart.Model_Object
         /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
         /// </summary>
         private int _currentIndex = 0;
+
+        private string _boneName;
         private bool _highlight = false;
 
 
-
-
-        public BoneModel()
+        
+        public string FilePath
         {
-
+            get
+            {
+                return _filePath;
+            }
+            set
+            {
+                SetValue(ref _filePath, value);
+                if (!string.IsNullOrEmpty(_filePath))
+                {
+                    BoneName = Path.GetFileName(_filePath);
+                }
+            }
         }
         public bool Highlight
         {
@@ -107,8 +120,20 @@ namespace Nart.Model_Object
                 return _highlight;
             }
         }
-        public void AddItem(Matrix3D item)
+        public string BoneName
         {
+            get
+            {
+                return _boneName;
+            }
+            set
+            {
+                SetValue(ref _boneName, value);
+            }
+        }
+
+        public void AddItem(Matrix3D item)
+        {            
             //數量少於陣列總長度則往後加入
             if (_count < _modelTransformSet.Length)
             {
@@ -143,17 +168,16 @@ namespace Nart.Model_Object
         /// </summary>        
         public void SetBoneMaterial()
         {
-          
-            HelixToolkit.Wpf.SharpDX.PhongMaterial material = new PhongMaterial();
 
-            material.ReflectiveColor = SharpDX.Color.Black;
-            float ambient = 0.0f;
-            material.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
-            material.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
-            int specular = 90;
-            material.SpecularColor = new SharpDX.Color(specular, specular, specular, 255);
-            material.SpecularShininess = 60;
-            material.DiffuseColor = DiffuseColor.ToColor4();
+            PhongMaterial material = new PhongMaterial
+            {
+                ReflectiveColor = SharpDX.Color.Black,
+                AmbientColor = new SharpDX.Color(0.0f, 0.0f, 0.0f, 1.0f),
+                EmissiveColor = SharpDX.Color.Black,
+                SpecularColor = new SharpDX.Color(90, 90, 90, 255),
+                SpecularShininess = 60,
+                DiffuseColor = DiffuseColor.ToColor4()
+            };         
 
             this.Material = material;
         }
@@ -225,7 +249,6 @@ namespace Nart.Model_Object
 
             IsLoaded = true;
         }
-
         public void SaveModel()
         {
 
@@ -272,5 +295,25 @@ namespace Nart.Model_Object
        
 
         }
-    }
+
+
+
+
+    public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName]string info = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+        }
+        protected bool SetValue<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = "")
+        {
+            if (object.Equals(oldValue, newValue))
+            {
+                return false;
+            }
+            oldValue = newValue;
+            this.OnPropertyChanged(propertyName);
+            return true;
+        }
+
+}
 }

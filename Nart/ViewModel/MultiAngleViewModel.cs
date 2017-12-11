@@ -27,6 +27,7 @@ namespace Nart
     {                  
         private static string _craniofacialInfo;
         private static string _ballDistance;
+        private readonly MultiAngleView _multiview;
         private RenderTechnique _renderTechnique;
         private Vector3 _light1Direction;
         private Vector3 _light2Direction;
@@ -34,8 +35,6 @@ namespace Nart
         private Vector3D _cam1LookDir;
         private Vector3D _cam2LookDir;
         private Vector3D _cam3LookDir;
-        private MultiAngleView _multiview;
-        //private readonly IList<BoneModel> HighlightItems = new List<BoneModel>(); //專門放點到的變色物件
 
 
 
@@ -53,6 +52,11 @@ namespace Nart
             binding.Source = MainViewModel.Data;
             binding.Mode = BindingMode.OneWay;
             BindingOperations.SetBinding(multiview.BallCollection, ItemsModel3D.ItemsSourceProperty, binding);
+
+            Binding binding2 = new Binding("BoneCollection");
+            binding2.Source = MainViewModel.Data;
+            binding2.Mode = BindingMode.OneWay;
+            BindingOperations.SetBinding(multiview.BoneCollection, ItemsModel3D.ItemsSourceProperty, binding2);
         }
 
         /// <summary>
@@ -187,11 +191,11 @@ namespace Nart
         }
         public IEffectsManager EffectsManager { get; protected set; }
         public IRenderTechniquesManager RenderTechniquesManager { get; protected set; }
-        public static ObservableCollection<Element3D> BoneModelCollection
-        {
-            get;
-            set;
-        } = new ObservableCollection<Element3D>();
+        //public static ObservableCollection<Element3D> BoneModelCollection
+        //{
+        //    get;
+        //    set;
+        //} = new ObservableCollection<Element3D>();
         public static ObservableCollection<Element3D> OspModelCollection
         {
             get;
@@ -202,7 +206,7 @@ namespace Nart
             get;
             set;
         } = new ObservableCollection<Element3D>();
-        public static ObservableCollection<Element3D> NavigationTargetCollection
+        public static ObservableCollection<Element3D> TargetCollection
         {
             get;
             set;
@@ -235,28 +239,27 @@ namespace Nart
         /// </summary>
         public static void ResetCameraPosition()
         {
-
+            var boneCollection=MainViewModel.Data.BoneCollection;
             Model3DGroup modelGroup = new Model3DGroup();
 
             //一般的BoneModel放置的位置，目前暫定放原始位置
-            if (BoneModelCollection != null && BoneModelCollection.Count != 0)
+            if (boneCollection != null && boneCollection.Count != 0)
             {
                 //重新調整模型中心                
-                foreach (Element3D model in BoneModelCollection)
-                {
-                    BoneModel boneModel = model as BoneModel;
+                foreach (BoneModel model in boneCollection)
+                {                   
                     //如果選擇多模型但檔名是空或不存在則進不去
-                    if (boneModel?.ModelContainer != null)
+                    if (model?.ModelContainer != null)
                     {
-                        modelGroup.Children.Add(boneModel.ModelContainer);
+                        modelGroup.Children.Add(model.ModelContainer);
                     }
                 }
             }
 
-            //NavigationTargetCollection 放置上下顎的目標位置
-            if (NavigationTargetCollection != null && NavigationTargetCollection.Count != 0)
+            //TargetCollection 放置上下顎的目標位置
+            if (TargetCollection != null && TargetCollection.Count != 0)
             {
-                foreach (Element3D model in NavigationTargetCollection)
+                foreach (Element3D model in TargetCollection)
                 {
                     BoneModel boneModel = model as BoneModel;
                     //如果選擇多模型但檔名是空或不存在則進不去
@@ -333,8 +336,7 @@ namespace Nart
             binding.Source = this;
             binding.Mode = BindingMode.OneWayToSource;
             BindingOperations.SetBinding(camera, ProjectionCamera.LookDirectionProperty, binding);
-        }
-     
+        }     
         public void OnMouseDoubleClickHandler(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
 
@@ -399,7 +401,7 @@ namespace Nart
                 ball.Geometry = all.ToMeshGeometry3D();
 
 
-                HelixToolkit.Wpf.SharpDX.PhongMaterial material = new PhongMaterial();
+                PhongMaterial material = new PhongMaterial();
 
                 material.ReflectiveColor = SharpDX.Color.Black;
                 float ambient = 0.0f;
@@ -418,10 +420,23 @@ namespace Nart
                 ball.Transform = new MatrixTransform3D();
 
                 MainViewModel.Data.BallCollection.Add(ball);
+
+                //////////////////測試另外一顆球
+                //BallModel ball2 = new BallModel
+                //{
+                //    BallName = "!!!!!",
+                //    BallInfo = "!!!!!"
+                //};
+                //var ballContainer2 = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+                //ballContainer2.AddSphere(ballCenter, 4);
+                //ball2.Geometry = ballContainer2.ToMeshGeometry3D();
+                //ball2.Material = PhongMaterials.Black;
+                //ball2.Transform = new MatrixTransform3D();
+
+                //MainViewModel.Data.BallCollection2.Add(ball2);
                 break;
             }
         }
-
         public void OnDrop(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -443,7 +458,7 @@ namespace Nart
                         Transform = new MatrixTransform3D()
                     };
                     model.LoadModel();
-                    MultiAngleViewModel.BoneModelCollection.Add(model);
+                    MultiAngleViewModel.NormalModelCollection.Add(model);
                 }
             }
             MultiAngleViewModel.ResetCameraPosition();

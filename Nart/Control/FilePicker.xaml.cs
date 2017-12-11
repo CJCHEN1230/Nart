@@ -404,7 +404,7 @@ namespace Nart.Control
         private static void OnFilePathChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs ea)
         {
             var instance = (FilePicker)dependencyObject;
-            if (instance.FilePath != null && instance.FilePath.Length > 0)
+            if (!string.IsNullOrEmpty(instance.FilePath))
             {
                 instance.SafeFileName = Path.GetFileName(instance.FilePath);              
             }

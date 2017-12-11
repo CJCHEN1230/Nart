@@ -37,9 +37,8 @@
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.RowSpan="3" Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
         <GridSplitter Grid.Row="1" Grid.Column="2"  Height="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  />
-        <hx:ModelContainer3DX x:Name="sharedContainer"   RenderTechnique="{Binding RenderTechnique}" EffectsManager="{Binding EffectsManager}" Margin="1" Grid.Row="2" Visibility="Hidden">
 
-
+         <hx:ModelContainer3DX x:Name="SharedContainer"   RenderTechnique="{Binding RenderTechnique}" EffectsManager="{Binding EffectsManager}" Margin="1" Grid.Column="0"  Grid.Row="2"  Visibility="Hidden">
             <hx:ItemsModel3D x:Name="BallCollection">
                 <hx:ItemsModel3D.ItemTemplate>
                     <DataTemplate>
@@ -51,24 +50,28 @@
                 </hx:ItemsModel3D.ItemTemplate>
             </hx:ItemsModel3D>
 
-            <hx:GroupModel3D ItemsSource="{Binding BoneModelCollection}">
-            </hx:GroupModel3D>
-            <hx:GroupModel3D ItemsSource="{Binding NavigationTargetCollection}">
-            </hx:GroupModel3D>
-            <hx:GroupModel3D ItemsSource="{Binding NormalModelCollection}">
-            </hx:GroupModel3D>
-            <hx:GroupModel3D ItemsSource="{Binding OspModelCollection}">
-            </hx:GroupModel3D>
-            <hx:GroupModel3D ItemsSource="{Binding TriangleModelCollection}">
-            </hx:GroupModel3D>
-            <!--<hx:GroupModel3D  x:Name="BallCollection">
-            </hx:GroupModel3D>-->
+            <hx:ItemsModel3D x:Name="BoneCollection">
+                    <hx:ItemsModel3D.ItemTemplate>
+                        <DataTemplate>
+                            <hx:MeshGeometryModel3D                        
+                                Geometry="{Binding Geometry}"                            
+                                Material="{Binding Material}"
+                                Transform="{Binding Transform}"/>
+                        </DataTemplate>
+                    </hx:ItemsModel3D.ItemTemplate>
+            </hx:ItemsModel3D>
 
-            
+            <hx:GroupModel3D ItemsSource="{Binding BoneModelCollection}"/>
+            <hx:GroupModel3D ItemsSource="{Binding TargetCollection}"/>
+            <hx:GroupModel3D ItemsSource="{Binding NormalModelCollection}"/>
+            <hx:GroupModel3D ItemsSource="{Binding OspModelCollection}"/>
+            <hx:GroupModel3D ItemsSource="{Binding TriangleModelCollection}"/>
+
+
 
             </hx:ModelContainer3DX>
 
-        <hx:Viewport3DX  x:Name="viewport2"
+        <hx:Viewport3DX  x:Name="Viewport2"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" Margin="0" 
                         Camera="{Binding Camera2}"
@@ -78,7 +81,7 @@
                         UseDefaultGestures="True"
                         EnableSharedModelMode="True"                               
                         BackgroundColor="0 0 0 0"
-                        SharedModelContainer="{Binding ElementName=sharedContainer}"
+                        SharedModelContainer="{Binding ElementName=SharedContainer}"
                         ShowFrameRate="True" Grid.Column="2">
             <hx:Viewport3DX.InputBindings>
                 <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
@@ -101,7 +104,7 @@
                 Direction="{Binding Light2Direction}"
                 Color="{Binding DirectionalLightColor}" />
         </hx:Viewport3DX>
-        <hx:Viewport3DX  x:Name="viewport3"
+        <hx:Viewport3DX  x:Name="Viewport3"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" 
                         Margin="0" 
@@ -111,7 +114,7 @@
                         CameraMode="Inspect"                            
                         UseDefaultGestures="True"
                         EnableSharedModelMode="True"
-                        SharedModelContainer="{Binding ElementName=sharedContainer}"
+                        SharedModelContainer="{Binding ElementName=SharedContainer}"
                         BackgroundColor="0 0 0 0"
                         ShowFrameRate="True"
                         Grid.Column="2" Grid.Row="2">
@@ -136,7 +139,7 @@
                 Direction="{Binding Light3Direction}"
                 Color="{Binding DirectionalLightColor}" />
         </hx:Viewport3DX>
-        <hx:Viewport3DX  x:Name="viewport1"
+        <hx:Viewport3DX  x:Name="Viewport1"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" 
                         Margin="0"                                      
@@ -146,7 +149,7 @@
                         CameraMode="Inspect"                            
                         UseDefaultGestures="True"
                         EnableSharedModelMode="True"                        
-                        SharedModelContainer="{Binding ElementName=sharedContainer}"
+                        SharedModelContainer="{Binding ElementName=SharedContainer}"
                         ShowCoordinateSystem="True"
                         CoordinateSystemLabelForeground="White"                         
                         BackgroundColor="0 0 0 0"  

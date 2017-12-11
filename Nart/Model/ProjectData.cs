@@ -15,9 +15,16 @@ namespace Nart
         private string _name = "蔡慧君";
         private string _id = "123456";
         private string _institution = "成大";
+
+
+        public bool IsSet = false;
+        public bool FirstStageDone = false;
+        public string FirstNavigation = "Maxilla";
+
         private bool _canSelectPoints = false;
         private string _selectPointState = "OFF";
         private  ObservableCollection<BallModel> _ballCollection=  new ObservableCollection<BallModel>();
+        private  ObservableCollection<BoneModel> _boneCollection =  new ObservableCollection<BoneModel>();
 
         public Projectata()
         {
@@ -90,14 +97,7 @@ namespace Nart
             set
             {
                 SetValue(ref _canSelectPoints, value);
-                if (_canSelectPoints)
-                {
-                    SelectPointState = "ON";
-                }
-                else
-                {
-                    SelectPointState = "OFF";
-                }
+                SelectPointState = _canSelectPoints ? "ON" : "OFF";
             }
         }
         public string SelectPointState
@@ -121,7 +121,17 @@ namespace Nart
             {
                 SetValue(ref _ballCollection, value);
             }
-        } 
-
+        }
+        public  ObservableCollection<BoneModel> BoneCollection
+        {
+            get
+            {
+                return _boneCollection;
+            }
+            set
+            {
+                SetValue(ref _boneCollection, value);
+            }
+        }
     }
 }
