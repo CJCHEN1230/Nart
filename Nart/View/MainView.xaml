@@ -127,7 +127,14 @@
                 <Controls:ExpanderInfo x:Name="ExpanderInfo"  Header="Patient Information" FontSize="18" IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,1,0,0"  VerticalAlignment="Top" Height="Auto"/>
                 <Controls:ExpanderNavigationBalls x:Name="ExpanderNavigationBalls" Header="Navigation balls"    IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,1,0" VerticalAlignment="Top" Height="Auto" />
                 <Controls:ExpanderTargetModel x:Name="ExpanderTargetModel" Header="Bone Model" IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,1,0" VerticalAlignment="Top" Height="Auto" />
-
+                <Controls:AdjustableExpander 
+                    x:Name="expander_TargetModel" 
+                    HeaderBackground="#FF0077A2"  
+                    Background="Transparent" 
+                    HeaderCornerRadius="20" 
+                    ContentMargin="5"
+                    HeaderBorderThickness="3"
+                    Margin="0,0,0,0" />
             </StackPanel>
         </ScrollViewer>
         <ScrollViewer x:Name="buttonList" Margin="-500,0,83,0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}" Grid.RowSpan="3">
@@ -198,6 +205,7 @@
                 </EventTrigger>
             </Button.Triggers>
         </Button>
+        <Button x:Name="button5" Content="Button" Grid.Column="3" HorizontalAlignment="Left" Margin="161,50,0,0" VerticalAlignment="Top" Width="74" Click="button_Click_2"/>
 
         <!--<GridSplitter Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch"  Background="Transparent" Margin="0"/>-->
 

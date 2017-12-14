@@ -69,7 +69,7 @@ namespace Nart
             
             Bone.FilePath = BoneFilePath;
             Bone.MarkerId = MarkerId;
-            Bone.DiffuseColor = BoneDiffuseColor;
+            Bone.BoneDiffuseColor = BoneDiffuseColor;
 
             Osp.FilePath = OspFilePath;
             Osp.MarkerId = MarkerId;
@@ -121,7 +121,7 @@ namespace Nart
                 SetValue(ref _boneDiffuseColor, value);
                 if (Bone.IsLoaded != true)
                     return;
-                Bone.DiffuseColor = _boneDiffuseColor;
+                Bone.BoneDiffuseColor = _boneDiffuseColor;
                 Bone.SetBoneMaterial();
             }
         }

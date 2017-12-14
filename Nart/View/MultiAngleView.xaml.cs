@@ -44,14 +44,14 @@ namespace Nart
             {
                 string firstNavigation = MainViewModel.Data.FirstNavigation;
 
-                for (int i = 0; i < MultiAngleViewModel.TriangleModelCollection.Count; i++) 
+                foreach (Element3D model in MultiAngleViewModel.TriangleModelCollection)
                 {
-                    DraggableTriangle model = MultiAngleViewModel.TriangleModelCollection[i] as DraggableTriangle;
+                    DraggableTriangle dragModel = model as DraggableTriangle;
                     //顯示第一階段的三角導引物
-                    if (model.MarkerId.Equals(firstNavigation))
+                    if (dragModel != null && dragModel.MarkerId.Equals(firstNavigation))
                     {
                         
-                        model.IsRendering = true;
+                        dragModel.IsRendering = true;
                     }
                 }
 

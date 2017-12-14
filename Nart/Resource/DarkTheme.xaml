@@ -481,7 +481,7 @@
 
 
 
-    <!-- Animated Expander Button's Template-->
+    <!-- 有重載旋轉動畫的toggle button 按一下會順時針轉 toggle button的外觀跟預設expander長一樣-->
     <ControlTemplate x:Key="AnimatedExpanderButtonTemp"
                          TargetType="{x:Type ToggleButton}">
         <Border x:Name="ExpanderButtonBorder"                
@@ -574,8 +574,7 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    <!-- Stretch Out Content Expander's Template,
-        Uses: AnimatedExpanderButtonTemp from above-->
+    <!-- 使用會旋轉toggle button的expander-->
     <ControlTemplate x:Key="StretchyExpanderTemp"
                          TargetType="{x:Type Expander}">
         <DockPanel>
@@ -872,8 +871,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <!--另外一種(球在中間)自製toggle switch -->
+    <!--另外一種(球在中間藍色的)自製toggle switch -->
     <Style x:Key="AnimatedToggleSwitch2" TargetType="{x:Type ToggleButton}">
         <Setter Property="Foreground" Value="Black" />
         <Setter Property="Background" Value="#FAFAFB" />
@@ -935,8 +933,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <!--另外一種(球在中間)自製toggle switch -->
+    <!--另外一種(球在中間黑色的)自製toggle switch -->
     <Style x:Key="AnimatedToggleSwitch3" TargetType="{x:Type ToggleButton}">
         <Setter Property="Foreground" Value="Black" />
         <Setter Property="Background" Value="#FAFAFB" />

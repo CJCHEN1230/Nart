@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Nart.Control"
+             xmlns:converter="clr-namespace:NartControl.Converter;assembly=NartControl"
              mc:Ignorable="d" 
              Foreground="White"
              FontSize="18"
@@ -14,15 +15,20 @@
              Height="Auto" Width="Auto"
              d:DesignHeight="300" d:DesignWidth="300">
     <Expander.Resources>
+        <converter:SolidColorBrushConverter x:Key="SolidColorBrushConverter"/>
         <!--不讓ListView採用這個template會造成外層ScrollViewer無法收到滾輪事件-->
         <ControlTemplate x:Key="NoScroll">
             <ItemsPresenter></ItemsPresenter>
         </ControlTemplate>
         <DataTemplate x:Key="boneTemplate">
             <StackPanel Orientation="Horizontal">
-                <CheckBox Margin="2" IsChecked="{Binding IsRendering}" VerticalAlignment="Center"/>
-                <Ellipse Margin="2,0" Stroke="Black" StrokeThickness="2" Width="25" Height="25" VerticalAlignment="Center"/>
-                <TextBox Margin="2,0" Foreground="White"  FontSize="18" Background="Transparent" Text="{Binding BoneName}" VerticalContentAlignment="Center" MinWidth="80" VerticalAlignment="Center"/>
+                <CheckBox Margin="2" IsChecked="{Binding IsRendering}" VerticalAlignment="Center">
+                    <CheckBox.LayoutTransform>
+                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                    </CheckBox.LayoutTransform>
+                </CheckBox>
+                <Ellipse Margin="8,0" Stroke="Black" Fill="{Binding BoneDiffuseColor, Converter={StaticResource SolidColorBrushConverter}}" StrokeThickness="2" Width="20" Height="20" VerticalAlignment="Center"/>
+                <TextBox Margin="4,0" Foreground="White"  BorderThickness="0" FontSize="18" Background="Transparent" Text="{Binding BoneName}" VerticalContentAlignment="Center" MinWidth="80" VerticalAlignment="Center"/>
             </StackPanel>
         </DataTemplate>
     </Expander.Resources>
@@ -35,10 +41,9 @@
     </Expander.Background>
     <Expander.Content>
         <StackPanel Orientation="Vertical" Margin="0">
-            <ListView x:Name="BoneListView"   BorderThickness="0"   ScrollViewer.VerticalScrollBarVisibility="Disabled"  Background="Transparent" Margin="30,5,0,0"
+            <ListView x:Name="BoneListView"   BorderThickness="0"   ScrollViewer.VerticalScrollBarVisibility="Disabled"  Background="Transparent" Margin="20,5,0,0"
                       Template="{StaticResource NoScroll}"
-                      ItemTemplate="{StaticResource boneTemplate}"
-                      ItemsSource = "{Binding BallCollection}">
+                      ItemTemplate="{StaticResource boneTemplate}">
                 <ListView.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Delete" Click="DeleteItem" ToolTip="Delete from the project">

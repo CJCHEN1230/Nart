@@ -9,6 +9,7 @@
              xmlns:ie="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:sdx="clr-namespace:SharpDX;assembly=SharpDX.Mathematics"
              xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
+             xmlns:modelObject="clr-namespace:Nart.Model_Object"
              mc:Ignorable="d" 
              Height="421.973" Width="793.895">
 
@@ -42,10 +43,10 @@
             <hx:ItemsModel3D x:Name="BallCollection">
                 <hx:ItemsModel3D.ItemTemplate>
                     <DataTemplate>
-                        <hx:MeshGeometryModel3D                        
-                        Geometry="{Binding Geometry}"                            
-                        Material="{Binding Material}"
-                        Transform="{Binding Transform}"/>
+                        <modelObject:BallModel                        
+                            Geometry="{Binding Geometry}"                            
+                            Material="{Binding Material}"
+                            Transform="{Binding Transform}"/>
                     </DataTemplate>
                 </hx:ItemsModel3D.ItemTemplate>
             </hx:ItemsModel3D>
@@ -53,10 +54,11 @@
             <hx:ItemsModel3D x:Name="BoneCollection">
                     <hx:ItemsModel3D.ItemTemplate>
                         <DataTemplate>
-                            <hx:MeshGeometryModel3D                        
+                            <modelObject:BoneModel                                
                                 Geometry="{Binding Geometry}"                            
                                 Material="{Binding Material}"
-                                Transform="{Binding Transform}"/>
+                                Transform="{Binding Transform}"
+                                IsRendering="{Binding IsRendering}"/>
                         </DataTemplate>
                     </hx:ItemsModel3D.ItemTemplate>
             </hx:ItemsModel3D>

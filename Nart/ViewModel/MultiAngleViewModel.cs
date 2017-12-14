@@ -361,7 +361,11 @@ namespace Nart
 
                 Point3D pointHit = hit.PointHit;
                 Vector3D normal = hit.NormalAtHit;
-                normal.Normalize();
+                //normal.Normalize();
+                normal.X = 0;
+                normal.Y = -1;
+                normal.Z = 0;
+
                 double temp1 = 1;
                 double temp2 = 4;
 
@@ -454,7 +458,7 @@ namespace Nart
                     {
                         FilePath = file,
                         MarkerId = "",
-                        DiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187),
+                        BoneDiffuseColor = System.Windows.Media.Color.FromArgb(255, 40, 181, 187),
                         Transform = new MatrixTransform3D()
                     };
                     model.LoadModel();

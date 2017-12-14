@@ -13,6 +13,7 @@ namespace Nart
     using ExtensionMethods;
     using Model_Object;
     using System.IO;
+    using System.IO;
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Input;
@@ -251,7 +252,7 @@ namespace Nart
                 FilePath = HeadModel,
                 MarkerId = "Head",
                 BoneType = "Head",
-                DiffuseColor = HeadDiffuseColor
+                BoneDiffuseColor = HeadDiffuseColor
             };
             head.LoadModel();
 
@@ -263,7 +264,7 @@ namespace Nart
                 IsRendering = false,
                 MarkerId = "",
                 BoneType = "Maxilla",
-                DiffuseColor = Color.FromArgb(255, 100, 100, 100),
+                BoneDiffuseColor = Color.FromArgb(255, 100, 100, 100),
                 Transform = new MatrixTransform3D(plannedMatrix.ToMatrix3D())
             };
             targetMaxilla.LoadModel();
@@ -275,7 +276,7 @@ namespace Nart
                 IsRendering = false,
                 MarkerId = "",
                 BoneType = "Mandible",
-                DiffuseColor = Color.FromArgb(255, 100, 100, 100),
+                BoneDiffuseColor = Color.FromArgb(255, 100, 100, 100),
                 Transform = new MatrixTransform3D(plannedMandible.ToMatrix3D())
             };
             targetMandible.LoadModel();        
@@ -292,7 +293,7 @@ namespace Nart
                 FilePath = MaxillaModel,
                 BoneType = "Maxilla",
                 MarkerId = "Splint",
-                DiffuseColor = MaxillaDiffuseColor
+                BoneDiffuseColor = MaxillaDiffuseColor
             };
             oriMaxilla.LoadModel();
 
@@ -301,10 +302,10 @@ namespace Nart
                 FilePath = MandibleModel,
                 BoneType = "Mandible",
                 MarkerId = "Splint",
-                DiffuseColor = MandibleDiffuseColor
+                BoneDiffuseColor = MandibleDiffuseColor
             };
             oriMandible.LoadModel();
-            
+
             MainViewModel.Data.BoneCollection.Add(oriMaxilla);
             MainViewModel.Data.BoneCollection.Add(oriMandible);
 

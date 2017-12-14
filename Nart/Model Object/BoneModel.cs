@@ -51,13 +51,17 @@ namespace Nart.Model_Object
         /// </summary>
         public string BoneType = "";
         /// <summary>
+        /// 防止抖動，用來存放所有矩陣，10是累積總數量
+        /// </summary>
+        private readonly Matrix3D[] _modelTransformSet = new Matrix3D[10];
+        /// <summary>
+        /// Model 顏色
+        /// </summary>
+        private Color _boneDiffuseColor;
+        /// <summary>
         /// 模型路徑
         /// </summary>
-        public string _filePath;
-        /// <summary>
-        /// 模型顏色
-        /// </summary>
-        public Color DiffuseColor;
+        private string _filePath;
         /// <summary>
         /// 此Model的最終轉換矩陣
         /// </summary>
@@ -66,10 +70,6 @@ namespace Nart.Model_Object
         /// 用來累加的矩陣
         /// </summary>
         private Matrix3D _totalModelTransform = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-        /// <summary>
-        /// 防止抖動，用來存放所有矩陣，10是累積總數量
-        /// </summary>
-        private Matrix3D[] _modelTransformSet = new Matrix3D[10];
         /// <summary>
         /// Count是在ModelTransformSet中的累積數量
         /// </summary>
@@ -131,6 +131,24 @@ namespace Nart.Model_Object
                 SetValue(ref _boneName, value);
             }
         }
+        public Color BoneDiffuseColor
+        {
+            get
+            {
+                return _boneDiffuseColor;
+            }
+            set
+            {
+                SetValue(ref _boneDiffuseColor, value);
+                if (IsLoaded != true)
+                    return;
+                PhongMaterial  phongMaterial= this.Material as PhongMaterial;
+                if (phongMaterial != null)
+                    phongMaterial.DiffuseColor = _boneDiffuseColor.ToColor4();
+
+
+            }
+        }
 
         public void AddItem(Matrix3D item)
         {            
@@ -176,7 +194,7 @@ namespace Nart.Model_Object
                 EmissiveColor = SharpDX.Color.Black,
                 SpecularColor = new SharpDX.Color(90, 90, 90, 255),
                 SpecularShininess = 60,
-                DiffuseColor = DiffuseColor.ToColor4()
+                DiffuseColor = BoneDiffuseColor.ToColor4()
             };         
 
             this.Material = material;

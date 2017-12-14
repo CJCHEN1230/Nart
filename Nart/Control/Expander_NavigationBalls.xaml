@@ -48,8 +48,7 @@
             </StackPanel>
             <ListView x:Name="BallListView"   BorderThickness="0"   ScrollViewer.VerticalScrollBarVisibility="Disabled"  Background="Transparent" Margin="30,5,0,0"
                               Template="{StaticResource NoScroll}"
-                              ItemTemplate="{StaticResource ballTemplate}"
-                              ItemsSource = "{Binding BallCollection}">
+                              ItemTemplate="{StaticResource ballTemplate}">
                 <ListView.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Delete" Click="DeleteItem" ToolTip="Delete from the project">

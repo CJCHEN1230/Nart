@@ -9,6 +9,9 @@ using System.Windows.Media;
 
 namespace NartControl.Converter
 {   
+
+
+
     /// <summary>
     /// Color和Brush轉換
     /// </summary>

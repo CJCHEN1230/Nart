@@ -24,7 +24,7 @@ namespace Nart.Control
         {
             InitializeComponent();
         }
-
+        #region ButtonImage property
         //第一個參數是和此DependencyProperty關聯的Property名稱
         //第二個用來指明此依賴屬性用來存儲什麼類型的值
         //第三個參數用來指明此依賴屬性的宿主是什麼類型或者說DependencyProperty.Register方法將把這個依賴屬性註冊關聯到哪個類型上。
@@ -48,9 +48,9 @@ namespace Nart.Control
 
             userControl.ButtonImage.Source = new BitmapImage((Uri)e.NewValue);
         }
+        #endregion
+
         #region ButtonLabel property
-
-
         public string ButtonLabel
         {
             set
