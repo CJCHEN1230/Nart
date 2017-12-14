@@ -90,5 +90,18 @@ namespace Nart.Control
         }
         public static readonly DependencyProperty HeaderCornerRadiusProperty = DependencyProperty.Register("HeaderCornerRadius", typeof(CornerRadius), typeof(AdjustableExpander), new UIPropertyMetadata(new CornerRadius(0)));
 
+        public Brush ArrowColor
+        {
+            set
+            {
+                SetValue(ArrowColorProperty, value);
+            }
+            get
+            {
+                return (Brush)GetValue(ArrowColorProperty);
+            }
+        }
+        public static readonly DependencyProperty ArrowColorProperty = DependencyProperty.Register("ArrowColorProperty", typeof(Brush), typeof(AdjustableExpander), new UIPropertyMetadata(Brushes.Transparent));
+
     }
 }

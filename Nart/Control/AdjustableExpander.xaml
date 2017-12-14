@@ -46,7 +46,7 @@
                     <Path x:Name="Arrow"
                           Grid.Column="1"
                           Data="M 0,1.5 L 6,5 12,1.5"
-                          Stroke="#FF4F80FF"
+                          Stroke="{Binding ArrowColor, RelativeSource={RelativeSource AncestorType=local:AdjustableExpander}}"
                           StrokeThickness="2"
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center"
@@ -83,24 +83,23 @@
                     </Trigger.ExitActions>
                 </Trigger>
 
-                <!-- MouseOver, Pressed behaviours-->
                 <Trigger Property="IsMouseOver"
                          Value="true">
-                    <Setter Property="Stroke"
+                    <!--<Setter Property="Stroke"
                             Value="#FF3C7FB1"
-                            TargetName="Circle" />
+                            TargetName="Circle" />-->
                     <Setter Property="Stroke"
                             Value="#222"
                             TargetName="Arrow" />
                 </Trigger>
                 <Trigger Property="IsPressed"
                          Value="true">
-                    <Setter Property="Stroke"
+                    <!--<Setter Property="Stroke"
                             Value="#FF526C7B"
-                            TargetName="Circle" />
-                    <Setter Property="StrokeThickness"
+                            TargetName="Circle" />-->
+                    <!--<Setter Property="StrokeThickness"
                             Value="1.5"
-                            TargetName="Circle" />
+                            TargetName="Circle" />-->
                     <Setter Property="Stroke"
                             Value="#FF003366"
                             TargetName="Arrow" />

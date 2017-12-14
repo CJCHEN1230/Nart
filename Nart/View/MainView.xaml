@@ -128,7 +128,8 @@
                 <Controls:ExpanderNavigationBalls x:Name="ExpanderNavigationBalls" Header="Navigation balls"    IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,1,0" VerticalAlignment="Top" Height="Auto" />
                 <Controls:ExpanderTargetModel x:Name="ExpanderTargetModel" Header="Bone Model" IsExpanded="True" FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,1,0" VerticalAlignment="Top" Height="Auto" />
                 <Controls:AdjustableExpander 
-                    x:Name="expander_TargetModel" 
+                    x:Name="expander_TargetModel"
+                    ArrowColor="#FF4F80FF"
                     HeaderBackground="#FF0077A2"  
                     Background="Transparent" 
                     HeaderCornerRadius="20" 
