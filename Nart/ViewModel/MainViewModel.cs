@@ -11,6 +11,9 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 
 namespace Nart
 {
@@ -40,9 +43,13 @@ namespace Nart
             TrackCommand = new RelayCommand(Track);
             CloseWindowCommand = new RelayCommand(this.OnClosed, null);
 
-            mainWindow.ExpanderInfo.BindPatientInfo(Data);
-            mainWindow.ExpanderNavigationBalls .BindBallCollection(Data);
-            mainWindow.ExpanderTargetModel.BindBoneCollection(Data);
+            BindPatientData();
+            BindBallData();
+            BindBondData();
+
+            //mainWindow.ExpanderInfo.BindPatientInfo(Data);
+            //mainWindow.ExpanderNavigationBalls .BindBallCollection(Data);
+            //mainWindow.ExpanderTargetModel.BindBoneCollection(Data);
 
         }
                 
@@ -131,7 +138,50 @@ namespace Nart
             }
             System.Windows.Application.Current.Shutdown();
         }
-      
+
+        private void BindPatientData()
+        {
+            Binding binding1 = new Binding("Name");
+            binding1.Source = Data;
+            binding1.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(_mainWindow.NameTB, TextBlock.TextProperty, binding1);
+
+            Binding binding2 = new Binding("ID");
+            binding2.Source = Data;
+            binding2.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(_mainWindow.IDTB, TextBlock.TextProperty, binding2);
+
+            Binding binding3 = new Binding("Institution");
+            binding3.Source = Data;
+            binding3.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(_mainWindow.InstitutionTB, TextBlock.TextProperty, binding3);
+        }
+        private void BindBallData()
+        {
+            Binding binding = new Binding("BallCollection");
+            binding.Source = Data;
+            binding.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(_mainWindow.BallListView, ItemsControl.ItemsSourceProperty, binding);
+
+            Binding binding2 = new Binding("CanSelectPoints");
+            binding2.Source = Data;
+            binding2.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(_mainWindow.SelectTB, ToggleButton.IsCheckedProperty, binding2);
+
+            Binding binding3 = new Binding("SelectPointState");
+            binding3.Source = Data;
+            binding3.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(_mainWindow.stateTB, TextBlock.TextProperty, binding3);
+        }
+
+        private void BindBondData()
+        {
+            //將data中的BoneCollection綁到此控制項的item上面   
+            Binding binding = new Binding("BoneCollection");
+            binding.Source = Data;
+            binding.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(_mainWindow.BoneListView, ItemsControl.ItemsSourceProperty, binding);
+        }
 
 
         public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;
