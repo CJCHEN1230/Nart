@@ -12,13 +12,14 @@ namespace Nart
 {
     public class Projectata : ObservableObject
     {
+        //病人資訊
         private string _name = "蔡慧君";
         private string _id = "123456";
         private string _institution = "成大";
 
-
         public bool IsSet = false;
         public bool FirstStageDone = false;
+        public bool SecondStageDone = false;
         public string FirstNavigation = "Maxilla";
 
         private bool _canSelectPoints = false;
@@ -27,31 +28,7 @@ namespace Nart
         private  ObservableCollection<BoneModel> _boneCollection =  new ObservableCollection<BoneModel>();
 
         public Projectata()
-        {
-
-            //Random crandom = new Random();
-            //for (int i = 0; i < 5; i++)
-            //{
-            //    BallModel ball = new BallModel();
-            //    ball.BallName = i.ToString() /*+ "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"*/;
-            //    ball.BallInfo = "!!!!!!!!!!!!!!!!!!!!!!!!!!";
-
-            //    var b1 = new MeshBuilder();
-
-            //    int a =crandom.Next() % 100;
-            //    int b = crandom.Next() % 100;
-            //    int c = crandom.Next() % 100;
-            //    ball.ModelCenter = new Vector3(a, b, c);
-            //    b1.AddSphere(new Vector3(a, b, c), 5);
-            //    ball.Geometry = b1.ToMeshGeometry3D();
-            //    ball.Material =PhongMaterials.White;
-            //    ball.Transform = new System.Windows.Media.Media3D.MatrixTransform3D();
-                
-
-            //    //MultiAngleViewModel.NormalModelCollection.Add(ball);
-
-            //    BallCollection.Add(ball);
-            //}
+        {            
         }
 
 

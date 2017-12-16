@@ -805,9 +805,7 @@ namespace Nart
                         Matrix3D level1 = TransformCoordinate(_splintInCt, _worldPoints[i].ThreePoints);
 
                         Matrix3D level2 = TransformCoordinate(_worldPoints[currentHeadIndex].ThreePoints, _oriWorldPoints[RegHeadIndex].ThreePoints);
-
-                        //Matrix3D level3 = WorldtoCT;
-
+                        
                         Matrix3D final =  level1 * level2 * _worldtoCT;
 
                         var boneCollection = MainViewModel.Data.BoneCollection;
@@ -832,9 +830,7 @@ namespace Nart
         {
             int mandibleOspIndex = -1;
             int headOspIndex = -1;
-            Vector3D headNormal;
-            Vector3D mandibleNormal;
-
+            
             //先找出模型引數
             for (int i = 0; i < MultiAngleViewModel.OspModelCollection.Count; i++)
             {                
@@ -866,8 +862,8 @@ namespace Nart
             //headNormal = headOSP.OSPOriNormal;
             //下顎模型的索引值
             //mandibleNormal = mandibleOSP.OSPOriNormal;
-            headNormal = headOsp.GetCurrentNormal();
-            mandibleNormal = mandibleOsp.GetCurrentNormal();
+            Vector3D headNormal = headOsp.GetCurrentNormal();
+            Vector3D mandibleNormal = mandibleOsp.GetCurrentNormal();
 
 
             //Po Or四個點
@@ -1008,11 +1004,24 @@ namespace Nart
                 if (MultiAngleViewModel.TriangleModelCollection == null || MultiAngleViewModel.TriangleModelCollection.Count == 0)
                     return;
 
-
-                if (MainViewModel.Data.FirstStageDone)
+                DraggableTriangle targetTriangle;
+                DraggableTriangle movedTriangle;
+                if (MainViewModel.Data.SecondStageDone)
+                {                    
+                    if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
+                    {
+                        targetTriangle = MultiAngleViewModel.TriangleModelCollection[1] as DraggableTriangle;
+                        movedTriangle = MultiAngleViewModel.TriangleModelCollection[3] as DraggableTriangle;
+                        
+                    }
+                    else
+                    {
+                        targetTriangle = MultiAngleViewModel.TriangleModelCollection[0] as DraggableTriangle;
+                        movedTriangle = MultiAngleViewModel.TriangleModelCollection[2] as DraggableTriangle;
+                    }
+                }
+                else if (MainViewModel.Data.FirstStageDone)
                 {
-                    DraggableTriangle targetTriangle;
-                    DraggableTriangle movedTriangle;
                     if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
                     {
                         targetTriangle = MultiAngleViewModel.TriangleModelCollection[0] as DraggableTriangle;
@@ -1023,48 +1032,56 @@ namespace Nart
                         targetTriangle = MultiAngleViewModel.TriangleModelCollection[1] as DraggableTriangle;
                         movedTriangle = MultiAngleViewModel.TriangleModelCollection[3] as DraggableTriangle;
                     }
-
-                    
-                    Vector3 red = targetTriangle.Positions[0];
-                    Vector3 green = targetTriangle.Positions[1];
-                    Vector3 blue = targetTriangle.Positions[2];
-
-                    Matrix mat = Matrix3DExtensions.ToMatrix(movedTriangle.Transform.Value);
-
-
-                    Vector3 red2 = new Vector3();
-                    Vector3 green2 = new Vector3();
-                    Vector3 blue2 = new Vector3();
-                    Vector3.TransformCoordinate(ref targetTriangle.Positions[0], ref mat, out red2);
-                    Vector3.TransformCoordinate(ref targetTriangle.Positions[1], ref mat, out green2);
-                    Vector3.TransformCoordinate(ref targetTriangle.Positions[2], ref mat, out blue2);
-
-
-                    var redVector = new Vector3();
-                    var greenVector = new Vector3();
-                    var blueVector = new Vector3();
-
-                    Vector3.Subtract(ref red2, ref red, out redVector);
-                    Vector3.Subtract(ref green2, ref green, out greenVector);
-                    Vector3.Subtract(ref blue2, ref blue, out blueVector);
-
-
-                    float redLength = redVector.Length();
-                    float greenLength = greenVector.Length();
-                    float blueLength = blueVector.Length();
-
-
-                    string info = "Red:      " + Math.Round(redLength, 3).ToString()
-                        + "\n\n" + "Green:  " + Math.Round(greenLength, 3).ToString()
-                        + "\n\n" + "Blue:     " + Math.Round(blueLength, 3).ToString();
-
-                    MultiAngleViewModel.BallDistance = info;
-
-                   
                 }
-                ShowPeriod2 = 0;
+                else
+                {
+                    ShowPeriod2 = 0;
+                    return;
+                }
 
-            }
+                if (targetTriangle == null || movedTriangle == null)
+                    return;
+
+                Vector3 red = targetTriangle.Positions[0];
+                Vector3 green = targetTriangle.Positions[1];
+                Vector3 blue = targetTriangle.Positions[2];
+
+                Matrix mat = Matrix3DExtensions.ToMatrix(movedTriangle.Transform.Value);
+
+
+                Vector3 red2;
+                Vector3 green2;
+                Vector3 blue2;
+                Vector3.TransformCoordinate(ref targetTriangle.Positions[0], ref mat, out red2);
+                Vector3.TransformCoordinate(ref targetTriangle.Positions[1], ref mat, out green2);
+                Vector3.TransformCoordinate(ref targetTriangle.Positions[2], ref mat, out blue2);
+
+
+                Vector3 redVector;
+                Vector3 greenVector;
+                Vector3 blueVector;
+
+                Vector3.Subtract(ref red2, ref red, out redVector);
+                Vector3.Subtract(ref green2, ref green, out greenVector);
+                Vector3.Subtract(ref blue2, ref blue, out blueVector);
+
+
+                float redLength = redVector.Length();
+                float greenLength = greenVector.Length();
+                float blueLength = blueVector.Length();
+
+
+                string info = "Red:      " + Math.Round(redLength, 2).ToString()
+                    + "\n\n" + "Green:  " + Math.Round(greenLength, 2).ToString()
+                    + "\n\n" + "Blue:     " + Math.Round(blueLength, 2).ToString();
+
+                MultiAngleViewModel.BallDistance = info;
+
+                ShowPeriod2 = 0;
+                }
+                
+
+            
 
             ShowPeriod2++;
            

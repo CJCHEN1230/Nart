@@ -36,7 +36,7 @@ namespace Nart
                 _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 _serverSocket.Bind(new IPEndPoint(IPAddress.Any, 59979));//IPEndPoint為一個定義完整的server位置，包含ip跟port
                 _serverSocket.Listen(10);//一個等待連線的queue長度，不是只能10個連線
-                _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), _serverSocket); //AsyncCallback(AcceptCallback),一旦連接上後的回調函數為AcceptCallback。當系統調用這個函數時，自動賦予的輸入參數為IAsyncResult類型變量ar。
+                _serverSocket.BeginAccept(AcceptCallback, _serverSocket); //AsyncCallback(AcceptCallback),一旦連接上後的回調函數為AcceptCallback。當系統調用這個函數時，自動賦予的輸入參數為IAsyncResult類型變量ar。
             }
             catch (SocketException ex)
             {
@@ -61,7 +61,7 @@ namespace Nart
                 _bufferList.Add(buffer);
 
                 clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), clientSocket);
-                _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
+                _serverSocket.BeginAccept(AcceptCallback, null);
 
                 Console.WriteLine("收到一客戶端");
             }
@@ -110,7 +110,6 @@ namespace Nart
                 ShowErrorDialog(ex.Message);
                 current.Close();
                 _clientSockets.Remove(current);
-                return;
             }
             catch (ObjectDisposedException ex)
             {
@@ -150,7 +149,7 @@ namespace Nart
 
             foreach (Socket eachSocket in _clientSockets)
             {            
-               eachSocket.BeginSend(sendData, 0, sendData.Length, SocketFlags.None, new AsyncCallback(SendCallback), eachSocket/*nullptr*/);                
+               eachSocket.BeginSend(sendData, 0, sendData.Length, SocketFlags.None, SendCallback, eachSocket/*nullptr*/);                
             }
         }        
         /// <summary>

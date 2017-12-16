@@ -213,7 +213,7 @@ namespace Nart
                 //更新先導航順序
                 MainViewModel.Data.FirstNavigation = value;
             }
-        }
+        } //這邊記得綁在Data裡面
         public ICommand ModelSettingCommand { get; }
 
         private void SetBinding(object source, DependencyObject target, string propertyName, DependencyProperty dp, BindingMode mode)
@@ -247,11 +247,18 @@ namespace Nart
         }
         public void LoadSettingModel(object o)
         {
+            MultiAngleViewModel.TargetCollection.Clear();
+            MainViewModel.Data.BoneCollection.Clear();
+            MultiAngleViewModel.OspModelCollection.Clear();
+            MultiAngleViewModel.TriangleModelCollection.Clear();
+
+
             BoneModel head = new BoneModel
             {
                 FilePath = HeadModel,
                 MarkerId = "Head",
                 BoneType = "Head",
+                ModelType = ModelType.Head,
                 BoneDiffuseColor = HeadDiffuseColor
             };
             head.LoadModel();
@@ -264,6 +271,7 @@ namespace Nart
                 IsRendering = false,
                 MarkerId = "",
                 BoneType = "Maxilla",
+                ModelType = ModelType.Maxilla,
                 BoneDiffuseColor = Color.FromArgb(255, 100, 100, 100),
                 Transform = new MatrixTransform3D(plannedMatrix.ToMatrix3D())
             };
@@ -276,6 +284,7 @@ namespace Nart
                 IsRendering = false,
                 MarkerId = "",
                 BoneType = "Mandible",
+                ModelType = ModelType.Mandible,
                 BoneDiffuseColor = Color.FromArgb(255, 100, 100, 100),
                 Transform = new MatrixTransform3D(plannedMandible.ToMatrix3D())
             };
@@ -296,7 +305,7 @@ namespace Nart
                 BoneDiffuseColor = MaxillaDiffuseColor
             };
             oriMaxilla.LoadModel();
-
+            
             BoneModel oriMandible = new BoneModel
             {
                 FilePath = MandibleModel,
@@ -331,21 +340,22 @@ namespace Nart
             MultiAngleViewModel.OspModelCollection.Add(headOsp);
             MultiAngleViewModel.OspModelCollection.Add(mandibleOsp);
 
-            //標記屬於上顎的ID
+            //標記屬於上顎的ID，綁定到目標上顎
             DraggableTriangle maxillaTargetTriangle =new DraggableTriangle(targetMaxilla.ModelCenter)                
             {
                 MarkerId = "Maxilla",
                 IsRendering = false
             };
-            MultiAngleViewModel.TriangleModelCollection.Add(maxillaTargetTriangle);
 
-            //標記屬於下顎的ID
+            //標記屬於下顎的ID，綁定到目標下顎
             DraggableTriangle mandibleTargetTriangle =new DraggableTriangle(targetMandible.ModelCenter)                
             {
                 MarkerId = "Mandible",
                 IsRendering = false
             };
-            MultiAngleViewModel.TriangleModelCollection.Add(mandibleTargetTriangle);
+
+
+
 
             //將導航三角形綁定到導航的上顎
             DraggableTriangle maxillaTriangle = new DraggableTriangle(oriMaxilla.ModelCenter)
@@ -355,7 +365,8 @@ namespace Nart
                 IsRendering = false
             };
             SetBinding(oriMaxilla, maxillaTriangle,"Transform" ,HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty,BindingMode.OneWay);
-            MultiAngleViewModel.TriangleModelCollection.Add(maxillaTriangle);
+
+            
       
             //將導航三角形綁定到導航的下顎
             DraggableTriangle mandibleTriangle = new DraggableTriangle(oriMandible.ModelCenter)
@@ -365,6 +376,10 @@ namespace Nart
                 IsRendering = false
             };
             SetBinding(oriMandible, mandibleTriangle, "Transform", HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty, BindingMode.OneWay);
+
+            MultiAngleViewModel.TriangleModelCollection.Add(maxillaTargetTriangle);
+            MultiAngleViewModel.TriangleModelCollection.Add(mandibleTargetTriangle);
+            MultiAngleViewModel.TriangleModelCollection.Add(maxillaTriangle);
             MultiAngleViewModel.TriangleModelCollection.Add(mandibleTriangle);
 
 

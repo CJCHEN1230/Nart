@@ -111,9 +111,9 @@
             </TabItem>
         </TabControl>
 
-        <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" HorizontalAlignment="Left" Margin="5,406,0,0" VerticalAlignment="Top" Height="46" Width="86" FontSize="20" Grid.Row="2" Grid.ColumnSpan="2"/>
+        <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" Margin="0,406,0,0" VerticalAlignment="Top" Height="162" FontSize="20" Grid.Row="2" Grid.ColumnSpan="2"/>
         <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="4" Background="White" Grid.Row="1" Margin="0"/>
-        <ScrollViewer Margin="0,0,0,0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Grid.Column="1" Grid.Row="2" >
+        <ScrollViewer Margin="0,0,0,0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"  Grid.Column="1" Grid.Row="2" >
             <!--<ScrollViewer.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF333333" Offset="0.3"/>
@@ -201,7 +201,8 @@
                                       ItemTemplate="{StaticResource ballTemplate}">
                                 <ListView.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Header="Delete" ToolTip="Delete from the project"><!--Click="DeleteItem"-->
+                                        <MenuItem Header="Delete" Command="{Binding DeleteBallCommad}" ToolTip="Delete from the project">
+                                            <!--Click="DeleteItem"-->
                                         </MenuItem>
                                     </ContextMenu>
                                 </ListView.ContextMenu>
@@ -247,7 +248,8 @@
                                       ItemTemplate="{StaticResource boneTemplate}">
                                 <ListView.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Header="Delete" ToolTip="Delete from the project"><!--Click="DeleteItem"-->
+                                        <MenuItem Header="Delete" Command="{Binding DeleteBoneCommad}" ToolTip="Delete from the project">
+                                            <!--Click="DeleteItem"-->
                                         </MenuItem>
                                     </ContextMenu>
                                 </ListView.ContextMenu>
@@ -255,10 +257,10 @@
                         </StackPanel>
                     </Expander.Content>
                 </Controls:AdjustableExpander>
-                
-                
-                
-                
+
+
+
+
             </StackPanel>
         </ScrollViewer>
         <ScrollViewer x:Name="buttonList" Margin="-500,0,83,0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}" Grid.RowSpan="3">

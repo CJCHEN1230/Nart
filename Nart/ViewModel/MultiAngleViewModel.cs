@@ -336,16 +336,15 @@ namespace Nart
             binding.Source = this;
             binding.Mode = BindingMode.OneWayToSource;
             BindingOperations.SetBinding(camera, ProjectionCamera.LookDirectionProperty, binding);
-        }     
+        }           
         public void OnMouseDoubleClickHandler(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-
             if (!MainViewModel.Data.CanSelectPoints)
                 return;
 
             Viewport3DX viewport = sender as Viewport3DX;
             if (viewport == null)
-                return; 
+                return;
             var point = e.GetPosition(viewport);
             var hitTests = viewport.FindHits(point);
 
@@ -371,12 +370,12 @@ namespace Nart
 
                 Vector3 point1 = new Vector3(Convert.ToSingle(pointHit.X - temp1 * normal.X), Convert.ToSingle(pointHit.Y - temp1 * normal.Y), Convert.ToSingle(pointHit.Z - temp1 * normal.Z));
                 Vector3 point2 = new Vector3(Convert.ToSingle(pointHit.X + temp2 * normal.X), Convert.ToSingle(pointHit.Y + temp2 * normal.Y), Convert.ToSingle(pointHit.Z + temp2 * normal.Z));
-                   
-                
+
+
 
                 BallModel ball = new BallModel
                 {
-                    BallName = "!!!!!",
+                    BallName = "Ball",
                     BallInfo = "!!!!!"
                 };
 
@@ -386,13 +385,13 @@ namespace Nart
                 var cylinderContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
 
 
-                double theta = Math.Acos(1.0/1.5);
+                double theta = Math.Acos(1.0 / 1.5);
                 double length = 1.5 * Math.Sin(theta);
                 Vector3 ballCenter = new Vector3(Convert.ToSingle(point2.X + length * normal.X),
                     Convert.ToSingle(point2.Y + length * normal.Y), Convert.ToSingle(point2.Z + length * normal.Z));
                 ball.Center = ballCenter;
 
-                
+
                 ballContainer.AddSphere(ballCenter, 1.5);
                 cylinderContainer.AddPipe(point1, point2, 2, 5, 200);
 
@@ -416,7 +415,7 @@ namespace Nart
                 material.SpecularShininess = 60;
                 material.DiffuseColor = new Color4(1.0f, 1.0f, 1.0f, 0.8f);
 
-            
+
 
 
                 ball.Material = material;

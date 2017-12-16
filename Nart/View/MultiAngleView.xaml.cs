@@ -36,51 +36,44 @@ namespace Nart
 
         }
 
-
+        /// <summary>
+        /// 這個階段主要要顯示出所設定的第一階段的上or下顎，且顯示三角形模型
+        /// </summary>
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            //確定已經註冊的情況
+            //確定已經設定導航資訊，且已經有按Tracking的情形
             if (MainViewModel.Data.IsSet&&CameraControl.TrackToggle)
             {
                 string firstNavigation = MainViewModel.Data.FirstNavigation;
-
                 foreach (Element3D model in MultiAngleViewModel.TriangleModelCollection)
                 {
                     DraggableTriangle dragModel = model as DraggableTriangle;
                     //顯示第一階段的三角導引物
                     if (dragModel != null && dragModel.MarkerId.Equals(firstNavigation))
-                    {
-                        
+                    {                        
                         dragModel.IsRendering = true;
                     }
                 }
 
                 var boneCollection = MainViewModel.Data.BoneCollection;
-                for (int i = 0; i < boneCollection.Count; i++)
+                foreach (BoneModel model in boneCollection)
                 {
-                    BoneModel model = boneCollection[i] as BoneModel;
-                    //骨骼名稱是上顎
+                    //骨骼名稱是不是所選的第一導引骨頭(上、下顎)，不是的話不讓他改變位置
                     if (!model.BoneType.Equals(firstNavigation))
                     {
-                        //model.IsRendering = false;
-                        model.Visibility = Visibility.Hidden;
+                        model.IsTransformApplied = false;
                     }
                 }
 
-                for (int i = 0; i < MultiAngleViewModel.TargetCollection.Count; i++)
+                //顯示出所選擇的目標模型
+                foreach (Element3D targetModel in MultiAngleViewModel.TargetCollection)
                 {
-                    BoneModel model = MultiAngleViewModel.TargetCollection[i] as BoneModel;
-                    if (!model.BoneType.Equals("Head"))
+                    BoneModel model = targetModel as BoneModel;
+                    //骨骼名稱是不是所選的第一導引骨頭(上、下顎)，不是的話則不顯示
+                    if (model != null && !model.BoneType.Equals("Head"))
                     {
                         //骨骼名稱是上顎
-                        if (model.BoneType.Equals(firstNavigation))
-                        {
-                            model.IsRendering = true;
-                        }
-                        else
-                        {
-                            model.IsRendering = false;
-                        }
+                        model.IsRendering = model.BoneType.Equals(firstNavigation);
                     }
                 }
                 MainViewModel.Data.FirstStageDone = true;
@@ -94,39 +87,33 @@ namespace Nart
             {
                 string firstNavigation = MainViewModel.Data.FirstNavigation;
 
-                for (int i = 0; i < MultiAngleViewModel.TriangleModelCollection.Count; i++)
+                foreach (Element3D dragModel in MultiAngleViewModel.TriangleModelCollection)
                 {
-                    DraggableTriangle model = MultiAngleViewModel.TriangleModelCollection[i] as DraggableTriangle;
+                    DraggableTriangle model = dragModel as DraggableTriangle;
 
                     model.IsRendering = !model.IsRendering;
-                  
                 }
                 var boneCollection = MainViewModel.Data.BoneCollection;
-
-                for (int i = 0; i < boneCollection.Count; i++)
+                
+                foreach (BoneModel model in boneCollection)
                 {
-                    BoneModel model = boneCollection[i] as BoneModel;
-                    //model.IsRendering = !model.IsRendering;
-                    if (model.Visibility == Visibility.Hidden)
-                    {
-                        model.Visibility = Visibility.Visible;
-                    }
-                    else 
-                    {
-                        model.Visibility = Visibility.Hidden;
-                    }
+                    //骨骼名稱是不是所選的第一導引骨頭(上、下顎)，不是的話則計算位置
+                    //if (!model.BoneType.Equals(firstNavigation))
+                    //{
+                        model.IsTransformApplied = !model.IsTransformApplied;
+                    //}
                 }
 
-                for (int i = 0; i < MultiAngleViewModel.TargetCollection.Count; i++)
-                {
 
-                    BoneModel model = MultiAngleViewModel.TargetCollection[i] as BoneModel;
+
+                foreach (Element3D targetModel in MultiAngleViewModel.TargetCollection)
+                {
+                    BoneModel model = targetModel as BoneModel;
 
                     if (!model.BoneType.Equals("Head"))
                     {
                         model.IsRendering = !model.IsRendering;
                     }
-                   
                 }
             }
         }

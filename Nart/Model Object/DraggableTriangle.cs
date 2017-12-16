@@ -33,6 +33,7 @@ namespace Nart.Model_Object
         /// MarkerID 的值
         /// </summary>
         public String MarkerId;
+        public ModelType ModelType;
         /// <summary>
         /// 整個三角形中心位置
         /// </summary>
@@ -44,12 +45,11 @@ namespace Nart.Model_Object
         /// <summary>
         /// 單顆球幾何
         /// </summary>
-        private static Geometry3D _nodeGeometry;
+        private static readonly Geometry3D NodeGeometry;
         /// <summary>
         /// 單根桿子
         /// </summary>
-        private static Geometry3D _edgeGeometry;
-
+        private static readonly Geometry3D EdgeGeometry;
         /// <summary>
         /// 直接調整透明度
         /// </summary>
@@ -57,11 +57,11 @@ namespace Nart.Model_Object
         /// <summary>
         /// 三顆球
         /// </summary>
-        private MeshGeometryModel3D[] _ballHandles = new MeshGeometryModel3D[3];
+        private readonly MeshGeometryModel3D[] _ballHandles = new MeshGeometryModel3D[3];
         /// <summary>
         /// 三根桿
         /// </summary>
-        private MeshGeometryModel3D[] _cylinderHandles = new MeshGeometryModel3D[3];
+        private readonly MeshGeometryModel3D[] _cylinderHandles = new MeshGeometryModel3D[3];
         /// <summary>
         /// 三頂點於中心的距離
         /// </summary>
@@ -95,11 +95,11 @@ namespace Nart.Model_Object
             //建立實體幾何
             var b1 = new MeshBuilder();
             b1.AddSphere(new Vector3(0.0f, 0.0f, 0), 8);
-            _nodeGeometry = b1.ToMeshGeometry3D();
+            NodeGeometry = b1.ToMeshGeometry3D();
 
             var b2 = new MeshBuilder();
             b2.AddCylinder(new Vector3(0, 0, 0), new Vector3(1, 0, 0), 3, 32, true, true);
-            _edgeGeometry = b2.ToMeshGeometry3D();
+            EdgeGeometry = b2.ToMeshGeometry3D();
         }
         public DraggableTriangle()
                     : this(new Point3D(0,0,0))
@@ -128,7 +128,7 @@ namespace Nart.Model_Object
                 _ballHandles[i] = new MeshGeometryModel3D()
                 {
                     Visibility = Visibility.Visible,
-                    Geometry = _nodeGeometry,
+                    Geometry = NodeGeometry,
                     Transform = new MatrixTransform3D(translateMat),
                 };
                 //定義球的滑鼠事件
@@ -151,28 +151,28 @@ namespace Nart.Model_Object
                 float theta = Convert.ToSingle(Math.Acos(Vector3.Dot(xBar, v1) / (v1.Length() * xBar.Length())));
                 Matrix rotateMat = Matrix.RotationAxis(rotateAxis, theta);
                 Matrix m = Matrix.Scaling(v1.Length(), 1, 1) * rotateMat * Matrix.Translation(Positions[i]);
-                this._cylinderHandles[i] = new MeshGeometryModel3D()
+                _cylinderHandles[i] = new MeshGeometryModel3D()
                 {
-                    Geometry = _edgeGeometry,
+                    Geometry = EdgeGeometry,
                     Material = SetMaterial(Color4.White),
                     Visibility = Visibility.Visible,
                     Transform = new MatrixTransform3D(m.ToMatrix3D())
                 };
                 //定義桿子的滑鼠事件
-                this._cylinderHandles[i].MouseMove3D += OnEdgeMouse3DMove;
-                this._cylinderHandles[i].MouseUp3D += OnEdgeMouse3DUp;
-                this._cylinderHandles[i].MouseDown3D += OnEdgeMouse3DDown;
+                _cylinderHandles[i].MouseMove3D += OnEdgeMouse3DMove;
+                _cylinderHandles[i].MouseUp3D += OnEdgeMouse3DUp;
+                _cylinderHandles[i].MouseDown3D += OnEdgeMouse3DDown;
 
             }
             //因為會畫透明物件，所以在上面迴圈外先將球一次加進去
-            for (int i =0;i<_ballHandles.Length ;i++)
+            foreach (MeshGeometryModel3D ball in _ballHandles)
             {
-                this.Children.Add(_ballHandles[i]);
+                Children.Add(ball);
             }
             //加完球再加桿子
-            for (int i = 0; i < _cylinderHandles.Length; i++)
+            foreach (MeshGeometryModel3D cylinder in _cylinderHandles)
             {
-                this.Children.Add(_cylinderHandles[i]);
+                Children.Add(cylinder);
             }
 
 
@@ -196,17 +196,15 @@ namespace Nart.Model_Object
             }
             set
             {
-                if (value != _transparency)
+                if (Math.Abs(value - _transparency) > 10E-10)
                 {
                     _transparency = value;
 
 
-                    //foreach (var item in (this.Items))
-                    //{
-                    for (int i=0;i<this.Children.Count ;i++)
+                    //將三角導引件內部所有球、桿的透明度更改成新的值
+                    foreach (MeshGeometryModel3D model in Children)
                     {
                         
-                        var model = this.Children[i] as MeshGeometryModel3D;
                         if (model != null)
                         {
                             PhongMaterial material = model.Material as PhongMaterial;
@@ -215,7 +213,7 @@ namespace Nart.Model_Object
                             color.Alpha = _transparency;
                             material.DiffuseColor = color;
                         }
-                        //}
+                        
                     }
                 }
             }

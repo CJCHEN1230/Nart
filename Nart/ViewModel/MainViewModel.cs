@@ -14,6 +14,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Media.Animation;
+using Nart.Model_Object;
 
 namespace Nart
 {
@@ -42,6 +44,9 @@ namespace Nart
             SetNavigationCommand = new RelayCommand(SetNavigation);
             TrackCommand = new RelayCommand(Track);
             CloseWindowCommand = new RelayCommand(this.OnClosed, null);
+            DeleteBallCommad = new RelayCommand(DeleteBallItem);
+            DeleteBoneCommad = new RelayCommand(DeleteBoneItem);
+
 
             BindPatientData();
             BindBallData();
@@ -86,8 +91,14 @@ namespace Nart
         /// 關閉程式
         /// </summary>
         public ICommand CloseWindowCommand { private set; get; }
-
-
+        /// <summary>
+        /// 刪除球Item的Command        
+        /// </summary>
+        public ICommand DeleteBallCommad { private set; get; }
+        /// <summary>
+        /// 刪除骨骼模型的Command        
+        /// </summary>
+        public ICommand DeleteBoneCommad { private set; get; }
 
         public void InitCamCtrl()
         {
@@ -109,6 +120,8 @@ namespace Nart
             _modelSettingdlg.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
 
             _modelSettingdlg.ShowDialog();
+
+            RestoreGridLength();
         }
         private void SetNavigation(object o)
         {
@@ -121,14 +134,18 @@ namespace Nart
             _navigatedlg.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
 
             _navigatedlg.ShowDialog();
+
+            RestoreGridLength();
         }
         private void Register(object o)
         {
             CameraControl.RegToggle = !CameraControl.RegToggle;
+            RestoreGridLength();
         }
         private void Track(object o)
         {
             CameraControl.TrackToggle = !CameraControl.TrackToggle;
+            RestoreGridLength();
         }
         private void OnClosed(object o)
         {
@@ -138,7 +155,109 @@ namespace Nart
             }
             System.Windows.Application.Current.Shutdown();
         }
+        /// <summary>
+        /// DeleteBallCommad 的實作內容，刪除球項目
+        /// </summary>
+        private void DeleteBallItem(object o)
+        {
+            ListView ballListView =  _mainWindow.BallListView;
 
+            if (ballListView.SelectedItem != null)
+            {
+                //選擇的BallModel
+                BallModel selectedModelItem = (BallModel)ballListView.SelectedItem;
+
+                int temp = ballListView.SelectedIndex;
+
+                ObservableCollection<BallModel> ballCollection = MainViewModel.Data.BallCollection;
+
+                ballCollection.Remove(selectedModelItem);
+
+                //刪減之後數量若跟舊的索引值一樣，代表選項在最後一個
+                if (ballCollection.Count == temp)
+                {
+                    ballListView.SelectedIndex = ballCollection.Count - 1;
+                }
+                else//不是的話則維持原索引值
+                {
+                    ballListView.SelectedIndex = temp;
+                }
+
+                ListViewItem item = ballListView.ItemContainerGenerator.ContainerFromIndex(ballListView.SelectedIndex) as ListViewItem;
+                if (item != null)
+                {
+                    item.Focus();
+                }
+
+            }
+        }
+        /// <summary>
+        /// DeleteBoneCommad 的實作內容，刪除Bone模型項目
+        /// </summary>
+        private void DeleteBoneItem(object o)
+        {
+            ListView boneListView = _mainWindow.BoneListView;
+
+            if (boneListView.SelectedItem != null)
+            {
+                //選擇的BoneModel
+                BoneModel selectedModelItem = (BoneModel)boneListView.SelectedItem;
+
+                int temp = boneListView.SelectedIndex;
+
+                var ballCollection = MainViewModel.Data.BoneCollection;
+
+                ballCollection.Remove(selectedModelItem);
+
+                //刪減之後數量若跟舊的索引值一樣，代表選項在最後一個
+                if (ballCollection.Count == temp)
+                {
+                    boneListView.SelectedIndex = ballCollection.Count - 1;
+                }
+                else//不是的話則維持原索引值
+                {
+                    boneListView.SelectedIndex = temp;
+                }
+                ListViewItem item = boneListView.ItemContainerGenerator.ContainerFromIndex(boneListView.SelectedIndex) as ListViewItem;
+                item?.Focus();
+            }
+        }
+        /// <summary>
+        /// 將Grid回復到原始狀態 
+        /// </summary>
+        private void RestoreGridLength()
+        {
+
+            GridLengthAnimation gla = new GridLengthAnimation
+            {
+                From = _mainWindow.Col0.Width,
+                To = new GridLength(0, GridUnitType.Star),
+                Duration = new TimeSpan(0, 0, 0, 0, 100),
+                FillBehavior = FillBehavior.Stop
+            };
+            gla.Completed += (s, e) =>
+            {
+                _mainWindow.Col0.Width = gla.To;
+            };
+            _mainWindow.MainGrid.ColumnDefinitions[0].BeginAnimation(ColumnDefinition.WidthProperty, gla);
+
+
+            GridLengthAnimation gla2 = new GridLengthAnimation
+            {
+                From = _mainWindow.Col1.Width,
+                To = new GridLength(0, GridUnitType.Auto),
+                Duration = new TimeSpan(0, 0, 0, 0, 100),
+                FillBehavior = FillBehavior.Stop
+            };
+            gla2.Completed += (s, e) =>
+            {
+                _mainWindow.Col1.Width = gla2.To;
+            };
+            _mainWindow.MainGrid.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla2);
+        }
+        /// <summary>
+        /// Bind Patient Information expander裡面的textbox 
+        /// </summary>
         private void BindPatientData()
         {
             Binding binding1 = new Binding("Name");
@@ -156,6 +275,9 @@ namespace Nart
             binding3.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.InstitutionTB, TextBlock.TextProperty, binding3);
         }
+        /// <summary>
+        /// Bind Navigation balls expander裡面的listview跟switch toggle 
+        /// </summary>
         private void BindBallData()
         {
             Binding binding = new Binding("BallCollection");
@@ -173,7 +295,9 @@ namespace Nart
             binding3.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.stateTB, TextBlock.TextProperty, binding3);
         }
-
+        /// <summary>
+        /// Bind bone Model expander裡面的listview 
+        /// </summary>
         private void BindBondData()
         {
             //將data中的BoneCollection綁到此控制項的item上面   

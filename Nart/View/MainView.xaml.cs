@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,25 +54,7 @@ namespace Nart
             this.DataContext = _mainViewModel;
 
             AllocConsole();
-
-            //System.Windows.Controls.Button temp = new System.Windows.Controls.Button();
-            //temp.Height = 100;
-            //System.Windows.Controls.Button temp1 = new System.Windows.Controls.Button();
-            //temp1.Height = 100;
-            //System.Windows.Controls.Button temp2 = new System.Windows.Controls.Button();
-            //temp2.Height = 100;
-            //System.Windows.Controls.Button temp3 = new System.Windows.Controls.Button();
-            //temp3.Height = 100;
-            //System.Windows.Controls.Button temp4 = new System.Windows.Controls.Button();
-            //temp4.Height = 100;
-
-            //expander_TargetModel.expItem.Children.Add(temp);
-            //expander_TargetModel.expItem.Children.Add(temp2);
-            //expander_TargetModel.expItem.Children.Add(temp1);
-            //expander_TargetModel.expItem.Children.Add(temp3);
-            //expander_TargetModel.expItem.Children.Add(temp4);
-
-
+            
         }
 
         private void Translate_Click(object sender, RoutedEventArgs e)
@@ -136,6 +119,10 @@ namespace Nart
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
+        
+
+
+
         private void button_Click(object sender, RoutedEventArgs e)
         {
             GridLengthAnimation animation = new GridLengthAnimation();
@@ -152,31 +139,31 @@ namespace Nart
 
         private void settingButton1_Click(object sender, RoutedEventArgs e)
         {
-            //// double ratio = Col1.ActualWidth / (mainGrid.ActualWidth - Col3.ActualWidth);
-            //double ratio = Col1.ActualWidth * 5 / Col2.ActualWidth;
-            //GridLengthAnimation gla = new GridLengthAnimation();
-            //gla.From = Col0.Width;
-            //gla.To = /*Col1.Width*/ new GridLength(ratio, GridUnitType.Star);
-            //gla.Duration = new TimeSpan(0, 0, 0, 0, 200);
-            //gla.FillBehavior = FillBehavior.Stop;
-            //gla.Completed += (s, e1) =>
-            //{
-            //    Col0.Width = gla.To;
-            //};
-            //mainGrid.ColumnDefinitions[0].BeginAnimation(ColumnDefinition.WidthProperty, gla);
+            // double ratio = Col1.ActualWidth / (mainGrid.ActualWidth - Col3.ActualWidth);
+            double ratio = Col1.ActualWidth * 5 / Col2.ActualWidth;
+            GridLengthAnimation gla = new GridLengthAnimation();
+            gla.From = Col0.Width;
+            gla.To = /*Col1.Width*/ new GridLength(ratio, GridUnitType.Star);
+            gla.Duration = new TimeSpan(0, 0, 0, 0, 200);
+            gla.FillBehavior = FillBehavior.Stop;
+            gla.Completed += (s, e1) =>
+            {
+                Col0.Width = gla.To;
+            };
+            MainGrid.ColumnDefinitions[0].BeginAnimation(ColumnDefinition.WidthProperty, gla);
 
 
-            //GridLengthAnimation gla2 = new GridLengthAnimation();
-            //gla2.From = Col1.Width;
-            ////gla2.To = Col0.Width;
-            //gla2.To = new GridLength(0, GridUnitType.Star);
-            //gla2.Duration = new TimeSpan(0, 0, 0, 0, 200);
-            //gla2.FillBehavior = FillBehavior.Stop;
-            //gla2.Completed += (s, e1) =>
-            //{
-            //    Col1.Width = gla2.To;
-            //};
-            //mainGrid.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla2);
+            GridLengthAnimation gla2 = new GridLengthAnimation();
+            gla2.From = Col1.Width;
+            //gla2.To = Col0.Width;
+            gla2.To = new GridLength(0, GridUnitType.Star);
+            gla2.Duration = new TimeSpan(0, 0, 0, 0, 200);
+            gla2.FillBehavior = FillBehavior.Stop;
+            gla2.Completed += (s, e1) =>
+            {
+                Col1.Width = gla2.To;
+            };
+            MainGrid.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla2);
 
         }
 

@@ -39,6 +39,10 @@ namespace Nart.Model_Object
         /// </summary>
         public bool IsAdded = false;
         /// <summary>
+        /// 能否指派當前模型的轉移矩陣
+        /// </summary>
+        public bool IsTransformApplied = true;
+        /// <summary>
         /// 模型有Load進去則為true
         /// </summary>
         public new bool IsLoaded = false;
@@ -50,6 +54,8 @@ namespace Nart.Model_Object
         /// 所屬綁定的骨頭部位
         /// </summary>
         public string BoneType = "";
+
+        public ModelType ModelType;
         /// <summary>
         /// 防止抖動，用來存放所有矩陣，10是累積總數量
         /// </summary>
@@ -178,8 +184,11 @@ namespace Nart.Model_Object
 
         }
         public void SetTransformMatrix()
-        {          
-                Transform = new MatrixTransform3D(_finalModelTransform);            
+        {
+            if (IsTransformApplied)
+            {
+                Transform = new MatrixTransform3D(_finalModelTransform);
+            }
         }
         /// <summary>
         /// 設定模型材質
@@ -317,7 +326,7 @@ namespace Nart.Model_Object
 
 
 
-    public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName]string info = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
