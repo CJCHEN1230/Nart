@@ -2,6 +2,7 @@
 using SharpDX;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -1064,7 +1065,6 @@ namespace Nart
                 Vector3 redVector;
                 Vector3 greenVector;
                 Vector3 blueVector;
-
                 Vector3.Subtract(ref red2, ref red, out redVector);
                 Vector3.Subtract(ref green2, ref green, out greenVector);
                 Vector3.Subtract(ref blue2, ref blue, out blueVector);
@@ -1083,64 +1083,41 @@ namespace Nart
 
 
 
-                //////////////////////////////////////////
 
+                /////////////////           
+                //ObservableCollection<BallModel>  ballCollection = MainViewModel.Data.BallCollection;
+            
+                //for(int i =0;i< ballCollection.Count; i++)
+                //{
+                //    if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
+                //    {
+                       
+                //        if (ballCollection[i].ModelType == ModelType.MovedMaxilla)
+                //        {
+                //            ballCollection[i].IsRendering = true;
+                //            ballCollection[i].Transform = movedTriangle.Transform;
+                //        }
+                //        else 
+                //        {
+                //            ballCollection[i].IsRendering = false;
+                //        }
+                //    }
+                //    else
+                //    {
 
-                BallModel ball = new BallModel
-                {
-                    BallName = "Ball",
-                    BallInfo = "!!!!!"
-                };
+                //        if (ballCollection[i].ModelType == ModelType.MovedMandible)
+                //        {
+                //            ballCollection[i].IsRendering = true;
+                //            ballCollection[i].Transform = movedTriangle.Transform;
+                //        }
+                //        else
+                //        {
+                //            ballCollection[i].IsRendering = false;
+                //        }
+                //    }
 
-
-                if (MainViewModel.Data.IsFirstStageDone)
-                {
-
-                    var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
-
-
-
-
-                    ballContainer.AddSphere(green, 1.5);
-                    ballContainer.AddSphere(green2, 1.5);
-
-
-                    ball.Geometry = ballContainer.ToMeshGeometry3D();
-                    ball.Material = PhongMaterials.White;
-
-
-
-
-                    MainViewModel.Data.BallCollection.Add(ball);
-                }
-
-
-
-                if (MainViewModel.Data.IsSecondStageDone)
-                {
-
-                    var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
-
-
-
-
-                    ballContainer.AddSphere(green, 1.5);
-                    ballContainer.AddSphere(green2, 1.5);
-
-
-                    ball.Geometry = ballContainer.ToMeshGeometry3D();
-                    ball.Material = PhongMaterials.Yellow;
-
-
-
-
-                    MainViewModel.Data.BallCollection.Add(ball);
-                }
-                ///////////////////////////////////////////////
-
-
-
-
+                //}
+                //////////////
 
                 ShowPeriod2 = 0;
                 }

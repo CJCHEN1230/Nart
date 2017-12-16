@@ -20,8 +20,11 @@ namespace Nart.Model_Object
         /// 紀錄模型中心
         /// </summary>
         public Vector3 Center;
+
+        public ModelType ModelType;
         private string _ballName;
         private string _ballInfo;
+
 
         public HelixToolkit.Wpf.SharpDX.MeshGeometry3D ballGeometry;
         public HelixToolkit.Wpf.SharpDX.MeshGeometry3D pipeGeometry;

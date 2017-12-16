@@ -257,7 +257,6 @@ namespace Nart
             {
                 FilePath = HeadModel,
                 MarkerId = "Head",
-                BoneType = "Head",
                 ModelType = ModelType.Head,
                 BoneDiffuseColor = HeadDiffuseColor
             };
@@ -270,7 +269,6 @@ namespace Nart
                 FilePath = MaxillaModel,
                 IsRendering = false,
                 MarkerId = "",
-                BoneType = "Maxilla",
                 ModelType = ModelType.TargetMaxilla,
                 BoneDiffuseColor = Color.FromArgb(255, 100, 100, 100),
                 Transform = new MatrixTransform3D(plannedMatrix.ToMatrix3D())
@@ -283,7 +281,6 @@ namespace Nart
                 FilePath = MandibleModel,
                 IsRendering = false,
                 MarkerId = "",
-                BoneType = "Mandible",
                 ModelType = ModelType.TargetMandible,
                 BoneDiffuseColor = Color.FromArgb(255, 100, 100, 100),
                 Transform = new MatrixTransform3D(plannedMandible.ToMatrix3D())
@@ -300,7 +297,6 @@ namespace Nart
             BoneModel oriMaxilla = new BoneModel
             {
                 FilePath = MaxillaModel,
-                BoneType = "Maxilla",
                 ModelType = ModelType.MovedMaxilla,
                 MarkerId = "Splint",
                 BoneDiffuseColor = MaxillaDiffuseColor
@@ -310,7 +306,6 @@ namespace Nart
             BoneModel oriMandible = new BoneModel
             {
                 FilePath = MandibleModel,
-                BoneType = "Mandible",
                 ModelType = ModelType.MovedMandible,
                 MarkerId = "Splint",
                 BoneDiffuseColor = MandibleDiffuseColor
@@ -347,7 +342,6 @@ namespace Nart
             {
                 MarkerId = "Maxilla",
                 IsRendering = false,
-                Transparency = 0.5f,
                 Transform = targetMaxilla.Transform,
                 ModelType = ModelType.TargetMaxillaTriangle,
             };
@@ -357,7 +351,6 @@ namespace Nart
             {
                 MarkerId = "Mandible",
                 IsRendering = false,
-                Transparency = 0.5f,
                 Transform = targetMandible.Transform,
                 ModelType = ModelType.TargetMandibleTriangle,
             };

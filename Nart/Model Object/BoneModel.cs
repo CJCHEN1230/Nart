@@ -53,8 +53,6 @@ namespace Nart.Model_Object
         /// <summary>
         /// 所屬綁定的骨頭部位
         /// </summary>
-        public string BoneType = "";
-
         public ModelType ModelType;
         /// <summary>
         /// 防止抖動，用來存放所有矩陣，10是累積總數量

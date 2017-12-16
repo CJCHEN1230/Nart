@@ -358,6 +358,7 @@ namespace Nart
                 if (!(hit.ModelHit is BoneModel))
                     continue;
 
+
                 Point3D pointHit = hit.PointHit;
                 Vector3D normal = hit.NormalAtHit;
                 //normal.Normalize();
@@ -378,6 +379,21 @@ namespace Nart
                     BallName = "Ball",
                     BallInfo = "!!!!!"
                 };
+
+                //這邊很怪 拿不到該有的屬性資訊只有一些基底的
+                BoneModel model = hit.ModelHit as BoneModel;
+                foreach (BoneModel modeltemp in MainViewModel.Data.BoneCollection)
+                {
+                    if (modeltemp.Geometry.Positions.Count == model.Geometry.Positions.Count)
+                    {
+                        ball.ModelType = modeltemp.ModelType;
+                        Binding binding = new Binding("Transform");
+                        binding.Source = modeltemp;
+                        binding.Mode = BindingMode.OneWay;
+                        BindingOperations.SetBinding(ball, HelixToolkit.Wpf.SharpDX.Model3D.TransformProperty, binding);
+
+                    }
+                }
 
 
                 var all = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
