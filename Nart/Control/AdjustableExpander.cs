@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace Nart.Control
 {
-    class AdjustableExpander : Expander
+    internal class AdjustableExpander : Expander
     {
         public Brush HeaderBackground
         {

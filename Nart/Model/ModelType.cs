@@ -12,8 +12,8 @@ namespace Nart
 
         Head,
 
-        OriMaxilla ,
-        OriMandible ,
+        MovedMaxilla ,
+        MovedMandible ,
 
         TargetMaxilla,
         TargetMandible,

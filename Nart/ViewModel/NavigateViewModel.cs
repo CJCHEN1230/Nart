@@ -271,7 +271,7 @@ namespace Nart
                 IsRendering = false,
                 MarkerId = "",
                 BoneType = "Maxilla",
-                ModelType = ModelType.Maxilla,
+                ModelType = ModelType.TargetMaxilla,
                 BoneDiffuseColor = Color.FromArgb(255, 100, 100, 100),
                 Transform = new MatrixTransform3D(plannedMatrix.ToMatrix3D())
             };
@@ -284,7 +284,7 @@ namespace Nart
                 IsRendering = false,
                 MarkerId = "",
                 BoneType = "Mandible",
-                ModelType = ModelType.Mandible,
+                ModelType = ModelType.TargetMandible,
                 BoneDiffuseColor = Color.FromArgb(255, 100, 100, 100),
                 Transform = new MatrixTransform3D(plannedMandible.ToMatrix3D())
             };
@@ -301,6 +301,7 @@ namespace Nart
             {
                 FilePath = MaxillaModel,
                 BoneType = "Maxilla",
+                ModelType = ModelType.MovedMaxilla,
                 MarkerId = "Splint",
                 BoneDiffuseColor = MaxillaDiffuseColor
             };
@@ -310,6 +311,7 @@ namespace Nart
             {
                 FilePath = MandibleModel,
                 BoneType = "Mandible",
+                ModelType = ModelType.MovedMandible,
                 MarkerId = "Splint",
                 BoneDiffuseColor = MandibleDiffuseColor
             };
@@ -344,14 +346,20 @@ namespace Nart
             DraggableTriangle maxillaTargetTriangle =new DraggableTriangle(targetMaxilla.ModelCenter)                
             {
                 MarkerId = "Maxilla",
-                IsRendering = false
+                IsRendering = false,
+                Transparency = 0.5f,
+                Transform = targetMaxilla.Transform,
+                ModelType = ModelType.TargetMaxillaTriangle,
             };
 
             //標記屬於下顎的ID，綁定到目標下顎
             DraggableTriangle mandibleTargetTriangle =new DraggableTriangle(targetMandible.ModelCenter)                
             {
                 MarkerId = "Mandible",
-                IsRendering = false
+                IsRendering = false,
+                Transparency = 0.5f,
+                Transform = targetMandible.Transform,
+                ModelType = ModelType.TargetMandibleTriangle,
             };
 
 
@@ -362,7 +370,8 @@ namespace Nart
             {
                 MarkerId = "Maxilla",
                 Transparency = 0.5f,
-                IsRendering = false
+                IsRendering = false,
+                ModelType = ModelType.MovedMaxillaTriangle,
             };
             SetBinding(oriMaxilla, maxillaTriangle,"Transform" ,HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty,BindingMode.OneWay);
 
@@ -372,8 +381,9 @@ namespace Nart
             DraggableTriangle mandibleTriangle = new DraggableTriangle(oriMandible.ModelCenter)
             {
                 MarkerId = "Mandible",
-                Transparency = 0.7f,
-                IsRendering = false
+                Transparency = 0.5f,
+                IsRendering = false,
+                ModelType = ModelType.MovedMandibleTriangle,
             };
             SetBinding(oriMandible, mandibleTriangle, "Transform", HelixToolkit.Wpf.SharpDX.GroupModel3D.TransformProperty, BindingMode.OneWay);
 
@@ -386,7 +396,7 @@ namespace Nart
 
             MultiAngleViewModel.ResetCameraPosition();
 
-            MainViewModel.Data.IsSet = true;
+            MainViewModel.Data.IsNavigationSetted = true;
 
             _navigateView.Hide();
         }

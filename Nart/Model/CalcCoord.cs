@@ -1006,7 +1006,7 @@ namespace Nart
 
                 DraggableTriangle targetTriangle;
                 DraggableTriangle movedTriangle;
-                if (MainViewModel.Data.SecondStageDone)
+                if (MainViewModel.Data.IsSecondStageDone)
                 {                    
                     if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
                     {
@@ -1020,7 +1020,7 @@ namespace Nart
                         movedTriangle = MultiAngleViewModel.TriangleModelCollection[2] as DraggableTriangle;
                     }
                 }
-                else if (MainViewModel.Data.FirstStageDone)
+                else if (MainViewModel.Data.IsFirstStageDone)
                 {
                     if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
                     {
@@ -1042,19 +1042,23 @@ namespace Nart
                 if (targetTriangle == null || movedTriangle == null)
                     return;
 
-                Vector3 red = targetTriangle.Positions[0];
-                Vector3 green = targetTriangle.Positions[1];
-                Vector3 blue = targetTriangle.Positions[2];
-
+                Vector3 red;
+                Vector3 green;
+                Vector3 blue;
                 Matrix mat = Matrix3DExtensions.ToMatrix(movedTriangle.Transform.Value);
+                Vector3.TransformCoordinate(ref movedTriangle.Positions[0], ref mat, out red);
+                Vector3.TransformCoordinate(ref movedTriangle.Positions[1], ref mat, out green);
+                Vector3.TransformCoordinate(ref movedTriangle.Positions[2], ref mat, out blue);
+
 
 
                 Vector3 red2;
                 Vector3 green2;
                 Vector3 blue2;
-                Vector3.TransformCoordinate(ref targetTriangle.Positions[0], ref mat, out red2);
-                Vector3.TransformCoordinate(ref targetTriangle.Positions[1], ref mat, out green2);
-                Vector3.TransformCoordinate(ref targetTriangle.Positions[2], ref mat, out blue2);
+                Matrix mat2 = Matrix3DExtensions.ToMatrix(targetTriangle.Transform.Value);
+                Vector3.TransformCoordinate(ref targetTriangle.Positions[0], ref mat2, out red2);
+                Vector3.TransformCoordinate(ref targetTriangle.Positions[1], ref mat2, out green2);
+                Vector3.TransformCoordinate(ref targetTriangle.Positions[2], ref mat2, out blue2);
 
 
                 Vector3 redVector;
@@ -1077,10 +1081,71 @@ namespace Nart
 
                 MultiAngleViewModel.BallDistance = info;
 
+
+
+                //////////////////////////////////////////
+
+
+                BallModel ball = new BallModel
+                {
+                    BallName = "Ball",
+                    BallInfo = "!!!!!"
+                };
+
+
+                if (MainViewModel.Data.IsFirstStageDone)
+                {
+
+                    var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+
+
+
+
+                    ballContainer.AddSphere(green, 1.5);
+                    ballContainer.AddSphere(green2, 1.5);
+
+
+                    ball.Geometry = ballContainer.ToMeshGeometry3D();
+                    ball.Material = PhongMaterials.White;
+
+
+
+
+                    MainViewModel.Data.BallCollection.Add(ball);
+                }
+
+
+
+                if (MainViewModel.Data.IsSecondStageDone)
+                {
+
+                    var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+
+
+
+
+                    ballContainer.AddSphere(green, 1.5);
+                    ballContainer.AddSphere(green2, 1.5);
+
+
+                    ball.Geometry = ballContainer.ToMeshGeometry3D();
+                    ball.Material = PhongMaterials.Yellow;
+
+
+
+
+                    MainViewModel.Data.BallCollection.Add(ball);
+                }
+                ///////////////////////////////////////////////
+
+
+
+
+
                 ShowPeriod2 = 0;
                 }
                 
-
+            
             
 
             ShowPeriod2++;

@@ -272,8 +272,6 @@ namespace Nart.Model_Object
 
             Geometry = modelGeometry;
 
-            Transform = new MatrixTransform3D();
-
             IsLoaded = true;
         }
         public void SaveModel()

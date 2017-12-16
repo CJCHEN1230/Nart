@@ -202,18 +202,16 @@ namespace Nart.Model_Object
 
 
                     //將三角導引件內部所有球、桿的透明度更改成新的值
-                    foreach (MeshGeometryModel3D model in Children)
+                    foreach (var element3D in Children)
                     {
-                        
-                        if (model != null)
-                        {
-                            PhongMaterial material = model.Material as PhongMaterial;
-                            Color4 color = material.DiffuseColor;
+                        var model = (MeshGeometryModel3D) element3D;
+                        PhongMaterial material = model?.Material as PhongMaterial;
+                        if (material == null)
+                            continue;
+                        Color4 color = material.DiffuseColor;
 
-                            color.Alpha = _transparency;
-                            material.DiffuseColor = color;
-                        }
-                        
+                        color.Alpha = _transparency;
+                        material.DiffuseColor = color;
                     }
                 }
             }

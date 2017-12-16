@@ -66,9 +66,9 @@
             <hx:GroupModel3D ItemsSource="{Binding BoneModelCollection}"/>
             <hx:GroupModel3D ItemsSource="{Binding TargetCollection}"/>
             <hx:GroupModel3D ItemsSource="{Binding NormalModelCollection}"/>
-            <hx:GroupModel3D ItemsSource="{Binding OspModelCollection}"/>
             <hx:GroupModel3D ItemsSource="{Binding TriangleModelCollection}"/>
 
+            <hx:GroupModel3D ItemsSource="{Binding OspModelCollection}"/>
 
 
             </hx:ModelContainer3DX>

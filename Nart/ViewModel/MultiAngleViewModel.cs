@@ -420,7 +420,7 @@ namespace Nart
 
                 ball.Material = material;
                 //ball.Material = PhongMaterials.Silver;
-                ball.Transform = new MatrixTransform3D();
+                //ball.Transform = new MatrixTransform3D();
 
                 MainViewModel.Data.BallCollection.Add(ball);
 

@@ -17,9 +17,9 @@ namespace Nart
         private string _id = "123456";
         private string _institution = "成大";
 
-        public bool IsSet = false;
-        public bool FirstStageDone = false;
-        public bool SecondStageDone = false;
+        public bool IsNavigationSetted = false;
+        public bool IsFirstStageDone = false;       
+        public bool IsSecondStageDone = false;
         public string FirstNavigation = "Maxilla";
 
         private bool _canSelectPoints = false;
