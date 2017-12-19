@@ -997,7 +997,9 @@ namespace Nart
             }
             ShowPeriod++;
         }
-
+        /// <summary>
+        /// 計算紅綠藍三球、以及其他手點球的距離
+        /// </summary>
         public void CalcBallDistance()
         {
             if (ShowPeriod2 == 5)
@@ -1079,44 +1081,65 @@ namespace Nart
                     + "\n\n" + "Green:  " + Math.Round(greenLength, 2).ToString()
                     + "\n\n" + "Blue:     " + Math.Round(blueLength, 2).ToString();
 
-                MultiAngleViewModel.BallDistance = info;
+                //MultiAngleViewModel.BallDistance = info;
 
 
 
 
                 /////////////////           
-                //ObservableCollection<BallModel>  ballCollection = MainViewModel.Data.BallCollection;
-            
-                //for(int i =0;i< ballCollection.Count; i++)
-                //{
-                //    if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
-                //    {
-                       
-                //        if (ballCollection[i].ModelType == ModelType.MovedMaxilla)
-                //        {
-                //            ballCollection[i].IsRendering = true;
-                //            ballCollection[i].Transform = movedTriangle.Transform;
-                //        }
-                //        else 
-                //        {
-                //            ballCollection[i].IsRendering = false;
-                //        }
-                //    }
-                //    else
-                //    {
+                ObservableCollection<BallModel> ballCollection = MainViewModel.Data.BallCollection;
 
-                //        if (ballCollection[i].ModelType == ModelType.MovedMandible)
-                //        {
-                //            ballCollection[i].IsRendering = true;
-                //            ballCollection[i].Transform = movedTriangle.Transform;
-                //        }
-                //        else
-                //        {
-                //            ballCollection[i].IsRendering = false;
-                //        }
-                //    }
+                for (int i = 0; i < ballCollection.Count; i++)
+                {
+                    if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
+                    {
 
-                //}
+                        if (ballCollection[i].ModelType == ModelType.MovedMaxilla)
+                        {
+                            ballCollection[i].IsRendering = true;
+                            //ballCollection[i].Transform = movedTriangle.Transform;
+
+                            Vector3 outputPoint;
+                            Vector3 outputDistance;
+                            Matrix mat3 = Matrix3DExtensions.ToMatrix(movedTriangle.Transform.Value);
+
+                            Vector3.TransformCoordinate(ref ballCollection[i].Center, ref mat3, out outputPoint);
+                            Vector3.Subtract(ref ballCollection[i].Center, ref outputPoint, out outputDistance);
+                            float distance = outputDistance.Length();
+
+                             info += "\n"+ ballCollection[i].BallName + ":" + Math.Round(distance, 2).ToString();
+                        }
+                        else
+                        {
+                            ballCollection[i].IsRendering = false;
+                        }
+                    }
+                    else
+                    {
+
+                        if (ballCollection[i].ModelType == ModelType.MovedMandible)
+                        {
+                            ballCollection[i].IsRendering = true;
+                            //ballCollection[i].Transform = movedTriangle.Transform;
+
+                            Vector3 outputPoint;
+                            Vector3 outputDistance;
+                            Matrix mat3 = Matrix3DExtensions.ToMatrix(movedTriangle.Transform.Value);
+
+                            Vector3.TransformCoordinate(ref ballCollection[i].Center, ref mat3, out outputPoint);
+                            Vector3.Subtract(ref ballCollection[i].Center, ref outputPoint, out outputDistance);
+                            float distance = outputDistance.Length();
+
+                            info += "\n" + ballCollection[i].BallName + ":" + Math.Round(distance, 2).ToString();
+                        }
+                        else
+                        {
+                            ballCollection[i].IsRendering = false;
+                        }
+                    }
+
+                }
+                MultiAngleViewModel.BallDistance = info;
                 //////////////
 
                 ShowPeriod2 = 0;

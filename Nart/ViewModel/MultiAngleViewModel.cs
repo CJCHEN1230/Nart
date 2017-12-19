@@ -380,7 +380,7 @@ namespace Nart
                     BallInfo = "!!!!!"
                 };
 
-                //這邊很怪 拿不到該有的屬性資訊只有一些基底的
+                //這邊很怪 拿不到該有的屬性資訊只有一些基底類別的資訊的
                 BoneModel model = hit.ModelHit as BoneModel;
                 foreach (BoneModel modeltemp in MainViewModel.Data.BoneCollection)
                 {

@@ -288,8 +288,8 @@ namespace Nart
             targetMandible.LoadModel();        
 
             MultiAngleViewModel.TargetCollection.Add(head);
-            MultiAngleViewModel.TargetCollection.Add(targetMaxilla);
-            MultiAngleViewModel.TargetCollection.Add(targetMandible);
+            //MultiAngleViewModel.TargetCollection.Add(targetMaxilla);
+            //MultiAngleViewModel.TargetCollection.Add(targetMandible);
 
 
 
