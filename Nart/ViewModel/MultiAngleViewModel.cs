@@ -26,6 +26,7 @@ namespace Nart
     public class MultiAngleViewModel : ObservableObject
     {                  
         private static string _craniofacialInfo;
+        private static string _navBallDistance;
         private static string _ballDistance;
         private readonly MultiAngleView _multiview;
         private RenderTechnique _renderTechnique;
@@ -76,6 +77,17 @@ namespace Nart
         /// <summary>
         /// 顯示三球距離的string
         /// </summary>
+        public static string NavBallDistance
+        {
+            get
+            {
+                return _navBallDistance;
+            }
+            set
+            {
+                SetStaticValue(ref _navBallDistance, value);
+            }
+        }
         public static string BallDistance
         {
             get

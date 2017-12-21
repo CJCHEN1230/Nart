@@ -984,11 +984,11 @@ namespace Nart
 
                 
 
-                string info = "DA:    "+ Math.Round(da, 4).ToString()
-                        + "\n\nDD:    "+ Math.Round(dd, 3).ToString()
-                        + "\n\nFDA:  "+ Math.Round(fda, 2).ToString()
-                        + "\n\nHDA: "+ Math.Round(hda, 2).ToString()
-                        + "\n\nPDD:  "+ Math.Round(pdd, 3).ToString();
+                string info = "DA:    "+ Math.Round(da, 4)
+                        + "\n\nDD:    "+ Math.Round(dd, 3)
+                        + "\n\nFDA:  "+ Math.Round(fda, 2)
+                        + "\n\nHDA: "+ Math.Round(hda, 2)
+                        + "\n\nPDD:  "+ Math.Round(pdd, 3);
 
                 MultiAngleViewModel.CraniofacialInfo = info;
 
@@ -1009,7 +1009,7 @@ namespace Nart
 
                 DraggableTriangle targetTriangle;
                 DraggableTriangle movedTriangle;
-                if (MainViewModel.Data.IsSecondStageDone)
+                if (MainViewModel.Data.IsSecondStage)
                 {                    
                     if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
                     {
@@ -1023,7 +1023,7 @@ namespace Nart
                         movedTriangle = MultiAngleViewModel.TriangleModelCollection[2] as DraggableTriangle;
                     }
                 }
-                else if (MainViewModel.Data.IsFirstStageDone)
+                else if (MainViewModel.Data.IsFirstStage)
                 {
                     if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
                     {
@@ -1077,70 +1077,77 @@ namespace Nart
                 float blueLength = blueVector.Length();
 
 
-                string info = "Red:      " + Math.Round(redLength, 2).ToString()
-                    + "\n\n" + "Green:  " + Math.Round(greenLength, 2).ToString()
-                    + "\n\n" + "Blue:     " + Math.Round(blueLength, 2).ToString();
+                string navInfo = "Red:      " + Math.Round(redLength, 2)
+                    + "\n\n" + "Green:  " + Math.Round(greenLength, 2)
+                    + "\n\n" + "Blue:     " + Math.Round(blueLength, 2);
 
-                //MultiAngleViewModel.BallDistance = info;
-
-
+                MultiAngleViewModel.NavBallDistance = navInfo;
 
 
-                /////////////////           
+
+                string ballDistanceInfo = "";
+
+                
+                //以下這段計算導航小球的距離 
                 ObservableCollection<BallModel> ballCollection = MainViewModel.Data.BallCollection;
+                Projectata data = MainViewModel.Data;
 
-                for (int i = 0; i < ballCollection.Count; i++)
+
+                //當選擇的是先導航上顎且在第一個階段  或  選擇先導航下顎但已經在第二階段
+                if ((data.FirstNavigation.Equals("Maxilla")&& data.IsFirstStage) ||
+                    (data.FirstNavigation.Equals("Mandible") && data.IsSecondStage))
                 {
-                    if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
+                    foreach (BallModel model in ballCollection)
                     {
-
-                        if (ballCollection[i].ModelType == ModelType.MovedMaxilla)
+                        if (model.ModelType == ModelType.MovedMaxilla)
                         {
-                            ballCollection[i].IsRendering = true;
-                            //ballCollection[i].Transform = movedTriangle.Transform;
+                            model.IsRendering = true;
 
                             Vector3 outputPoint;
                             Vector3 outputDistance;
                             Matrix mat3 = Matrix3DExtensions.ToMatrix(movedTriangle.Transform.Value);
 
-                            Vector3.TransformCoordinate(ref ballCollection[i].Center, ref mat3, out outputPoint);
-                            Vector3.Subtract(ref ballCollection[i].Center, ref outputPoint, out outputDistance);
+                            Vector3.TransformCoordinate(ref model.Center, ref mat3, out outputPoint);
+                            Vector3.Subtract(ref model.Center, ref outputPoint, out outputDistance);
                             float distance = outputDistance.Length();
 
-                             info += "\n"+ ballCollection[i].BallName + ":" + Math.Round(distance, 2).ToString();
+                            ballDistanceInfo += model.BallName + ":   " + Math.Round(distance, 2) + "\n\n";
                         }
                         else
                         {
-                            ballCollection[i].IsRendering = false;
+                            model.IsRendering = false;
                         }
                     }
-                    else
-                    {
-
-                        if (ballCollection[i].ModelType == ModelType.MovedMandible)
-                        {
-                            ballCollection[i].IsRendering = true;
-                            //ballCollection[i].Transform = movedTriangle.Transform;
-
-                            Vector3 outputPoint;
-                            Vector3 outputDistance;
-                            Matrix mat3 = Matrix3DExtensions.ToMatrix(movedTriangle.Transform.Value);
-
-                            Vector3.TransformCoordinate(ref ballCollection[i].Center, ref mat3, out outputPoint);
-                            Vector3.Subtract(ref ballCollection[i].Center, ref outputPoint, out outputDistance);
-                            float distance = outputDistance.Length();
-
-                            info += "\n" + ballCollection[i].BallName + ":" + Math.Round(distance, 2).ToString();
-                        }
-                        else
-                        {
-                            ballCollection[i].IsRendering = false;
-                        }
-                    }
-
                 }
-                MultiAngleViewModel.BallDistance = info;
-                //////////////
+                else if ((data.FirstNavigation.Equals("Mandible") && data.IsFirstStage) ||
+                         (data.FirstNavigation.Equals("Maxilla") && data.IsSecondStage))
+                {
+                    foreach (BallModel model in ballCollection)
+                    {
+                        if (model.ModelType == ModelType.MovedMandible)
+                        {
+                            model.IsRendering = true;
+
+                            Vector3 outputPoint;
+                            Vector3 outputDistance;
+                            Matrix mat3 = Matrix3DExtensions.ToMatrix(movedTriangle.Transform.Value);
+
+                            Vector3.TransformCoordinate(ref model.Center, ref mat3, out outputPoint);
+                            Vector3.Subtract(ref model.Center, ref outputPoint, out outputDistance);
+                            float distance = outputDistance.Length();
+
+                            ballDistanceInfo += model.BallName + ":   " + Math.Round(distance, 2) + "\n\n";
+                        }
+                        else
+                        {
+                            model.IsRendering = false;
+                        }
+                    }
+                }
+
+               
+                MultiAngleViewModel.BallDistance = ballDistanceInfo;
+                
 
                 ShowPeriod2 = 0;
                 }

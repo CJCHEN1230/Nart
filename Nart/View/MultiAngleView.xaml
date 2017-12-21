@@ -26,32 +26,34 @@
     </i:Interaction.Triggers>
     <Border BorderThickness="2" BorderBrush="#FFF0F0F0" CornerRadius="3">
         <Grid x:Name="grid" Margin="0" AllowDrop="True" >
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="5"/>
-            <ColumnDefinition Width="1.5*"/>
-        </Grid.ColumnDefinitions>
-        <GridSplitter Grid.RowSpan="3" Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-        <GridSplitter Grid.Row="1" Grid.Column="2"  Height="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="1.5*"/>
+            </Grid.ColumnDefinitions>
 
-         <hx:ModelContainer3DX x:Name="SharedContainer"   RenderTechnique="{Binding RenderTechnique}" EffectsManager="{Binding EffectsManager}" Margin="1" Grid.Column="0"  Grid.Row="2"  Visibility="Hidden">
-            <hx:ItemsModel3D x:Name="BallCollection">
-                <hx:ItemsModel3D.ItemTemplate>
-                    <DataTemplate>
-                        <modelObject:BallModel                        
+            <GridSplitter Grid.RowSpan="3" Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+            <GridSplitter Grid.Row="1" Grid.Column="2"  Height="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  />
+
+            <hx:ModelContainer3DX x:Name="SharedContainer"   RenderTechnique="{Binding RenderTechnique}" EffectsManager="{Binding EffectsManager}" Margin="1" Grid.Column="0"  Grid.Row="2"  Visibility="Hidden">
+                <hx:ItemsModel3D x:Name="BallCollection">
+                    <hx:ItemsModel3D.ItemTemplate>
+                        <DataTemplate>
+                            <modelObject:BallModel                        
                             Geometry="{Binding Geometry}"                            
                             Material="{Binding Material}"
-                            Transform="{Binding Transform}"/>
-                    </DataTemplate>
-                </hx:ItemsModel3D.ItemTemplate>
-            </hx:ItemsModel3D>
+                            Transform="{Binding Transform}"
+                            IsRendering="{Binding IsRendering}"/>
+                        </DataTemplate>
+                    </hx:ItemsModel3D.ItemTemplate>
+                </hx:ItemsModel3D>
 
-            <hx:ItemsModel3D x:Name="BoneCollection">
+                <hx:ItemsModel3D x:Name="BoneCollection">
                     <hx:ItemsModel3D.ItemTemplate>
                         <DataTemplate>
                             <modelObject:BoneModel                                
@@ -61,19 +63,19 @@
                                 IsRendering="{Binding IsRendering}"/>
                         </DataTemplate>
                     </hx:ItemsModel3D.ItemTemplate>
-            </hx:ItemsModel3D>
+                </hx:ItemsModel3D>
 
-            <hx:GroupModel3D ItemsSource="{Binding BoneModelCollection}"/>
-            <hx:GroupModel3D ItemsSource="{Binding TargetCollection}"/>
-            <hx:GroupModel3D ItemsSource="{Binding NormalModelCollection}"/>
-            <hx:GroupModel3D ItemsSource="{Binding TriangleModelCollection}"/>
+                <hx:GroupModel3D ItemsSource="{Binding BoneModelCollection}"/>
+                <hx:GroupModel3D ItemsSource="{Binding TargetCollection}"/>
+                <hx:GroupModel3D ItemsSource="{Binding NormalModelCollection}"/>
+                <hx:GroupModel3D ItemsSource="{Binding TriangleModelCollection}"/>
 
-            <hx:GroupModel3D ItemsSource="{Binding OspModelCollection}"/>
+                <hx:GroupModel3D ItemsSource="{Binding OspModelCollection}"/>
 
 
             </hx:ModelContainer3DX>
 
-        <hx:Viewport3DX  x:Name="Viewport2"
+            <hx:Viewport3DX  x:Name="Viewport2"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" Margin="0" 
                         Camera="{Binding Camera2}"
@@ -85,28 +87,28 @@
                         BackgroundColor="0 0 0 0"
                         SharedModelContainer="{Binding ElementName=SharedContainer}"
                         ShowFrameRate="True" Grid.Column="2">
-            <hx:Viewport3DX.InputBindings>
-                <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
-                <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
-                <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
-                <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
-                <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
-                <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
-                <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
-                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
-                <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
-                <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
-            </hx:Viewport3DX.InputBindings>
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseDoubleClick">
-                    <ie:CallMethodAction MethodName="OnMouseDoubleClickHandler" TargetObject="{Binding}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <hx:DirectionalLight3D
+                <hx:Viewport3DX.InputBindings>
+                    <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
+                    <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
+                    <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
+                    <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
+                    <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
+                    <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
+                    <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
+                    <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
+                    <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
+                    <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
+                </hx:Viewport3DX.InputBindings>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <ie:CallMethodAction MethodName="OnMouseDoubleClickHandler" TargetObject="{Binding}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <hx:DirectionalLight3D
                 Direction="{Binding Light2Direction}"
                 Color="{Binding DirectionalLightColor}" />
-        </hx:Viewport3DX>
-        <hx:Viewport3DX  x:Name="Viewport3"
+            </hx:Viewport3DX>
+            <hx:Viewport3DX  x:Name="Viewport3"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" 
                         Margin="0" 
@@ -120,28 +122,28 @@
                         BackgroundColor="0 0 0 0"
                         ShowFrameRate="True"
                         Grid.Column="2" Grid.Row="2">
-            <hx:Viewport3DX.InputBindings>
-                <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
-                <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
-                <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
-                <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
-                <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
-                <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
-                <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
-                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
-                <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
-                <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
-            </hx:Viewport3DX.InputBindings>
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseLeftButtonDown">
-                    <ie:CallMethodAction MethodName="OnMouseDoubleClickHandler" TargetObject="{Binding}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <hx:DirectionalLight3D
+                <hx:Viewport3DX.InputBindings>
+                    <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
+                    <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
+                    <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
+                    <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
+                    <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
+                    <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
+                    <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
+                    <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
+                    <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
+                    <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
+                </hx:Viewport3DX.InputBindings>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <ie:CallMethodAction MethodName="OnMouseDoubleClickHandler" TargetObject="{Binding}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <hx:DirectionalLight3D
                 Direction="{Binding Light3Direction}"
                 Color="{Binding DirectionalLightColor}" />
-        </hx:Viewport3DX>
-        <hx:Viewport3DX  x:Name="Viewport1"
+            </hx:Viewport3DX>
+            <hx:Viewport3DX  x:Name="Viewport1"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" 
                         Margin="0"                                      
@@ -157,39 +159,45 @@
                         BackgroundColor="0 0 0 0"  
                         ShowFrameRate="False"
                         Grid.RowSpan="3" >
-            <hx:Viewport3DX.InputBindings>
-                <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
-                <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
-                <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
-                <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
-                <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
-                <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
-                <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
-                <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
-                <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
-                <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
-            </hx:Viewport3DX.InputBindings>
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseDoubleClick">
-                    <ie:CallMethodAction MethodName="OnMouseDoubleClickHandler" TargetObject="{Binding}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+                <hx:Viewport3DX.InputBindings>
+                    <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
+                    <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
+                    <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
+                    <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
+                    <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
+                    <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
+                    <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
+                    <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
+                    <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
+                    <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="RightClick" />
+                </hx:Viewport3DX.InputBindings>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <ie:CallMethodAction MethodName="OnMouseDoubleClickHandler" TargetObject="{Binding}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
 
-            <hx:DirectionalLight3D
+                <hx:DirectionalLight3D
                 Direction="{Binding Light1Direction}"
                 Color="{Binding DirectionalLightColor}" />
 
-        </hx:Viewport3DX>
+            </hx:Viewport3DX>
 
-        <Button x:Name="button" Content="Stage1" Margin="124,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Click="button_Click" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67"/>
+            
+            <Button x:Name="Stage1Button" Content="Stage1" Margin="124,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Click="button_Click" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67"/>
+            <Button x:Name="Stage2Button" Content="Stage2" Margin="212,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67" Click="button_Copy_Click"/>
+            <Grid Margin="0" Grid.RowSpan="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Label x:Name="BallDistanceLabel" IsHitTestVisible="False"   Content="{Binding BallDistance, Mode=OneWay}" Margin="235,0,0,0"  HorizontalContentAlignment="Right" FontWeight="Bold" FontSize="20" Foreground="White" Grid.Row="0"/>
+                <Label x:Name="NavBallDistanceLabel" IsHitTestVisible="False" Content="{Binding NavBallDistance, Mode=OneWay}" Margin="0,0,0,0"  HorizontalContentAlignment="Left" FontWeight="Bold" FontSize="20" Foreground="White" Grid.Row="1"/>
+                <Label x:Name="CephLabel" IsHitTestVisible="False" Content="{Binding CraniofacialInfo, Mode=OneWay}"  ContentStringFormat="" Margin="1,1,0,1" HorizontalAlignment="Left" FontWeight="Bold" FontSize="20" Foreground="White" Width="248" Grid.Row="0"/>
 
-        <Button x:Name="button_Copy" Content="Stage2" Margin="212,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67" Click="button_Copy_Click"/>
+            </Grid>
 
-        <Label x:Name="CephLabel" Content="{Binding CraniofacialInfo, Mode=OneWay}" ContentStringFormat="" Margin="1,1,0,1" HorizontalAlignment="Left" FontWeight="Bold" FontSize="20" Foreground="White" Width="248"/>
-
-        <Label x:Name="label2" Content="{Binding BallDistance, Mode=OneWay}" Margin="0,0,0,0"  HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontWeight="Bold" FontSize="20" Foreground="White" Width="156"/>
-
-    </Grid>
+        </Grid>
 
     </Border>
 </UserControl>

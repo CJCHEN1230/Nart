@@ -18,8 +18,8 @@ namespace Nart
         private string _institution = "成大";
 
         public bool IsNavigationSetted = false;
-        public bool IsFirstStageDone = false;       
-        public bool IsSecondStageDone = false;
+        public bool IsFirstStage = false;       
+        public bool IsSecondStage = false;
         public string FirstNavigation = "Maxilla";
 
         private bool _canSelectPoints = false;

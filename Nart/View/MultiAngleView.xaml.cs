@@ -126,7 +126,7 @@ namespace Nart
                 }
             }
             //第一階段按下
-            MainViewModel.Data.IsFirstStageDone = true;
+            MainViewModel.Data.IsFirstStage = true;
         }
         /// <summary>
         /// 這個階段主要要顯示出所設定的第二階段的上or下顎，且顯示三角形模型
@@ -134,7 +134,7 @@ namespace Nart
         private void button_Copy_Click(object sender, RoutedEventArgs e)
         {
             //確定已經註冊的情況
-            if (!MainViewModel.Data.IsNavigationSetted || !MainViewModel.Data.IsFirstStageDone || !CameraControl.TrackToggle )
+            if (!MainViewModel.Data.IsNavigationSetted || !MainViewModel.Data.IsFirstStage || !CameraControl.TrackToggle )
                 return;
             string firstNavigation = MainViewModel.Data.FirstNavigation;
 
@@ -166,8 +166,8 @@ namespace Nart
                     model.IsRendering = !model.IsRendering;
                 }
             }
-
-            MainViewModel.Data.IsSecondStageDone = true;
+            MainViewModel.Data.IsFirstStage = false;
+            MainViewModel.Data.IsSecondStage = true;
         }
     }
 }
