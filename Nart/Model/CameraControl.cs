@@ -19,19 +19,19 @@ namespace Nart
          /// <summary>
         /// 儲存兩相機的點資料
         /// </summary>
-        private List<BWMarker>[] _outputMarker = new List<BWMarker>[2];
-        /// <summary>
-        /// 雙相機控制項
-        /// </summary>
-        internal TIS.Imaging.ICImagingControl[] IcImagingControl = new TIS.Imaging.ICImagingControl[2];
+        private readonly List<BWMarker>[] _outputMarker = new List<BWMarker>[2];
         /// <summary>
         /// 雙相機Buffer
         /// </summary>
-        private ImageBuffer[] _displayBuffer = new ImageBuffer[2];
+        private readonly ImageBuffer[] _displayBuffer = new ImageBuffer[2];
         /// <summary>
         /// 角點影像處理
         /// </summary>
-        private CornerPointFilter[] _corPtFltr = new CornerPointFilter[2];
+        private readonly CornerPointFilter[] _corPtFltr = new CornerPointFilter[2];
+        /// <summary>
+        /// 雙相機控制項
+        /// </summary>
+        internal TIS.Imaging.ICImagingControl[] IcImagingControl = new TIS.Imaging.ICImagingControl[2];       
         /// <summary>
         /// 顯示畫面的委派
         /// </summary>
@@ -194,17 +194,15 @@ namespace Nart
                 _calcCoord.Registraion2();
             }
 
-            if (CameraControl.TrackToggle)
+            if (CameraControl.TrackToggle) 
             {
                 _calcCoord.CalcModelTransform2();
 
                 MoveModel();
 
-                if (_calcCoord.FHCoord!=null)
-                {
-                    _calcCoord.CalcCraniofacialInfo();
-                    _calcCoord.CalcBallDistance();
-                }
+                _calcCoord.CalcCraniofacialInfo();
+
+                _calcCoord.CalcBallDistance();
             }
         
 
@@ -214,7 +212,7 @@ namespace Nart
         /// <summary>
         /// 相機拍攝的所觸發的事件函數
         /// </summary>  
-        private void icImagingControl1_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
+        private void icImagingControl1_ImageAvailable(object sender, ICImagingControl.ImageAvailableEventArgs e)
         {
             if (_cameraToggle[0])
             {
@@ -239,7 +237,7 @@ namespace Nart
         /// <summary>
         /// 相機拍攝的所觸發的事件函數
         /// </summary>
-        private void icImagingControl2_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
+        private void icImagingControl2_ImageAvailable(object sender, ICImagingControl.ImageAvailableEventArgs e)
         {
             if (_cameraToggle[1])
             {

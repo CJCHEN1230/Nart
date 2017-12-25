@@ -16,21 +16,61 @@ namespace Nart
         /// <summary>
         /// 儲存該Marker的三個世界座標點
         /// </summary>
-        public Point3D[] ThreePoints;
+        public Point3D[] ThreePoints = new Point3D[3];
         /// <summary>
         /// 儲存該Marker的三個長度
         /// </summary>
-        public double[] ThreeLength;
+        public double[] ThreeLength = new double[3];
         /// <summary>
         /// 記錄在資料庫中對應的MarkerID
         /// </summary>
-        public String MarkerId = "";
-        public Marker3D()
-        {
-            ThreePoints = new Point3D[3];
+        public string MarkerId = "";
 
-            ThreeLength = new double[3];
-        }
+
+        public readonly Point3D[] PointsStack= new Point3D[10];
+
+
+        private Point3D _totalPoint = new Point3D(0, 0, 0);
+        /// <summary>
+        /// Count是在ModelTransformSet中的累積數量
+        /// </summary>
+        private int _count = 0;
+        /// <summary>
+        /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
+        /// </summary>
+        private int _currentIndex = 0;
+
+
+        //public void AddItem(Point3D item)
+        //{
+        //    //數量少於陣列總長度則往後加入
+        //    if (_count < _pointsStack.Length)
+        //    {
+        //        _count++;
+
+        //        ExtensionMethods.Matrix3DExtensions.AddMatrix3D(ref _totalModelTransform, ref item);
+
+        //        ExtensionMethods.Matrix3DExtensions.DivideMatrix3D(ref _totalModelTransform, _count, ref _finalModelTransform);
+
+        //    }
+        //    else
+        //    {
+        //        ExtensionMethods.Matrix3DExtensions.SubtractMatrix3D(ref _totalModelTransform, ref _modelTransformSet[_currentIndex]);
+
+        //        ExtensionMethods.Matrix3DExtensions.AddMatrix3D(ref _totalModelTransform, ref item);
+
+        //        ExtensionMethods.Matrix3DExtensions.DivideMatrix3D(ref _totalModelTransform, _count, ref _finalModelTransform);
+        //    }
+
+        //    _pointsStack[_currentIndex] = item;
+
+        //    _currentIndex++;
+        //    _currentIndex = _currentIndex % _pointsStack.Length;
+
+        //}
+
+
+
         /// <summary>
         /// 依照邊長排序點
         /// </summary>
@@ -127,7 +167,7 @@ namespace Nart
         /// <summary>
         /// 輸入資料庫，並存下對應的索引值到DatabaseIndex
         /// </summary>
-        public void CompareDatabase(List<MarkerData> markerDb)
+        public void CompareDatabase(ref List<MarkerData> markerDb)
         {
            
             for (int i = 0; i < markerDb.Count; i++)

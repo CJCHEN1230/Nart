@@ -16,11 +16,14 @@ namespace Nart
         private string _name = "蔡慧君";
         private string _id = "123456";
         private string _institution = "成大";
+        private string _regFilePath = "../../../data/蔡慧君測試用.txt";
 
+        public bool IsRegInitialized = false;
         public bool IsNavigationSetted = false;
         public bool IsFirstStage = false;       
         public bool IsSecondStage = false;
         public string FirstNavigation = "Maxilla";
+       
 
         private bool _canSelectPoints = false;
         private string _selectPointState = "OFF";
@@ -65,6 +68,19 @@ namespace Nart
                 SetValue(ref _institution, value);
             }
         }
+
+        public string RegFilePath
+        {
+            get
+            {
+                return _regFilePath;
+            }
+            set
+            {
+                SetValue(ref _regFilePath, value);
+            }
+        }
+
         public bool CanSelectPoints
         {
             get
