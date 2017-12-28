@@ -231,13 +231,60 @@ namespace Nart.Model_Object
 
         public void AddItem2(Matrix3D item)
         {
-            double  w = Math.Sqrt(1.0 + item.M11 + item.M22 + item.M33) / 2.0;
-            double w4 = (4.0 * w);
-            double x = (item.M32 - item.M23) / w4;
-            double y = (item.M13 - item.M31) / w4;
-            double z = (item.M21 - item.M12) / w4;
+            double w;          
+            double x;
+            double y;
+            double z;
+
+
+
+            double tr = item.M11 + item.M22 + item.M33;
+
+            if (tr > 0)
+            {
+                double S = Math.Sqrt(tr + 1.0) * 2; // S=4*qw 
+                w = 0.25 * S;
+                x = (item.M32 - item.M23) / S;
+                y = (item.M13 - item.M31) / S;
+                z = (item.M21 - item.M12) / S;
+            }
+            else if ((item.M11 > item.M22) & (item.M11 > item.M33))
+            {
+                double S = Math.Sqrt(1.0 + item.M11 - item.M22 - item.M33) * 2; // S=4*qx 
+                w = (item.M32 - item.M23) / S;
+                x = 0.25 * S;
+                y = (item.M12 + item.M21) / S;
+                z = (item.M13 + item.M31) / S;
+            }
+            else if (item.M22 > item.M33)
+            {
+                double S = Math.Sqrt(1.0 + item.M22 - item.M11 - item.M33) * 2; // S=4*qy
+                w = (item.M13 - item.M31) / S;
+                x = (item.M12 + item.M21) / S;
+                y = 0.25 * S;
+                z = (item.M23 + item.M32) / S;
+            }
+            else
+            {
+                double S = Math.Sqrt(1.0 + item.M33 - item.M11 - item.M22) * 2; // S=4*qz
+                w = (item.M21 - item.M12) / S;
+                x = (item.M13 + item.M31) / S;
+                y = (item.M23 + item.M32) / S;
+                z = 0.25 * S;
+            }
+
+            
+
+
+
+
+            //Console.WriteLine("x  y  z  w:" + x.ToString("#.###E+0") + "  " + y.ToString("#.###E+0") + "  " + z.ToString("#.###E+0") + "  " + w.ToString("#.#E+0") + "  ");
+
 
             Quaternion items = new Quaternion(x, y, z, w);
+            items.Normalize();
+
+            Matrix3D temp = new Matrix3D();
 
             //數量少於陣列總長度則往後加入
             if (_count < _modelQuaternionSet.Length)
@@ -305,7 +352,28 @@ namespace Nart.Model_Object
             _currentIndex++;
             _currentIndex = _currentIndex % _modelQuaternionSet.Length;
 
-            
+
+            //temp.Rotate(items);
+
+            //double test;
+            //test = temp.M12;
+            //temp.M12 = temp.M21;
+            //temp.M21 = test;
+
+            //test = temp.M13;
+            //temp.M13 = temp.M31;
+            //temp.M31 = test;
+
+            //test = temp.M23;
+            //temp.M23 = temp.M32;
+            //temp.M32 = test;
+
+
+            //_finalModelTransform = temp;
+
+            //_finalModelTransform.OffsetX = item.OffsetX;
+            //_finalModelTransform.OffsetY = item.OffsetY;
+            //_finalModelTransform.OffsetZ = item.OffsetZ;
             //Console.WriteLine("\n\nInput:\n" + _modelVector3DSet[_currentIndex]);
             //Console.WriteLine("\nfinal translation:\n" + _finalTranslation);
         }
@@ -318,12 +386,25 @@ namespace Nart.Model_Object
             {
                 Matrix3D temp = new Matrix3D();
                 temp.Rotate(_finalQuaternion);
-                Matrix3D temp2 = new Matrix3D();
-                temp2.OffsetX = _finalTranslation.X;
-                temp2.OffsetY = _finalTranslation.Y;
-                temp2.OffsetZ = _finalTranslation.Z;
+                
+                double test;
+                test = temp.M12;
+                temp.M12 = temp.M21;
+                temp.M21 = test;
 
-                Transform = new MatrixTransform3D(temp * temp2);
+                test = temp.M13;
+                temp.M13 = temp.M31;
+                temp.M31 = test;
+
+                test = temp.M23;
+                temp.M23 = temp.M32;
+                temp.M32 = test;
+
+                temp.OffsetX = _finalTranslation.X;
+                temp.OffsetY = _finalTranslation.Y;
+                temp.OffsetZ = _finalTranslation.Z;
+
+                Transform = new MatrixTransform3D(temp );
             }
         }
 
