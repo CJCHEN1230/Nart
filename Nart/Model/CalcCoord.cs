@@ -1099,7 +1099,7 @@ namespace Nart
                            
                             if (boneModel.MarkerId == _curWorldPoints[i].MarkerId&& boneModel.IsRendering)
                             {
-                                 // boneModel.AddItem(final);
+                                  //boneModel.AddItem(final);
                                boneModel.AddItem2(final);
                                 //boneModel._finalModelTransform = final;
                             }
