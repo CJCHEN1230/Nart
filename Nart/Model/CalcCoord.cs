@@ -28,7 +28,7 @@ namespace Nart
         /// <summary>
         ///Marker的database
         /// </summary>
-        public MarkerDatabase Database;       
+        public MarkerDatabase Database = new MarkerDatabase();
         /// <summary>
         ///雙相機鏡心在世界座標
         /// </summary>
@@ -42,9 +42,9 @@ namespace Nart
         /// </summary>
         public Matrix3D FHCoord;
         //在註冊時存取下來算平均值用的頭部世界座標資料，可容納數量也是用來計算平均值所取的數量
-        private readonly List<Point3D[]> _headMarkerStack = new List<Point3D[]>(20);
+        private readonly List<Point3D[]> _headMarkerStack = new List<Point3D[]>(10);
         //在註冊時存取下來算平均值用的咬板世界座標資料，可容納數量也是用來計算平均值所取的數量
-        private readonly List<Point3D[]> _splintMarkerStack = new List<Point3D[]>(20);
+        private readonly List<Point3D[]> _splintMarkerStack = new List<Point3D[]>(10);
         /// <summary>
         ///兩台相機參數
         /// </summary>
@@ -90,7 +90,7 @@ namespace Nart
         /// <summary>
         /// 當前點世界座標
         /// </summary>
-        private List<Marker3D> _worldPoints = new List<Marker3D>(10);
+        private List<Marker3D> _curWorldPoints = new List<Marker3D>(10);
         /// <summary>
         /// 註冊時的點世界座標
         /// </summary>
@@ -99,7 +99,9 @@ namespace Nart
         /// 世界座標轉換到MS的座標
         /// </summary>
         private List<Marker3D> _msWorldPoints = new List<Marker3D>(10);
-        
+
+        private MeanFilter _meanFilter;
+
 
         /// <summary>
         /// 每計算過幾次顯示一次
@@ -113,10 +115,11 @@ namespace Nart
             _camParam[0] = new CamParam("../../../data/CaliR_L.txt");
             _camParam[1] = new CamParam("../../../data/CaliR_R.txt");
             _craniofacialInfo = new CraniofacialInfo("../../../data/ceph.csv");
-            Database = new MarkerDatabase();
 
-          
 
+            _meanFilter = new MeanFilter(Database);
+
+            
 
             CalcLensCenter();
             CalcEpipolarGeometry();
@@ -291,7 +294,7 @@ namespace Nart
         /// </summary>
         public void MatchAndCalc3D(List<BWMarker>[] outputMarker)
         {
-            _worldPoints.Clear();
+            _curWorldPoints.Clear();
             for (int i = 0, count = 0; i < outputMarker[0].Count; i++) //左相機Marker尋訪
             {
                 for (int j = count; j < outputMarker[1].Count; j++) //右相機Marker尋訪
@@ -303,37 +306,31 @@ namespace Nart
                        && Math.Abs(outputMarker[0][i].CornerPoint[2].RectifyY - outputMarker[1][j].CornerPoint[2].RectifyY) < MatchError)
                     {
                         Marker3D threeWorldPoints = new Marker3D(); //Marker上面的三點世界座標
-                        for (int k = 0; k < outputMarker[0][i].CornerPoint.Count; k++)
-                        {                           
+
+                        Parallel.For(0, 3, k =>
+                        {
                             Point3D point3D = CalcWorldPoint(outputMarker[0][i].CornerPoint[k].CameraPoint, outputMarker[1][j].CornerPoint[k].CameraPoint);
                             threeWorldPoints.ThreePoints[k] = point3D;
-                        }
+                        });
+
                         
-                        _worldPoints.Add(threeWorldPoints);
+                        threeWorldPoints.SortedByLength(); //對計算到的3D點排序
+
+                        threeWorldPoints.CompareDatabase(ref Database.MarkerInfo);//比對當前世界座標與資料庫並存下引數與Marker的ID
+
+                        _curWorldPoints.Add(threeWorldPoints);
+
+                      
                         count = j + 1;
                         break;                        
                     }             
                 }
             }
-
-            //對計算到的3D點排序
-            foreach (Marker3D marker3D in _worldPoints)
-            {
-                marker3D.SortedByLength();
-            }
-
-            MainViewModel.PointNumber = (_worldPoints.Count * 3).ToString() + "個點";      
+            ///_meanFilter.filter(ref _curWorldPoints);
+            
+            MainViewModel.PointNumber = (_curWorldPoints.Count * 3).ToString() + "個點";      
         }
-        /// <summary>
-        /// 將計算出的3D座標點與資料庫比對並存下引數
-        /// </summary>
-        public void MatchRealMarker()
-        {
-            foreach (Marker3D marker in _worldPoints)
-            {
-                marker.CompareDatabase(ref Database.MarkerInfo);
-            }
-        }
+       
         /// <summary>
         /// 目前尚未使用這種排序
         /// </summary>
@@ -392,22 +389,24 @@ namespace Nart
             //尋訪資料庫中的Marker
             for (int i = 0, j = 0; i < Database.MarkerInfo.Count; i++)
             {   //尋訪世界座標中的Marker
-                for (j = 0; j < _worldPoints.Count; j++)
+                for (j = 0; j < _curWorldPoints.Count; j++)
                 {
                     //如果資料庫中的MarkerID存在當前資料庫就檢查下一個
-                    if (Database.MarkerInfo[i].Id.Equals(_worldPoints[j].MarkerId))
+                    if (Database.MarkerInfo[i].MarkerID.Equals(_curWorldPoints[j].MarkerId))
                     {
                         break; //換下一個資料庫中的Marker
                     }
                 }
                 //資料庫中的Marker在WorldPoint中都找不到時
-                if (j == _worldPoints.Count)
+                if (j == _curWorldPoints.Count)
                 {
                     Database.MarkerInfo.RemoveAt(i);
                     i--;
                 }
             }
             Database.ResetIndex();
+            //Database重建之後，將meanFilter裡面的stack也重建
+            _meanFilter.CreatePointStack(Database);
         }        
         /// <summary>
         /// 傳入兩組三個點所組成的座標系，回傳轉換矩陣
@@ -545,6 +544,50 @@ namespace Nart
                                             new Point3D(matrixInfo[3], matrixInfo[4], matrixInfo[5]),
                                             new Point3D(matrixInfo[6], matrixInfo[7], matrixInfo[8])};
 
+
+
+
+
+
+                BallModel ball = new BallModel
+                {
+                    BallName = "Ball",
+                    BallInfo = "!!!!!"
+                };
+
+                var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+
+
+                ballContainer.AddSphere(
+                    new Vector3(Convert.ToSingle(_splintInCT[0].X), Convert.ToSingle(_splintInCT[0].Y),
+                        Convert.ToSingle(_splintInCT[0].Z)), 2.5);
+                ballContainer.AddSphere(
+                    new Vector3(Convert.ToSingle(_splintInCT[1].X), Convert.ToSingle(_splintInCT[1].Y),
+                        Convert.ToSingle(_splintInCT[1].Z)), 2.5);
+                ballContainer.AddSphere(
+                    new Vector3(Convert.ToSingle(_splintInCT[2].X), Convert.ToSingle(_splintInCT[2].Y),
+                        Convert.ToSingle(_splintInCT[2].Z)), 2.5);
+              
+                ball.Geometry = ballContainer.ToMeshGeometry3D();
+                ball.Material = PhongMaterials.Silver;
+
+                MainViewModel.Data.BallCollection.Add(ball);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 return true;
             }
             catch
@@ -578,9 +621,9 @@ namespace Nart
             _msWorldPoints.Clear();
            
             //取得咬板Marker在WorldPoints中的索引值
-            RegSplintIndex = GetSpecIndex(_worldPoints, "Splint");             
+            RegSplintIndex = GetSpecIndex(_curWorldPoints, "Splint");             
             //取得頭Marker在WorldPoints中的索引值
-            RegHeadIndex = GetSpecIndex(_worldPoints, "Head");
+            RegHeadIndex = GetSpecIndex(_curWorldPoints, "Head");
 
             //註冊需要咬板與頭部標記片，找不到就返回
             if (RegSplintIndex == -1 || RegHeadIndex== -1)
@@ -600,6 +643,7 @@ namespace Nart
                 {
                     MessageBox.Show("找不到咬板以及頭部標記片");
                 }
+                CameraControl.RegToggle = false;
                 return;
             }
 
@@ -607,6 +651,7 @@ namespace Nart
             //讀進_splintInCT檔案
             if (!LoadSplintPoint("../../../data/蔡慧君測試用.txt"))
             {
+                CameraControl.RegToggle = false;
                 return;
             }
             //簡化資料庫的Marker
@@ -615,8 +660,8 @@ namespace Nart
             CalcFHCoord();
             
                 
-            _cTtoWorld = TransformCoordinate(_splintInCT, _worldPoints[RegSplintIndex].ThreePoints);
-            _worldtoCT = TransformCoordinate(_worldPoints[RegSplintIndex].ThreePoints, _splintInCT);
+            _cTtoWorld = TransformCoordinate(_splintInCT, _curWorldPoints[RegSplintIndex].ThreePoints);
+            _worldtoCT = TransformCoordinate(_curWorldPoints[RegSplintIndex].ThreePoints, _splintInCT);
 
 
             MainViewModel.Data.IsRegInitialized = true;
@@ -636,13 +681,13 @@ namespace Nart
             }
 
             //先判斷當前標記片數量是否過少
-            if (_worldPoints.Count >= 2)
+            if (_curWorldPoints.Count >= 2)
             {
                 //取得咬板Marker在WorldPoints中的索引值
-                RegSplintIndex = GetSpecIndex(_worldPoints, "Splint");
+                RegSplintIndex = GetSpecIndex(_curWorldPoints, "Splint");
                 Console.WriteLine("\n\n第" + (RegSplintIndex + 1) + "組點是咬板");
                 //取得頭Marker在WorldPoints中的索引值
-                RegHeadIndex = GetSpecIndex(_worldPoints, "Head");
+                RegHeadIndex = GetSpecIndex(_curWorldPoints, "Head");
                 Console.WriteLine("\n\n第" + (RegHeadIndex + 1) + "組點是頭部");
 
                 //註冊需要咬板與頭部標記片
@@ -659,18 +704,17 @@ namespace Nart
                     }
                     Console.WriteLine("splint:" + Database.SplintIndex);
                     Console.WriteLine("Head:" + Database.HeadIndex);
+                    
 
-                    MatchRealMarker();//比對當前世界座標與資料庫並存下引數
-
-                    for (int i = 0; i < _worldPoints.Count; i++)
+                    for (int i = 0; i < _curWorldPoints.Count; i++)
                     {
-                        Console.WriteLine("MarkerID" + i + ":" + _worldPoints[i].MarkerId);
+                        Console.WriteLine("MarkerID" + i + ":" + _curWorldPoints[i].MarkerId);
                     }
 
 
-                    _oriWorldtoMS = TransformCoordinate(_worldPoints[RegSplintIndex].ThreePoints, _MSSplintMarker);
+                    _oriWorldtoMS = TransformCoordinate(_curWorldPoints[RegSplintIndex].ThreePoints, _MSSplintMarker);
 
-                    foreach (Marker3D marker3D in _worldPoints)
+                    foreach (Marker3D marker3D in _curWorldPoints)
                     {
                         //創建註冊時的世界座標點
                         Marker3D oriWorldPoint = new Marker3D { MarkerId = marker3D.MarkerId };
@@ -685,7 +729,7 @@ namespace Nart
                         _msWorldPoints.Add(msWorldPoint);
                     }
 
-                    MessageBox.Show("註冊了" + _worldPoints.Count + "組Marker");
+                    MessageBox.Show("註冊了" + _curWorldPoints.Count + "組Marker");
 
                     for (int i = 0; i < _oriWorldPoints.Count; i++)
                     {
@@ -732,17 +776,17 @@ namespace Nart
             }
 
             //取得咬板Marker在WorldPoints中的索引值
-            RegSplintIndex = GetSpecIndex(_worldPoints, "Splint");
+            RegSplintIndex = GetSpecIndex(_curWorldPoints, "Splint");
             //取得頭Marker在WorldPoints中的索引值
-            RegHeadIndex = GetSpecIndex(_worldPoints, "Head");
+            RegHeadIndex = GetSpecIndex(_curWorldPoints, "Head");
 
 
             //註冊需要咬板與頭部標記片
             if (RegSplintIndex != -1 && RegHeadIndex != -1)
             {
 
-                _splintMarkerStack.Add(_worldPoints[RegSplintIndex].ThreePoints);
-                _headMarkerStack.Add(_worldPoints[RegHeadIndex].ThreePoints);
+                _splintMarkerStack.Add(_curWorldPoints[RegSplintIndex].ThreePoints);
+                _headMarkerStack.Add(_curWorldPoints[RegHeadIndex].ThreePoints);
 
 
                 //各收集到100組後進來
@@ -809,13 +853,13 @@ namespace Nart
                     splintMarkerPoint[2].Z /= _splintMarkerStack.Count;
 
 
-                    _worldPoints[RegSplintIndex].ThreePoints = splintMarkerPoint;
-                    _worldPoints[RegHeadIndex].ThreePoints = headMarkerPoint;
+                    _curWorldPoints[RegSplintIndex].ThreePoints = splintMarkerPoint;
+                    _curWorldPoints[RegHeadIndex].ThreePoints = headMarkerPoint;
 
 
 
-                    _cTtoWorld = TransformCoordinate(_splintInCT, _worldPoints[RegSplintIndex].ThreePoints);
-                    _worldtoCT = TransformCoordinate(_worldPoints[RegSplintIndex].ThreePoints, _splintInCT);
+                    _cTtoWorld = TransformCoordinate(_splintInCT, _curWorldPoints[RegSplintIndex].ThreePoints);
+                    _worldtoCT = TransformCoordinate(_curWorldPoints[RegSplintIndex].ThreePoints, _splintInCT);
 
 
                     Marker3D oriWorldPoint1 = new Marker3D
@@ -834,9 +878,13 @@ namespace Nart
                     oriWorldPoint2.SortedByLength();
                     _oriWorldPoints.Add(oriWorldPoint2);
 
+                    RegSplintIndex = 0;                    
+                    RegHeadIndex = 1;
+
+
                     _headMarkerStack.Clear();
                     _splintMarkerStack.Clear();
-                    MessageBox.Show("註冊了" + _worldPoints.Count + "組Marker");
+                    MessageBox.Show("註冊了" + _curWorldPoints.Count + "組Marker");
                     CameraControl.RegToggle = false;
                 }
             }
@@ -847,24 +895,24 @@ namespace Nart
         /// </summary>
         public void CalcModelTransform()
         {
-            int currentHeadIndex = GetSpecIndex(_worldPoints, "Head");
+            int currentHeadIndex = GetSpecIndex(_curWorldPoints, "Head");
 
             //沒有找到頭的Marker
             if (currentHeadIndex != -1) 
             {
                 
-                Parallel.For(0, _worldPoints.Count, i =>
+                Parallel.For(0, _curWorldPoints.Count, i =>
                {
                    //當前Marker找不到或找到的是頭部Marker則跳過
-                   if (!_worldPoints[i].MarkerId.Equals("")/*&& !WorldPoints[i].MarkerID.Equals("Splint") */&& !_worldPoints[i].MarkerId.Equals("Head"))
+                   if (!_curWorldPoints[i].MarkerId.Equals("")/*&& !WorldPoints[i].MarkerID.Equals("Splint") */&& !_curWorldPoints[i].MarkerId.Equals("Head"))
                     {
-                        int mSandOriIndex = GetSpecIndex(_msWorldPoints, _worldPoints[i].MarkerId);//取得當前世界座標在註冊時的座標索引值是多少
+                        int mSandOriIndex = GetSpecIndex(_msWorldPoints, _curWorldPoints[i].MarkerId);//取得當前世界座標在註冊時的座標索引值是多少
 
                         //Matrix3D level1 = TransformCoordinate(CTBall, MSBall);
 
-                        Matrix3D level2 = TransformCoordinate(_msWorldPoints[mSandOriIndex].ThreePoints, _worldPoints[i].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"
+                        Matrix3D level2 = TransformCoordinate(_msWorldPoints[mSandOriIndex].ThreePoints, _curWorldPoints[i].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"
 
-                        Matrix3D level3 = TransformCoordinate(_worldPoints[currentHeadIndex].ThreePoints, _msWorldPoints[RegHeadIndex].ThreePoints);
+                        Matrix3D level3 = TransformCoordinate(_curWorldPoints[currentHeadIndex].ThreePoints, _msWorldPoints[RegHeadIndex].ThreePoints);
 
                         //Matrix3D level4 = TransformCoordinate(MSBall, CTBall);
                         
@@ -873,9 +921,9 @@ namespace Nart
                         var boneCollection = MainViewModel.Data.BoneCollection;
                        foreach (BoneModel boneModel in boneCollection)
                        {                          
-                           if (boneModel != null && boneModel.MarkerId == _worldPoints[i].MarkerId)
+                           if (boneModel != null && boneModel.MarkerId == _curWorldPoints[i].MarkerId)
                            {
-                               boneModel.AddItem(final);
+                               boneModel.AddItem(final);                       
                            }
                        }
                    }                                                        
@@ -888,34 +936,172 @@ namespace Nart
         /// </summary>
         public void CalcModelTransform2()
         {
-            int currentHeadIndex = GetSpecIndex(_worldPoints, "Head");
+            int currentHeadIndex = GetSpecIndex(_curWorldPoints, "Head");
 
             //沒有找到頭的Marker
             if (currentHeadIndex != -1)
             {
 
                 //Parallel.For(0, WorldPoints.Count, i =>
-                for (int i = 0; i < _worldPoints.Count; i++) 
+                for (int i = 0; i < _curWorldPoints.Count; i++) 
                 {
                     //當前Marker找不到或找到的是頭部Marker則跳過
-                    if (_worldPoints[i].MarkerId.Equals("Splint")) 
+                    if (_curWorldPoints[i].MarkerId.Equals("Splint")) 
                     {
                   
-                        int splintMarkerIndex = GetSpecIndex(_worldPoints, "Splint");//取得當前世界座標在註冊時的座標索引值是多少
-                                                
-                        Matrix3D level1 = TransformCoordinate(_splintInCT, _worldPoints[i].ThreePoints);
+                        int splintMarkerIndex = GetSpecIndex(_curWorldPoints, "Splint");//取得當前世界座標在註冊時的座標索引值是多少
 
-                        Matrix3D level2 = TransformCoordinate(_worldPoints[currentHeadIndex].ThreePoints, _oriWorldPoints[RegHeadIndex].ThreePoints);
-                        
+
+                        Matrix3D level1 = TransformCoordinate(_splintInCT, _curWorldPoints[i].ThreePoints);
+
+                        Matrix3D level2 = TransformCoordinate(_curWorldPoints[currentHeadIndex].ThreePoints, _oriWorldPoints[RegHeadIndex].ThreePoints);
+
+                        MainViewModel.Data.BoneCollection[1]._finalModelTransform = level1;
+                        MainViewModel.Data.BoneCollection[2]._finalModelTransform = level1*level2;
+                        {
+
+
+                            BallModel ball = new BallModel
+                            {
+                                BallName = "Ball",
+                                BallInfo = "!!!!!"
+                            };
+
+                            var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+
+                            if (MainViewModel.Data.BallCollection.Count > 1)
+                            {
+                                MainViewModel.Data.BallCollection.RemoveAt(1);
+                            }
+
+                            ballContainer.AddSphere(
+                                new Vector3(Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[0].X),
+                                    Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[0].Y),
+                                    Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[0].Z)), 7);
+                            ballContainer.AddSphere(
+                                new Vector3(Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[1].X),
+                                    Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[1].Y),
+                                    Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[1].Z)), 7);
+                            ballContainer.AddSphere(
+                                new Vector3(Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[2].X),
+                                    Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[2].Y),
+                                    Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[2].Z)), 7);
+
+                            ball.Geometry = ballContainer.ToMeshGeometry3D();
+                            ball.Material = PhongMaterials.Yellow;
+
+                            MainViewModel.Data.BallCollection.Insert(1,ball);
+
+                        }
+
+                        {
+                            BallModel ball = new BallModel
+                            {
+                                BallName = "Ball",
+                                BallInfo = "!!!!!"
+                            };
+                            var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+                            if (MainViewModel.Data.BallCollection.Count > 2)
+                            {
+                                MainViewModel.Data.BallCollection.RemoveAt(2);
+                            }
+                            ballContainer.AddSphere(
+                                new Vector3(Convert.ToSingle(_curWorldPoints[i].ThreePoints[0].X),
+                                    Convert.ToSingle(_curWorldPoints[i].ThreePoints[0].Y),
+                                    Convert.ToSingle(_curWorldPoints[i].ThreePoints[0].Z)), 7);
+                            ballContainer.AddSphere(
+                                new Vector3(Convert.ToSingle(_curWorldPoints[i].ThreePoints[1].X),
+                                    Convert.ToSingle(_curWorldPoints[i].ThreePoints[1].Y),
+                                    Convert.ToSingle(_curWorldPoints[i].ThreePoints[1].Z)), 7);
+                            ballContainer.AddSphere(
+                                new Vector3(Convert.ToSingle(_curWorldPoints[i].ThreePoints[2].X),
+                                    Convert.ToSingle(_curWorldPoints[i].ThreePoints[2].Y),
+                                    Convert.ToSingle(_curWorldPoints[i].ThreePoints[2].Z)), 7);
+
+                            ball.Geometry = ballContainer.ToMeshGeometry3D();
+                            ball.Material = PhongMaterials.Blue;
+
+                            MainViewModel.Data.BallCollection.Insert(2, ball);
+
+
+                        }
+                        {
+                            BallModel ball = new BallModel
+                            {
+                                BallName = "Ball",
+                                BallInfo = "!!!!!"
+                            };
+                            var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+                            if (MainViewModel.Data.BallCollection.Count > 3)
+                            {
+                                MainViewModel.Data.BallCollection.RemoveAt(3);
+                            }
+                            ballContainer.AddSphere(
+                                new Vector3(Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[0].X),
+                                    Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[0].Y),
+                                    Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[0].Z)), 7);
+                            ballContainer.AddSphere(
+                                new Vector3(Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[1].X),
+                                    Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[1].Y),
+                                    Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[1].Z)), 7);
+                            ballContainer.AddSphere(
+                                new Vector3(Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[2].X),
+                                    Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[2].Y),
+                                    Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[2].Z)), 7);
+
+                            ball.Geometry = ballContainer.ToMeshGeometry3D();
+                            ball.Material = PhongMaterials.Red;
+
+                            MainViewModel.Data.BallCollection.Insert(3, ball);
+
+
+                        }
+
+
+                        {
+                            BallModel ball = new BallModel
+                            {
+                                BallName = "Ball",
+                                BallInfo = "!!!!!"
+                            };
+                            var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+                            if (MainViewModel.Data.BallCollection.Count > 4)
+                            {
+                                MainViewModel.Data.BallCollection.RemoveAt(4);
+                            }
+                            ballContainer.AddSphere(
+                                new Vector3(Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[0].X),
+                                    Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[0].Y),
+                                    Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[0].Z)), 7);
+                            ballContainer.AddSphere(
+                                new Vector3(Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[1].X),
+                                    Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[1].Y),
+                                    Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[1].Z)), 7);
+                            ballContainer.AddSphere(
+                                new Vector3(Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[2].X),
+                                    Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[2].Y),
+                                    Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[2].Z)), 7);
+
+                            ball.Geometry = ballContainer.ToMeshGeometry3D();
+                            ball.Material = PhongMaterials.Green;
+
+                            MainViewModel.Data.BallCollection.Insert(4, ball);
+                        }
+
+
+
+
                         Matrix3D final =  level1 * level2 * _worldtoCT;
 
                         var boneCollection = MainViewModel.Data.BoneCollection;
                         foreach (BoneModel boneModel in boneCollection)
                         {
                            
-                            if (boneModel.MarkerId == _worldPoints[i].MarkerId&& boneModel.IsRendering)
+                            if (boneModel.MarkerId == _curWorldPoints[i].MarkerId&& boneModel.IsRendering)
                             {
-                                boneModel.AddItem(final);
+                                 boneModel.AddItem(final);
+                                //boneModel.AddItem2(final);
+                                //boneModel._finalModelTransform = final;
                             }
                         }
                     }
@@ -1185,11 +1371,11 @@ namespace Nart
 
 
 
-                string ballDistanceInfo = "             dx             dy             dz";
+                //string ballDistanceInfo = "              dx              dy              dz\n";
+                string ballDistanceInfo ="".PadLeft(15)+ "dx".PadLeft(10) + "dy".PadLeft(10) + "dz".PadLeft(10);
 
-                
                 //以下這段計算導航小球的距離 
-                ObservableCollection<BallModel> ballCollection = MainViewModel.Data.BallCollection;
+                ObservableCollection <BallModel> ballCollection = MainViewModel.Data.BallCollection;
                 Projectata data = MainViewModel.Data;
 
 
@@ -1211,7 +1397,12 @@ namespace Nart
                             Vector3.Subtract(ref model.Center, ref outputPoint, out outputDistance);
                             
 
-                            ballDistanceInfo += model.BallName + ":   " + Math.Round(outputDistance.X, 2) + "   " + Math.Round(outputDistance.Y, 2) + "   " + Math.Round(outputDistance.Z, 2) + "\n\n";
+                            
+                            ballDistanceInfo += "\n"+model.BallName.PadLeft(10) +
+                                                ("" + Math.Round(outputDistance.X, 2)).PadLeft(10) +
+                                                ("" + Math.Round(outputDistance.Y, 2)).PadLeft(10) +
+                                                ("" + Math.Round(outputDistance.Z, 2)).PadLeft(10);
+                            
                         }
                         else
                         {
@@ -1236,7 +1427,10 @@ namespace Nart
                             Vector3.Subtract(ref model.Center, ref outputPoint, out outputDistance);
                             float distance = outputDistance.Length();
 
-                            ballDistanceInfo += model.BallName + ":   " + Math.Round(outputDistance.X, 2) + "   " + Math.Round(outputDistance.Y, 2) + "   " + Math.Round(outputDistance.Z, 2) + "\n\n";
+                            ballDistanceInfo += "\n" + model.BallName.PadLeft(10) +
+                                                ("" + Math.Round(outputDistance.X, 2)).PadLeft(10) +
+                                                ("" + Math.Round(outputDistance.Y, 2)).PadLeft(10) +
+                                                ("" + Math.Round(outputDistance.Z, 2)).PadLeft(10);
                         }
                         else
                         {

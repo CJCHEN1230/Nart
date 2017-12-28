@@ -16,7 +16,7 @@ namespace Nart
         public struct MarkerData
         {
             public double[] ThreeLength;
-            public string Id;
+            public string MarkerID;
         }
         /// <summary>
         ///使用一個List儲存Marker的三邊長與ID
@@ -75,7 +75,7 @@ namespace Nart
 
                     MarkerData markerdata = new MarkerData();
                     markerdata.ThreeLength = lengthData;
-                    markerdata.Id = id;
+                    markerdata.MarkerID = id;
                     MarkerInfo.Add(markerdata);
                 }
             }
@@ -95,12 +95,12 @@ namespace Nart
             for (int i = 0; i < MarkerInfo.Count; i++)
             {
                 //存下Head Marker在Database中的Index
-                if (MarkerInfo[i].Id.Equals("Head"))
+                if (MarkerInfo[i].MarkerID.Equals("Head"))
                 {
                     HeadIndex = i;
                 }
                 //存下Head Marker在Database中的Index
-                if (MarkerInfo[i].Id.Equals("Splint"))
+                if (MarkerInfo[i].MarkerID.Equals("Splint"))
                 {
                     SplintIndex = i;
                 }

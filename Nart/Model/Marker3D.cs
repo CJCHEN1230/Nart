@@ -11,7 +11,7 @@ namespace Nart
     //
     // 摘要:紀錄辨識好的世界座標系資料
     //     
-    class Marker3D
+    public class Marker3D
     {
         /// <summary>
         /// 儲存該Marker的三個世界座標點
@@ -27,47 +27,60 @@ namespace Nart
         public string MarkerId = "";
 
 
-        public readonly Point3D[] PointsStack= new Point3D[10];
 
 
-        private Point3D _totalPoint = new Point3D(0, 0, 0);
-        /// <summary>
-        /// Count是在ModelTransformSet中的累積數量
-        /// </summary>
+
+
+
+
+
+        private Point3D[,] _pointsStack = new Point3D[10, 3];
+        private Point3D[] _totalValue = new Point3D[3];
+
         private int _count = 0;
-        /// <summary>
-        /// CurrenIndex是當前要儲存在ModelTransformSet裡面位置的索引
-        /// </summary>
         private int _currentIndex = 0;
+        public void AddItem(Point3D[] item)
+        {
+            //數量少於陣列總長度則往後加入
+            if (_count < _pointsStack.GetLength(1))
+            {
+
+                _count++;
+
+                ExtensionMethods.Point3DExtensions.AddPoint3D(ref _totalValue, ref item);
+
+                ExtensionMethods.Point3DExtensions.DividePoint3D(ref _totalValue, _count, ref ThreePoints);
+
+            }
+            else
+            {
+                Point3D[] temp = new Point3D[3]
+                    {_pointsStack[_currentIndex, 0], _pointsStack[_currentIndex, 1], _pointsStack[_currentIndex, 2]};
+                ExtensionMethods.Point3DExtensions.SubtractPoint3D(ref _totalValue, ref temp);
+
+                ExtensionMethods.Point3DExtensions.AddPoint3D(ref _totalValue, ref item);
+
+                ExtensionMethods.Point3DExtensions.DividePoint3D(ref _totalValue, _count, ref ThreePoints);
+            }
+
+            _pointsStack[_currentIndex, 0] = item[0];
+            _pointsStack[_currentIndex, 1] = item[1];            
+            _pointsStack[_currentIndex, 2] = item[2];
+
+            _currentIndex++;
+            _currentIndex = _currentIndex % _pointsStack.GetLength(1);
+
+        }
 
 
-        //public void AddItem(Point3D item)
-        //{
-        //    //數量少於陣列總長度則往後加入
-        //    if (_count < _pointsStack.Length)
-        //    {
-        //        _count++;
 
-        //        ExtensionMethods.Matrix3DExtensions.AddMatrix3D(ref _totalModelTransform, ref item);
 
-        //        ExtensionMethods.Matrix3DExtensions.DivideMatrix3D(ref _totalModelTransform, _count, ref _finalModelTransform);
 
-        //    }
-        //    else
-        //    {
-        //        ExtensionMethods.Matrix3DExtensions.SubtractMatrix3D(ref _totalModelTransform, ref _modelTransformSet[_currentIndex]);
 
-        //        ExtensionMethods.Matrix3DExtensions.AddMatrix3D(ref _totalModelTransform, ref item);
 
-        //        ExtensionMethods.Matrix3DExtensions.DivideMatrix3D(ref _totalModelTransform, _count, ref _finalModelTransform);
-        //    }
 
-        //    _pointsStack[_currentIndex] = item;
 
-        //    _currentIndex++;
-        //    _currentIndex = _currentIndex % _pointsStack.Length;
 
-        //}
 
 
 
@@ -180,7 +193,7 @@ namespace Nart
                 
                 if (Math.Abs(diff1) < 1 && Math.Abs(diff2) < 1 && Math.Abs(diff3) < 1) 
                 {                   
-                    this.MarkerId = markerDb[i].Id;
+                    this.MarkerId = markerDb[i].MarkerID;
                     return;
                 }
 

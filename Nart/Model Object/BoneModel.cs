@@ -20,6 +20,7 @@ namespace Nart.Model_Object
     using System.IO;
     using System.Windows.Media;
     using Color = System.Windows.Media.Color;
+    using Quaternion = System.Windows.Media.Media3D.Quaternion;
     public class BoneModel : MeshGeometryModel3D,  INotifyPropertyChanged
     {
         /// <summary>
@@ -69,11 +70,35 @@ namespace Nart.Model_Object
         /// <summary>
         /// 此Model的最終轉換矩陣
         /// </summary>
-        private Matrix3D _finalModelTransform;
+        public Matrix3D _finalModelTransform;
         /// <summary>
         /// 用來累加的矩陣
         /// </summary>
         private Matrix3D _totalModelTransform = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+
+
+        /// <summary>
+        /// 此Model的最終轉換矩陣
+        /// </summary>
+        public System.Windows.Media.Media3D.Quaternion _finalQuaternion;
+        private System.Windows.Media.Media3D.Quaternion _totalQuaternion = new System.Windows.Media.Media3D.Quaternion(0, 0, 0, 0);
+        private readonly System.Windows.Media.Media3D.Quaternion[] _modelQuaternionSet = new System.Windows.Media.Media3D.Quaternion[10];
+
+
+        public Vector3D _finalTranslation;
+
+        private Vector3D _totalTranslation = new Vector3D(0, 0, 0);
+        private readonly Vector3D[] _modelVector3DSet = new Vector3D[10];
+
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// Count是在ModelTransformSet中的累積數量
         /// </summary>
@@ -155,7 +180,11 @@ namespace Nart.Model_Object
         }
 
         public void AddItem(Matrix3D item)
-        {            
+        {
+            //item.OffsetX = 0;
+            //item.OffsetY = 0;
+            //item.OffsetZ = 0;
+
             //數量少於陣列總長度則往後加入
             if (_count < _modelTransformSet.Length)
             {
@@ -180,7 +209,132 @@ namespace Nart.Model_Object
             _currentIndex++;
             _currentIndex = _currentIndex % _modelTransformSet.Length;
 
+            //Console.WriteLine("\n\n");
+            //if (_count == 10)
+            //{
+
+            //    for (int i = 0; i < 10; i++)
+            //    {
+            //        Console.WriteLine("\n\nInput[" + (_currentIndex + i)%10 + "]:\n" +
+            //                          _modelTransformSet[(_currentIndex + i) % 10].OffsetX + "   " +
+            //                          _modelTransformSet[(_currentIndex + i) % 10].OffsetY + "   " +
+            //                          _modelTransformSet[(_currentIndex + i) % 10].OffsetZ + "   ");
+            //    }
+            //}
+            //Console.WriteLine("\nfinal translation:\n" + _finalModelTransform.OffsetX + "   " + _finalModelTransform.OffsetY +"   " +_finalModelTransform.OffsetZ);
+
         }
+
+
+
+
+
+        public void AddItem2(Matrix3D item)
+        {
+            double  w = Math.Sqrt(1.0 + item.M11 + item.M22 + item.M33) / 2.0;
+            double w4 = (4.0 * w);
+            double x = (item.M32 - item.M23) / w4;
+            double y = (item.M13 - item.M31) / w4;
+            double z = (item.M21 - item.M12) / w4;
+
+            Quaternion items = new Quaternion(x, y, z, w);
+
+            //數量少於陣列總長度則往後加入
+            if (_count < _modelQuaternionSet.Length)
+            {
+                _count++;
+
+                _totalQuaternion.W = _totalQuaternion.W + items.W;
+                _totalQuaternion.X = _totalQuaternion.X + items.X;
+                _totalQuaternion.Y = _totalQuaternion.Y + items.Y;
+                _totalQuaternion.Z = _totalQuaternion.Z + items.Z;
+
+                _finalQuaternion.W = _totalQuaternion.W / _count;
+                _finalQuaternion.Y = _totalQuaternion.Y / _count;
+                _finalQuaternion.X = _totalQuaternion.X / _count;
+                _finalQuaternion.Z = _totalQuaternion.Z / _count;
+                _finalQuaternion.Normalize();
+
+                _totalTranslation.X = _totalTranslation.X + item.OffsetX;
+                _totalTranslation.Y = _totalTranslation.Y + item.OffsetY;
+                _totalTranslation.Z = _totalTranslation.Z + item.OffsetZ;
+
+                _finalTranslation.X = _totalTranslation.X / _count;
+                _finalTranslation.Y = _totalTranslation.Y / _count;
+                _finalTranslation.Z = _totalTranslation.Z / _count;
+            }
+            else
+            {
+                _totalQuaternion.W = _totalQuaternion.W - _modelQuaternionSet[_currentIndex].W;
+                _totalQuaternion.X = _totalQuaternion.X - _modelQuaternionSet[_currentIndex].X;
+                _totalQuaternion.Y = _totalQuaternion.Y - _modelQuaternionSet[_currentIndex].Y;
+                _totalQuaternion.Z = _totalQuaternion.Z - _modelQuaternionSet[_currentIndex].Z;
+
+                _totalQuaternion.W = _totalQuaternion.W + items.W;
+                _totalQuaternion.X = _totalQuaternion.X + items.X;
+                _totalQuaternion.Y = _totalQuaternion.Y + items.Y;
+                _totalQuaternion.Z = _totalQuaternion.Z + items.Z;
+
+                _finalQuaternion.W = _totalQuaternion.W / _count;
+                _finalQuaternion.Y = _totalQuaternion.Y / _count;
+                _finalQuaternion.X = _totalQuaternion.X / _count;
+                _finalQuaternion.Z = _totalQuaternion.Z / _count;
+                _finalQuaternion.Normalize();
+
+
+                _totalTranslation.X = _totalTranslation.X - _modelVector3DSet[_currentIndex].X;
+                _totalTranslation.Y = _totalTranslation.Y - _modelVector3DSet[_currentIndex].Y;
+                _totalTranslation.Z = _totalTranslation.Z - _modelVector3DSet[_currentIndex].Z;
+
+                _totalTranslation.X = _totalTranslation.X + item.OffsetX;
+                _totalTranslation.Y = _totalTranslation.Y + item.OffsetY;
+                _totalTranslation.Z = _totalTranslation.Z + item.OffsetZ;
+
+                _finalTranslation.X = _totalTranslation.X / _count;
+                _finalTranslation.Y = _totalTranslation.Y / _count;
+                _finalTranslation.Z = _totalTranslation.Z / _count;
+
+
+            }
+
+            _modelQuaternionSet[_currentIndex] = items;
+            _modelVector3DSet[_currentIndex] = new Vector3D(item.OffsetX,item.OffsetY,item.OffsetZ);
+
+
+
+            _currentIndex++;
+            _currentIndex = _currentIndex % _modelQuaternionSet.Length;
+
+            
+            //Console.WriteLine("\n\nInput:\n" + _modelVector3DSet[_currentIndex]);
+            //Console.WriteLine("\nfinal translation:\n" + _finalTranslation);
+        }
+
+
+
+        public void SetQuaternion()
+        {
+            if (IsTransformApplied)
+            {
+                Matrix3D temp = new Matrix3D();
+                temp.Rotate(_finalQuaternion);
+                Matrix3D temp2 = new Matrix3D();
+                temp2.OffsetX = _finalTranslation.X;
+                temp2.OffsetY = _finalTranslation.Y;
+                temp2.OffsetZ = _finalTranslation.Z;
+
+                Transform = new MatrixTransform3D(temp * temp2);
+            }
+        }
+
+
+
+
+
+
+
+
+
         public void SetTransformMatrix()
         {
             if (IsTransformApplied)

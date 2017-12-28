@@ -166,6 +166,7 @@ namespace Nart
             foreach (BoneModel boneModel in MainViewModel.Data.BoneCollection)
             {
                 boneModel.SetTransformMatrix();
+                //boneModel.SetQuaternion();
             }
         }
         /// <summary>
@@ -186,7 +187,7 @@ namespace Nart
           
             _calcCoord.MatchAndCalc3D(_outputMarker);
             
-            _calcCoord.MatchRealMarker();//比對當前世界座標與資料庫並存下引數與Marker的ID
+            
 
 
             if (CameraControl.RegToggle)

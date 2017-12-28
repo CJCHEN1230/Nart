@@ -149,8 +149,10 @@
     <Compile Include="Control\ImgButton2.xaml.cs">
       <DependentUpon>ImgButton2.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ExtensionMethods\Point3DExtensions.cs" />
     <Compile Include="Model Object\BallModel.cs" />
     <Compile Include="Model\ModelType.cs" />
+    <Compile Include="Model\MeanFilter.cs" />
     <Compile Include="Model\ProjectData.cs" />
     <Compile Include="ObservableObject.cs" />
     <Compile Include="RelayCommand.cs" />
