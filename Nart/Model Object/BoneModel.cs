@@ -56,10 +56,6 @@ namespace Nart.Model_Object
         /// </summary>
         public ModelType ModelType;
         /// <summary>
-        /// 防止抖動，用來存放所有矩陣，10是累積總數量
-        /// </summary>
-        private readonly Matrix3D[] _modelTransformSet = new Matrix3D[10];
-        /// <summary>
         /// Model 顏色
         /// </summary>
         private Color _boneDiffuseColor;
@@ -67,37 +63,18 @@ namespace Nart.Model_Object
         /// 模型路徑
         /// </summary>
         private string _filePath;
-        /// <summary>
-        /// 此Model的最終轉換矩陣
-        /// </summary>
-        public Matrix3D _finalModelTransform;
-        /// <summary>
-        /// 用來累加的矩陣
-        /// </summary>
-        private Matrix3D _totalModelTransform = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 
+        private string _safeFileName;
+        private bool _highlight = false;
 
-        /// <summary>
-        /// 此Model的最終轉換矩陣
-        /// </summary>
-        public System.Windows.Media.Media3D.Quaternion _finalQuaternion;
-        private System.Windows.Media.Media3D.Quaternion _totalQuaternion = new System.Windows.Media.Media3D.Quaternion(0, 0, 0, 0);
-        private readonly System.Windows.Media.Media3D.Quaternion[] _modelQuaternionSet = new System.Windows.Media.Media3D.Quaternion[10];
+        private Quaternion _finalRotation;
+        private Vector3D _finalTranslation;
 
-
-        public Vector3D _finalTranslation;
-
+        private Quaternion _totalRotation = new Quaternion(0, 0, 0, 0);
         private Vector3D _totalTranslation = new Vector3D(0, 0, 0);
-        private readonly Vector3D[] _modelVector3DSet = new Vector3D[10];
 
-
-
-
-
-
-
-
-
+        private readonly Quaternion[] _rotationSet = new Quaternion[10];
+        private readonly Vector3D[] _translationSet = new Vector3D[10];
 
         /// <summary>
         /// Count是在ModelTransformSet中的累積數量
@@ -108,8 +85,6 @@ namespace Nart.Model_Object
         /// </summary>
         private int _currentIndex = 0;
 
-        private string _boneName;
-        private bool _highlight = false;
 
 
         
@@ -124,7 +99,7 @@ namespace Nart.Model_Object
                 SetValue(ref _filePath, value);
                 if (!string.IsNullOrEmpty(_filePath))
                 {
-                    BoneName = Path.GetFileName(_filePath);
+                    SafeFileName = Path.GetFileName(_filePath);
                 }
             }
         }
@@ -149,15 +124,15 @@ namespace Nart.Model_Object
                 return _highlight;
             }
         }
-        public string BoneName
+        public string SafeFileName
         {
             get
             {
-                return _boneName;
+                return _safeFileName;
             }
             set
             {
-                SetValue(ref _boneName, value);
+                SetValue(ref _safeFileName, value);
             }
         }
         public Color BoneDiffuseColor
@@ -179,65 +154,17 @@ namespace Nart.Model_Object
             }
         }
 
+      
+
+
         public void AddItem(Matrix3D item)
         {
-            //item.OffsetX = 0;
-            //item.OffsetY = 0;
-            //item.OffsetZ = 0;
 
-            //數量少於陣列總長度則往後加入
-            if (_count < _modelTransformSet.Length)
-            {
-                _count++;
-
-                ExtensionMethods.Matrix3DExtensions.AddMatrix3D(ref _totalModelTransform, ref item);
-
-                ExtensionMethods.Matrix3DExtensions.DivideMatrix3D(ref _totalModelTransform, _count, ref _finalModelTransform);
-
-            }
-            else
-            {
-                ExtensionMethods.Matrix3DExtensions.SubtractMatrix3D(ref _totalModelTransform, ref _modelTransformSet[_currentIndex]);
-
-                ExtensionMethods.Matrix3DExtensions.AddMatrix3D(ref _totalModelTransform, ref item);
-
-                ExtensionMethods.Matrix3DExtensions.DivideMatrix3D(ref _totalModelTransform, _count, ref _finalModelTransform);
-            }
-
-            _modelTransformSet[_currentIndex] = item;
-
-            _currentIndex++;
-            _currentIndex = _currentIndex % _modelTransformSet.Length;
-
-            //Console.WriteLine("\n\n");
-            //if (_count == 10)
-            //{
-
-            //    for (int i = 0; i < 10; i++)
-            //    {
-            //        Console.WriteLine("\n\nInput[" + (_currentIndex + i)%10 + "]:\n" +
-            //                          _modelTransformSet[(_currentIndex + i) % 10].OffsetX + "   " +
-            //                          _modelTransformSet[(_currentIndex + i) % 10].OffsetY + "   " +
-            //                          _modelTransformSet[(_currentIndex + i) % 10].OffsetZ + "   ");
-            //    }
-            //}
-            //Console.WriteLine("\nfinal translation:\n" + _finalModelTransform.OffsetX + "   " + _finalModelTransform.OffsetY +"   " +_finalModelTransform.OffsetZ);
-
-        }
-
-
-
-
-
-        public void AddItem2(Matrix3D item)
-        {
+            //先計算旋轉矩陣的四元數表達法
             double w;          
             double x;
             double y;
             double z;
-
-
-
             double tr = item.M11 + item.M22 + item.M33;
 
             if (tr > 0)
@@ -275,36 +202,30 @@ namespace Nart.Model_Object
 
             
 
-
-
-
-            //Console.WriteLine("x  y  z  w:" + x.ToString("#.###E+0") + "  " + y.ToString("#.###E+0") + "  " + z.ToString("#.###E+0") + "  " + w.ToString("#.#E+0") + "  ");
-
-
-            Quaternion items = new Quaternion(x, y, z, w);
-            items.Normalize();
-
-            Matrix3D temp = new Matrix3D();
+            Quaternion rotation = new Quaternion(x, y, z, w);
+            Vector3D translation = new Vector3D(item.OffsetX, item.OffsetY, item.OffsetZ);
+            rotation.Normalize();
+            
 
             //數量少於陣列總長度則往後加入
-            if (_count < _modelQuaternionSet.Length)
+            if (_count < _rotationSet.Length)
             {
                 _count++;
 
-                _totalQuaternion.W = _totalQuaternion.W + items.W;
-                _totalQuaternion.X = _totalQuaternion.X + items.X;
-                _totalQuaternion.Y = _totalQuaternion.Y + items.Y;
-                _totalQuaternion.Z = _totalQuaternion.Z + items.Z;
+                _totalRotation.W = _totalRotation.W + rotation.W;
+                _totalRotation.X = _totalRotation.X + rotation.X;
+                _totalRotation.Y = _totalRotation.Y + rotation.Y;
+                _totalRotation.Z = _totalRotation.Z + rotation.Z;
 
-                _finalQuaternion.W = _totalQuaternion.W / _count;
-                _finalQuaternion.Y = _totalQuaternion.Y / _count;
-                _finalQuaternion.X = _totalQuaternion.X / _count;
-                _finalQuaternion.Z = _totalQuaternion.Z / _count;
-                _finalQuaternion.Normalize();
+                _finalRotation.W = _totalRotation.W / _count;
+                _finalRotation.Y = _totalRotation.Y / _count;
+                _finalRotation.X = _totalRotation.X / _count;
+                _finalRotation.Z = _totalRotation.Z / _count;
+                _finalRotation.Normalize();
 
-                _totalTranslation.X = _totalTranslation.X + item.OffsetX;
-                _totalTranslation.Y = _totalTranslation.Y + item.OffsetY;
-                _totalTranslation.Z = _totalTranslation.Z + item.OffsetZ;
+                _totalTranslation.X = _totalTranslation.X + translation.X;
+                _totalTranslation.Y = _totalTranslation.Y + translation.Y;
+                _totalTranslation.Z = _totalTranslation.Z + translation.Z;
 
                 _finalTranslation.X = _totalTranslation.X / _count;
                 _finalTranslation.Y = _totalTranslation.Y / _count;
@@ -312,30 +233,30 @@ namespace Nart.Model_Object
             }
             else
             {
-                _totalQuaternion.W = _totalQuaternion.W - _modelQuaternionSet[_currentIndex].W;
-                _totalQuaternion.X = _totalQuaternion.X - _modelQuaternionSet[_currentIndex].X;
-                _totalQuaternion.Y = _totalQuaternion.Y - _modelQuaternionSet[_currentIndex].Y;
-                _totalQuaternion.Z = _totalQuaternion.Z - _modelQuaternionSet[_currentIndex].Z;
+                _totalRotation.W = _totalRotation.W - _rotationSet[_currentIndex].W;
+                _totalRotation.X = _totalRotation.X - _rotationSet[_currentIndex].X;
+                _totalRotation.Y = _totalRotation.Y - _rotationSet[_currentIndex].Y;
+                _totalRotation.Z = _totalRotation.Z - _rotationSet[_currentIndex].Z;
 
-                _totalQuaternion.W = _totalQuaternion.W + items.W;
-                _totalQuaternion.X = _totalQuaternion.X + items.X;
-                _totalQuaternion.Y = _totalQuaternion.Y + items.Y;
-                _totalQuaternion.Z = _totalQuaternion.Z + items.Z;
+                _totalRotation.W = _totalRotation.W + rotation.W;
+                _totalRotation.X = _totalRotation.X + rotation.X;
+                _totalRotation.Y = _totalRotation.Y + rotation.Y;
+                _totalRotation.Z = _totalRotation.Z + rotation.Z;
 
-                _finalQuaternion.W = _totalQuaternion.W / _count;
-                _finalQuaternion.Y = _totalQuaternion.Y / _count;
-                _finalQuaternion.X = _totalQuaternion.X / _count;
-                _finalQuaternion.Z = _totalQuaternion.Z / _count;
-                _finalQuaternion.Normalize();
+                _finalRotation.W = _totalRotation.W / _count;
+                _finalRotation.Y = _totalRotation.Y / _count;
+                _finalRotation.X = _totalRotation.X / _count;
+                _finalRotation.Z = _totalRotation.Z / _count;
+                _finalRotation.Normalize();
 
 
-                _totalTranslation.X = _totalTranslation.X - _modelVector3DSet[_currentIndex].X;
-                _totalTranslation.Y = _totalTranslation.Y - _modelVector3DSet[_currentIndex].Y;
-                _totalTranslation.Z = _totalTranslation.Z - _modelVector3DSet[_currentIndex].Z;
+                _totalTranslation.X = _totalTranslation.X - _translationSet[_currentIndex].X;
+                _totalTranslation.Y = _totalTranslation.Y - _translationSet[_currentIndex].Y;
+                _totalTranslation.Z = _totalTranslation.Z - _translationSet[_currentIndex].Z;
 
-                _totalTranslation.X = _totalTranslation.X + item.OffsetX;
-                _totalTranslation.Y = _totalTranslation.Y + item.OffsetY;
-                _totalTranslation.Z = _totalTranslation.Z + item.OffsetZ;
+                _totalTranslation.X = _totalTranslation.X + translation.X;
+                _totalTranslation.Y = _totalTranslation.Y + translation.Y;
+                _totalTranslation.Z = _totalTranslation.Z + translation.Z;
 
                 _finalTranslation.X = _totalTranslation.X / _count;
                 _finalTranslation.Y = _totalTranslation.Y / _count;
@@ -344,75 +265,14 @@ namespace Nart.Model_Object
 
             }
 
-            _modelQuaternionSet[_currentIndex] = items;
-            _modelVector3DSet[_currentIndex] = new Vector3D(item.OffsetX,item.OffsetY,item.OffsetZ);
-
-
+            _rotationSet[_currentIndex] = rotation;
+            _translationSet[_currentIndex] = translation;
 
             _currentIndex++;
-            _currentIndex = _currentIndex % _modelQuaternionSet.Length;
+            _currentIndex = _currentIndex % _rotationSet.Length;
 
-
-            //temp.Rotate(items);
-
-            //double test;
-            //test = temp.M12;
-            //temp.M12 = temp.M21;
-            //temp.M21 = test;
-
-            //test = temp.M13;
-            //temp.M13 = temp.M31;
-            //temp.M31 = test;
-
-            //test = temp.M23;
-            //temp.M23 = temp.M32;
-            //temp.M32 = test;
-
-
-            //_finalModelTransform = temp;
-
-            //_finalModelTransform.OffsetX = item.OffsetX;
-            //_finalModelTransform.OffsetY = item.OffsetY;
-            //_finalModelTransform.OffsetZ = item.OffsetZ;
-            //Console.WriteLine("\n\nInput:\n" + _modelVector3DSet[_currentIndex]);
-            //Console.WriteLine("\nfinal translation:\n" + _finalTranslation);
+            
         }
-
-
-
-        public void SetQuaternion()
-        {
-            if (IsTransformApplied)
-            {
-                Matrix3D temp = new Matrix3D();
-                temp.Rotate(_finalQuaternion);
-                
-                double test;
-                test = temp.M12;
-                temp.M12 = temp.M21;
-                temp.M21 = test;
-
-                test = temp.M13;
-                temp.M13 = temp.M31;
-                temp.M31 = test;
-
-                test = temp.M23;
-                temp.M23 = temp.M32;
-                temp.M32 = test;
-
-                temp.OffsetX = _finalTranslation.X;
-                temp.OffsetY = _finalTranslation.Y;
-                temp.OffsetZ = _finalTranslation.Z;
-
-                Transform = new MatrixTransform3D(temp );
-            }
-        }
-
-
-
-
-
-
 
 
 
@@ -420,9 +280,31 @@ namespace Nart.Model_Object
         {
             if (IsTransformApplied)
             {
-                Transform = new MatrixTransform3D(_finalModelTransform);
+                Matrix3D transform = new Matrix3D();
+                //將四元數轉乘Matrix 剛轉完需要再轉置
+                transform.Rotate(_finalRotation);
+                
+                double temp;
+                temp = transform.M12;
+                transform.M12 = transform.M21;
+                transform.M21 = temp;
+
+                temp = transform.M13;
+                transform.M13 = transform.M31;
+                transform.M31 = temp;
+
+                temp = transform.M23;
+                transform.M23 = transform.M32;
+                transform.M32 = temp;
+
+                transform.OffsetX = _finalTranslation.X;
+                transform.OffsetY = _finalTranslation.Y;
+                transform.OffsetZ = _finalTranslation.Z;
+
+                Transform = new MatrixTransform3D(transform );
             }
         }
+
         /// <summary>
         /// 設定模型材質
         /// </summary>        

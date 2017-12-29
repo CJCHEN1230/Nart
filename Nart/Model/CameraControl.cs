@@ -166,7 +166,7 @@ namespace Nart
             foreach (BoneModel boneModel in MainViewModel.Data.BoneCollection)
             {
                       //boneModel.SetTransformMatrix();
-                 boneModel.SetQuaternion();
+                 boneModel.SetTransformMatrix();
             }
         }
         /// <summary>

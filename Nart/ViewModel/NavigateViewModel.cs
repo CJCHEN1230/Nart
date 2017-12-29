@@ -302,27 +302,7 @@ namespace Nart
                 BoneDiffuseColor = MaxillaDiffuseColor
             };
             oriMaxilla.LoadModel();
-
-
-            BoneModel oriMaxilla2 = new BoneModel
-            {
-                FilePath = MaxillaModel,
-                MarkerId = "12",
-                BoneDiffuseColor = MandibleDiffuseColor
-            };
-            oriMaxilla2.LoadModel();
-
-
-            BoneModel oriMaxilla3 = new BoneModel
-            {
-                FilePath = MaxillaModel,
-                MarkerId = "32",
-                BoneDiffuseColor =  Color.FromArgb(100, 200, 231, 2)
-        };
-            oriMaxilla3.LoadModel();
-
-
-
+            
 
             BoneModel oriMandible = new BoneModel
             {
@@ -334,10 +314,7 @@ namespace Nart
             oriMandible.LoadModel();
 
             MainViewModel.Data.BoneCollection.Add(oriMaxilla);
-            MainViewModel.Data.BoneCollection.Add(oriMaxilla2);
-            MainViewModel.Data.BoneCollection.Add(oriMaxilla3);
-
-            //MainViewModel.Data.BoneCollection.Add(oriMandible);
+            MainViewModel.Data.BoneCollection.Add(oriMandible);
 
             //載入OSP模型
             OspModel headOsp = new OspModel

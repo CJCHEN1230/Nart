@@ -10,8 +10,11 @@ using System.Windows;
 using System.Windows.Media.Media3D;
 using System.Xml;
 using HelixToolkit.Wpf.SharpDX;
+using MathNet.Numerics.LinearAlgebra.Single;
 using UseCVLibrary;
+using Matrix = SharpDX.Matrix;
 using Matrix3DExtensions = Nart.ExtensionMethods.Matrix3DExtensions;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Nart
 {
@@ -100,7 +103,7 @@ namespace Nart
         /// </summary>
         private List<Marker3D> _msWorldPoints = new List<Marker3D>(10);
 
-        private MeanFilter _meanFilter;
+        //private MeanFilter _meanFilter;
 
 
         /// <summary>
@@ -117,7 +120,7 @@ namespace Nart
             _craniofacialInfo = new CraniofacialInfo("../../../data/ceph.csv");
 
 
-            _meanFilter = new MeanFilter(Database);
+            //_meanFilter = new MeanFilter(Database);
 
             
 
@@ -406,61 +409,120 @@ namespace Nart
             }
             Database.ResetIndex();
             //Database重建之後，將meanFilter裡面的stack也重建
-            _meanFilter.CreatePointStack(Database);
+           // _meanFilter.CreatePointStack(Database);
         }        
         /// <summary>
         /// 傳入兩組三個點所組成的座標系，回傳轉換矩陣
         /// </summary>
-        private Matrix3D TransformCoordinate(Point3D[] a,Point3D[] b)
-        {          
-            List<Point3D[]> twoPoints = new List<Point3D[]>(2) { a, b };
-            Point3D[] avg = new Point3D[2];
-            Vector3D[] u = new Vector3D[2];
-            Vector3D[] v = new Vector3D[2];
-            Vector3D[] w = new Vector3D[2];
+        //private Matrix3D TransformCoordinate(ref Point3D[] a,ref Point3D[] b)
+        //{          
+        //    List<Point3D[]> twoPoints = new List<Point3D[]>(2) { a, b };
+        //    Point3D[] avg = new Point3D[2];
+        //    Vector3D[] u = new Vector3D[2];
+        //    Vector3D[] v = new Vector3D[2];
+        //    Vector3D[] w = new Vector3D[2];
 
-            Parallel.For(0, twoPoints.Count , i =>
-            {
-                avg[i] = new Point3D((twoPoints[i][0].X + twoPoints[i][1].X + twoPoints[i][2].X) / 3.0, (twoPoints[i][0].Y + twoPoints[i][1].Y + twoPoints[i][2].Y) / 3.0, (twoPoints[i][0].Z + twoPoints[i][1].Z + twoPoints[i][2].Z) / 3.0);
+        //    Parallel.For(0, twoPoints.Count , i =>
+        //    {
+        //        avg[i] = new Point3D((twoPoints[i][0].X + twoPoints[i][1].X + twoPoints[i][2].X) / 3.0, (twoPoints[i][0].Y + twoPoints[i][1].Y + twoPoints[i][2].Y) / 3.0, (twoPoints[i][0].Z + twoPoints[i][1].Z + twoPoints[i][2].Z) / 3.0);
 
-                u[i] = twoPoints[i][0] - avg[i];
+        //        u[i] = twoPoints[i][0] - avg[i];
 
-                Vector3D temp = twoPoints[i][2] - avg[i];
+        //        Vector3D temp = twoPoints[i][2] - avg[i];
 
-                v[i] = Vector3D.CrossProduct(u[i], temp);
+        //        v[i] = Vector3D.CrossProduct(u[i], temp);
 
-                w[i] = Vector3D.CrossProduct(u[i], v[i]);
+        //        w[i] = Vector3D.CrossProduct(u[i], v[i]);
 
-                u[i].Normalize();
-                v[i].Normalize();
-                w[i].Normalize();
+        //        u[i].Normalize();
+        //        v[i].Normalize();
+        //        w[i].Normalize();
 
-            });
+        //    });
 
-            Matrix3D translate1 = new Matrix3D(1, 0, 0, 0,
-                                              0, 1, 0, 0,
-                                              0, 0, 1, 0,
-                                             -avg[0].X, -avg[0].Y, -avg[0].Z, 1);
+        //    Matrix3D translate1 = new Matrix3D(1, 0, 0, 0,
+        //                                      0, 1, 0, 0,
+        //                                      0, 0, 1, 0,
+        //                                     -avg[0].X, -avg[0].Y, -avg[0].Z, 1);
 
-            Matrix3D rotate1 = new Matrix3D(u[0].X, v[0].X, w[0].X, 0,
-                                              u[0].Y, v[0].Y, w[0].Y, 0,
-                                              u[0].Z, v[0].Z, w[0].Z, 0,
-                                             0, 0, 0, 1);
+        //    Matrix3D rotate1 = new Matrix3D(u[0].X, v[0].X, w[0].X, 0,
+        //                                      u[0].Y, v[0].Y, w[0].Y, 0,
+        //                                      u[0].Z, v[0].Z, w[0].Z, 0,
+        //                                     0, 0, 0, 1);
 
-            Matrix3D transform1= translate1 * rotate1;
+        //    Matrix3D transform1= translate1 * rotate1;
 
 
          
-            Matrix3D transform2 = new Matrix3D(u[1].X, u[1].Y, u[1].Z, 0,
-                                               v[1].X, v[1].Y, v[1].Z, 0,
-                                               w[1].X, w[1].Y, w[1].Z, 0,
-                                             avg[1].X, avg[1].Y, avg[1].Z, 1);
+        //    Matrix3D transform2 = new Matrix3D(u[1].X, u[1].Y, u[1].Z, 0,
+        //                                       v[1].X, v[1].Y, v[1].Z, 0,
+        //                                       w[1].X, w[1].Y, w[1].Z, 0,
+        //                                     avg[1].X, avg[1].Y, avg[1].Z, 1);
 
-            Matrix3D finalTransform = transform1 * transform2;
+        //    Matrix3D finalTransform = transform1 * transform2;
+
+
+        //    return finalTransform;
+        //}
+
+
+        private Matrix3D TransformCoordinate(ref Point3D[] a,ref Point3D[] b)
+        {
+            Point3D aavg = new Point3D((a[0].X + a[1].X + a[2].X) / 3.0, (a[0].Y + a[1].Y + a[2].Y) / 3.0, (a[0].Z + a[1].Z + a[2].Z) / 3.0);
+            Point3D bavg = new Point3D((b[0].X + b[1].X + b[2].X) / 3.0, (b[0].Y + b[1].Y + b[2].Y) / 3.0, (b[0].Z + b[1].Z + b[2].Z) / 3.0);
+
+            var PT = DenseMatrix.OfArray(new float[,] {
+                { Convert.ToSingle(a[0].X-aavg.X),Convert.ToSingle(a[1].X-aavg.X),Convert.ToSingle(a[2].X-aavg.X)},
+                { Convert.ToSingle(a[0].Y-aavg.Y),Convert.ToSingle(a[1].Y-aavg.Y),Convert.ToSingle(a[2].Y-aavg.Y) },
+                { Convert.ToSingle(a[0].Z-aavg.Z),Convert.ToSingle(a[1].Z-aavg.Z),Convert.ToSingle(a[2].Z-aavg.Z)  }});
+
+
+
+            var Q = DenseMatrix.OfArray(new float[,] {
+                { Convert.ToSingle(b[0].X-bavg.X),Convert.ToSingle(b[0].Y-bavg.Y),Convert.ToSingle(b[0].Z-bavg.Z)},
+                {  Convert.ToSingle(b[1].X-bavg.X),Convert.ToSingle(b[1].Y-bavg.Y),Convert.ToSingle(b[1].Z-bavg.Z) },
+                { Convert.ToSingle(b[2].X-bavg.X),Convert.ToSingle(b[2].Y-bavg.Y), Convert.ToSingle(b[2].Z-bavg.Z) }});
+
+            var A = PT * Q;
+            var svd1 = A.Svd(true);
+            Matrix<float> U = svd1.U;
+
+            Matrix<float> VT = svd1.VT;
+
+            var UVT = U * VT;
+            float det = UVT.Determinant();
+            var dia = DenseMatrix.OfArray(new float[,]
+            {
+                {1.0f, 0.0f, 0.0f},
+                {0.0f, 1.0f, 0.0f},
+                {0.0f, 0.0f, det}
+            });
+
+            var R = U * dia * VT;
+            Matrix3D T = new Matrix3D(1, 0, 0, 0
+                                                                , 0, 1, 0, 0
+                                                                , 0, 0, 1, 0
+                                                                , -aavg.X, -aavg.Y, -aavg.Z, 1);
+            Matrix3D R1 = new Matrix3D(R[0, 0], R[0, 1], R[0, 2], 0, R[1, 0], R[1, 1], R[1, 2], 0, R[2, 0], R[2, 1],
+                R[2, 2], 0, bavg.X, bavg.Y, bavg.Z, 1);
+
+
+
+            Matrix3D finalTransform = T * R1;
 
 
             return finalTransform;
         }
+
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// 匯入原N-Art的註冊檔
         /// </summary>
@@ -490,10 +552,10 @@ namespace Nart
                                             new Point3D(regData[24], regData[25], regData[26])};
               
 
-                _CTtoMS = TransformCoordinate(_CTBall, _MSBall);
+                _CTtoMS = TransformCoordinate(ref _CTBall,ref  _MSBall);
 
 
-                _MStoCT = TransformCoordinate(_MSBall, _CTBall);
+                _MStoCT = TransformCoordinate(ref _MSBall,ref _CTBall);
 
 
                 Console.WriteLine("\nCTBall");
@@ -545,47 +607,7 @@ namespace Nart
                                             new Point3D(matrixInfo[6], matrixInfo[7], matrixInfo[8])};
 
 
-
-
-
-
-                BallModel ball = new BallModel
-                {
-                    BallName = "Ball",
-                    BallInfo = "!!!!!"
-                };
-
-                var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
-
-
-                ballContainer.AddSphere(
-                    new Vector3(Convert.ToSingle(_splintInCT[0].X), Convert.ToSingle(_splintInCT[0].Y),
-                        Convert.ToSingle(_splintInCT[0].Z)), 2.5);
-                ballContainer.AddSphere(
-                    new Vector3(Convert.ToSingle(_splintInCT[1].X), Convert.ToSingle(_splintInCT[1].Y),
-                        Convert.ToSingle(_splintInCT[1].Z)), 2.5);
-                ballContainer.AddSphere(
-                    new Vector3(Convert.ToSingle(_splintInCT[2].X), Convert.ToSingle(_splintInCT[2].Y),
-                        Convert.ToSingle(_splintInCT[2].Z)), 2.5);
-              
-                ball.Geometry = ballContainer.ToMeshGeometry3D();
-                ball.Material = PhongMaterials.Silver;
-
-                MainViewModel.Data.BallCollection.Add(ball);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                
 
 
                 return true;
@@ -660,8 +682,8 @@ namespace Nart
             CalcFHCoord();
             
                 
-            _cTtoWorld = TransformCoordinate(_splintInCT, _curWorldPoints[RegSplintIndex].ThreePoints);
-            _worldtoCT = TransformCoordinate(_curWorldPoints[RegSplintIndex].ThreePoints, _splintInCT);
+            _cTtoWorld = TransformCoordinate(ref _splintInCT,ref  _curWorldPoints[RegSplintIndex].ThreePoints);
+            _worldtoCT = TransformCoordinate(ref _curWorldPoints[RegSplintIndex].ThreePoints,ref _splintInCT);
 
 
             MainViewModel.Data.IsRegInitialized = true;
@@ -712,7 +734,7 @@ namespace Nart
                     }
 
 
-                    _oriWorldtoMS = TransformCoordinate(_curWorldPoints[RegSplintIndex].ThreePoints, _MSSplintMarker);
+                    _oriWorldtoMS = TransformCoordinate(ref _curWorldPoints[RegSplintIndex].ThreePoints,ref _MSSplintMarker);
 
                     foreach (Marker3D marker3D in _curWorldPoints)
                     {
@@ -858,8 +880,8 @@ namespace Nart
 
 
 
-                    _cTtoWorld = TransformCoordinate(_splintInCT, _curWorldPoints[RegSplintIndex].ThreePoints);
-                    _worldtoCT = TransformCoordinate(_curWorldPoints[RegSplintIndex].ThreePoints, _splintInCT);
+                    _cTtoWorld = TransformCoordinate(ref _splintInCT,ref  _curWorldPoints[RegSplintIndex].ThreePoints);
+                    _worldtoCT = TransformCoordinate(ref _curWorldPoints[RegSplintIndex].ThreePoints,ref  _splintInCT);
 
 
                     Marker3D oriWorldPoint1 = new Marker3D
@@ -910,9 +932,9 @@ namespace Nart
 
                         //Matrix3D level1 = TransformCoordinate(CTBall, MSBall);
 
-                        Matrix3D level2 = TransformCoordinate(_msWorldPoints[mSandOriIndex].ThreePoints, _curWorldPoints[i].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"
+                        Matrix3D level2 = TransformCoordinate(ref _msWorldPoints[mSandOriIndex].ThreePoints,ref _curWorldPoints[i].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"
 
-                        Matrix3D level3 = TransformCoordinate(_curWorldPoints[currentHeadIndex].ThreePoints, _msWorldPoints[RegHeadIndex].ThreePoints);
+                        Matrix3D level3 = TransformCoordinate(ref _curWorldPoints[currentHeadIndex].ThreePoints,ref _msWorldPoints[RegHeadIndex].ThreePoints);
 
                         //Matrix3D level4 = TransformCoordinate(MSBall, CTBall);
                         
@@ -952,156 +974,19 @@ namespace Nart
                         int splintMarkerIndex = GetSpecIndex(_curWorldPoints, "Splint");//取得當前世界座標在註冊時的座標索引值是多少
 
 
-                        Matrix3D level1 = TransformCoordinate(_splintInCT, _curWorldPoints[i].ThreePoints);
+                        Matrix3D level1 = TransformCoordinate(ref _splintInCT,ref _curWorldPoints[i].ThreePoints);
 
-                        Matrix3D level2 = TransformCoordinate(_curWorldPoints[currentHeadIndex].ThreePoints, _oriWorldPoints[RegHeadIndex].ThreePoints);
-
-                        MainViewModel.Data.BoneCollection[1]._finalModelTransform = level1;
-                        MainViewModel.Data.BoneCollection[2]._finalModelTransform = level1*level2;
-                        {
-
-
-                            BallModel ball = new BallModel
-                            {
-                                BallName = "Ball",
-                                BallInfo = "!!!!!"
-                            };
-
-                            var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
-
-                            if (MainViewModel.Data.BallCollection.Count > 1)
-                            {
-                                MainViewModel.Data.BallCollection.RemoveAt(1);
-                            }
-
-                            ballContainer.AddSphere(
-                                new Vector3(Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[0].X),
-                                    Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[0].Y),
-                                    Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[0].Z)), 7);
-                            ballContainer.AddSphere(
-                                new Vector3(Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[1].X),
-                                    Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[1].Y),
-                                    Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[1].Z)), 7);
-                            ballContainer.AddSphere(
-                                new Vector3(Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[2].X),
-                                    Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[2].Y),
-                                    Convert.ToSingle(_oriWorldPoints[RegHeadIndex].ThreePoints[2].Z)), 7);
-
-                            ball.Geometry = ballContainer.ToMeshGeometry3D();
-                            ball.Material = PhongMaterials.Yellow;
-
-                            MainViewModel.Data.BallCollection.Insert(1,ball);
-
-                        }
-
-                        {
-                            BallModel ball = new BallModel
-                            {
-                                BallName = "Ball",
-                                BallInfo = "!!!!!"
-                            };
-                            var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
-                            if (MainViewModel.Data.BallCollection.Count > 2)
-                            {
-                                MainViewModel.Data.BallCollection.RemoveAt(2);
-                            }
-                            ballContainer.AddSphere(
-                                new Vector3(Convert.ToSingle(_curWorldPoints[i].ThreePoints[0].X),
-                                    Convert.ToSingle(_curWorldPoints[i].ThreePoints[0].Y),
-                                    Convert.ToSingle(_curWorldPoints[i].ThreePoints[0].Z)), 7);
-                            ballContainer.AddSphere(
-                                new Vector3(Convert.ToSingle(_curWorldPoints[i].ThreePoints[1].X),
-                                    Convert.ToSingle(_curWorldPoints[i].ThreePoints[1].Y),
-                                    Convert.ToSingle(_curWorldPoints[i].ThreePoints[1].Z)), 7);
-                            ballContainer.AddSphere(
-                                new Vector3(Convert.ToSingle(_curWorldPoints[i].ThreePoints[2].X),
-                                    Convert.ToSingle(_curWorldPoints[i].ThreePoints[2].Y),
-                                    Convert.ToSingle(_curWorldPoints[i].ThreePoints[2].Z)), 7);
-
-                            ball.Geometry = ballContainer.ToMeshGeometry3D();
-                            ball.Material = PhongMaterials.Blue;
-
-                            MainViewModel.Data.BallCollection.Insert(2, ball);
-
-
-                        }
-                        {
-                            BallModel ball = new BallModel
-                            {
-                                BallName = "Ball",
-                                BallInfo = "!!!!!"
-                            };
-                            var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
-                            if (MainViewModel.Data.BallCollection.Count > 3)
-                            {
-                                MainViewModel.Data.BallCollection.RemoveAt(3);
-                            }
-                            ballContainer.AddSphere(
-                                new Vector3(Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[0].X),
-                                    Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[0].Y),
-                                    Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[0].Z)), 7);
-                            ballContainer.AddSphere(
-                                new Vector3(Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[1].X),
-                                    Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[1].Y),
-                                    Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[1].Z)), 7);
-                            ballContainer.AddSphere(
-                                new Vector3(Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[2].X),
-                                    Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[2].Y),
-                                    Convert.ToSingle(_curWorldPoints[currentHeadIndex].ThreePoints[2].Z)), 7);
-
-                            ball.Geometry = ballContainer.ToMeshGeometry3D();
-                            ball.Material = PhongMaterials.Red;
-
-                            MainViewModel.Data.BallCollection.Insert(3, ball);
-
-
-                        }
-
-
-                        {
-                            BallModel ball = new BallModel
-                            {
-                                BallName = "Ball",
-                                BallInfo = "!!!!!"
-                            };
-                            var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
-                            if (MainViewModel.Data.BallCollection.Count > 4)
-                            {
-                                MainViewModel.Data.BallCollection.RemoveAt(4);
-                            }
-                            ballContainer.AddSphere(
-                                new Vector3(Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[0].X),
-                                    Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[0].Y),
-                                    Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[0].Z)), 7);
-                            ballContainer.AddSphere(
-                                new Vector3(Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[1].X),
-                                    Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[1].Y),
-                                    Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[1].Z)), 7);
-                            ballContainer.AddSphere(
-                                new Vector3(Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[2].X),
-                                    Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[2].Y),
-                                    Convert.ToSingle(_oriWorldPoints[RegSplintIndex].ThreePoints[2].Z)), 7);
-
-                            ball.Geometry = ballContainer.ToMeshGeometry3D();
-                            ball.Material = PhongMaterials.Green;
-
-                            MainViewModel.Data.BallCollection.Insert(4, ball);
-                        }
-
-
+                        Matrix3D level2 = TransformCoordinate(ref _curWorldPoints[currentHeadIndex].ThreePoints,ref  _oriWorldPoints[RegHeadIndex].ThreePoints);
 
 
                         Matrix3D final =  level1 * level2 * _worldtoCT;
 
                         var boneCollection = MainViewModel.Data.BoneCollection;
                         foreach (BoneModel boneModel in boneCollection)
-                        {
-                           
+                        {                           
                             if (boneModel.MarkerId == _curWorldPoints[i].MarkerId&& boneModel.IsRendering)
                             {
-                                  //boneModel.AddItem(final);
-                               boneModel.AddItem2(final);
-                                //boneModel._finalModelTransform = final;
+                               boneModel.AddItem(final);
                             }
                         }
                     }
@@ -1399,9 +1284,9 @@ namespace Nart
 
                             
                             ballDistanceInfo += "\n"+model.BallName.PadLeft(10) +
-                                                ("" + Math.Round(outputDistance.X, 2)).PadLeft(10) +
-                                                ("" + Math.Round(outputDistance.Y, 2)).PadLeft(10) +
-                                                ("" + Math.Round(outputDistance.Z, 2)).PadLeft(10);
+                                                ("" + Math.Abs(Math.Round(outputDistance.X, 2))).PadLeft(10) +
+                                                ("" + Math.Abs(Math.Round(outputDistance.Y, 2))).PadLeft(10) +
+                                                ("" + Math.Abs(Math.Round(outputDistance.Z, 2))).PadLeft(10);
                             
                         }
                         else
@@ -1428,9 +1313,9 @@ namespace Nart
                             float distance = outputDistance.Length();
 
                             ballDistanceInfo += "\n" + model.BallName.PadLeft(10) +
-                                                ("" + Math.Round(outputDistance.X, 2)).PadLeft(10) +
-                                                ("" + Math.Round(outputDistance.Y, 2)).PadLeft(10) +
-                                                ("" + Math.Round(outputDistance.Z, 2)).PadLeft(10);
+                                                ("" + Math.Abs(Math.Round(outputDistance.X, 2))).PadLeft(10) +
+                                                ("" + Math.Abs(Math.Round(outputDistance.Y, 2))).PadLeft(10) +
+                                                ("" + Math.Abs(Math.Round(outputDistance.Z, 2))).PadLeft(10);
                         }
                         else
                         {

@@ -237,7 +237,7 @@
                                     </CheckBox.LayoutTransform>
                                 </CheckBox>
                                 <Ellipse Margin="8,0" Stroke="Black" Fill="{Binding BoneDiffuseColor, Converter={StaticResource SolidColorBrushConverter}}" StrokeThickness="2" Width="20" Height="20" VerticalAlignment="Center"/>
-                                <TextBox Margin="4,0" Foreground="White"  BorderThickness="0" FontSize="18" Background="Transparent" Text="{Binding BoneName}" VerticalContentAlignment="Center" MinWidth="80" VerticalAlignment="Center"/>
+                                <TextBox Margin="4,0" Foreground="White"  BorderThickness="0" FontSize="18" Background="Transparent" Text="{Binding SafeFileName}" VerticalContentAlignment="Center" MinWidth="80" VerticalAlignment="Center"/>
                             </StackPanel>
                         </DataTemplate>
                     </Expander.Resources>

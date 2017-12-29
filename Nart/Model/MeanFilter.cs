@@ -7,6 +7,7 @@ using System.Windows.Media.Media3D;
 
 namespace Nart
 {
+    //目前用不到這個類別，有點可惜先留著
     public class MeanFilter
     {
         public class PointStack
