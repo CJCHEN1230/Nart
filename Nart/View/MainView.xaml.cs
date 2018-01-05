@@ -51,49 +51,18 @@ namespace Nart
             margin.Right = 0;
             buttonList.Margin = margin;
 
+           
+
+
             this.DataContext = _mainViewModel;
 
             AllocConsole();
-            
+            //int screenWidth = Screen.PrimaryScreen.Bounds.Width;
+            //int screenHeight = Screen.PrimaryScreen.Bounds.Height;
+            //Console.WriteLine("螢幕解析度為 " + screenWidth.ToString() + "*" + screenHeight.ToString());
         }
 
-        private void Translate_Click(object sender, RoutedEventArgs e)
-        {
-
-            //this.Closed
-            //Matrix3D TEST = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -100, 100, 1);
-
-
-            //BoneModel test = MultiAngleViewModel.BoneModelCollection[0] as BoneModel;
-
-            //test.Transform= new MatrixTransform3D(TEST);
-            //MainViewModel.ModelDataCollection = multiAngleView._multiAngleViewModel.ModelDataCollection;
-
-            //SharpDX.Vector3 temp = MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0];
-
-            //Point3D oldPoint = new Point3D(temp.X,temp.Y,temp.Z);
-
-            //Console.WriteLine("oldPoint:" + oldPoint);
-
-            //for (int i = 0; i < MainViewModel.ModelDataCollection.Count; i++)
-            //{
-            //    MainViewModel.ModelDataCollection[i].ModelTransform = new MatrixTransform3D(TEST);
-            //}
-
-            //SharpDX.Vector3 temp2 = MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0];
-
-            //Point3D newPoint = new Point3D(temp2.X, temp2.Y, temp2.Z);
-
-
-            //Console.WriteLine("newPoint:" + newPoint);
-
-            //multiAngleView._multiAngleViewModel.ModelDataCollection = MainViewModel.ModelDataCollection;
-
-
-            // Console.WriteLine(MainViewModel.ModelDataCollection[0].ModelGeometry.Positions[0].X);
-
-        }
-
+       
         private void CamHost1_Loaded(object sender, RoutedEventArgs e)
         {
             if (!CamHost1.IsActivated)
@@ -119,8 +88,6 @@ namespace Nart
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
-        
-
 
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -128,7 +95,7 @@ namespace Nart
             GridLengthAnimation animation = new GridLengthAnimation();
             animation.From = new GridLength(0D);
             animation.To = Col1.Width;
-            animation.Duration = new Duration( TimeSpan.FromSeconds(0.2));
+            animation.Duration = new Duration(TimeSpan.FromSeconds(0.2));
 
             Storyboard.SetTargetProperty(animation, new PropertyPath(Grid.WidthProperty));
             Storyboard.SetTarget(animation, Col0);
@@ -138,66 +105,96 @@ namespace Nart
         }
 
         private void settingButton1_Click(object sender, RoutedEventArgs e)
-        {
-            // double ratio = Col1.ActualWidth / (mainGrid.ActualWidth - Col3.ActualWidth);
-            double ratio = Col1.ActualWidth * 5 / Col2.ActualWidth;
-            GridLengthAnimation gla = new GridLengthAnimation();
-            gla.From = Col0.Width;
-            gla.To = /*Col1.Width*/ new GridLength(ratio, GridUnitType.Star);
-            gla.Duration = new TimeSpan(0, 0, 0, 0, 200);
-            gla.FillBehavior = FillBehavior.Stop;
-            gla.Completed += (s, e1) =>
-            {
-                Col0.Width = gla.To;
-            };
-            MainGrid.ColumnDefinitions[0].BeginAnimation(ColumnDefinition.WidthProperty, gla);
+        {      
+            var storyboard = new Storyboard();
+
+            Col2.Width = new GridLength(Col2.ActualWidth, GridUnitType.Pixel);
+            
+            GridLengthAnimation gla2 =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(Col1.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(0, GridUnitType.Pixel),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
 
 
-            GridLengthAnimation gla2 = new GridLengthAnimation();
-            gla2.From = Col1.Width;
-            //gla2.To = Col0.Width;
-            gla2.To = new GridLength(0, GridUnitType.Star);
-            gla2.Duration = new TimeSpan(0, 0, 0, 0, 200);
-            gla2.FillBehavior = FillBehavior.Stop;
-            gla2.Completed += (s, e1) =>
-            {
-                Col1.Width = gla2.To;
-            };
-            MainGrid.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla2);
+            Storyboard.SetTargetProperty(gla2, new PropertyPath(ColumnDefinition.WidthProperty));
+            Storyboard.SetTarget(gla2, Col1);
+            
+            storyboard.Children.Add(gla2);
+           
+            GridLengthAnimation gla =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(Col0.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(Col1.ActualWidth, GridUnitType.Pixel),
+                    Duration = new TimeSpan(0, 0, 0, 0, 200),
+                    FillBehavior = FillBehavior.HoldEnd,
 
+                };
+            Storyboard.SetTargetProperty(gla, new PropertyPath(ColumnDefinition.WidthProperty));
+            Storyboard.SetTarget(gla, Col0);
+
+
+            storyboard.Children.Add(gla);
+
+            double ratio_1 = Col1.ActualWidth / (Col2.ActualWidth + Col1.ActualWidth);
+            double ratio_2 = Col2.ActualWidth / (Col2.ActualWidth + Col1.ActualWidth);
+   
+            this.BeginStoryboard(storyboard);
+           
         }
 
         private void settingButton2_Click(object sender, RoutedEventArgs e)
         {
+            Col2.Width = new GridLength(Col2.ActualWidth, GridUnitType.Pixel);
 
-            
-            //GridLengthAnimation gla = new GridLengthAnimation();
-            //gla.From = Col0.Width;
-            //gla.To =new GridLength(0, GridUnitType.Star);
-            //gla.Duration = new TimeSpan(0, 0, 0, 0, 200);
-            //gla.FillBehavior = FillBehavior.Stop;
-            //gla.Completed += (s, e1) =>
-            //{
-            //    Col0.Width = gla.To;
-            //};
-            //mainGrid.ColumnDefinitions[0].BeginAnimation(ColumnDefinition.WidthProperty, gla);
+            GridLengthAnimation gla =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(Col0.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(0, GridUnitType.Pixel),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
 
+            GridLengthAnimation gla2 =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(Col1.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(Col0.ActualWidth, GridUnitType.Pixel),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
 
-            //GridLengthAnimation gla2 = new GridLengthAnimation();
-            //gla2.From = Col1.Width;
-            //gla2.To = new GridLength(0, GridUnitType.Auto);
-            //gla2.Duration = new TimeSpan(0, 0, 0, 0, 200);
-            //gla2.FillBehavior = FillBehavior.Stop;
             //gla2.Completed += (s, e1) =>
             //{
-            //    Col1.Width = gla2.To;
+            //    double ratio = Col2.ActualWidth / (MainGrid.ActualWidth - 10 - Col0.ActualWidth - Col1.ActualWidth);
+
+            //    Col2.Width = new GridLength(ratio, GridUnitType.Star);
             //};
-            //mainGrid.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla2);
+
+            Col0.BeginAnimation(ColumnDefinition.WidthProperty, gla);
+            Col1.BeginAnimation(ColumnDefinition.WidthProperty, gla2);
+
+
+
+            //Console.WriteLine("22\n");
+            //Console.WriteLine("Col0:" + Col0.Width);
+            //Console.WriteLine("Col1:" + Col1.Width);
+            //Console.WriteLine("Col2:" + Col2.Width);
         }
 
         private void button_Click_1(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("\n\n\nCol0  Width:" + Col0.Width);            
+
+            Console.WriteLine("\n\n\nCol2 MaxWidth:" + Col2.MaxWidth);
+
+            Console.WriteLine("\nMain  Width:" + MainGrid.Width);
+            Console.WriteLine("\nMain  ActualWidth:" + MainGrid.ActualWidth);
+            Console.WriteLine("\nCol0  Width:" + Col0.Width);            
             Console.WriteLine("\nCol0  ActualWidth:" + Col0.ActualWidth);
             Console.WriteLine("\nCol1  Width:" + Col1.Width);
             Console.WriteLine("\nCol1  ActualWidth:" + Col1.ActualWidth);
@@ -311,5 +308,11 @@ namespace Nart
 
 
 }
+
+        private void MainGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            Col2.MaxWidth = MainGrid.ActualWidth;
+            Col2.MinWidth = Screen.PrimaryScreen.Bounds.Width*2.0/3.0;
+        }
     }
 }

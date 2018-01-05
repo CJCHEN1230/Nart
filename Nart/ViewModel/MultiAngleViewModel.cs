@@ -388,8 +388,7 @@ namespace Nart
 
                 BallModel ball = new BallModel
                 {
-                    BallName = "Ball",
-                    BallInfo = "!!!!!"
+                    BallName = "Ball",                    
                 };
 
                 //這邊很怪 拿不到該有的屬性資訊只有一些基底類別的資訊的
@@ -418,6 +417,10 @@ namespace Nart
                 Vector3 ballCenter = new Vector3(Convert.ToSingle(point2.X + length * normal.X),
                     Convert.ToSingle(point2.Y + length * normal.Y), Convert.ToSingle(point2.Z + length * normal.Z));
                 ball.Center = ballCenter;
+                ball.BallInfo = "X:" + Math.Round(ballCenter.X, 2) + "    Y:" + Math.Round(ballCenter.Y, 2) +
+                                "    Z:" + Math.Round(ballCenter.Z, 2);
+
+
 
 
                 ballContainer.AddSphere(ballCenter, 1.5);

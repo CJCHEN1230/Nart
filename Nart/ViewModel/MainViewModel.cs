@@ -227,33 +227,54 @@ namespace Nart
         /// </summary>
         private void RestoreGridLength()
         {
+            //Col2.Width = new GridLength(Col2.ActualWidth, GridUnitType.Pixel);
 
-            GridLengthAnimation gla = new GridLengthAnimation
-            {
-                From = _mainWindow.Col0.Width,
-                To = new GridLength(0, GridUnitType.Star),
-                Duration = new TimeSpan(0, 0, 0, 0, 100),
-                FillBehavior = FillBehavior.Stop
-            };
-            gla.Completed += (s, e) =>
-            {
-                _mainWindow.Col0.Width = gla.To;
-            };
-            _mainWindow.MainGrid.ColumnDefinitions[0].BeginAnimation(ColumnDefinition.WidthProperty, gla);
+            GridLengthAnimation gla =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(_mainWindow.Col0.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(0, GridUnitType.Pixel),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
+
+            GridLengthAnimation gla2 =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(_mainWindow.Col1.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(_mainWindow.Col0.ActualWidth, GridUnitType.Pixel),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
+
+            _mainWindow.Col0.BeginAnimation(ColumnDefinition.WidthProperty, gla);
+            _mainWindow.Col1.BeginAnimation(ColumnDefinition.WidthProperty, gla2);
+            //GridLengthAnimation gla = new GridLengthAnimation
+            //{
+            //    From = _mainWindow.Col0.Width,
+            //    To = new GridLength(0, GridUnitType.Star),
+            //    Duration = new TimeSpan(0, 0, 0, 0, 100),
+            //    FillBehavior = FillBehavior.Stop
+            //};
+            //gla.Completed += (s, e) =>
+            //{
+            //    _mainWindow.Col0.Width = gla.To;
+            //};
+            //_mainWindow.MainGrid.ColumnDefinitions[0].BeginAnimation(ColumnDefinition.WidthProperty, gla);
 
 
-            GridLengthAnimation gla2 = new GridLengthAnimation
-            {
-                From = _mainWindow.Col1.Width,
-                To = new GridLength(0, GridUnitType.Auto),
-                Duration = new TimeSpan(0, 0, 0, 0, 100),
-                FillBehavior = FillBehavior.Stop
-            };
-            gla2.Completed += (s, e) =>
-            {
-                _mainWindow.Col1.Width = gla2.To;
-            };
-            _mainWindow.MainGrid.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla2);
+            //GridLengthAnimation gla2 = new GridLengthAnimation
+            //{
+            //    From = _mainWindow.Col1.Width,
+            //    To = new GridLength(0, GridUnitType.Auto),
+            //    Duration = new TimeSpan(0, 0, 0, 0, 100),
+            //    FillBehavior = FillBehavior.Stop
+            //};
+            //gla2.Completed += (s, e) =>
+            //{
+            //    _mainWindow.Col1.Width = gla2.To;
+            //};
+            //_mainWindow.MainGrid.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla2);
         }
         /// <summary>
         /// Bind Patient Information expander裡面的textbox 

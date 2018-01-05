@@ -410,7 +410,7 @@ namespace Nart
             Database.ResetIndex();
             //Database重建之後，將meanFilter裡面的stack也重建
            // _meanFilter.CreatePointStack(Database);
-        }        
+        }
         /// <summary>
         /// 傳入兩組三個點所組成的座標系，回傳轉換矩陣
         /// </summary>
@@ -453,7 +453,7 @@ namespace Nart
         //    Matrix3D transform1= translate1 * rotate1;
 
 
-         
+
         //    Matrix3D transform2 = new Matrix3D(u[1].X, u[1].Y, u[1].Z, 0,
         //                                       v[1].X, v[1].Y, v[1].Z, 0,
         //                                       w[1].X, w[1].Y, w[1].Z, 0,
@@ -465,7 +465,9 @@ namespace Nart
         //    return finalTransform;
         //}
 
-
+        /// <summary>
+        /// 使用Kabsch algorithm做三點對三點座標轉換
+        /// </summary>
         private Matrix3D TransformCoordinate(ref Point3D[] a,ref Point3D[] b)
         {
             Point3D aavg = new Point3D((a[0].X + a[1].X + a[2].X) / 3.0, (a[0].Y + a[1].Y + a[2].Y) / 3.0, (a[0].Z + a[1].Z + a[2].Z) / 3.0);
