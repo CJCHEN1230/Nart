@@ -65,7 +65,7 @@ namespace Nart.Control
 
             }
         }
-        public void BindBallCollection(Projectata data)
+        public void BindBallCollection(ProjectData data)
         {
             Binding binding = new Binding("BallCollection");
             binding.Source = data;

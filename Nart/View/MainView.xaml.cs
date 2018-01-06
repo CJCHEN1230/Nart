@@ -30,6 +30,7 @@ using NartControl;
 using System.Windows.Media.Animation;
 using SharpDX;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Nart
 {
@@ -139,9 +140,6 @@ namespace Nart
 
 
             storyboard.Children.Add(gla);
-
-            double ratio_1 = Col1.ActualWidth / (Col2.ActualWidth + Col1.ActualWidth);
-            double ratio_2 = Col2.ActualWidth / (Col2.ActualWidth + Col1.ActualWidth);
    
             this.BeginStoryboard(storyboard);
            
@@ -169,37 +167,49 @@ namespace Nart
                     FillBehavior = FillBehavior.HoldEnd
                 };
 
-            //gla2.Completed += (s, e1) =>
-            //{
-            //    double ratio = Col2.ActualWidth / (MainGrid.ActualWidth - 10 - Col0.ActualWidth - Col1.ActualWidth);
-
-            //    Col2.Width = new GridLength(ratio, GridUnitType.Star);
-            //};
-
+         
             Col0.BeginAnimation(ColumnDefinition.WidthProperty, gla);
             Col1.BeginAnimation(ColumnDefinition.WidthProperty, gla2);
-
-
-
-            //Console.WriteLine("22\n");
-            //Console.WriteLine("Col0:" + Col0.Width);
-            //Console.WriteLine("Col1:" + Col1.Width);
-            //Console.WriteLine("Col2:" + Col2.Width);
+             
         }
 
         private void button_Click_1(object sender, RoutedEventArgs e)
         {
 
-            Console.WriteLine("\n\n\nCol2 MaxWidth:" + Col2.MaxWidth);
+            FileStream myFileStream = new FileStream(@"D:\Desktop\ttt.bin", FileMode.Create);
+            //建立 BinaryFormatter 物件
+            BinaryFormatter myBinaryFormatter = new BinaryFormatter();
+            
+            myBinaryFormatter.Serialize(myFileStream, MainViewModel.Data);
 
-            Console.WriteLine("\nMain  Width:" + MainGrid.Width);
-            Console.WriteLine("\nMain  ActualWidth:" + MainGrid.ActualWidth);
-            Console.WriteLine("\nCol0  Width:" + Col0.Width);            
-            Console.WriteLine("\nCol0  ActualWidth:" + Col0.ActualWidth);
-            Console.WriteLine("\nCol1  Width:" + Col1.Width);
-            Console.WriteLine("\nCol1  ActualWidth:" + Col1.ActualWidth);
-            Console.WriteLine("\nCol2  Width:" + Col2.Width);
-            Console.WriteLine("\nCol2  ActualWidth:" + Col2.ActualWidth);
+            myFileStream.Close();
+
+
+            //// 反序列化，從檔案取出資料成員           
+            //FileStream myFileStream = new FileStream(@"D:\Desktop\ttt.bin", FileMode.Open);
+            //BinaryFormatter myBinaryFormatter = new BinaryFormatter();
+
+            //ProjectData
+            //mydata = (ProjectData)
+            //    myBinaryFormatter.Deserialize(myFileStream);
+            //myFileStream.Close();
+            //// 於控制臺輸出資料			
+            //Console.WriteLine(mydata.Name);
+            //Console.WriteLine(mydata.Id);
+            //Console.WriteLine(mydata.Institution);
+
+
+
+
+            //Console.WriteLine("\n\n\nCol2 MaxWidth:" + Col2.MaxWidth);
+            //Console.WriteLine("\nMain  Width:" + MainGrid.Width);
+            //Console.WriteLine("\nMain  ActualWidth:" + MainGrid.ActualWidth);
+            //Console.WriteLine("\nCol0  Width:" + Col0.Width);            
+            //Console.WriteLine("\nCol0  ActualWidth:" + Col0.ActualWidth);
+            //Console.WriteLine("\nCol1  Width:" + Col1.Width);
+            //Console.WriteLine("\nCol1  ActualWidth:" + Col1.ActualWidth);
+            //Console.WriteLine("\nCol2  Width:" + Col2.Width);
+            //Console.WriteLine("\nCol2  ActualWidth:" + Col2.ActualWidth);
         }
 
         private void button_Click_2(object sender, RoutedEventArgs e)

@@ -40,9 +40,10 @@
             <ColumnDefinition x:Name="Col2" Width="5*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="25*"/>
             <RowDefinition Height="4"/>
-            <RowDefinition Height="8*"/>
+            <RowDefinition Height="180*"/>
+            <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
         <TabControl  SelectedIndex="{Binding Path = TabIndex}"  Margin="0,0,0,0" OpacityMask="Black" Grid.Column="3" Grid.Row="2" BorderThickness="0">
             <TabControl.Background>
@@ -65,7 +66,7 @@
                         <GradientStop Color="#FF343333" Offset="1"/>
                     </LinearGradientBrush>
                 </TabItem.Background>
-                <Border BorderThickness="2" BorderBrush="#FFF0F0F0" CornerRadius="3" Margin="-1">
+                <Border BorderThickness="2" BorderBrush="#FFF0F0F0" CornerRadius="3" Margin="0">
                     <Grid  Margin="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
@@ -84,7 +85,7 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Controls:CameraWrapper>
-                        <Controls:CameraWrapper x:Name="CamHost2" Grid.Column="2"  Grid.Row="1"  Margin="-1,0,0,0" Loaded="CamHost2_Loaded">
+                        <Controls:CameraWrapper x:Name="CamHost2" Grid.Column="2"  Grid.Row="1"  Margin="0" Loaded="CamHost2_Loaded">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Loaded">
                                     <i:InvokeCommandAction Command="{Binding CameraTwoLoadedCommand}" />
@@ -110,9 +111,9 @@
             </TabItem>
         </TabControl>
 
-        <Label x:Name="PointLabel" Content="{Binding Path = PointNumber}" Margin="0,406,0,0" VerticalAlignment="Top" Height="162" FontSize="20" Grid.Row="2" Grid.ColumnSpan="2"/>
+        
         <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="4" Background="White" Grid.Row="1" Margin="0"/>
-        <GridSplitter  Margin="0,0,0,0"  Grid.Row="2" Grid.Column="2"  Style="{DynamicResource VerticalGridSplitter}" Background="#FF6A6A6A" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Width="Auto" />
+        <GridSplitter  Margin="0,0,0,0"  Grid.Row="2" Grid.Column="2"  Style="{DynamicResource VerticalGridSplitter}" Background="#FF6A6A6A" HorizontalAlignment="Stretch"  Width="Auto" />
 
         <ScrollViewer  Margin="0,0,0,0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Grid.Column="1" Grid.Row="2" >
             <!--<ScrollViewer.Background>
@@ -282,9 +283,9 @@
             </ScrollViewer.Background>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="25*"/>
                     <RowDefinition Height="4"/>
-                    <RowDefinition Height="8*"/>
+                    <RowDefinition Height="180*"/>
                 </Grid.RowDefinitions>
                 <Border Grid.RowSpan="3" BorderBrush="White" BorderThickness="0,0,2,0">
                     <Button x:Name="button5_Copy" Content="Button" VerticalAlignment="Top" Click="button_Click_1" Height="18" Margin="0,14,169,0" HorizontalAlignment="Right" Width="57"/>
@@ -341,10 +342,18 @@
                 </EventTrigger>
             </Button.Triggers>-->
         </Button>
-        <Button x:Name="button5" Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="228,28,0,0" VerticalAlignment="Top" Width="74" Click="button_Click_1" Height="18"/>
         <Button x:Name="button5_Copy1" Content="Button" Grid.Column="3" HorizontalAlignment="Left" Margin="109,49,0,0" VerticalAlignment="Top" Width="74" Click="button_Click_1" Height="18"/>
-
-        <!--<GridSplitter Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch"  Background="Transparent" Margin="0"/>-->
+        <Border BorderThickness="0"  Grid.ColumnSpan="4" Margin="0,0,0,0" Grid.Row="3" Background="#FF007ACC">
+            <StatusBar Background="{x:Null}" Foreground="White" FontSize="13" >
+                <StatusBarItem HorizontalAlignment="Left" >
+                    <StackPanel Orientation="Horizontal"  >
+                        <TextBlock Text="Ready" VerticalAlignment="Center" />
+                        <TextBlock x:Name="PointLabel"  Foreground="White" Text="{Binding Path = PointNumber}"  VerticalAlignment="Center" Margin="100,0,0,0" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </StatusBarItem>
+            </StatusBar>
+        </Border>
+            <!--<GridSplitter Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch"  Background="Transparent" Margin="0"/>-->
 
     </Grid>
 </Window>

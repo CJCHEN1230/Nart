@@ -390,7 +390,7 @@ namespace Nart
 
             MultiAngleViewModel.ResetCameraPosition();
 
-            MainViewModel.Data.IsNavigationSetted = true;
+            MainViewModel.Data.IsNavigationSet = true;
 
             _navigateView.Hide();
         }

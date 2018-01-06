@@ -60,7 +60,7 @@ namespace Nart.Control
 
             }
         }
-        public void BindBoneCollection(Projectata data)
+        public void BindBoneCollection(ProjectData data)
         {
             //將data中的BoneCollection綁到此控制項的item上面   
             Binding binding = new Binding("BoneCollection");

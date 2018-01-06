@@ -1263,7 +1263,7 @@ namespace Nart
 
                 //以下這段計算導航小球的距離 
                 ObservableCollection <BallModel> ballCollection = MainViewModel.Data.BallCollection;
-                Projectata data = MainViewModel.Data;
+                ProjectData data = MainViewModel.Data;
 
 
                 //當選擇的是先導航上顎且在第一個階段  或  選擇先導航下顎但已經在第二階段

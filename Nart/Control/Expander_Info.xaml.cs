@@ -25,7 +25,7 @@ namespace Nart.Control
             InitializeComponent();
         }
 
-        public void BindPatientInfo(Projectata data)
+        public void BindPatientInfo(ProjectData data)
         {
 
             SetBinding(data, NameTB, "Name", TextBlock.TextProperty, BindingMode.TwoWay);

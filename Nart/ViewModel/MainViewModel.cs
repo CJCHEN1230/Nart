@@ -24,7 +24,7 @@ namespace Nart
     /// </summary>
     public class MainViewModel : ObservableObject
     {
-        public static Projectata Data = new Projectata();
+        public static ProjectData Data = new ProjectData();
         public CameraControl CamCtrl;
         public NartServer Server= new NartServer();
         private readonly MainView _mainWindow;

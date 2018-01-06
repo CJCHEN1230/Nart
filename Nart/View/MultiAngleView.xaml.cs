@@ -42,7 +42,7 @@ namespace Nart
         private void button_Click(object sender, RoutedEventArgs e)
         {
             //確定已經設定導航資訊，且已經有按Tracking的情形
-            if (!MainViewModel.Data.IsNavigationSetted || !CameraControl.TrackToggle)
+            if (!MainViewModel.Data.IsNavigationSet || !CameraControl.TrackToggle)
                 return;
 
             string firstNavigation = MainViewModel.Data.FirstNavigation;
@@ -134,7 +134,7 @@ namespace Nart
         private void button_Copy_Click(object sender, RoutedEventArgs e)
         {
             //確定已經註冊的情況
-            if (!MainViewModel.Data.IsNavigationSetted || !MainViewModel.Data.IsFirstStage || !CameraControl.TrackToggle )
+            if (!MainViewModel.Data.IsNavigationSet || !MainViewModel.Data.IsFirstStage || !CameraControl.TrackToggle )
                 return;
             string firstNavigation = MainViewModel.Data.FirstNavigation;
 
