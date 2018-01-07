@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using HelixToolkit.Wpf.SharpDX;
@@ -21,7 +22,8 @@ namespace Nart.Model_Object
     using System.Windows.Media;
     using Color = System.Windows.Media.Color;
     using Quaternion = System.Windows.Media.Media3D.Quaternion;
-    public class BoneModel : MeshGeometryModel3D,  INotifyPropertyChanged
+    [Serializable]
+    public class BoneModel : MeshGeometryModel3D,  INotifyPropertyChanged, ISerializable
     {
         /// <summary>
         /// 讀檔時存模型的容器，方便之後算BoundingBox
@@ -50,7 +52,7 @@ namespace Nart.Model_Object
         /// <summary>
         /// MarkerID 的值
         /// </summary>
-        public string MarkerId;
+        public string MarkerId = "";
         /// <summary>
         /// 所屬綁定的骨頭部位
         /// </summary>
@@ -85,9 +87,35 @@ namespace Nart.Model_Object
         /// </summary>
         private int _currentIndex = 0;
 
+        public BoneModel()
+        {
+        }
+
+        public BoneModel(SerializationInfo info, StreamingContext context)
+        {
+            IsRendering = (bool)info.GetValue("IsRendering", typeof(bool));
+            SafeFileName = (string)info.GetValue("SafeFileName", typeof(string));
+            MarkerId = (string)info.GetValue("MarkerId", typeof(string));
+            ModelCenter.X = (float)info.GetValue("ModelCenter_X", typeof(float));
+            ModelCenter.Y = (float)info.GetValue("ModelCenter_Y", typeof(float));
+            ModelCenter.Z = (float)info.GetValue("ModelCenter_Z", typeof(float));
+            IsTransformApplied = (bool)info.GetValue("IsTransformApplied", typeof(bool));
+            ModelType = (ModelType)info.GetValue("ModelType", typeof(ModelType));
+            Matrix3D matrix = new Matrix3D();
+            matrix.M11 = (double)info.GetValue("M11", typeof(double)); matrix.M12 = (double)info.GetValue("M12", typeof(double)); matrix.M13 = (double)info.GetValue("M13", typeof(double)); matrix.M14 = (double)info.GetValue("M14", typeof(double));
+            matrix.M21 = (double)info.GetValue("M21", typeof(double)); matrix.M22 = (double)info.GetValue("M22", typeof(double)); matrix.M23 = (double)info.GetValue("M23", typeof(double)); matrix.M24 = (double)info.GetValue("M24", typeof(double));
+            matrix.M31 = (double)info.GetValue("M31", typeof(double)); matrix.M32 = (double)info.GetValue("M32", typeof(double)); matrix.M33 = (double)info.GetValue("M33", typeof(double)); matrix.M34 = (double)info.GetValue("M34", typeof(double));
+            matrix.OffsetX = (double)info.GetValue("M41", typeof(double)); matrix.OffsetY = (double)info.GetValue("M42", typeof(double)); matrix.OffsetZ = (double)info.GetValue("M43", typeof(double)); matrix.M44 = (double)info.GetValue("M44", typeof(double));
+            Transform = new MatrixTransform3D(matrix);
+            Color boneColor = new Color();
+            boneColor.A = (byte)info.GetValue("boneColor_A", typeof(byte));
+            boneColor.R = (byte)info.GetValue("boneColor_R", typeof(byte));
+            boneColor.G = (byte)info.GetValue("boneColor_G", typeof(byte));
+            boneColor.B = (byte)info.GetValue("boneColor_B", typeof(byte));
+            BoneDiffuseColor = boneColor;
+        }
 
 
-        
         public string FilePath
         {
             get
@@ -301,7 +329,7 @@ namespace Nart.Model_Object
                 transform.OffsetY = _finalTranslation.Y;
                 transform.OffsetZ = _finalTranslation.Z;
 
-                Transform = new MatrixTransform3D(transform );
+                Transform = new MatrixTransform3D(transform);
             }
         }
 
@@ -389,7 +417,10 @@ namespace Nart.Model_Object
 
             IsLoaded = true;
         }
-        public void SaveModel()
+        /// <summary>
+        /// 儲存模型檔案，第一個參數指定路徑，第二個參數指定是否要儲存轉移後的模型
+        /// </summary>
+        public void SaveModel(string filepath , bool isSavedTransform)
         {
 
             HelixToolkit.Wpf.SharpDX.MeshGeometry3D geometry= Geometry as HelixToolkit.Wpf.SharpDX.MeshGeometry3D;
@@ -421,13 +452,17 @@ namespace Nart.Model_Object
             GeometryModel3D model = new GeometryModel3D
             {
                 Geometry = mesh,
-                Transform = Transform
+
             };
+            if (isSavedTransform)
+            {
+                model.Transform = Transform;
+            }
 
 
             StlExporter export = new StlExporter();
-            string name = Path.GetFileName(FilePath);
-            using (var fileStream = File.Create("D:\\Desktop\\test\\"+ name+".stl"))
+            
+            using (var fileStream = File.Create(System.IO.Path.Combine(filepath, SafeFileName)))
             {
                 export.Export(model, fileStream);
             }
@@ -435,7 +470,26 @@ namespace Nart.Model_Object
        
 
         }
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("IsRendering", IsRendering);
+            info.AddValue("SafeFileName", SafeFileName);
+            info.AddValue("MarkerId", MarkerId);
+            info.AddValue("ModelCenter_X", ModelCenter.X);
+            info.AddValue("ModelCenter_Y", ModelCenter.Y);
+            info.AddValue("ModelCenter_Z", ModelCenter.Z);
+            info.AddValue("IsTransformApplied", IsTransformApplied);
+            info.AddValue("ModelType", ModelType);
+            info.AddValue("M11", Transform.Value.M11); info.AddValue("M12", Transform.Value.M12); info.AddValue("M13", Transform.Value.M13); info.AddValue("M14", Transform.Value.M14);
+            info.AddValue("M21", Transform.Value.M21); info.AddValue("M22", Transform.Value.M22); info.AddValue("M23", Transform.Value.M23); info.AddValue("M24", Transform.Value.M24);
+            info.AddValue("M31", Transform.Value.M31); info.AddValue("M32", Transform.Value.M32); info.AddValue("M33", Transform.Value.M33); info.AddValue("M34", Transform.Value.M34);
+            info.AddValue("M41", Transform.Value.OffsetX); info.AddValue("M42", Transform.Value.OffsetY); info.AddValue("M43", Transform.Value.OffsetZ); info.AddValue("M44", Transform.Value.M44);
+            info.AddValue("boneColor_A", BoneDiffuseColor.A);
+            info.AddValue("boneColor_R", BoneDiffuseColor.R);
+            info.AddValue("boneColor_G", BoneDiffuseColor.G);
+            info.AddValue("boneColor_B", BoneDiffuseColor.B);
 
+        }
 
 
 
@@ -455,5 +509,6 @@ namespace Nart.Model_Object
             return true;
         }
 
-}
+        
+    }
 }

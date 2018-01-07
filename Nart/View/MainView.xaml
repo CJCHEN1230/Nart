@@ -353,7 +353,9 @@
                 </StatusBarItem>
             </StatusBar>
         </Border>
-            <!--<GridSplitter Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch"  Background="Transparent" Margin="0"/>-->
+        <Button x:Name="button2" Content="Save" Grid.Column="3" HorizontalAlignment="Left" Margin="267,28,0,0" VerticalAlignment="Top" Width="80" Height="68" Click="SaveClick"/>
+        <Button x:Name="button2_Copy" Content="Load" Grid.Column="3" HorizontalAlignment="Left" Margin="377,28,0,0" VerticalAlignment="Top" Width="80" Height="68" Click="LoadClick"/>
+        <!--<GridSplitter Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch"  Background="Transparent" Margin="0"/>-->
 
     </Grid>
 </Window>

@@ -29,7 +29,6 @@ namespace Nart
         public bool IsSecondStage = false;
         public bool IsFinished = false;
         public string FirstNavigation = "Maxilla";
-       
 
         private bool _canSelectPoints = false;
         private string _selectPointState = "OFF";
@@ -43,7 +42,7 @@ namespace Nart
         public ProjectData(SerializationInfo info, StreamingContext context)
         {
             Name = (string)info.GetValue("Name", typeof(string));
-            Id = (string)info.GetValue("Id", typeof(string));
+            ID = (string)info.GetValue("ID", typeof(string));
             Institution = (string)info.GetValue("Institution", typeof(string));
             RegFilePath = (string)info.GetValue("RegFilePath", typeof(string));
             IsRegInitialized = (bool)info.GetValue("IsRegInitialized", typeof(bool));
@@ -53,123 +52,64 @@ namespace Nart
             IsFinished = (bool)info.GetValue("IsFinished", typeof(bool));
             FirstNavigation = (string)info.GetValue("FirstNavigation", typeof(string));
 
+
+            int count = (int)info.GetValue("BallCollection_Count", typeof(int));
+
+            ObservableCollection<BallModel> ballCollection = new ObservableCollection<BallModel>();
+
+            for (int i = 0; i < count; i++)
+            {
+                BallModel ballModel = (BallModel)info.GetValue("BallCollection_" + i, typeof(BallModel));
+                ballModel.CreateBall();
+                ballCollection.Add(ballModel);
+            }
+            BallCollection=ballCollection;
+
+            count = (int)info.GetValue("BoneCollection_Count", typeof(int));
+            ObservableCollection<BoneModel> boneCollection = new ObservableCollection<BoneModel>();
+            for (int i = 0; i < count; i++)
+            {
+                BoneModel boneModel = (BoneModel)info.GetValue("BoneCollection_"+i, typeof(BoneModel));
+                boneCollection.Add(boneModel);
+            }
+            BoneCollection = boneCollection;
         }
 
-
-        private void SerializeBinary()
+        public void UpdateData(ProjectData projectData)
         {
-            //Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            //dlg.FileName = "Dsgn_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".dsgn";
-            //dlg.DefaultExt = ".dsgn";
-            //dlg.Filter = "GB Design Project Files (.dsgn)|*.dsgn";
-            //Nullable<bool> result = dlg.ShowDialog();
 
-            string FileName= "D:\\Desktop\\test.nart";
-            // 建立檔案資料流物件
-            using (FileStream fileStream = new FileStream(FileName, FileMode.Create, FileAccess.Write))
+            this.Name = projectData.Name;
+            this.ID = projectData.ID;
+            this.Institution = projectData.Institution;
+            this.RegFilePath = projectData.RegFilePath;
+            this.IsRegInitialized = projectData.IsRegInitialized;
+            this.IsNavigationSet = projectData.IsNavigationSet; 
+            this.IsFirstStage = projectData.IsFirstStage;
+            this.IsSecondStage = projectData.IsSecondStage;
+            this.IsFinished = projectData.IsFinished;
+            this.FirstNavigation = projectData.FirstNavigation;
+
+            this.BallCollection.Clear();
+            for (int i = 0; i < projectData.BallCollection.Count; i++)
             {
-                // 建立 BinaryFormatter 物件
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
-
-                // 將物件進行二進位序列化，並且儲存檔案
-                binaryFormatter.Serialize(fileStream, this);
-            }
-            // 將序列化後的檔案內容呈現到表單畫面
-            StringBuilder sbContent = new StringBuilder();
-
-            foreach (var byteData in File.ReadAllBytes(FileName))
-            {
-                sbContent.Append(byteData);
-                sbContent.Append(" ");
+                BallModel ballModel = projectData.BallCollection[i];
+                this.BallCollection.Add(ballModel);
             }
 
-
-            Console.WriteLine(File.ReadAllText(FileName));
-        }
-        /// <summary>
-        /// 使用 BinaryFormatter 進行還原序列化
-        /// </summary>
-        /// <returns></returns>
-        private ProjectData DeserializeBinary()
-        {
-            // 建立 ProjectData 類別物件
-            ProjectData clsSerializable = null;
-
-            string FileName = "D:\\Desktop\\test.nart";
-            // 建立檔案資料流物件
-            using (FileStream fileStream = new FileStream(FileName, FileMode.Open))
+            this.BoneCollection.Clear();
+            for (int i = 0; i < projectData.BoneCollection.Count; i++)
             {
-                // 建立 BinaryFormatter 物件
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
-
-                // 將檔案內容還原序列化成 Object 物件，並且進一步轉型成正確的型別
- 
-                clsSerializable = (ProjectData)binaryFormatter.Deserialize(fileStream);
+                BoneModel boneModel = projectData.BoneCollection[i];
+                this.BoneCollection.Add(boneModel);
             }
-            return clsSerializable;
-        }
-      
-        /// <summary>
-        /// 使用 SoapFormatter 進行序列化
-        /// </summary>
-        private void SerializeSoap()
-        {
-            // 建立 ProjectData 類別物件
-            ProjectData clsSerializable = new ProjectData();
-            string FileName = "D:\\Desktop\\test.nart";
-            // 建立檔案資料流物件
-            using (FileStream fileStream = new FileStream(FileName, FileMode.Create, FileAccess.Write))
-            {
-                // 建立 SoapFormatter 物件
-                SoapFormatter soapFormatter = new SoapFormatter();
-
-                // 將物件進行 SOAP 序列化，並且儲存檔案
-                soapFormatter.Serialize(fileStream, clsSerializable);
-            }
-
-            // 將序列化後的檔案內容呈現到表單畫面
-            Console.WriteLine(File.ReadAllText(FileName));
+            
         }
 
-        /// <summary>
-        /// 使用 SoapFormatter 進行還原序列化
-        /// </summary>
-        /// <returns></returns>
-        private ProjectData DeserializeSoap()
-        {
-            // 建立 ProjectData 類別物件
-            ProjectData clsSerializable = null;
-            string FileName = "D:\\Desktop\\test.nart";
-            // 建立檔案資料流物件
-            using (FileStream fileStream = new FileStream(FileName, FileMode.Open))
-            {
-                // 建立 SoapFormatter 物件
-                SoapFormatter soapFormatter = new SoapFormatter();
-
-                // 將檔案內容還原序列化成 Object 物件，並且進一步轉型成正確的型別
-                  clsSerializable = (ProjectData)soapFormatter.Deserialize(fileStream);
-                
-            }
-            return clsSerializable;
-        }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            //private string _name = "蔡慧君";
-            //private string _id = "123456";
-            //private string _institution = "成大";
-            //private string _regFilePath = "../../../data/蔡慧君測試用.txt";
-
-            //public bool IsRegInitialized = false;
-            //public bool IsNavigationSet = false;
-            //public bool IsFirstStage = false;
-            //public bool IsSecondStage = false;
-            //public bool IsFinished = false;
-            //public string FirstNavigation = "Maxilla";
-
-
             info.AddValue("Name", Name);
-            info.AddValue("Id", Id);
+            info.AddValue("ID", ID);
             info.AddValue("Institution", Institution);
             info.AddValue("RegFilePath", RegFilePath);
             info.AddValue("IsRegInitialized", IsRegInitialized);
@@ -179,7 +119,18 @@ namespace Nart
             info.AddValue("IsFinished", IsFinished);
             info.AddValue("FirstNavigation", FirstNavigation);
 
+            info.AddValue("BallCollection_Count", BallCollection.Count);
+            for (int i = 0; i < BallCollection.Count; i++)
+            {
+                info.AddValue("BallCollection_" + i, BallCollection[i]);
+            }
 
+            info.AddValue("BoneCollection_Count", BoneCollection.Count);
+            for (int i = 0; i < BoneCollection.Count; i++) 
+            {
+                info.AddValue("BoneCollection_"+ i, BoneCollection[i]);
+            }
+            
 
         }
 
@@ -203,7 +154,7 @@ namespace Nart
                 SetValue(ref _name, value);
             }
         }
-        public string Id
+        public string ID
         {
             get
             {

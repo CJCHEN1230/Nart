@@ -47,17 +47,6 @@ namespace Nart
             _multiview = multiview;           
             SetLight();
             SetCamera();
-
-            
-            Binding binding = new Binding("BallCollection");
-            binding.Source = MainViewModel.Data;
-            binding.Mode = BindingMode.OneWay;
-            BindingOperations.SetBinding(multiview.BallCollection, ItemsModel3D.ItemsSourceProperty, binding);
-
-            Binding binding2 = new Binding("BoneCollection");
-            binding2.Source = MainViewModel.Data;
-            binding2.Mode = BindingMode.OneWay;
-            BindingOperations.SetBinding(multiview.BoneCollection, ItemsModel3D.ItemsSourceProperty, binding2);
         }
 
         /// <summary>
@@ -416,7 +405,7 @@ namespace Nart
                 double length = 1.5 * Math.Sin(theta);
                 Vector3 ballCenter = new Vector3(Convert.ToSingle(point2.X + length * normal.X),
                     Convert.ToSingle(point2.Y + length * normal.Y), Convert.ToSingle(point2.Z + length * normal.Z));
-                ball.Center = ballCenter;
+                ball.BallCenter = ballCenter;
                 ball.BallInfo = "X:" + Math.Round(ballCenter.X, 2) + "    Y:" + Math.Round(ballCenter.Y, 2) +
                                 "    Z:" + Math.Round(ballCenter.Z, 2);
 

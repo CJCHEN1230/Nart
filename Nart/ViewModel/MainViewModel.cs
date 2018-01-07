@@ -50,7 +50,7 @@ namespace Nart
 
             BindPatientData();
             BindBallData();
-            BindBondData();
+            BindBoneData();
 
             //mainWindow.ExpanderInfo.BindPatientInfo(Data);
             //mainWindow.ExpanderNavigationBalls .BindBallCollection(Data);
@@ -315,17 +315,29 @@ namespace Nart
             binding3.Source = Data;
             binding3.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.stateTB, TextBlock.TextProperty, binding3);
+
+            Binding binding4 = new Binding("BallCollection");
+            binding4.Source = Data;
+            binding4.Mode = BindingMode.OneWay;
+            BindingOperations.SetBinding(_mainWindow.multiAngleView.BallCollection, ItemsModel3D.ItemsSourceProperty, binding4);
+
+
         }
         /// <summary>
         /// Bind bone Model expander裡面的listview 
         /// </summary>
-        private void BindBondData()
+        private void BindBoneData()
         {
             //將data中的BoneCollection綁到此控制項的item上面   
             Binding binding = new Binding("BoneCollection");
             binding.Source = Data;
             binding.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.BoneListView, ItemsControl.ItemsSourceProperty, binding);
+
+            Binding binding2 = new Binding("BoneCollection");
+            binding2.Source = MainViewModel.Data;
+            binding2.Mode = BindingMode.OneWay;
+            BindingOperations.SetBinding(_mainWindow.multiAngleView.BoneCollection, ItemsModel3D.ItemsSourceProperty, binding2);
         }
 
 

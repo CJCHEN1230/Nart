@@ -1280,8 +1280,8 @@ namespace Nart
                             Vector3 outputDistance;
                             Matrix mat3 = Matrix3DExtensions.ToMatrix(movedTriangle.Transform.Value);
 
-                            Vector3.TransformCoordinate(ref model.Center, ref mat3, out outputPoint);
-                            Vector3.Subtract(ref model.Center, ref outputPoint, out outputDistance);
+                            Vector3.TransformCoordinate(ref model.BallCenter, ref mat3, out outputPoint);
+                            Vector3.Subtract(ref model.BallCenter, ref outputPoint, out outputDistance);
                             
 
                             
@@ -1310,8 +1310,8 @@ namespace Nart
                             Vector3 outputDistance;
                             Matrix mat3 = Matrix3DExtensions.ToMatrix(movedTriangle.Transform.Value);
 
-                            Vector3.TransformCoordinate(ref model.Center, ref mat3, out outputPoint);
-                            Vector3.Subtract(ref model.Center, ref outputPoint, out outputDistance);
+                            Vector3.TransformCoordinate(ref model.BallCenter, ref mat3, out outputPoint);
+                            Vector3.Subtract(ref model.BallCenter, ref outputPoint, out outputDistance);
                             float distance = outputDistance.Length();
 
                             ballDistanceInfo += "\n" + model.BallName.PadLeft(10) +
