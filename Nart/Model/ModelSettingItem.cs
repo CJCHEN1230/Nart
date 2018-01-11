@@ -1,7 +1,6 @@
 ﻿using HelixToolkit.Wpf;
 using HelixToolkit.Wpf.SharpDX;
 using HelixToolkit.Wpf.SharpDX.Core;
-using NartControl;
 using SharpDX;
 using System;
 using System.Collections.Generic;
@@ -59,8 +58,6 @@ namespace Nart
         /// combobox選項的內容
         /// </summary>
         private List<string> _comboboxList = MarkerDatabase.MarkerIdList;
-
-
         /// <summary>
         /// 設定好模型之後Load進去模型資料所用
         /// </summary>
@@ -85,7 +82,6 @@ namespace Nart
             }
 
         }
-
         public string BoneFilePath
         {
             get

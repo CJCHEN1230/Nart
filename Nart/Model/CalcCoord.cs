@@ -44,9 +44,13 @@ namespace Nart
         /// FH平面座標系的旋轉矩陣
         /// </summary>
         public Matrix3D FHCoord;
-        //在註冊時存取下來算平均值用的頭部世界座標資料，可容納數量也是用來計算平均值所取的數量
+        /// <summary>
+        ///在註冊時存取下來算平均值用的頭部世界座標資料，可容納數量也是用來計算平均值所取的數量
+        /// </summary>
         private readonly List<Point3D[]> _headMarkerStack = new List<Point3D[]>(10);
-        //在註冊時存取下來算平均值用的咬板世界座標資料，可容納數量也是用來計算平均值所取的數量
+        /// <summary>
+        ///在註冊時存取下來算平均值用的咬板世界座標資料，可容納數量也是用來計算平均值所取的數量
+        /// </summary>
         private readonly List<Point3D[]> _splintMarkerStack = new List<Point3D[]>(10);
         /// <summary>
         ///兩台相機參數
@@ -150,8 +154,7 @@ namespace Nart
 
             plainCenter = _camParam[0].InvExtParam.Transform(plainCenter);
 
-            //Base line
-            //Vector3D vec_x = new Vector3D(LensCenter[0].X - LensCenter[1].X, LensCenter[0].Y - LensCenter[1].Y, LensCenter[0].Z - LensCenter[1].Z);
+            //Base line            
             Vector3D vecX = new Vector3D(LensCenter[1].X - LensCenter[0].X, LensCenter[1].Y - LensCenter[0].Y, LensCenter[1].Z - LensCenter[0].Z);
 
             vecX.Normalize();
@@ -412,58 +415,58 @@ namespace Nart
            // _meanFilter.CreatePointStack(Database);
         }
         /// <summary>
-        /// 傳入兩組三個點所組成的座標系，回傳轉換矩陣
+        /// 傳入兩組三個點，任意對準座標軸，回傳轉移矩陣
         /// </summary>
-        //private Matrix3D TransformCoordinate(ref Point3D[] a,ref Point3D[] b)
-        //{          
-        //    List<Point3D[]> twoPoints = new List<Point3D[]>(2) { a, b };
-        //    Point3D[] avg = new Point3D[2];
-        //    Vector3D[] u = new Vector3D[2];
-        //    Vector3D[] v = new Vector3D[2];
-        //    Vector3D[] w = new Vector3D[2];
+        private Matrix3D OriginalTransformCoordinate(ref Point3D[] a, ref Point3D[] b)
+        {
+            List<Point3D[]> twoPoints = new List<Point3D[]>(2) { a, b };
+            Point3D[] avg = new Point3D[2];
+            Vector3D[] u = new Vector3D[2];
+            Vector3D[] v = new Vector3D[2];
+            Vector3D[] w = new Vector3D[2];
 
-        //    Parallel.For(0, twoPoints.Count , i =>
-        //    {
-        //        avg[i] = new Point3D((twoPoints[i][0].X + twoPoints[i][1].X + twoPoints[i][2].X) / 3.0, (twoPoints[i][0].Y + twoPoints[i][1].Y + twoPoints[i][2].Y) / 3.0, (twoPoints[i][0].Z + twoPoints[i][1].Z + twoPoints[i][2].Z) / 3.0);
+            Parallel.For(0, twoPoints.Count, i =>
+           {
+               avg[i] = new Point3D((twoPoints[i][0].X + twoPoints[i][1].X + twoPoints[i][2].X) / 3.0, (twoPoints[i][0].Y + twoPoints[i][1].Y + twoPoints[i][2].Y) / 3.0, (twoPoints[i][0].Z + twoPoints[i][1].Z + twoPoints[i][2].Z) / 3.0);
 
-        //        u[i] = twoPoints[i][0] - avg[i];
+               u[i] = twoPoints[i][0] - avg[i];
 
-        //        Vector3D temp = twoPoints[i][2] - avg[i];
+               Vector3D temp = twoPoints[i][2] - avg[i];
 
-        //        v[i] = Vector3D.CrossProduct(u[i], temp);
+               v[i] = Vector3D.CrossProduct(u[i], temp);
 
-        //        w[i] = Vector3D.CrossProduct(u[i], v[i]);
+               w[i] = Vector3D.CrossProduct(u[i], v[i]);
 
-        //        u[i].Normalize();
-        //        v[i].Normalize();
-        //        w[i].Normalize();
+               u[i].Normalize();
+               v[i].Normalize();
+               w[i].Normalize();
 
-        //    });
+           });
 
-        //    Matrix3D translate1 = new Matrix3D(1, 0, 0, 0,
-        //                                      0, 1, 0, 0,
-        //                                      0, 0, 1, 0,
-        //                                     -avg[0].X, -avg[0].Y, -avg[0].Z, 1);
+            Matrix3D translate1 = new Matrix3D(1, 0, 0, 0,
+                                              0, 1, 0, 0,
+                                              0, 0, 1, 0,
+                                             -avg[0].X, -avg[0].Y, -avg[0].Z, 1);
 
-        //    Matrix3D rotate1 = new Matrix3D(u[0].X, v[0].X, w[0].X, 0,
-        //                                      u[0].Y, v[0].Y, w[0].Y, 0,
-        //                                      u[0].Z, v[0].Z, w[0].Z, 0,
-        //                                     0, 0, 0, 1);
+            Matrix3D rotate1 = new Matrix3D(u[0].X, v[0].X, w[0].X, 0,
+                                              u[0].Y, v[0].Y, w[0].Y, 0,
+                                              u[0].Z, v[0].Z, w[0].Z, 0,
+                                             0, 0, 0, 1);
 
-        //    Matrix3D transform1= translate1 * rotate1;
-
-
-
-        //    Matrix3D transform2 = new Matrix3D(u[1].X, u[1].Y, u[1].Z, 0,
-        //                                       v[1].X, v[1].Y, v[1].Z, 0,
-        //                                       w[1].X, w[1].Y, w[1].Z, 0,
-        //                                     avg[1].X, avg[1].Y, avg[1].Z, 1);
-
-        //    Matrix3D finalTransform = transform1 * transform2;
+            Matrix3D transform1 = translate1 * rotate1;
 
 
-        //    return finalTransform;
-        //}
+
+            Matrix3D transform2 = new Matrix3D(u[1].X, u[1].Y, u[1].Z, 0,
+                                               v[1].X, v[1].Y, v[1].Z, 0,
+                                               w[1].X, w[1].Y, w[1].Z, 0,
+                                             avg[1].X, avg[1].Y, avg[1].Z, 1);
+
+            Matrix3D finalTransform = transform1 * transform2;
+
+
+            return finalTransform;
+        }
 
         /// <summary>
         /// 使用Kabsch algorithm做三點對三點座標轉換
@@ -515,16 +518,6 @@ namespace Nart
 
             return finalTransform;
         }
-
-
-
-
-
-
-
-
-
-
         /// <summary>
         /// 匯入原N-Art的註冊檔
         /// </summary>
@@ -620,10 +613,6 @@ namespace Nart
                 return false;
             }
         }
-        
-        
-        
-        
         /// <summary>
         /// 輸入點群資料跟指定的Marker(上、下顎、頭)ID，回傳資料庫的索引位置
         /// </summary>
@@ -638,7 +627,9 @@ namespace Nart
             }
             return -1;
         }
-
+        /// <summary>
+        /// 初始化
+        /// </summary>
         public void InitializeRegistration()
         {
             _oriWorldPoints.Clear();

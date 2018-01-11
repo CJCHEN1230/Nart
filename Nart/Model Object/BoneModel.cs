@@ -65,19 +65,35 @@ namespace Nart.Model_Object
         /// 模型路徑
         /// </summary>
         private string _filePath;
-
+        /// <summary>
+        /// 純檔名  xxx.stl
+        /// </summary>
         private string _safeFileName;
         private bool _highlight = false;
-
+        /// <summary>
+        /// 最後的旋轉矩陣
+        /// </summary>
         private Quaternion _finalRotation;
+        /// <summary>
+        /// 最後的平移矩陣
+        /// </summary>
         private Vector3D _finalTranslation;
-
+        /// <summary>
+        /// 累加的旋轉矩陣
+        /// </summary>
         private Quaternion _totalRotation = new Quaternion(0, 0, 0, 0);
+        /// <summary>
+        /// 累加的平移矩陣
+        /// </summary>
         private Vector3D _totalTranslation = new Vector3D(0, 0, 0);
-
-        private readonly Quaternion[] _rotationSet = new Quaternion[10];
-        private readonly Vector3D[] _translationSet = new Vector3D[10];
-
+        /// <summary>
+        /// 做均值濾波儲存下來旋轉矩陣的集合
+        /// </summary>
+        private readonly Quaternion[] _rotationCollection = new Quaternion[10];
+        /// <summary>
+        /// 做均值濾波儲存下來平移矩陣的集合
+        /// </summary>
+        private readonly Vector3D[] _translationCollection = new Vector3D[10];
         /// <summary>
         /// Count是在ModelTransformSet中的累積數量
         /// </summary>
@@ -90,7 +106,9 @@ namespace Nart.Model_Object
         public BoneModel()
         {
         }
-
+        /// <summary>
+        /// 將BoneModel物件反序列化的過程
+        /// </summary>
         public BoneModel(SerializationInfo info, StreamingContext context)
         {
             IsRendering = (bool)info.GetValue("IsRendering", typeof(bool));
@@ -182,9 +200,9 @@ namespace Nart.Model_Object
             }
         }
 
-      
-
-
+        /// <summary>
+        /// 將旋轉矩陣輸入，並計算最後結果在_finalTranslation、_finalRotation
+        /// </summary>     
         public void AddItem(Matrix3D item)
         {
 
@@ -236,7 +254,7 @@ namespace Nart.Model_Object
             
 
             //數量少於陣列總長度則往後加入
-            if (_count < _rotationSet.Length)
+            if (_count < _rotationCollection.Length)
             {
                 _count++;
 
@@ -261,10 +279,10 @@ namespace Nart.Model_Object
             }
             else
             {
-                _totalRotation.W = _totalRotation.W - _rotationSet[_currentIndex].W;
-                _totalRotation.X = _totalRotation.X - _rotationSet[_currentIndex].X;
-                _totalRotation.Y = _totalRotation.Y - _rotationSet[_currentIndex].Y;
-                _totalRotation.Z = _totalRotation.Z - _rotationSet[_currentIndex].Z;
+                _totalRotation.W = _totalRotation.W - _rotationCollection[_currentIndex].W;
+                _totalRotation.X = _totalRotation.X - _rotationCollection[_currentIndex].X;
+                _totalRotation.Y = _totalRotation.Y - _rotationCollection[_currentIndex].Y;
+                _totalRotation.Z = _totalRotation.Z - _rotationCollection[_currentIndex].Z;
 
                 _totalRotation.W = _totalRotation.W + rotation.W;
                 _totalRotation.X = _totalRotation.X + rotation.X;
@@ -278,9 +296,9 @@ namespace Nart.Model_Object
                 _finalRotation.Normalize();
 
 
-                _totalTranslation.X = _totalTranslation.X - _translationSet[_currentIndex].X;
-                _totalTranslation.Y = _totalTranslation.Y - _translationSet[_currentIndex].Y;
-                _totalTranslation.Z = _totalTranslation.Z - _translationSet[_currentIndex].Z;
+                _totalTranslation.X = _totalTranslation.X - _translationCollection[_currentIndex].X;
+                _totalTranslation.Y = _totalTranslation.Y - _translationCollection[_currentIndex].Y;
+                _totalTranslation.Z = _totalTranslation.Z - _translationCollection[_currentIndex].Z;
 
                 _totalTranslation.X = _totalTranslation.X + translation.X;
                 _totalTranslation.Y = _totalTranslation.Y + translation.Y;
@@ -293,17 +311,17 @@ namespace Nart.Model_Object
 
             }
 
-            _rotationSet[_currentIndex] = rotation;
-            _translationSet[_currentIndex] = translation;
+            _rotationCollection[_currentIndex] = rotation;
+            _translationCollection[_currentIndex] = translation;
 
             _currentIndex++;
-            _currentIndex = _currentIndex % _rotationSet.Length;
+            _currentIndex = _currentIndex % _rotationCollection.Length;
 
             
         }
-
-
-
+        /// <summary>
+        /// 設定轉移矩陣，將旋轉跟平移矩陣結合
+        /// </summary>   
         public void SetTransformMatrix()
         {
             if (IsTransformApplied)
@@ -332,7 +350,6 @@ namespace Nart.Model_Object
                 Transform = new MatrixTransform3D(transform);
             }
         }
-
         /// <summary>
         /// 設定模型材質
         /// </summary>        
@@ -470,6 +487,9 @@ namespace Nart.Model_Object
        
 
         }
+        /// <summary>
+        /// 序列化物件資料
+        /// </summary>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("IsRendering", IsRendering);

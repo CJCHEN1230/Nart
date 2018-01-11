@@ -26,7 +26,6 @@ using HelixToolkit.Wpf.SharpDX;
 using System.Diagnostics;
 using Nart.ExtensionMethods;
 using Nart.Model_Object;
-using NartControl;
 using System.Windows.Media.Animation;
 using SharpDX;
 using System.IO;
@@ -329,129 +328,6 @@ namespace Nart
             Col2.MinWidth = Screen.PrimaryScreen.Bounds.Width*2.0/3.0;
         }
 
-        private void SaveClick(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
-            {
-                FileName = "Nart_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".nart",
-                DefaultExt = ".nart",
-                Filter = "Nart Project Files (.nart)|*.nart"
-            };
-            bool? result = dlg.ShowDialog();
-
-            if (result == true)
-            {
-                // 建立暫存目錄
-                string fullFilePath = dlg.FileName;//完成路徑+副檔名
-
-                string projectName = System.IO.Path.GetFileNameWithoutExtension(fullFilePath);//檔名不包含副檔名
-                string filePath = System.IO.Path.GetDirectoryName(fullFilePath);//路徑
-                string tempDirectory = System.IO.Path.Combine(filePath, projectName);//路徑+檔名(不包含副檔名)
-
-                //先創建一個資料夾
-                if (System.IO.Directory.Exists(tempDirectory) == true)
-                {
-                    System.IO.Directory.Delete(tempDirectory);
-                }
-                else
-                {
-                    System.IO.Directory.CreateDirectory(tempDirectory);
-                }
-
-                // 專案檔輸出                             
-                string xmlFilePah  = System.IO.Path.Combine(tempDirectory, projectName) + ".xml";
-                                  
-                using (FileStream myFileStream = new FileStream(xmlFilePah, FileMode.Create))
-                {
-                    SoapFormatter soapFormatter = new SoapFormatter();
-                    soapFormatter.Serialize(myFileStream, MainViewModel.Data);
-                    myFileStream.Close();
-                }
-
-                foreach (BoneModel boneModel in MainViewModel.Data.BoneCollection)
-                {
-                    boneModel.SaveModel(tempDirectory, false);
-                }
-
-
-                ZipFile.CreateFromDirectory(tempDirectory, fullFilePath);
-                System.IO.Directory.Delete(tempDirectory, true);                
-            }
-        }
-        private void LoadClick(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
-            {
-                DefaultExt = ".nart",
-                Multiselect = false,
-                Filter = "Nart Project Files (.nart)|*.nart"
-            };
-
-            bool? result = dlg.ShowDialog();
-
-            if (result == true)
-            {
-                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-
-                string fullFilePath = dlg.FileName;
-
-                switch (System.IO.Path.GetExtension(fullFilePath).ToLower())
-                {
-                    //
-                    case ".nart":
-                        {
-
-                            string projectName = System.IO.Path.GetFileNameWithoutExtension(fullFilePath);//檔名不包含副檔名
-                            string filePath = System.IO.Path.GetDirectoryName(fullFilePath);//路徑
-                            string tempDirectory = System.IO.Path.Combine(filePath, projectName);//路徑+檔名(不包含副檔名)
-                            
-                            System.IO.Directory.CreateDirectory(tempDirectory);
-                            ZipFile.ExtractToDirectory(fullFilePath, tempDirectory);
-
-                            string xmlFilePath = System.IO.Path.Combine(tempDirectory, projectName + ".xml");
-                            if (!File.Exists(xmlFilePath))
-                            {
-                                return;
-                            }
-
-                            ProjectData projectData;
-                            using (FileStream myFileStream = new FileStream(xmlFilePath, FileMode.Open))
-                            {
-                                SoapFormatter soapFormatter = new SoapFormatter();
-                                projectData = (ProjectData)soapFormatter.Deserialize(myFileStream);
-                                myFileStream.Close();
-                            }
-                            
-                            foreach (BoneModel boneModel in projectData.BoneCollection)
-                            {
-                                boneModel.FilePath = System.IO.Path.Combine(tempDirectory, boneModel.SafeFileName);
-                                boneModel.LoadModel();
-                            }
-                            projectData.Name = "大家好";
-                            projectData.ID = "我很好";
-                            projectData.Institution = "成大!!!!!!!!";
-                            MainViewModel.Data.UpdateData(projectData);
-
-
-                            MultiAngleViewModel.ResetCameraPosition();
-                            //_mainViewModel
-
-
-
-                            System.IO.Directory.Delete(tempDirectory, true);
-                            break;
-                        }
-
-                }
-            }
-
-
-            Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
-
-            
-
-
-
-        }
+       
     }
 }

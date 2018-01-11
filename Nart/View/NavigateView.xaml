@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"          
-        xmlns:Converter="clr-namespace:NartControl.Converter;assembly=NartControl" 
+        xmlns:Converter="clr-namespace:Nart.Converter" 
         xmlns:Controls="clr-namespace:Nart.Control" 
         xmlns:pt ="http://propertytools.org/wpf"
         xmlns:local ="clr-namespace:Nart"

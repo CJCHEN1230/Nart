@@ -14,21 +14,19 @@ namespace Nart
     /// </summary>
     public class CraniofacialInfo
     {
-        public Point3D PoL = new Point3D();
-        public Point3D PoR = new Point3D();
-        public Point3D OrL = new Point3D();
-        public Point3D OrR = new Point3D();
-        public Point3D Me = new Point3D();
-        public Point3D GoL = new Point3D();
-        public Point3D GoR = new Point3D();
+        public Point3D PoL;
+        public Point3D PoR;
+        public Point3D OrL;
+        public Point3D OrR;
+        public Point3D Me;
+        public Point3D GoL;
+        public Point3D GoR;
         public Point3D GoIntersection;   // Go點連線與下顎對稱面的交點
-
 
         public CraniofacialInfo(string path)
         {
             LoadCranioFacialInfo(path);
         }
-
         private void LoadCranioFacialInfo(string path)
         {
             try

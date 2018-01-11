@@ -65,11 +65,20 @@
                     </hx:ItemsModel3D.ItemTemplate>
                 </hx:ItemsModel3D>
 
-                <hx:GroupModel3D ItemsSource="{Binding BoneModelCollection}"/>
-                <hx:GroupModel3D ItemsSource="{Binding TargetCollection}"/>
+                <hx:ItemsModel3D x:Name="Targetollection">
+                    <hx:ItemsModel3D.ItemTemplate>
+                        <DataTemplate>
+                            <modelObject:BoneModel                                
+                                Geometry="{Binding Geometry}"                            
+                                Material="{Binding Material}"
+                                Transform="{Binding Transform}"
+                                IsRendering="{Binding IsRendering}"/>
+                        </DataTemplate>
+                    </hx:ItemsModel3D.ItemTemplate>
+                </hx:ItemsModel3D>
+
                 <hx:GroupModel3D ItemsSource="{Binding NormalModelCollection}"/>
                 <hx:GroupModel3D ItemsSource="{Binding TriangleModelCollection}"/>
-
                 <hx:GroupModel3D ItemsSource="{Binding OspModelCollection}"/>
 
 
@@ -184,7 +193,7 @@
             </hx:Viewport3DX>
 
 
-            <Button x:Name="Stage1Button" Content="Stage1" Margin="124,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Click="button_Click" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67"/>
+            <Button x:Name="Stage1Button" Content="Stage1" Margin="124,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67"  Click="button_Click"/>
             <Button x:Name="Stage2Button" Content="Stage2" Margin="212,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67" Click="button_Copy_Click"/>
             <Button x:Name="FinishButton" Content="Finish" Margin="300,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67" Click="button_Copy_Click"/>
             <Grid Margin="0" Grid.RowSpan="3">

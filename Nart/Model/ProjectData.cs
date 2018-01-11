@@ -34,6 +34,7 @@ namespace Nart
         private string _selectPointState = "OFF";
         private  ObservableCollection<BallModel> _ballCollection=  new ObservableCollection<BallModel>();
         private  ObservableCollection<BoneModel> _boneCollection =  new ObservableCollection<BoneModel>();
+        private ObservableCollection <BoneModel> _targetCollection = new ObservableCollection<BoneModel>();
 
         public ProjectData()
         {            
@@ -54,9 +55,7 @@ namespace Nart
 
 
             int count = (int)info.GetValue("BallCollection_Count", typeof(int));
-
             ObservableCollection<BallModel> ballCollection = new ObservableCollection<BallModel>();
-
             for (int i = 0; i < count; i++)
             {
                 BallModel ballModel = (BallModel)info.GetValue("BallCollection_" + i, typeof(BallModel));
@@ -73,8 +72,17 @@ namespace Nart
                 boneCollection.Add(boneModel);
             }
             BoneCollection = boneCollection;
-        }
 
+            count = (int)info.GetValue("TargetCollection_Count", typeof(int));
+            ObservableCollection<BoneModel> targetCollection = new ObservableCollection<BoneModel>();
+            for (int i = 0; i < count; i++)
+            {
+                BoneModel targetModel = (BoneModel)info.GetValue("TargetCollection_" + i, typeof(BoneModel));
+                targetCollection.Add(targetModel);
+            }
+            TargetCollection = targetCollection;
+
+        }
         public void UpdateData(ProjectData projectData)
         {
 
@@ -102,10 +110,14 @@ namespace Nart
                 BoneModel boneModel = projectData.BoneCollection[i];
                 this.BoneCollection.Add(boneModel);
             }
-            
+
+            this.TargetCollection.Clear();
+            for (int i = 0; i < projectData.TargetCollection.Count; i++)
+            {
+                BoneModel targetModel = projectData.TargetCollection[i];
+                this.TargetCollection.Add(targetModel);
+            }
         }
-
-
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Name", Name);
@@ -130,17 +142,13 @@ namespace Nart
             {
                 info.AddValue("BoneCollection_"+ i, BoneCollection[i]);
             }
-            
 
+            info.AddValue("TargetCollection_Count", TargetCollection.Count);
+            for (int i = 0; i < TargetCollection.Count; i++)
+            {
+                info.AddValue("TargetCollection_" + i, TargetCollection[i]);
+            }
         }
-
-
-
-
-
-
-
-
 
 
         public string Name
@@ -230,6 +238,17 @@ namespace Nart
             set
             {
                 SetValue(ref _boneCollection, value);
+            }
+        }
+        public ObservableCollection<BoneModel> TargetCollection
+        {
+            get
+            {
+                return _targetCollection;
+            }
+            set
+            {
+                SetValue(ref _targetCollection, value);
             }
         }
     }

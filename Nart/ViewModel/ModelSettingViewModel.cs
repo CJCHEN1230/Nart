@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NartControl;
 using System.Windows.Media;
 using SharpDX.Direct3D11;
 using System.Windows.Controls;

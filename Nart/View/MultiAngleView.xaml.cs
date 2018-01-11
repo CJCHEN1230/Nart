@@ -102,25 +102,26 @@ namespace Nart
                 }
             }
 
+            var targetCollection = MainViewModel.Data.TargetCollection;
             //顯示出所選擇的目標模型
-            foreach (Element3D targetModel in MultiAngleViewModel.TargetCollection)
+            foreach (BoneModel targetModel in targetCollection)
             {
-                BoneModel model = targetModel as BoneModel;
-                if (model == null)                     
+             
+                if (targetModel == null)                     
                     return;
                 //骨骼名稱是不是所選的第一導引骨頭(上、下顎)，不是的話則不顯示
                 switch (firstNavigation)
                 {                        
                     case "Maxilla":
-                        if (model.ModelType == ModelType.TargetMaxilla)
+                        if (targetModel.ModelType == ModelType.TargetMaxilla)
                         {
-                            model.IsRendering = true;
+                            targetModel.IsRendering = true;
                         }
                         break;
                     case "Mandible":
-                        if (model.ModelType == ModelType.TargetMandible)
+                        if (targetModel.ModelType == ModelType.TargetMandible)
                         {
-                            model.IsRendering = true;
+                            targetModel.IsRendering = true;
                         }
                         break;
                 }
@@ -156,14 +157,12 @@ namespace Nart
 
 
 
-            foreach (Element3D targetModel in MultiAngleViewModel.TargetCollection)
-            {
-                BoneModel model = targetModel as BoneModel;
-
-                if (model != null && 
-                    (model.ModelType.Equals(ModelType.TargetMandible) || model.ModelType.Equals(ModelType.TargetMaxilla))) 
+            foreach (BoneModel targetModel in MainViewModel.Data.TargetCollection)
+            {              
+                if (targetModel != null && 
+                    (targetModel.ModelType.Equals(ModelType.TargetMandible) || targetModel.ModelType.Equals(ModelType.TargetMaxilla))) 
                 {
-                    model.IsRendering = !model.IsRendering;
+                    targetModel.IsRendering = !targetModel.IsRendering;
                 }
             }
             MainViewModel.Data.IsFirstStage = false;

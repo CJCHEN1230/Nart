@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace NartControl.Converter
-{   
-
-
-
+namespace Nart.Converter
+{
     /// <summary>
     /// Color和Brush轉換
     /// </summary>
@@ -55,26 +52,26 @@ namespace NartControl.Converter
 
         #endregion
     }
-    
+
     public class EnumMatchToBooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null || parameter == null)
                 return false;
- 
+
             string checkValue = value.ToString();
             string targetValue = parameter.ToString();
-            return checkValue.Equals(targetValue, 
+            return checkValue.Equals(targetValue,
                      StringComparison.InvariantCultureIgnoreCase);
         }
- 
-        public object ConvertBack(object value, Type targetType, 
+
+        public object ConvertBack(object value, Type targetType,
                                   object parameter, CultureInfo culture)
         {
             if (value == null || parameter == null)
                 return null;
- 
+
             bool useValue = (bool)value;
 
             if (useValue)
@@ -82,5 +79,5 @@ namespace NartControl.Converter
 
             return null;
         }
-    }   
+    }
 }

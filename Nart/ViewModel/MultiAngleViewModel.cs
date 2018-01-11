@@ -192,11 +192,6 @@ namespace Nart
         }
         public IEffectsManager EffectsManager { get; protected set; }
         public IRenderTechniquesManager RenderTechniquesManager { get; protected set; }
-        //public static ObservableCollection<Element3D> BoneModelCollection
-        //{
-        //    get;
-        //    set;
-        //} = new ObservableCollection<Element3D>();
         public static ObservableCollection<Element3D> OspModelCollection
         {
             get;
@@ -207,11 +202,11 @@ namespace Nart
             get;
             set;
         } = new ObservableCollection<Element3D>();
-        public static ObservableCollection<Element3D> TargetCollection
-        {
-            get;
-            set;
-        } = new ObservableCollection<Element3D>();
+        //public static ObservableCollection<Element3D> TargetCollection
+        //{
+        //    get;
+        //    set;
+        //} = new ObservableCollection<Element3D>();
         public static ObservableCollection<Element3D> NormalModelCollection
         {
             get;
@@ -256,17 +251,16 @@ namespace Nart
                     }
                 }
             }
-
+            var targetCollection = MainViewModel.Data.TargetCollection;
             //TargetCollection 放置上下顎的目標位置
-            if (TargetCollection != null && TargetCollection.Count != 0)
+            if (targetCollection != null && targetCollection.Count != 0)
             {
-                foreach (Element3D model in TargetCollection)
-                {
-                    BoneModel boneModel = model as BoneModel;
+                foreach (BoneModel model in targetCollection)
+                {                   
                     //如果選擇多模型但檔名是空或不存在則進不去
-                    if (boneModel?.ModelContainer != null)
+                    if (model?.ModelContainer != null)
                     {
-                        modelGroup.Children.Add(boneModel.ModelContainer);
+                        modelGroup.Children.Add(model.ModelContainer);
                     }
                 }
             }

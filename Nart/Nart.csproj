@@ -156,6 +156,7 @@
     <Compile Include="Control\ImgButton2.xaml.cs">
       <DependentUpon>ImgButton2.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converter\NartConverter.cs" />
     <Compile Include="ExtensionMethods\Point3DExtensions.cs" />
     <Compile Include="Model Object\BallModel.cs" />
     <Compile Include="Model\ModelType.cs" />
@@ -283,10 +284,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\NartControl\NartControl.csproj">
-      <Project>{9c9659d2-1de1-4446-81e1-8bdf4ed0e2b0}</Project>
-      <Name>NartControl</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UseCVLibrary\UseCVLibrary.vcxproj">
       <Project>{29f503a7-b9e8-4c31-a9eb-87cce6f88863}</Project>
       <Name>UseCVLibrary</Name>

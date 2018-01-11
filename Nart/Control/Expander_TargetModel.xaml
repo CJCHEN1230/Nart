@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Nart.Control"
-             xmlns:converter="clr-namespace:NartControl.Converter;assembly=NartControl"
+             xmlns:converter="clr-namespace:Nart.Converter"
              mc:Ignorable="d" 
              Foreground="White"
              FontSize="18"

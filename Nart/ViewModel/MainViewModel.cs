@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
-using NartControl;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Runtime.CompilerServices;
@@ -16,6 +15,9 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Media.Animation;
 using Nart.Model_Object;
+using System.IO;
+using System.IO.Compression;
+using System.Runtime.Serialization.Formatters.Soap;
 
 namespace Nart
 {
@@ -46,7 +48,8 @@ namespace Nart
             CloseWindowCommand = new RelayCommand(this.OnClosed, null);
             DeleteBallCommad = new RelayCommand(DeleteBallItem);
             DeleteBoneCommad = new RelayCommand(DeleteBoneItem);
-
+            SaveProjectCommand = new RelayCommand(SaveProject);
+            LoadProjectCommand = new RelayCommand(LoadProject);
 
             BindPatientData();
             BindBallData();
@@ -77,6 +80,9 @@ namespace Nart
                 SetStaticValue(ref _pointNumber, value);
             }
         }
+
+        public ICommand SaveProjectCommand { private set; get; }
+        public ICommand LoadProjectCommand { private set; get; }
         public ICommand SetModelCommand { private set; get; }
         public ICommand SetNavigationCommand { private set; get; }
         /// <summary>
@@ -222,6 +228,154 @@ namespace Nart
                 item?.Focus();
             }
         }
+        private void SaveProject(object o)
+        {
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
+            {
+                FileName = "Nart_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".nart",
+                DefaultExt = ".nart",
+                Filter = "Nart Project Files (.nart)|*.nart"
+            };
+            bool? result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                // 建立暫存目錄
+                string fullFilePath = dlg.FileName;//完整路徑+副檔名
+                if (File.Exists(fullFilePath))
+                {
+                    System.IO.File.Delete(fullFilePath);
+                }
+
+                string projectName = System.IO.Path.GetFileNameWithoutExtension(fullFilePath);//檔名不包含副檔名
+                string filePath = System.IO.Path.GetDirectoryName(fullFilePath);//路徑
+                string tempDirectory = System.IO.Path.Combine(filePath, projectName);//路徑+檔名(不包含副檔名)
+
+                if (File.Exists(filePath))
+                {
+                    System.IO.Directory.Delete(filePath);
+                }
+
+                //先創建一個資料夾
+                if (System.IO.Directory.Exists(tempDirectory) == true)
+                {
+                    System.IO.Directory.Delete(tempDirectory);
+                }
+                else
+                {
+                    System.IO.Directory.CreateDirectory(tempDirectory);
+                }
+
+                // 專案檔輸出                             
+                string xmlFilePah = System.IO.Path.Combine(tempDirectory, projectName) + ".xml";
+
+                using (FileStream myFileStream = new FileStream(xmlFilePah, FileMode.Create))
+                {
+                    SoapFormatter soapFormatter = new SoapFormatter();
+                    soapFormatter.Serialize(myFileStream, MainViewModel.Data);
+                    myFileStream.Close();
+                }
+
+                foreach (BoneModel boneModel in MainViewModel.Data.BoneCollection)
+                {
+                    boneModel.SaveModel(tempDirectory, false);
+                }
+
+                
+
+
+                ZipFile.CreateFromDirectory(tempDirectory, fullFilePath);
+                System.IO.Directory.Delete(tempDirectory, true);
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
+            }
+        }
+        private void LoadProject(object o)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                DefaultExt = ".nart",
+                Multiselect = false,
+                Filter = "Nart Project Files (.nart)|*.nart"
+            };
+
+            bool? result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+
+                string fullFilePath = dlg.FileName;
+
+                switch (System.IO.Path.GetExtension(fullFilePath).ToLower())
+                {
+
+                    case ".nart":
+                        {
+
+                            string projectName = System.IO.Path.GetFileNameWithoutExtension(fullFilePath);//檔名不包含副檔名
+                            string filePath = System.IO.Path.GetDirectoryName(fullFilePath);//路徑
+                            string tempDirectory = System.IO.Path.Combine(filePath, projectName);//路徑+檔名(不包含副檔名)
+
+                            Directory.CreateDirectory(tempDirectory);
+                            ZipFile.ExtractToDirectory(fullFilePath, tempDirectory);
+
+                            string xmlFilePath = System.IO.Path.Combine(tempDirectory, projectName + ".xml");
+                            if (!File.Exists(xmlFilePath))
+                            {
+                                return;
+                            }
+
+                            ProjectData projectData;
+                            using (FileStream myFileStream = new FileStream(xmlFilePath, FileMode.Open))
+                            {
+                                SoapFormatter soapFormatter = new SoapFormatter();
+                                projectData = (ProjectData)soapFormatter.Deserialize(myFileStream);
+                                myFileStream.Close();
+                            }
+
+
+                            foreach (BoneModel boneModel in projectData.BoneCollection)
+                            {
+                                //BoneModel boneModel = projectData.BoneCollection[i];
+                                boneModel.FilePath = System.IO.Path.Combine(tempDirectory, boneModel.SafeFileName);
+                                boneModel.LoadModel();
+                                if (boneModel.ModelType == ModelType.MovedMaxilla)
+                                {                                   
+                                    foreach (BoneModel targetModel in projectData.TargetCollection)
+                                    {
+                                        if (targetModel.ModelType == ModelType.TargetMaxilla)
+                                        {
+                                            targetModel.FilePath = boneModel.FilePath;
+                                            targetModel.LoadModel();
+                                        }
+                                    }
+                                }
+                                else if (boneModel.ModelType == ModelType.MovedMandible)
+                                {
+                                    foreach (BoneModel targetModel in projectData.TargetCollection)
+                                    {
+                                        if (targetModel.ModelType == ModelType.TargetMandible)
+                                        {
+                                            targetModel.FilePath = boneModel.FilePath;
+                                            targetModel.LoadModel();
+                                        }
+                                    }
+                                }
+                            }
+
+                          
+
+                            MainViewModel.Data.UpdateData(projectData);
+                            MultiAngleViewModel.ResetCameraPosition();
+                            System.IO.Directory.Delete(tempDirectory, true);
+                            break;
+                        }
+
+                }
+            }
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
+        }
         /// <summary>
         /// 將Grid回復到原始狀態 
         /// </summary>
@@ -276,6 +430,12 @@ namespace Nart
             //};
             //_mainWindow.MainGrid.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla2);
         }
+
+
+
+
+
+
         /// <summary>
         /// Bind Patient Information expander裡面的textbox 
         /// </summary>
@@ -335,9 +495,19 @@ namespace Nart
             BindingOperations.SetBinding(_mainWindow.BoneListView, ItemsControl.ItemsSourceProperty, binding);
 
             Binding binding2 = new Binding("BoneCollection");
-            binding2.Source = MainViewModel.Data;
+            binding2.Source = Data;
             binding2.Mode = BindingMode.OneWay;
             BindingOperations.SetBinding(_mainWindow.multiAngleView.BoneCollection, ItemsModel3D.ItemsSourceProperty, binding2);
+
+            Binding binding3 = new Binding("TargetCollection");
+            binding3.Source = Data;
+            binding3.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(_mainWindow.TargetModelListView, ItemsControl.ItemsSourceProperty, binding3);
+
+            Binding binding4 = new Binding("TargetCollection");
+            binding4.Source = Data;
+            binding4.Mode = BindingMode.OneWay;
+            BindingOperations.SetBinding(_mainWindow.multiAngleView.Targetollection, ItemsModel3D.ItemsSourceProperty, binding4);
         }
 
 

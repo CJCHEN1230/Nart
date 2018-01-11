@@ -1,5 +1,4 @@
-﻿using NartControl;
-using SharpDX;
+﻿using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +11,6 @@ namespace Nart
 {
     using ExtensionMethods;
     using Model_Object;
-    using System.IO;
     using System.IO;
     using System.Windows;
     using System.Windows.Data;
@@ -247,21 +245,11 @@ namespace Nart
         }
         public void LoadSettingModel(object o)
         {
-            MultiAngleViewModel.TargetCollection.Clear();
+            MainViewModel.Data.TargetCollection.Clear();
             MainViewModel.Data.BoneCollection.Clear();
             MultiAngleViewModel.OspModelCollection.Clear();
             MultiAngleViewModel.TriangleModelCollection.Clear();
-
-
-            BoneModel head = new BoneModel
-            {
-                FilePath = HeadModel,
-                MarkerId = "Head",
-                ModelType = ModelType.Head,
-                BoneDiffuseColor = HeadDiffuseColor
-            };
-            head.LoadModel();
-
+            
             //讀取原始上下顎 加上 規劃後的轉移矩陣
             Matrix plannedMatrix = ReadMatrixFile(_plannedMaxillaMatrix);
             BoneModel targetMaxilla = new BoneModel
@@ -287,13 +275,18 @@ namespace Nart
             };
             targetMandible.LoadModel();        
 
-            MultiAngleViewModel.TargetCollection.Add(head);
-            MultiAngleViewModel.TargetCollection.Add(targetMaxilla);
-            MultiAngleViewModel.TargetCollection.Add(targetMandible);
+            //MainViewModel.Data.TargetCollection.Add(head);
+            MainViewModel.Data.TargetCollection.Add(targetMaxilla);
+            MainViewModel.Data.TargetCollection.Add(targetMandible);
 
-
-
-
+            BoneModel head = new BoneModel
+            {
+                FilePath = HeadModel,
+                MarkerId = "Head",
+                ModelType = ModelType.Head,
+                BoneDiffuseColor = HeadDiffuseColor
+            };
+            head.LoadModel();
             BoneModel oriMaxilla = new BoneModel
             {
                 FilePath = MaxillaModel,
@@ -301,9 +294,7 @@ namespace Nart
                 MarkerId = "Splint",
                 BoneDiffuseColor = MaxillaDiffuseColor
             };
-            oriMaxilla.LoadModel();
-            
-
+            oriMaxilla.LoadModel();            
             BoneModel oriMandible = new BoneModel
             {
                 FilePath = MandibleModel,
@@ -313,6 +304,7 @@ namespace Nart
             };
             oriMandible.LoadModel();
 
+            MainViewModel.Data.BoneCollection.Add(head);
             MainViewModel.Data.BoneCollection.Add(oriMaxilla);
             MainViewModel.Data.BoneCollection.Add(oriMandible);
 
@@ -335,8 +327,8 @@ namespace Nart
 
             //綁定下顎對稱面到下顎模型
             SetBinding(oriMandible, mandibleOsp, "Transform", HelixToolkit.Wpf.SharpDX.Model3D.TransformProperty, BindingMode.OneWay);
-            MultiAngleViewModel.OspModelCollection.Add(headOsp);
-            MultiAngleViewModel.OspModelCollection.Add(mandibleOsp);
+            //MultiAngleViewModel.OspModelCollection.Add(headOsp);
+            //MultiAngleViewModel.OspModelCollection.Add(mandibleOsp);
 
             //標記屬於上顎的ID，綁定到目標上顎
             DraggableTriangle maxillaTargetTriangle =new DraggableTriangle(targetMaxilla.ModelCenter)                
