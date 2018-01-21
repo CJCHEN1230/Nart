@@ -327,8 +327,8 @@ namespace Nart
 
             //綁定下顎對稱面到下顎模型
             SetBinding(oriMandible, mandibleOsp, "Transform", HelixToolkit.Wpf.SharpDX.Model3D.TransformProperty, BindingMode.OneWay);
-            //MultiAngleViewModel.OspModelCollection.Add(headOsp);
-            //MultiAngleViewModel.OspModelCollection.Add(mandibleOsp);
+            MultiAngleViewModel.OspModelCollection.Add(headOsp);
+            MultiAngleViewModel.OspModelCollection.Add(mandibleOsp);
 
             //標記屬於上顎的ID，綁定到目標上顎
             DraggableTriangle maxillaTargetTriangle =new DraggableTriangle(targetMaxilla.ModelCenter)                

@@ -26,8 +26,9 @@ namespace Nart.Model_Object
 
         public ModelType ModelType;
         private string _ballName;
-        private string _ballInfo;
-
+        private string _ballXCoord;
+        private string _ballYCoord;
+        private string _ballZCoord;
 
         public HelixToolkit.Wpf.SharpDX.MeshGeometry3D ballGeometry;
         public HelixToolkit.Wpf.SharpDX.MeshGeometry3D pipeGeometry;
@@ -55,7 +56,9 @@ namespace Nart.Model_Object
             BallCenter = ballCenter;
 
             BallName = (string)info.GetValue("BallName", typeof(string));
-            BallInfo = (string)info.GetValue("BallInfo", typeof(string));
+            BallXCoord = (string)info.GetValue("BallXCoord", typeof(string));
+            BallYCoord = (string)info.GetValue("BallYCoord", typeof(string));
+            BallZCoord = (string)info.GetValue("BallZCoord", typeof(string));
             ModelType = (ModelType)info.GetValue("ModelType", typeof(ModelType));
         }
 
@@ -67,7 +70,9 @@ namespace Nart.Model_Object
             info.AddValue("BallCenter_Y", BallCenter.Y);
             info.AddValue("BallCenter_Z", BallCenter.Z);
             info.AddValue("BallName", BallName);
-            info.AddValue("BallInfo", BallInfo);
+            info.AddValue("BallXCoord", BallXCoord);
+            info.AddValue("BallYCoord", BallYCoord);
+            info.AddValue("BallZCoord", BallZCoord);
             info.AddValue("ModelType", ModelType);
         }
 
@@ -97,19 +102,42 @@ namespace Nart.Model_Object
             {
                 SetValue(ref _ballName, value);
             }
-        }
-        public string BallInfo
+        }    
+        public string BallXCoord
         {
             get
             {
-                return _ballInfo;
+                return _ballXCoord;
             }
             set
             {
-                SetValue(ref _ballInfo, value);
+                SetValue(ref _ballXCoord, value);
             }
         }
 
+        public string BallYCoord
+        {
+            get
+            {
+                return _ballYCoord;
+            }
+            set
+            {
+                SetValue(ref _ballYCoord, value);
+            }
+        }
+
+        public string BallZCoord
+        {
+            get
+            {
+                return _ballZCoord;
+            }
+            set
+            {
+                SetValue(ref _ballZCoord, value);
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName]string info = "")

@@ -54,15 +54,13 @@ namespace Nart
             margin.Right = 0;
             buttonList.Margin = margin;
 
-           
+         
 
 
             this.DataContext = _mainViewModel;
 
-            AllocConsole();
-            //int screenWidth = Screen.PrimaryScreen.Bounds.Width;
-            //int screenHeight = Screen.PrimaryScreen.Bounds.Height;
-            //Console.WriteLine("螢幕解析度為 " + screenWidth.ToString() + "*" + screenHeight.ToString());
+            //AllocConsole();
+       
         }
 
        
@@ -325,7 +323,7 @@ namespace Nart
         private void MainGrid_Loaded(object sender, RoutedEventArgs e)
         {
             Col2.MaxWidth = MainGrid.ActualWidth;
-            Col2.MinWidth = Screen.PrimaryScreen.Bounds.Width*2.0/3.0;
+            Col2.MinWidth = MainGrid.ActualWidth * 2.0/3.0;
         }
 
        
