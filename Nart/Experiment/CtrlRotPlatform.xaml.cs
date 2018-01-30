@@ -72,7 +72,7 @@ namespace Nart.Experiment
                     Console.WriteLine("\n2:" + CurWorldPoints[0].ThreeLength[1]);
                     Console.WriteLine("\n3:" + CurWorldPoints[0].ThreeLength[2]);
 
-
+                     
 
 
                     break;
