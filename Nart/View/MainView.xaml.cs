@@ -42,12 +42,12 @@ namespace Nart
     public partial class MainView : Window
     {
 
-        private MainViewModel _mainViewModel = null;
+        public MainViewModel MainViewModel = null;
         public MainView()
         {
             InitializeComponent();
 
-            _mainViewModel = new MainViewModel(this);
+            MainViewModel = new MainViewModel(this);
 
             Thickness margin = buttonList.Margin;
             margin.Left = 0;
@@ -57,9 +57,9 @@ namespace Nart
          
 
 
-            this.DataContext = _mainViewModel;
+            this.DataContext = MainViewModel;
 
-            //AllocConsole();
+            AllocConsole();
        
         }
 
@@ -76,7 +76,7 @@ namespace Nart
             if (!CamHost2.IsActivated)
             {
                 CamHost2.InitializeCamSetting(CamHost2.ActualWidth, CamHost2.ActualHeight);
-                _mainViewModel.InitCamCtrl();
+                MainViewModel.InitCamCtrl();
                 CamHost1.IsActivated = true;
                 CamHost2.IsActivated = true;
             }
@@ -176,41 +176,32 @@ namespace Nart
         private void button_Click_1(object sender, RoutedEventArgs e)
         {
 
+            SelectTB.IsEnabled = !SelectTB.IsEnabled;
 
-        
-            FileStream myFileStream = new FileStream(@"D:\Desktop\ttt2.xml", FileMode.Create);
-            //建立 BinaryFormatter 物件
-            SoapFormatter myBinaryFormatter = new SoapFormatter();
+            Console.WriteLine("SelectTB.IsEnabled:"+ SelectTB.IsEnabled);
+            //FileStream myFileStream = new FileStream(@"D:\Desktop\ttt2.xml", FileMode.Create);
+            ////建立 BinaryFormatter 物件
+            //SoapFormatter myBinaryFormatter = new SoapFormatter();
 
-            myBinaryFormatter.Serialize(myFileStream, MainViewModel.Data);
+            //myBinaryFormatter.Serialize(myFileStream, MainViewModel.Data);
 
-            myFileStream.Close();
+            //myFileStream.Close();
 
-            // 反序列化，從檔案取出資料成員           
-             myFileStream = new FileStream(@"D:\Desktop\ttt2.xml", FileMode.Open);
-             myBinaryFormatter = new SoapFormatter();
+            //// 反序列化，從檔案取出資料成員           
+            // myFileStream = new FileStream(@"D:\Desktop\ttt2.xml", FileMode.Open);
+            // myBinaryFormatter = new SoapFormatter();
 
-            ProjectData mydata = (ProjectData)
-                myBinaryFormatter.Deserialize(myFileStream);
-            
-            myFileStream.Close();
-            // 於控制臺輸出資料			
-            Console.WriteLine(mydata.Name);
-            Console.WriteLine(mydata.ID);
-            Console.WriteLine(mydata.Institution);
+            //ProjectData mydata = (ProjectData)
+            //    myBinaryFormatter.Deserialize(myFileStream);
 
-
+            //myFileStream.Close();
+            //// 於控制臺輸出資料			
+            //Console.WriteLine(mydata.Name);
+            //Console.WriteLine(mydata.ID);
+            //Console.WriteLine(mydata.Institution);
 
 
-            //Console.WriteLine("\n\n\nCol2 MaxWidth:" + Col2.MaxWidth);
-            //Console.WriteLine("\nMain  Width:" + MainGrid.Width);
-            //Console.WriteLine("\nMain  ActualWidth:" + MainGrid.ActualWidth);
-            //Console.WriteLine("\nCol0  Width:" + Col0.Width);            
-            //Console.WriteLine("\nCol0  ActualWidth:" + Col0.ActualWidth);
-            //Console.WriteLine("\nCol1  Width:" + Col1.Width);
-            //Console.WriteLine("\nCol1  ActualWidth:" + Col1.ActualWidth);
-            //Console.WriteLine("\nCol2  Width:" + Col2.Width);
-            //Console.WriteLine("\nCol2  ActualWidth:" + Col2.ActualWidth);
+
         }
 
         private void button_Click_2(object sender, RoutedEventArgs e)

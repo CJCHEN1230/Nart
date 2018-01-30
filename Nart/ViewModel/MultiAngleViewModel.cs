@@ -402,12 +402,6 @@ namespace Nart
                 ball.BallCenter = ballCenter;
 
 
-                ball.BallXCoord = "X:" + Math.Round(ballCenter.X, 2);
-                ball.BallYCoord = "Y:" + Math.Round(ballCenter.Y, 2);
-                ball.BallZCoord = "Z:" + Math.Round(ballCenter.Z, 2);
-
-
-
                 ballContainer.AddSphere(ballCenter, 1.5);
                 cylinderContainer.AddPipe(point1, point2, 2, 5, 200);
 

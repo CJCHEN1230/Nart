@@ -15,6 +15,7 @@ using UseCVLibrary;
 using Matrix = SharpDX.Matrix;
 using Matrix3DExtensions = Nart.ExtensionMethods.Matrix3DExtensions;
 using MathNet.Numerics.LinearAlgebra;
+using Nart.Experiment;
 
 namespace Nart
 {
@@ -107,6 +108,7 @@ namespace Nart
         /// </summary>
         private List<Marker3D> _msWorldPoints = new List<Marker3D>(10);
 
+        public static List<Marker3D> ForExperiment = new List<Marker3D>(10);
         //private MeanFilter _meanFilter;
 
 
@@ -318,7 +320,6 @@ namespace Nart
                             Point3D point3D = CalcWorldPoint(outputMarker[0][i].CornerPoint[k].CameraPoint, outputMarker[1][j].CornerPoint[k].CameraPoint);
                             threeWorldPoints.ThreePoints[k] = point3D;
                         });
-
                         
                         threeWorldPoints.SortedByLength(); //對計算到的3D點排序
 
@@ -332,11 +333,19 @@ namespace Nart
                     }             
                 }
             }
+
+            ForExperiment.Clear();
+            for (int i =0;i<_curWorldPoints.Count ; i++)
+            {
+                ForExperiment.Add(_curWorldPoints[i]);
+            }
+            
+            
+
             ///_meanFilter.filter(ref _curWorldPoints);
             
             MainViewModel.PointNumber = (_curWorldPoints.Count * 3).ToString() + "個點";      
-        }
-       
+        }       
         /// <summary>
         /// 目前尚未使用這種排序
         /// </summary>
@@ -467,7 +476,6 @@ namespace Nart
 
             return finalTransform;
         }
-
         /// <summary>
         /// 使用Kabsch algorithm做三點對三點座標轉換
         /// </summary>
@@ -658,7 +666,7 @@ namespace Nart
                 {
                     MessageBox.Show("找不到咬板以及頭部標記片");
                 }
-                CameraControl.RegToggle = false;
+                MainViewModel.Data.RegToggle = false;
                 return;
             }
 
@@ -666,7 +674,7 @@ namespace Nart
             //讀進_splintInCT檔案
             if (!LoadSplintPoint("../../../data/蔡慧君測試用.txt"))
             {
-                CameraControl.RegToggle = false;
+                MainViewModel.Data.RegToggle = false;
                 return;
             }
             //簡化資料庫的Marker
@@ -774,7 +782,7 @@ namespace Nart
             {
                 MessageBox.Show("包括咬板與頭部還需要其他標記片");
             }
-            CameraControl.RegToggle = false;
+            MainViewModel.Data.RegToggle = false;
         }
         /// <summary>
         /// 導航的註冊
@@ -900,7 +908,7 @@ namespace Nart
                     _headMarkerStack.Clear();
                     _splintMarkerStack.Clear();
                     MessageBox.Show("註冊了" + _curWorldPoints.Count + "組Marker");
-                    CameraControl.RegToggle = false;
+                    MainViewModel.Data.RegToggle = false;
                 }
             }
         }
@@ -1083,8 +1091,7 @@ namespace Nart
             double z = _craniofacialInfo.GoL.Z + goVector.Z * t;
             _craniofacialInfo.GoIntersection = new Point3D(x, y, z);
 
-        }
-        
+        }        
         /// <summary>
         /// 計算出顱面資訊
         /// </summary>
@@ -1167,15 +1174,19 @@ namespace Nart
         /// </summary>
         public void CalcBallDistance()
         {
+            //累計次數到五次才進來
             if (ShowPeriod2 == 5)
             {
+
                 if (MultiAngleViewModel.TriangleModelCollection == null || MultiAngleViewModel.TriangleModelCollection.Count == 0)
                     return;
 
                 DraggableTriangle targetTriangle;
                 DraggableTriangle movedTriangle;
+                //在第二階段
                 if (MainViewModel.Data.IsSecondStage)
                 {                    
+                    //第二階段但第一階段導的是上顎
                     if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
                     {
                         targetTriangle = MultiAngleViewModel.TriangleModelCollection[1] as DraggableTriangle;
@@ -1187,6 +1198,7 @@ namespace Nart
                         movedTriangle = MultiAngleViewModel.TriangleModelCollection[2] as DraggableTriangle;
                     }
                 }
+                //在第一階段
                 else if (MainViewModel.Data.IsFirstStage)
                 {
                     if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
@@ -1271,11 +1283,12 @@ namespace Nart
                             Vector3 outputDistance;
                             Matrix mat3 = Matrix3DExtensions.ToMatrix(movedTriangle.Transform.Value);
 
-                            Vector3.TransformCoordinate(ref model.BallCenter, ref mat3, out outputPoint);
-                            Vector3.Subtract(ref model.BallCenter, ref outputPoint, out outputDistance);
-                            
+                            Vector3 ballCenter = model.BallCenter;
+                            Vector3.TransformCoordinate(ref ballCenter, ref mat3, out outputPoint);
+                            Vector3.Subtract(ref ballCenter, ref outputPoint, out outputDistance);
+                            model.BallDistance = outputDistance;
 
-                            
+
                             ballDistanceInfo += "\n"+model.BallName.PadLeft(10) +
                                                 ("" + Math.Abs(Math.Round(outputDistance.X, 2))).PadLeft(10) +
                                                 ("" + Math.Abs(Math.Round(outputDistance.Y, 2))).PadLeft(10) +
@@ -1301,8 +1314,9 @@ namespace Nart
                             Vector3 outputDistance;
                             Matrix mat3 = Matrix3DExtensions.ToMatrix(movedTriangle.Transform.Value);
 
-                            Vector3.TransformCoordinate(ref model.BallCenter, ref mat3, out outputPoint);
-                            Vector3.Subtract(ref model.BallCenter, ref outputPoint, out outputDistance);
+                            Vector3 ballCenter = model.BallCenter;
+                            Vector3.TransformCoordinate(ref ballCenter, ref mat3, out outputPoint);
+                            Vector3.Subtract(ref ballCenter, ref outputPoint, out outputDistance);
                             float distance = outputDistance.Length();
 
                             ballDistanceInfo += "\n" + model.BallName.PadLeft(10) +

@@ -18,6 +18,7 @@ using Nart.Model_Object;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.Serialization.Formatters.Soap;
+using Nart.Experiment;
 
 namespace Nart
 {
@@ -34,7 +35,7 @@ namespace Nart
         private static int _tabIndex = 1; //預設tab頁面索引值        
         private ModelSettingView _modelSettingdlg;
         private NavigateView _navigatedlg;
-        
+        private CtrlRotPlatform _ctrlRotPlatform;
 
 
 
@@ -44,6 +45,7 @@ namespace Nart
             SetModelCommand = new RelayCommand(SetModel);
             RegisterCommand = new RelayCommand(Register);
             SetNavigationCommand = new RelayCommand(SetNavigation);
+            CtrlRotPlatformCommand = new RelayCommand(OpenRotPlatform);
             TrackCommand = new RelayCommand(Track);
             CloseWindowCommand = new RelayCommand(this.OnClosed, null);
             DeleteBallCommad = new RelayCommand(DeleteBallItem);
@@ -105,7 +107,10 @@ namespace Nart
         /// 刪除骨骼模型的Command        
         /// </summary>
         public ICommand DeleteBoneCommad { private set; get; }
-
+        /// <summary>
+        /// 開啟控制旋轉平台的Command        
+        /// </summary>
+        public ICommand CtrlRotPlatformCommand { private set; get; }
         public void InitCamCtrl()
         {
 
@@ -143,14 +148,28 @@ namespace Nart
 
             RestoreGridLength();
         }
+        private void OpenRotPlatform(object o)
+        {
+            if (_ctrlRotPlatform == null)
+            {
+                _ctrlRotPlatform = new CtrlRotPlatform();
+            }
+            _ctrlRotPlatform.Owner = _mainWindow;
+
+            _ctrlRotPlatform.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+
+            _ctrlRotPlatform.Show();
+
+            RestoreGridLength();
+        }
         private void Register(object o)
         {
-            CameraControl.RegToggle = !CameraControl.RegToggle;
+            MainViewModel.Data.RegToggle = !MainViewModel.Data.RegToggle;
             RestoreGridLength();
         }
         private void Track(object o)
         {
-            CameraControl.TrackToggle = !CameraControl.TrackToggle;
+            MainViewModel.Data.TrackToggle = !MainViewModel.Data.TrackToggle;
             RestoreGridLength();
         }
         private void OnClosed(object o)
@@ -305,7 +324,21 @@ namespace Nart
             {
                 Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
 
-                string fullFilePath = dlg.FileName;
+                if (System.IO.File.Exists(dlg.FileName) == false)
+                    return;
+
+                if (System.IO.Path.GetExtension(dlg.FileName).ToLower() != ".nart")
+                    return;
+
+                ImportFile(dlg.FileName);
+            }
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
+        }
+        public void ImportFile(string filename)
+        {
+
+
+            string fullFilePath = filename;
 
                 switch (System.IO.Path.GetExtension(fullFilePath).ToLower())
                 {
@@ -373,8 +406,6 @@ namespace Nart
                         }
 
                 }
-            }
-            Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
         }
         /// <summary>
         /// 將Grid回復到原始狀態 

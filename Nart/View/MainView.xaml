@@ -194,15 +194,15 @@
                                     </StackPanel>
                                 </Expander.Header>
                                 <Expander.Content>
-                                    <Grid Margin="20,8,0,0" Background="Blue" >
+                                    <Grid Margin="20,8,0,0" Width="300">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="1*"/>
                                             <ColumnDefinition Width="1*"/>
                                             <ColumnDefinition Width="1*"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock  Grid.Column="0" TextWrapping="NoWrap" Margin="10,0"  Text="{Binding BallXCoord}"/>
-                                        <TextBlock  Grid.Column="1" TextWrapping="NoWrap" Margin="10,0"  Text="{Binding BallYCoord}"/>
-                                        <TextBlock  Grid.Column="2" TextWrapping="NoWrap" Margin="10,0"  Text="{Binding BallZCoord}"/>
+                                        <TextBlock  Grid.Column="0" HorizontalAlignment="Left" TextWrapping="NoWrap" Margin="0,0"  Text="{Binding BallXCoord}"/>
+                                        <TextBlock  Grid.Column="1" HorizontalAlignment="Left" TextWrapping="NoWrap" Margin="0,0"  Text="{Binding BallYCoord}"/>
+                                        <TextBlock  Grid.Column="2" HorizontalAlignment="Left" TextWrapping="NoWrap" Margin="0,0"  Text="{Binding BallZCoord}"/>
                                     </Grid >
                                 </Expander.Content>
                             </Expander>
@@ -212,7 +212,7 @@
                         <StackPanel Orientation="Vertical" Margin="0">
                             <StackPanel Orientation="Horizontal" Margin="5,5">
                                 <TextBlock Text="Select Points" VerticalAlignment="Center" Margin="30,0,10,0"/>
-                                <ToggleButton x:Name="SelectTB" IsChecked="{Binding CanSelectPoints}" Style="{StaticResource AnimatedToggleSwitch3}"  VerticalAlignment="Center" Height="30" Width="80" HorizontalAlignment="Left" Margin="0,0,0,0"/>
+                                <ToggleButton x:Name="SelectTB" IsEnabled="True" IsChecked="{Binding CanSelectPoints}" Style="{StaticResource AnimatedToggleSwitch3}"  VerticalAlignment="Center" Height="30" Width="80" HorizontalAlignment="Left" Margin="0,0,0,0"/>
                                 <TextBlock x:Name="stateTB" Width="50" Text="OFF" VerticalAlignment="Center" Margin="10,0"/>
                             </StackPanel>
                             <ListView x:Name="BallListView"   BorderThickness="0"   ScrollViewer.VerticalScrollBarVisibility="Disabled"  Background="Transparent" Margin="30,5,0,0"
@@ -333,8 +333,9 @@
                     <RowDefinition Height="25*"/>
                     <RowDefinition Height="4"/>
                     <RowDefinition Height="180*"/>
+                    <RowDefinition Height="5*"/>
                 </Grid.RowDefinitions>
-                <Border Grid.RowSpan="3" BorderBrush="White" BorderThickness="0,0,2,0"/>
+                <Border Grid.RowSpan="4" BorderBrush="White" BorderThickness="0,0,2,0"/>
 
                 <Button  x:Name="settingButton2" Grid.Row="0" Grid.Column="0" Grid.RowSpan="1"  HorizontalAlignment="Center" Style="{DynamicResource ResourceKey=SettingButton}" Width="40" Click="settingButton2_Click" Height="40" VerticalAlignment="Center">
                     <!--<Button.Triggers>
@@ -362,6 +363,7 @@
                     <Button x:Name="RegButton" Command="{Binding RegisterCommand}" Content="Registration"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
                     <Button x:Name="button4" Command="{Binding TrackCommand}"   Content="Tracking"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
                     <Button x:Name="button" Content="Save Ball Information" VerticalAlignment="Top"    Margin="0,5,0,0"  Click="button_Click_2" Style="{DynamicResource ResourceKey=SideButton}"  Height="68"/>
+                    <Button x:Name="button5" Command="{Binding CtrlRotPlatformCommand}"   Content="rotation" VerticalAlignment="Top"    Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}"  Height="68"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>
@@ -387,7 +389,7 @@
                 </EventTrigger>
             </Button.Triggers>-->
         </Button>
-        <Button x:Name="button5_Copy1" Content="Button" Grid.Column="3" HorizontalAlignment="Left" Margin="605,60,0,0" VerticalAlignment="Top" Width="74" Click="button_Click_1" Height="18"/>
+        <Button x:Name="button5_Copy1" Content="Button" Grid.Column="3" HorizontalAlignment="Left" Margin="300,53,0,0" VerticalAlignment="Top" Width="74" Click="button_Click_1" Height="18"/>
         <Border BorderThickness="0"  Grid.ColumnSpan="4" Margin="0,0,0,0" Grid.Row="3" Background="#FF007ACC">
             <StatusBar Background="{x:Null}" Foreground="White" FontSize="13" >
                 <StatusBarItem HorizontalAlignment="Left" >
@@ -398,8 +400,8 @@
                 </StatusBarItem>
             </StatusBar>
         </Border>
-        <Button x:Name="button2" Content="Save"  Command="{Binding SaveProjectCommand}"  Grid.Column="3" HorizontalAlignment="Left" Margin="17,28,0,0" VerticalAlignment="Top" Width="80" Height="68" />
-        <Button x:Name="button2_Copy" Content="Load"  Command="{Binding LoadProjectCommand}"  Grid.Column="3" HorizontalAlignment="Left" Margin="113,28,0,0" VerticalAlignment="Top" Width="80" Height="68"/>
+        <Button x:Name="button2" Content="Save"  Command="{Binding SaveProjectCommand}"  Grid.Column="3" HorizontalAlignment="Left" Margin="9,26,0,0" VerticalAlignment="Top" Width="80" Height="68" />
+        <Button x:Name="button2_Copy" Content="Load"  Command="{Binding LoadProjectCommand}"  Grid.Column="3" HorizontalAlignment="Left" Margin="169,24,0,0" VerticalAlignment="Top" Width="80" Height="68"/>
         <!--<GridSplitter Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch"  Background="Transparent" Margin="0"/>-->
 
     </Grid>

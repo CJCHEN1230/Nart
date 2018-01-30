@@ -19,16 +19,17 @@ namespace Nart.Model_Object
     [Serializable]
     public class BallModel : MeshGeometryModel3D ,  INotifyPropertyChanged , ISerializable
     {
-        /// <summary>
-        /// 紀錄模型中心
-        /// </summary>
-        public Vector3 BallCenter;
 
         public ModelType ModelType;
         private string _ballName;
         private string _ballXCoord;
         private string _ballYCoord;
         private string _ballZCoord;
+        /// <summary>
+        /// 紀錄模型中心
+        /// </summary>
+        private Vector3 _ballCenter;
+        private Vector3 _ballDistance;
 
         public HelixToolkit.Wpf.SharpDX.MeshGeometry3D ballGeometry;
         public HelixToolkit.Wpf.SharpDX.MeshGeometry3D pipeGeometry;
@@ -102,7 +103,7 @@ namespace Nart.Model_Object
             {
                 SetValue(ref _ballName, value);
             }
-        }    
+        }
         public string BallXCoord
         {
             get
@@ -136,6 +137,33 @@ namespace Nart.Model_Object
             set
             {
                 SetValue(ref _ballZCoord, value);
+            }
+        }
+
+        public Vector3 BallDistance
+        {
+            get
+            {
+                return _ballDistance;
+            }
+            set
+            {
+                SetValue(ref _ballDistance, value);
+            }
+        }
+        public Vector3 BallCenter
+        {
+            get
+            {
+                return _ballCenter;
+            }
+            set
+            {
+                SetValue(ref _ballCenter, value);
+
+                BallXCoord = "X:" + Math.Round(_ballCenter.X, 2);
+                BallYCoord = "Y:" + Math.Round(_ballCenter.Y, 2);
+                BallZCoord = "Z:" + Math.Round(_ballCenter.Z, 2);
             }
         }
 

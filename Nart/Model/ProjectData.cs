@@ -17,6 +17,17 @@ namespace Nart
     [Serializable]
     public class ProjectData : ObservableObject , ISerializable
     {
+        /// <summary>
+        /// 開啟Registration Button的功能
+        /// </summary>
+        public bool RegToggle = false;
+        /// <summary>
+        /// 開啟Tracking Button的功能
+        /// </summary>
+        public bool TrackToggle = false;
+
+
+
         //病人資訊
         private string _name = "蔡慧君";
         private string _id = "123456";
@@ -30,8 +41,11 @@ namespace Nart
         public bool IsFinished = false;
         public string FirstNavigation = "Maxilla";
 
-        private bool _canSelectPoints = false;
+        private bool _canSelectPoints = true;
         private string _selectPointState = "OFF";
+
+
+
         private  ObservableCollection<BallModel> _ballCollection=  new ObservableCollection<BallModel>();
         private  ObservableCollection<BoneModel> _boneCollection =  new ObservableCollection<BoneModel>();
         private ObservableCollection <BoneModel> _targetCollection = new ObservableCollection<BoneModel>();

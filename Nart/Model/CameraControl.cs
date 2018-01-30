@@ -52,14 +52,7 @@ namespace Nart
         /// 計算座標的類別
         /// </summary>
         private CalcCoord _calcCoord ;
-        /// <summary>
-        /// 開啟Registration Button的功能
-        /// </summary>
-        public static bool RegToggle = false;
-        /// <summary>
-        /// 開啟Tracking Button的功能
-        /// </summary>
-        public static bool TrackToggle = false;
+
         /// <summary>
         /// 管理相機通過與否
         /// </summary>
@@ -188,13 +181,13 @@ namespace Nart
             
             
 
-
-            if (CameraControl.RegToggle)
+            
+            if (MainViewModel.Data.RegToggle)
             {
                 _calcCoord.Registraion2();
             }
 
-            if (CameraControl.TrackToggle) 
+            if (MainViewModel.Data.TrackToggle) 
             {
                 _calcCoord.CalcModelTransform2();
 

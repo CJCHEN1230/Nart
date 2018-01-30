@@ -13,5 +13,29 @@ namespace Nart
     /// </summary>
     public partial class App : Application
     {
+        private void LaunchApplication(object sender, StartupEventArgs e)
+        {
+            string filename = string.Empty;
+
+            //使用command line同時開啟的化，只開最後一個.nart附檔名的檔案
+            foreach (string temp in e.Args)
+            {
+                if (System.IO.File.Exists(temp) && System.IO.Path.GetExtension(temp).ToLower() == ".nart")
+                {
+                    filename = temp;
+                }
+            }
+
+            
+            MainView mainView = new MainView();
+           
+            if (filename != string.Empty)
+            {
+                mainView.MainViewModel.ImportFile(filename);
+            }
+            mainView.Show();
+
+            
+        }
     }
 }

@@ -42,7 +42,7 @@ namespace Nart
         private void button_Click(object sender, RoutedEventArgs e)
         {
             //確定已經設定導航資訊，且已經有按Tracking的情形
-            if (!MainViewModel.Data.IsNavigationSet || !CameraControl.TrackToggle)
+            if (!MainViewModel.Data.IsNavigationSet || !MainViewModel.Data.TrackToggle)
                 return;
 
             string firstNavigation = MainViewModel.Data.FirstNavigation;
@@ -135,7 +135,7 @@ namespace Nart
         private void button_Copy_Click(object sender, RoutedEventArgs e)
         {
             //確定已經註冊的情況
-            if (!MainViewModel.Data.IsNavigationSet || !MainViewModel.Data.IsFirstStage || !CameraControl.TrackToggle )
+            if (!MainViewModel.Data.IsNavigationSet || !MainViewModel.Data.IsFirstStage || !MainViewModel.Data.TrackToggle )
                 return;
             string firstNavigation = MainViewModel.Data.FirstNavigation;
 
@@ -167,6 +167,32 @@ namespace Nart
             }
             MainViewModel.Data.IsFirstStage = false;
             MainViewModel.Data.IsSecondStage = true;
+        }
+
+
+        private void button_Copy2_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (BoneModel targetModel in MainViewModel.Data.TargetCollection)
+            {
+                if (targetModel != null &&
+                    (targetModel.ModelType.Equals(ModelType.TargetMandible) || targetModel.ModelType.Equals(ModelType.TargetMaxilla)))
+                {
+                    targetModel.IsRendering = false;
+                }
+            }
+
+            foreach (Element3D dragModel in MultiAngleViewModel.TriangleModelCollection)
+            {
+                DraggableTriangle model = dragModel as DraggableTriangle;
+
+                if (model != null)
+                    model.IsRendering = false;
+            }
+
+            MainViewModel.Data.RegToggle = false;
+            MainViewModel.Data.TrackToggle = false;
+            MainViewModel.Data.IsFirstStage = false;
+            MainViewModel.Data.IsSecondStage = false;
         }
     }
 }
