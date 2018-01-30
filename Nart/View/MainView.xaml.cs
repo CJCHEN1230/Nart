@@ -59,7 +59,7 @@ namespace Nart
 
             this.DataContext = MainViewModel;
 
-            AllocConsole();
+            //AllocConsole();
        
         }
 
