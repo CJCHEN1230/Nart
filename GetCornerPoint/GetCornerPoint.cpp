@@ -76,7 +76,7 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 	//將所有輪廓平行化計算來篩選
 	parallel_for(0u, (unsigned int)contours.size(), [&newContours, &EllipseSet, &contours](int i) {
 		RotatedRect temp;
-		if (contours.at(i).size() < 100 || contours.at(i).size() > 500)
+		if (contours.at(i).size() < 60 || contours.at(i).size() > 300)
 		{
 			return;
 		}
@@ -129,7 +129,7 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 
 		/// Shi-Tomasi的參數設置  
 		double qualityLevel = 0.001;	//最小特徵值小於qualityLevel*最大特徵值的點將被忽略
-		double minDistance = 10;		//兩角點間最小距離 
+		double minDistance = 20;		//兩角點間最小距離 
 		int blockSize = 3;
 		bool useHarrisDetector = false;   //不使用Harris  
 		double k = 0.04;

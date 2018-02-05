@@ -52,7 +52,6 @@ namespace Nart
         /// 計算座標的類別
         /// </summary>
         private CalcCoord _calcCoord ;
-
         /// <summary>
         /// 管理相機通過與否
         /// </summary>
@@ -131,12 +130,15 @@ namespace Nart
             if (IcImagingControl[0].DeviceValid && IcImagingControl[1].DeviceValid) 
             {
                 DisplayThread.Start();
-                
 
-                Parallel.For(0, 2, i =>
-                {
-                    IcImagingControl[i].LiveStart();
-                });
+
+                //Parallel.For(0, 2, i =>
+                //{
+                //    IcImagingControl[i].LiveStart();
+                //});
+
+                IcImagingControl[0].LiveStart();
+                IcImagingControl[1].LiveStart();
             }
         }
         public void CameraClose()
