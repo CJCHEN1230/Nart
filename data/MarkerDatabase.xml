@@ -1,36 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <BWMarker>
-	<Maxilla>
-		<Marker ID="A">
-			<LengthA>23.324</LengthA>
-			<LengthB>20</LengthB>
-			<LengthC>12</LengthC>
-		</Marker>
-		<Marker ID="B">
-			<LengthA>25.238</LengthA>
-			<LengthB>21</LengthB>
-			<LengthC>14</LengthC>
-		</Marker>
-	</Maxilla>
-	<Mandible>
-		<Marker ID="C">
-			<LengthA>25.086</LengthA>
-			<LengthB>23</LengthB>
-			<LengthC>10</LengthC>
-		</Marker>
-	</Mandible>
-	<Head>
-		<Marker ID="Head">
-			<LengthA>23.431</LengthA>
-			<LengthB>18</LengthB>
-			<LengthC>15</LengthC>
-		</Marker>
-	</Head>
-	<Splint>
-		<Marker ID="Splint">
-			<LengthA>22</LengthA>
-			<LengthB>15.958</LengthB>
-			<LengthC>12</LengthC>
-		</Marker>
-	</Splint>
+	<Marker ID="A">
+		<LengthA>23.324</LengthA>
+		<LengthB>20</LengthB>
+		<LengthC>12</LengthC>
+	</Marker>
+	<Marker ID="B">
+		<LengthA>25.238</LengthA>
+		<LengthB>21</LengthB>
+		<LengthC>14</LengthC>
+	</Marker>
+	<Marker ID="C">
+		<LengthA>25.086</LengthA>
+		<LengthB>23</LengthB>
+		<LengthC>10</LengthC>
+	</Marker>
+	<Marker ID="Head">
+		<LengthA>23.431</LengthA>
+		<LengthB>18</LengthB>
+		<LengthC>15</LengthC>
+	</Marker>
+	<Marker ID="Splint">
+		<LengthA>22</LengthA>
+		<LengthB>15.958</LengthB>
+		<LengthC>12</LengthC>
+	</Marker>
 </BWMarker>

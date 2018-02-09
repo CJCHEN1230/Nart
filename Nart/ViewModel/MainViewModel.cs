@@ -19,6 +19,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Runtime.Serialization.Formatters.Soap;
 using Nart.Experiment;
+using Microsoft.Win32;
 
 namespace Nart
 {
@@ -42,6 +43,7 @@ namespace Nart
         public MainViewModel(MainView mainWindow)
         {
             _mainWindow = mainWindow;
+            LoadMarkerDatabaseCommand = new RelayCommand(LoadMarkerData);
             SetModelCommand = new RelayCommand(SetModel);
             RegisterCommand = new RelayCommand(Register);
             SetNavigationCommand = new RelayCommand(SetNavigation);
@@ -86,6 +88,7 @@ namespace Nart
         public ICommand SaveProjectCommand { private set; get; }
         public ICommand LoadProjectCommand { private set; get; }
         public ICommand SetModelCommand { private set; get; }
+        public ICommand LoadMarkerDatabaseCommand { private set; get; }
         public ICommand SetNavigationCommand { private set; get; }
         /// <summary>
         /// 註冊按鈕
@@ -117,6 +120,29 @@ namespace Nart
             CamCtrl = new CameraControl(new TIS.Imaging.ICImagingControl[2] { _mainWindow.CamHost1.IcImagingControl, _mainWindow.CamHost2.IcImagingControl });
             CamCtrl.CameraStart();
         }
+
+
+        private void LoadMarkerData(object o)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Marker Database" ,
+                DefaultExt = ".xml",
+                Multiselect = false,
+                Filter = "XML File (.xml)|*.xml"
+         
+            };
+            
+            if (true == dlg.ShowDialog())
+            {
+                //MarkerDatabase database = MainViewModel.Data.database;
+                ////將路徑存到ProjectData 裡面的 MarkerDatabase當中
+                //database.Filepath =dlg.FileName;
+                //database.LoadDatabase();
+            }
+            RestoreGridLength();
+        }
+
         /// <summary>
         /// 顯示設置好的各項模型資訊，按下Set Model 之後並且按ok後會走到這
         /// </summary>       

@@ -64,7 +64,7 @@ namespace Nart
         /// <summary>
         ///判斷是不是相同點的pixel高度容忍值
         /// </summary>
-        private const double MatchError = 5;
+        private const double MatchError = 8;
         /// <summary>
         ///CT珠子中心座標
         /// </summary>
@@ -132,7 +132,6 @@ namespace Nart
 
             CalcLensCenter();
             CalcEpipolarGeometry();
-            
         }
         /// <summary>
         /// 計算鏡心在世界座標
@@ -322,12 +321,11 @@ namespace Nart
                         });
                         
                         threeWorldPoints.SortedByLength(); //對計算到的3D點排序
-
+                        
                         threeWorldPoints.CompareDatabase(ref Database.MarkerInfo);//比對當前世界座標與資料庫並存下引數與Marker的ID
 
                         _curWorldPoints.Add(threeWorldPoints);
 
-                      
                         count = j + 1;
                         break;                        
                     }             
@@ -339,9 +337,6 @@ namespace Nart
             {
                 ForExperiment.Add(_curWorldPoints[i]);
             }
-            
-            
-
             ///_meanFilter.filter(ref _curWorldPoints);
             
             MainViewModel.PointNumber = (_curWorldPoints.Count * 3).ToString() + "個點";      
@@ -911,8 +906,7 @@ namespace Nart
                     MainViewModel.Data.RegToggle = false;
                 }
             }
-        }
-        
+        }        
         /// <summary>
         /// 計算出每個Marker的轉移矩陣
         /// </summary>

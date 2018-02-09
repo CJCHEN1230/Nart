@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,11 @@ namespace Nart
 {
     public class MarkerDatabase
     {
+        public bool Isloaded = false;
+        /// <summary>
+        ///預設資料庫檔案路徑
+        /// </summary>
+        public string Filepath = "./data/MarkerDatabase.xml";
         /// <summary>
         ///使用一個Struct專門記錄三邊長與ID
         /// </summary>
@@ -36,19 +42,21 @@ namespace Nart
         public static List<String> MarkerIdList = new List<String>();
         public MarkerDatabase()
         {            
-            CreateDatabase();
+            LoadDatabase();
         }
         /// <summary>
         /// 輸入Marker的data(三邊長)並將資料存進MarkerDB裡面
         /// </summary>
-        private void CreateDatabase()
+        public void LoadDatabase()
         {
             
             try
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load("../../../data/MarkerDatabase(1).xml");
-
+             
+                doc.Load(Filepath);
+                //先清空Marker資料內容
+                MarkerInfo.Clear();
                 //挑出Maxilla下面的Marker element
                 XmlNodeList markerList = doc.SelectNodes("BWMarker/Marker");
                 foreach (XmlNode oneNode in markerList)
@@ -78,9 +86,12 @@ namespace Nart
                     markerdata.MarkerID = id;
                     MarkerInfo.Add(markerdata);
                 }
+                Isloaded = true;
             }
             catch
             {
+                
+                Isloaded = false;
                 MessageBox.Show("資料庫檔案錯誤");
             }
             

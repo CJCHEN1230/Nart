@@ -34,6 +34,7 @@ namespace Nart
         private string _institution = "成大";
         private string _regFilePath = "../../../data/蔡慧君測試用.txt";
 
+        //public MarkerDatabase database = new MarkerDatabase();
         public bool IsRegInitialized = false;
         public bool IsNavigationSet = false;
         public bool IsFirstStage = false;       

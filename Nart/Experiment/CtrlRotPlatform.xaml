@@ -7,16 +7,29 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         
-        Title="CtrlRotPlatform" Height="387.461" Width="513.48"
+        Title="CtrlRotPlatform" Height="629.945" Width="947.128"
         >
     <Grid>
-        <ComboBox x:Name="cbSerialPorts" HorizontalAlignment="Left" Margin="155,74,0,0" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="button_Copy" Click="ConnectBtn_Click" Content="Connect" HorizontalAlignment="Left" Margin="54,45,0,0" VerticalAlignment="Top" Width="75" Height="71"/>
-        <Button x:Name="button" Content="Enter" HorizontalAlignment="Left" Margin="189,146,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="EnterClick"/>
-        <TextBox x:Name="inputTB" HorizontalAlignment="Left" Height="115" Margin="54,146,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="123" KeyDown="inputTB_KeyDown"/>
-        <Button x:Name="button_Copy1" Content="Do experiment" HorizontalAlignment="Left" Margin="316,145,0,0" VerticalAlignment="Top" Width="106" Height="71" Click="DoExperiemntClick"/>
-        <Button x:Name="button_Copy2" Content="Save" HorizontalAlignment="Left" Margin="265,261,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="SaveClick"/>
-        <Button x:Name="button_Copy3" Content="Write Date" HorizontalAlignment="Left" Margin="315,37,0,0" VerticalAlignment="Top" Width="106" Height="71" Click="WriteDataClick"/>
+        <ComboBox x:Name="cbSerialPorts" HorizontalAlignment="Left" Margin="164,80,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="button_Copy" Click="ConnectBtn_Click" Content="Connect" HorizontalAlignment="Left" Margin="63,51,0,0" VerticalAlignment="Top" Width="75" Height="71"/>
+        <Button x:Name="button" Content="Enter" HorizontalAlignment="Left" Margin="204,444,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="EnterClick"/>
+        <TextBox x:Name="inputTB" HorizontalAlignment="Left" Height="115" Margin="69,444,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="123" KeyDown="inputTB_KeyDown"/>
+        <Button x:Name="button_Copy1" Content="Do experiment" HorizontalAlignment="Left" Margin="367,51,0,0" VerticalAlignment="Top" Width="106" Height="71" Click="DoExperiemntClick"/>
+        <Button x:Name="button_Copy2" Content="Save" HorizontalAlignment="Left" Margin="649,505,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="SaveClick"/>
+        <Button x:Name="button_Copy3" Content="Write Length Data" HorizontalAlignment="Left" Margin="63,169,0,0" VerticalAlignment="Top" Width="116" Height="88" Click="WriteLengthDataClick"/>
+        <Button x:Name="button_Copy4" Content="Write Points Data" HorizontalAlignment="Left" Margin="221,169,0,0" VerticalAlignment="Top" Width="116" Height="88" Click="WritePointsDataClick"/>
+        <Button x:Name="XPosiBtn" Content="+X" HorizontalAlignment="Left" Margin="364,240,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="XPosiBtn_Click"/>
+        <Button x:Name="XNegBtn" Content="-X" HorizontalAlignment="Left" Margin="464,239,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="XNegBtn_Click"/>
+        <Button x:Name="YPosiBtn" Content="+Y" HorizontalAlignment="Left" Margin="365,338,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="YPosiBtn_Click"/>
+        <Button x:Name="YNegBtn" Content="-Y" HorizontalAlignment="Left" Margin="464,339,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="YNegBtn_Click"/>
+        <Button x:Name="X5PosiBtn" Content="+5X" HorizontalAlignment="Left" Margin="678,241,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="X5PosiBtn_Click"/>
+        <Button x:Name="X5NegBtn" Content="-5X" HorizontalAlignment="Left" Margin="778,240,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="X5NegBtn_Click"/>
+        <Button x:Name="Y5PosiBtn" Content="+5Y" HorizontalAlignment="Left" Margin="679,339,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="Y5PosiBtn_Click"/>
+        <Button x:Name="Y5NegBtn" Content="-5Y" HorizontalAlignment="Left" Margin="778,340,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="Y5NegBtn_Click"/>
+        <Button x:Name="YPosiBtn_Copy" Content="+Z" HorizontalAlignment="Left" Margin="366,432,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="ZPosiBtn_Click"/>
+        <Button x:Name="YNegBtn_Copy" Content="-Z" HorizontalAlignment="Left" Margin="465,433,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="ZNegBtn_Click"/>
+        <Button x:Name="Y5PosiBtn_Copy" Content="+5Z" HorizontalAlignment="Left" Margin="680,425,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="Z5PosiBtn"/>
+        <Button x:Name="Y5NegBtn_Copy" Content="-5Z" HorizontalAlignment="Left" Margin="779,426,0,0" VerticalAlignment="Top" Width="75" Height="71" Click="Z5NegBtn"/>
 
 
     </Grid>

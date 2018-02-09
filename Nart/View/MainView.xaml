@@ -112,7 +112,7 @@
             </TabItem>
         </TabControl>
 
-        
+
         <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="4" Background="White" Grid.Row="1" Margin="0"/>
         <GridSplitter  Margin="0,0,0,0"  Grid.Row="2" Grid.Column="2"  Style="{DynamicResource VerticalGridSplitter}" Background="#FF6A6A6A" HorizontalAlignment="Stretch"  Width="Auto" />
 
@@ -357,14 +357,15 @@
                 </Button>
 
                 <StackPanel Margin="0" Grid.Row="2">
-
-                    <Button x:Name="button1_Copy" Command="{Binding SetNavigationCommand}" Content="Set Navigation" Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                    <Button x:Name="button1" Command="{Binding SetModelCommand}" Content="Set Model"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                    <Button x:Name="RegButton" Command="{Binding RegisterCommand}" Content="Registration"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                    <Button x:Name="button4" Command="{Binding TrackCommand}"   Content="Tracking"  Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                    <Button x:Name="button" Content="Save Ball Information" VerticalAlignment="Top"    Margin="0,5,0,0"  Click="button_Click_2" Style="{DynamicResource ResourceKey=SideButton}"  Height="68"/>
-                    <Button x:Name="button5" Command="{Binding CtrlRotPlatformCommand}"   Content="rotation" VerticalAlignment="Top"    Margin="0,5,0,0" Style="{DynamicResource ResourceKey=SideButton}"  Height="68"/>
+                    <Button x:Name="LoadDataBtn" Command="{Binding LoadMarkerDatabaseCommand}" Content="Load Marker Database" Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                    <Button x:Name="button1_Copy" Command="{Binding SetNavigationCommand}" Content="Set Navigation" Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                    <Button x:Name="button1" Command="{Binding SetModelCommand}" Content="Set Model"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                    <Button x:Name="RegButton" Command="{Binding RegisterCommand}" Content="Registration"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                    <Button x:Name="button4" Command="{Binding TrackCommand}"   Content="Tracking"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                    <Button x:Name="button" Content="Save Ball Information" VerticalAlignment="Top"    Margin="0,5,2,0"  Click="button_Click_2" Style="{DynamicResource ResourceKey=SideButton}"  Height="68"/>
+                    <Button x:Name="button5" Command="{Binding CtrlRotPlatformCommand}"   Content="rotation" VerticalAlignment="Top"    Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}"  Height="68"/>
                 </StackPanel>
+         
             </Grid>
         </ScrollViewer>
         <Button x:Name="settingButton1" HorizontalAlignment="Center" Style="{DynamicResource ResourceKey=SettingButton}" Width="40" Height="40" VerticalAlignment="Center"  Grid.Column="1" Click="settingButton1_Click" >

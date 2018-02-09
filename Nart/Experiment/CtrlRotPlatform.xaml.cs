@@ -69,7 +69,7 @@ namespace Nart.Experiment
                 string get = myport.ReadLine();
                 Console.WriteLine("\n!!!!!!!!!:" + get);
                 //Thread.Sleep(2000);
-                WriteData();
+                //WriteLengthData();
                 inputTB.Text = "";
             }
             
@@ -81,7 +81,7 @@ namespace Nart.Experiment
                 myport.Write("10");
                 string get = myport.ReadLine();
                 Console.WriteLine("\n!!!!!!!!!:" + get);
-                WriteData();
+                WriteLengthData();
             }
 
         }
@@ -96,7 +96,7 @@ namespace Nart.Experiment
 
 
 
-        private void WriteData()
+        private void WriteLengthData()
         {
             while (true)
             {
@@ -135,11 +135,76 @@ namespace Nart.Experiment
 
                 if (count >= 20)
                 {
+                    excelApp.Cells[currentLine, 1] = (currentLine - 2) * 10;
+                    excelApp.Cells[currentLine, 2] = "找不到";
+                    excelApp.Cells[currentLine, 3] = "找不到";
+                    excelApp.Cells[currentLine, 4] = "找不到";
+                    currentLine++;
                     break;
                 }
             }
         }
 
+        private void WriteWorldCoord()
+        {
+            while (true)
+            {
+                if (CalcCoord.ForExperiment.Count == 1)
+                {
+                    CurWorldPoints.Clear();
+                    CurWorldPoints.Add(CalcCoord.ForExperiment[0]);
+
+                    Console.WriteLine("\nPoint1:" + CurWorldPoints[0].ThreePoints[0].X + "  " + CurWorldPoints[0].ThreePoints[0].Y + "  " + CurWorldPoints[0].ThreePoints[0].Z);
+                    Console.WriteLine("\nPoint2:" + CurWorldPoints[0].ThreePoints[1].X + "  " + CurWorldPoints[0].ThreePoints[1].Y + "  " + CurWorldPoints[0].ThreePoints[1].Z);
+                    Console.WriteLine("\nPoint3:" + CurWorldPoints[0].ThreePoints[2].X + "  " + CurWorldPoints[0].ThreePoints[2].Y + "  " + CurWorldPoints[0].ThreePoints[2].Z);
+
+                    try
+                    {
+                        // 設定第X列資料
+                        excelApp.Cells[currentLine, 1] = (currentLine - 2) * 10;
+                        excelApp.Cells[currentLine, 2] = CurWorldPoints[0].ThreePoints[0].X;
+                        excelApp.Cells[currentLine, 3] = CurWorldPoints[0].ThreePoints[0].Y;
+                        excelApp.Cells[currentLine, 4] = CurWorldPoints[0].ThreePoints[0].Z;
+                        excelApp.Cells[currentLine, 5] = CurWorldPoints[0].ThreePoints[1].X ;
+                        excelApp.Cells[currentLine, 6] = CurWorldPoints[0].ThreePoints[1].Y;
+                        excelApp.Cells[currentLine, 7] = CurWorldPoints[0].ThreePoints[1].Z;
+                        excelApp.Cells[currentLine, 8] = CurWorldPoints[0].ThreePoints[2].X;
+                        excelApp.Cells[currentLine, 9] = CurWorldPoints[0].ThreePoints[2].Y;
+                        excelApp.Cells[currentLine, 10] = CurWorldPoints[0].ThreePoints[2].Z;
+
+                        currentLine++;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("產生報表時出錯！" + Environment.NewLine + ex.Message);
+                        break;
+                    }
+
+                    count = 0;
+                    break;
+                }
+                else
+                {
+                    count++;
+                }
+
+                if (count >= 20)
+                {
+                    excelApp.Cells[currentLine, 1] = (currentLine - 2) * 10;
+                    excelApp.Cells[currentLine, 2] = "找不到";
+                    excelApp.Cells[currentLine, 3] = "找不到";
+                    excelApp.Cells[currentLine, 4] = "找不到";
+                    excelApp.Cells[currentLine, 5] = "找不到";
+                    excelApp.Cells[currentLine, 6] = "找不到";
+                    excelApp.Cells[currentLine, 7] = "找不到";
+                    excelApp.Cells[currentLine, 8] = "找不到";
+                    excelApp.Cells[currentLine, 9] = "找不到";
+                    excelApp.Cells[currentLine, 10] = "找不到";
+                    currentLine++;
+                    break;
+                }
+            }
+        }
 
         private void InitializeExcel()
         {
@@ -210,9 +275,134 @@ namespace Nart.Experiment
       
         }
 
-        private void WriteDataClick(object sender, RoutedEventArgs e)
+        private void WriteLengthDataClick(object sender, RoutedEventArgs e)
         {
-            WriteData();
+            WriteLengthData();
+        }
+
+        private void WritePointsDataClick(object sender, RoutedEventArgs e)
+        {
+            WriteWorldCoord();
+        }
+
+        private void XPosiBtn_Click(object sender, RoutedEventArgs e)
+        {
+            myport.Write("MoveXPosi");
+            string get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+            myport.Write("MoveXPosi");
+            get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+        }
+
+        private void XNegBtn_Click(object sender, RoutedEventArgs e)
+        {
+            myport.Write("MoveXNeg");
+            string get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+            myport.Write("MoveXNeg");
+            get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+        }
+
+        private void YPosiBtn_Click(object sender, RoutedEventArgs e)
+        {
+            myport.Write("MoveYPosi");
+            string get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+            myport.Write("MoveYPosi");
+            get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+        }
+
+        private void YNegBtn_Click(object sender, RoutedEventArgs e)
+        {
+            myport.Write("MoveYNeg");
+            string get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+            myport.Write("MoveYNeg");
+            get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+        }
+
+        private void X5PosiBtn_Click(object sender, RoutedEventArgs e)
+        {
+            for (int i =0;i<5 ;i++)
+            {
+                myport.Write("MoveXPosi");
+                string get = myport.ReadLine();
+                Console.WriteLine("\n!!!!!!!!!:" + get);
+            }
+        }
+
+        private void X5NegBtn_Click(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                myport.Write("MoveXNeg");
+                string get = myport.ReadLine();
+                Console.WriteLine("\n!!!!!!!!!:" + get);
+            }
+        }
+
+        private void Y5PosiBtn_Click(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                myport.Write("MoveYPosi");
+                string get = myport.ReadLine();
+                Console.WriteLine("\n!!!!!!!!!:" + get);
+            }
+        }
+
+        private void Y5NegBtn_Click(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                myport.Write("MoveYNeg");
+                string get = myport.ReadLine();
+                Console.WriteLine("\n!!!!!!!!!:" + get);
+            }
+        }
+
+        private void ZPosiBtn_Click(object sender, RoutedEventArgs e)
+        {
+            myport.Write("MoveZPosi");
+            string get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+            myport.Write("MoveZPosi");
+            get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+        }
+
+        private void ZNegBtn_Click(object sender, RoutedEventArgs e)
+        {
+            myport.Write("MoveZNeg");
+            string get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+            myport.Write("MoveZNeg");
+            get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+        }
+
+        private void Z5PosiBtn(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                myport.Write("MoveZPosi");
+                string get = myport.ReadLine();
+                Console.WriteLine("\n!!!!!!!!!:" + get);
+            }
+        }
+
+        private void Z5NegBtn(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                myport.Write("MoveZNeg");
+                string get = myport.ReadLine();
+                Console.WriteLine("\n!!!!!!!!!:" + get);
+            }
         }
     }
 }
