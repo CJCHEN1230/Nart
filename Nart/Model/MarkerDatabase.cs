@@ -37,7 +37,7 @@ namespace Nart
         /// </summary>
         public int SplintIndex = -1;
         /// <summary>
-        /// Marker的ID資料組成的List
+        /// Marker的ID資料組成的List，創建來給ModelSettingItem中的combobox使用
         /// </summary>
         public static List<String> MarkerIdList = new List<String>();
         public MarkerDatabase()
@@ -110,7 +110,7 @@ namespace Nart
                 {
                     HeadIndex = i;
                 }
-                //存下Head Marker在Database中的Index
+                //存下Splint Marker在Database中的Index
                 if (MarkerInfo[i].MarkerID.Equals("Splint"))
                 {
                     SplintIndex = i;

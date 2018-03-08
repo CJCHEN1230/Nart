@@ -158,7 +158,7 @@ namespace Nart
         }
         private void MoveModel()
         {
-            foreach (BoneModel boneModel in MainViewModel.Data.BoneCollection)
+            foreach (BoneModel boneModel in MainViewModel.ProjData.BoneCollection)
             {
                  boneModel.SetTransformMatrix();
             }
@@ -184,12 +184,12 @@ namespace Nart
             
 
             
-            if (MainViewModel.Data.RegToggle)
+            if (MainViewModel.ProjData.RegToggle)
             {
                 _calcCoord.Registraion2();
             }
 
-            if (MainViewModel.Data.TrackToggle) 
+            if (MainViewModel.ProjData.TrackToggle) 
             {
                 _calcCoord.CalcModelTransform2();
 

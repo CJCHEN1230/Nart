@@ -209,7 +209,7 @@ namespace Nart
             {
                 SetValue(ref _firstNavigation, value);
                 //更新先導航順序
-                MainViewModel.Data.FirstNavigation = value;
+                MainViewModel.ProjData.FirstNavigation = value;
             }
         } //這邊記得綁在Data裡面
         public ICommand ModelSettingCommand { get; }
@@ -245,8 +245,8 @@ namespace Nart
         }
         public void LoadSettingModel(object o)
         {
-            MainViewModel.Data.TargetCollection.Clear();
-            MainViewModel.Data.BoneCollection.Clear();
+            MainViewModel.ProjData.TargetCollection.Clear();
+            MainViewModel.ProjData.BoneCollection.Clear();
             MultiAngleViewModel.OspModelCollection.Clear();
             MultiAngleViewModel.TriangleModelCollection.Clear();
             
@@ -276,8 +276,8 @@ namespace Nart
             targetMandible.LoadModel();        
 
             //MainViewModel.Data.TargetCollection.Add(head);
-            MainViewModel.Data.TargetCollection.Add(targetMaxilla);
-            MainViewModel.Data.TargetCollection.Add(targetMandible);
+            MainViewModel.ProjData.TargetCollection.Add(targetMaxilla);
+            MainViewModel.ProjData.TargetCollection.Add(targetMandible);
 
             BoneModel head = new BoneModel
             {
@@ -304,9 +304,9 @@ namespace Nart
             };
             oriMandible.LoadModel();
 
-            MainViewModel.Data.BoneCollection.Add(head);
-            MainViewModel.Data.BoneCollection.Add(oriMaxilla);
-            MainViewModel.Data.BoneCollection.Add(oriMandible);
+            MainViewModel.ProjData.BoneCollection.Add(head);
+            MainViewModel.ProjData.BoneCollection.Add(oriMaxilla);
+            MainViewModel.ProjData.BoneCollection.Add(oriMandible);
 
             //載入OSP模型
             OspModel headOsp = new OspModel
@@ -382,7 +382,7 @@ namespace Nart
 
             MultiAngleViewModel.ResetCameraPosition();
 
-            MainViewModel.Data.IsNavigationSet = true;
+            MainViewModel.ProjData.IsNavigationSet = true;
 
             _navigateView.Hide();
         }

@@ -43,7 +43,7 @@ namespace Nart.Control
 
                 int temp = BallListView.SelectedIndex;
 
-                ObservableCollection<BallModel> ballCollection = MainViewModel.Data.BallCollection;
+                ObservableCollection<BallModel> ballCollection = MainViewModel.ProjData.BallCollection;
 
                 ballCollection.Remove(selectedModelItem);
 

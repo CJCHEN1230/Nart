@@ -261,7 +261,7 @@ namespace Nart
                 //確認有Load過且有沒有被加進去modelDataCollection
                 if (boneModel.IsLoaded && !boneModel.IsAdded) 
                 {
-                    MainViewModel.Data.BoneCollection.Add(ModelSettingCollection[i].Bone);
+                    MainViewModel.ProjData.BoneCollection.Add(ModelSettingCollection[i].Bone);
                     ModelSettingCollection[i].Bone.IsAdded = true;
                     //除了頭部以外需要guide
                     if (!boneModel.MarkerId.Equals("Head")&& !boneModel.MarkerId.Equals("C"))
@@ -291,13 +291,13 @@ namespace Nart
 
             }
             //刪除modelDataCollection中已經從ModelInfoCollection移除的模型，
-            for (int i = 0; i < MainViewModel.Data.BoneCollection.Count; i++)
+            for (int i = 0; i < MainViewModel.ProjData.BoneCollection.Count; i++)
             {
-                BoneModel boneModel = MainViewModel.Data.BoneCollection[i] as BoneModel;
+                BoneModel boneModel = MainViewModel.ProjData.BoneCollection[i] as BoneModel;
                 //模型如果透過 - 移除 或是 因為換錯誤檔名造成IsLoaded 為false則直接移除
                 if (boneModel.IsRemoved || !boneModel.IsLoaded)
                 {
-                    MainViewModel.Data.BoneCollection.RemoveAt(i);
+                    MainViewModel.ProjData.BoneCollection.RemoveAt(i);
                     boneModel.IsAdded = false;
                     i--;
                 }
@@ -318,7 +318,7 @@ namespace Nart
             }
             
             Console.WriteLine("OSP 數量:"+ MultiAngleViewModel.OspModelCollection.Count);
-            Console.WriteLine("Bone  數量:" + MainViewModel.Data.BoneCollection.Count);
+            Console.WriteLine("Bone  數量:" + MainViewModel.ProjData.BoneCollection.Count);
 
 
             

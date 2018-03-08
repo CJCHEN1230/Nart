@@ -42,10 +42,10 @@ namespace Nart
         private void button_Click(object sender, RoutedEventArgs e)
         {
             //確定已經設定導航資訊，且已經有按Tracking的情形
-            if (!MainViewModel.Data.IsNavigationSet || !MainViewModel.Data.TrackToggle)
+            if (!MainViewModel.ProjData.IsNavigationSet || !MainViewModel.ProjData.TrackToggle)
                 return;
 
-            string firstNavigation = MainViewModel.Data.FirstNavigation;
+            string firstNavigation = MainViewModel.ProjData.FirstNavigation;
             foreach (Element3D model in MultiAngleViewModel.TriangleModelCollection)
             {
                 DraggableTriangle dragModel = model as DraggableTriangle;
@@ -79,7 +79,7 @@ namespace Nart
                 }
             }
 
-            var boneCollection = MainViewModel.Data.BoneCollection;
+            var boneCollection = MainViewModel.ProjData.BoneCollection;
             foreach (BoneModel model in boneCollection)
             {
                 switch (firstNavigation)
@@ -102,7 +102,7 @@ namespace Nart
                 }
             }
 
-            var targetCollection = MainViewModel.Data.TargetCollection;
+            var targetCollection = MainViewModel.ProjData.TargetCollection;
             //顯示出所選擇的目標模型
             foreach (BoneModel targetModel in targetCollection)
             {
@@ -127,7 +127,7 @@ namespace Nart
                 }
             }
             //第一階段按下
-            MainViewModel.Data.IsFirstStage = true;
+            MainViewModel.ProjData.IsFirstStage = true;
         }
         /// <summary>
         /// 這個階段主要要顯示出所設定的第二階段的上or下顎，且顯示三角形模型
@@ -135,9 +135,9 @@ namespace Nart
         private void button_Copy_Click(object sender, RoutedEventArgs e)
         {
             //確定已經註冊的情況
-            if (!MainViewModel.Data.IsNavigationSet || !MainViewModel.Data.IsFirstStage || !MainViewModel.Data.TrackToggle )
+            if (!MainViewModel.ProjData.IsNavigationSet || !MainViewModel.ProjData.IsFirstStage || !MainViewModel.ProjData.TrackToggle )
                 return;
-            string firstNavigation = MainViewModel.Data.FirstNavigation;
+            string firstNavigation = MainViewModel.ProjData.FirstNavigation;
 
             //因為是第二階段，所以三角導引物是否顯示相反就好
             foreach (Element3D dragModel in MultiAngleViewModel.TriangleModelCollection)
@@ -147,7 +147,7 @@ namespace Nart
                 if (model != null)
                     model.IsRendering = !model.IsRendering;
             }
-            var boneCollection = MainViewModel.Data.BoneCollection;
+            var boneCollection = MainViewModel.ProjData.BoneCollection;
 
             //因為是第二階段，所以模型是否可以更新位置相反就好
             foreach (BoneModel model in boneCollection)
@@ -157,7 +157,7 @@ namespace Nart
 
 
 
-            foreach (BoneModel targetModel in MainViewModel.Data.TargetCollection)
+            foreach (BoneModel targetModel in MainViewModel.ProjData.TargetCollection)
             {              
                 if (targetModel != null && 
                     (targetModel.ModelType.Equals(ModelType.TargetMandible) || targetModel.ModelType.Equals(ModelType.TargetMaxilla))) 
@@ -165,14 +165,14 @@ namespace Nart
                     targetModel.IsRendering = !targetModel.IsRendering;
                 }
             }
-            MainViewModel.Data.IsFirstStage = false;
-            MainViewModel.Data.IsSecondStage = true;
+            MainViewModel.ProjData.IsFirstStage = false;
+            MainViewModel.ProjData.IsSecondStage = true;
         }
 
 
         private void button_Copy2_Click(object sender, RoutedEventArgs e)
         {
-            foreach (BoneModel targetModel in MainViewModel.Data.TargetCollection)
+            foreach (BoneModel targetModel in MainViewModel.ProjData.TargetCollection)
             {
                 if (targetModel != null &&
                     (targetModel.ModelType.Equals(ModelType.TargetMandible) || targetModel.ModelType.Equals(ModelType.TargetMaxilla)))
@@ -189,10 +189,10 @@ namespace Nart
                     model.IsRendering = false;
             }
 
-            MainViewModel.Data.RegToggle = false;
-            MainViewModel.Data.TrackToggle = false;
-            MainViewModel.Data.IsFirstStage = false;
-            MainViewModel.Data.IsSecondStage = false;
+            MainViewModel.ProjData.RegToggle = false;
+            MainViewModel.ProjData.TrackToggle = false;
+            MainViewModel.ProjData.IsFirstStage = false;
+            MainViewModel.ProjData.IsSecondStage = false;
         }
     }
 }

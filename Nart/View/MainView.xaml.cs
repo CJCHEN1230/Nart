@@ -208,7 +208,7 @@ namespace Nart
         {
             //ball的模型
             Model3DGroup ballGroup = new Model3DGroup();
-            foreach (BallModel model in MainViewModel.Data.BallCollection)
+            foreach (BallModel model in MainViewModel.ProjData.BallCollection)
             {
                 System.Windows.Media.Media3D.MeshGeometry3D ballMesh = new System.Windows.Media.Media3D.MeshGeometry3D
                 {
@@ -252,7 +252,7 @@ namespace Nart
 
             //cylinder的模型
             Model3DGroup pipeGroup = new Model3DGroup();
-            foreach (BallModel model in MainViewModel.Data.BallCollection)
+            foreach (BallModel model in MainViewModel.ProjData.BallCollection)
             {
                 System.Windows.Media.Media3D.MeshGeometry3D pipeMesh = new System.Windows.Media.Media3D.MeshGeometry3D
                 {
@@ -296,7 +296,7 @@ namespace Nart
             //存球資料
             FileStream fs = new FileStream("D:\\Desktop\\test\\balldata.txt", FileMode.Create);
             StreamWriter sw = new StreamWriter(fs);
-            foreach (BallModel model in MainViewModel.Data.BallCollection)
+            foreach (BallModel model in MainViewModel.ProjData.BallCollection)
             {               
                 
                sw.Write(model.BallCenter.X+" "+model.BallCenter.Y+" "+ model.BallCenter.Z+"\r\n");

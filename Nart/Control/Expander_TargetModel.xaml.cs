@@ -38,7 +38,7 @@ namespace Nart.Control
 
                 int temp = BoneListView.SelectedIndex;
 
-                var ballCollection = MainViewModel.Data.BoneCollection;
+                var ballCollection = MainViewModel.ProjData.BoneCollection;
 
                 ballCollection.Remove(selectedModelItem);
 

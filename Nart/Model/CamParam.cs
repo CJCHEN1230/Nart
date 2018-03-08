@@ -9,7 +9,7 @@ using System.Windows.Media.Media3D;
 
 namespace Nart
 {
-    class CamParam
+     public class CamParam
     {
         public Matrix3D ExtParam; //exteranl parameters
         public Matrix3D InvExtParam; //exteranl parameters inverse

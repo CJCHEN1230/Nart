@@ -28,7 +28,8 @@ namespace Nart
     /// </summary>
     public class MainViewModel : ObservableObject
     {
-        public static ProjectData Data = new ProjectData();
+        public static ProjectData ProjData/* = new ProjectData()*/;
+        
         public CameraControl CamCtrl;
         public NartServer Server= new NartServer();
         private readonly MainView _mainWindow;
@@ -39,7 +40,11 @@ namespace Nart
         private CtrlRotPlatform _ctrlRotPlatform;
 
 
-
+        static MainViewModel()
+        {
+            ProjData = new ProjectData();
+            
+        }
         public MainViewModel(MainView mainWindow)
         {
             _mainWindow = mainWindow;
@@ -190,12 +195,12 @@ namespace Nart
         }
         private void Register(object o)
         {
-            MainViewModel.Data.RegToggle = !MainViewModel.Data.RegToggle;
+            MainViewModel.ProjData.RegToggle = !MainViewModel.ProjData.RegToggle;
             RestoreGridLength();
         }
         private void Track(object o)
         {
-            MainViewModel.Data.TrackToggle = !MainViewModel.Data.TrackToggle;
+            MainViewModel.ProjData.TrackToggle = !MainViewModel.ProjData.TrackToggle;
             RestoreGridLength();
         }
         private void OnClosed(object o)
@@ -220,7 +225,7 @@ namespace Nart
 
                 int temp = ballListView.SelectedIndex;
 
-                ObservableCollection<BallModel> ballCollection = MainViewModel.Data.BallCollection;
+                ObservableCollection<BallModel> ballCollection = MainViewModel.ProjData.BallCollection;
 
                 ballCollection.Remove(selectedModelItem);
 
@@ -256,7 +261,7 @@ namespace Nart
 
                 int temp = boneListView.SelectedIndex;
 
-                var ballCollection = MainViewModel.Data.BoneCollection;
+                var ballCollection = MainViewModel.ProjData.BoneCollection;
 
                 ballCollection.Remove(selectedModelItem);
 
@@ -318,11 +323,11 @@ namespace Nart
                 using (FileStream myFileStream = new FileStream(xmlFilePah, FileMode.Create))
                 {
                     SoapFormatter soapFormatter = new SoapFormatter();
-                    soapFormatter.Serialize(myFileStream, MainViewModel.Data);
+                    soapFormatter.Serialize(myFileStream, MainViewModel.ProjData);
                     myFileStream.Close();
                 }
 
-                foreach (BoneModel boneModel in MainViewModel.Data.BoneCollection)
+                foreach (BoneModel boneModel in MainViewModel.ProjData.BoneCollection)
                 {
                     boneModel.SaveModel(tempDirectory, false);
                 }
@@ -425,7 +430,7 @@ namespace Nart
 
                           
 
-                            MainViewModel.Data.UpdateData(projectData);
+                            MainViewModel.ProjData.UpdateData(projectData);
                             MultiAngleViewModel.ResetCameraPosition();
                             System.IO.Directory.Delete(tempDirectory, true);
                             break;
@@ -499,17 +504,17 @@ namespace Nart
         private void BindPatientData()
         {
             Binding binding1 = new Binding("Name");
-            binding1.Source = Data;
+            binding1.Source = ProjData;
             binding1.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.NameTB, TextBlock.TextProperty, binding1);
 
             Binding binding2 = new Binding("ID");
-            binding2.Source = Data;
+            binding2.Source = ProjData;
             binding2.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.IDTB, TextBlock.TextProperty, binding2);
 
             Binding binding3 = new Binding("Institution");
-            binding3.Source = Data;
+            binding3.Source = ProjData;
             binding3.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.InstitutionTB, TextBlock.TextProperty, binding3);
         }
@@ -519,22 +524,22 @@ namespace Nart
         private void BindBallData()
         {
             Binding binding = new Binding("BallCollection");
-            binding.Source = Data;
+            binding.Source = ProjData;
             binding.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.BallListView, ItemsControl.ItemsSourceProperty, binding);
 
             Binding binding2 = new Binding("CanSelectPoints");
-            binding2.Source = Data;
+            binding2.Source = ProjData;
             binding2.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.SelectTB, ToggleButton.IsCheckedProperty, binding2);
 
             Binding binding3 = new Binding("SelectPointState");
-            binding3.Source = Data;
+            binding3.Source = ProjData;
             binding3.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.stateTB, TextBlock.TextProperty, binding3);
 
             Binding binding4 = new Binding("BallCollection");
-            binding4.Source = Data;
+            binding4.Source = ProjData;
             binding4.Mode = BindingMode.OneWay;
             BindingOperations.SetBinding(_mainWindow.multiAngleView.BallCollection, ItemsModel3D.ItemsSourceProperty, binding4);
 
@@ -547,22 +552,22 @@ namespace Nart
         {
             //將data中的BoneCollection綁到此控制項的item上面   
             Binding binding = new Binding("BoneCollection");
-            binding.Source = Data;
+            binding.Source = ProjData;
             binding.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.BoneListView, ItemsControl.ItemsSourceProperty, binding);
 
             Binding binding2 = new Binding("BoneCollection");
-            binding2.Source = Data;
+            binding2.Source = ProjData;
             binding2.Mode = BindingMode.OneWay;
             BindingOperations.SetBinding(_mainWindow.multiAngleView.BoneCollection, ItemsModel3D.ItemsSourceProperty, binding2);
 
             Binding binding3 = new Binding("TargetCollection");
-            binding3.Source = Data;
+            binding3.Source = ProjData;
             binding3.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.TargetModelListView, ItemsControl.ItemsSourceProperty, binding3);
 
             Binding binding4 = new Binding("TargetCollection");
-            binding4.Source = Data;
+            binding4.Source = ProjData;
             binding4.Mode = BindingMode.OneWay;
             BindingOperations.SetBinding(_mainWindow.multiAngleView.Targetollection, ItemsModel3D.ItemsSourceProperty, binding4);
         }

@@ -29,10 +29,7 @@ namespace Nart
         ///咬板在註冊資料中引數
         /// </summary>
         public int RegSplintIndex = -1;
-        /// <summary>
-        ///Marker的database
-        /// </summary>
-        public MarkerDatabase Database = new MarkerDatabase();
+
         /// <summary>
         ///雙相機鏡心在世界座標
         /// </summary>
@@ -53,10 +50,6 @@ namespace Nart
         ///在註冊時存取下來算平均值用的咬板世界座標資料，可容納數量也是用來計算平均值所取的數量
         /// </summary>
         private readonly List<Point3D[]> _splintMarkerStack = new List<Point3D[]>(10);
-        /// <summary>
-        ///兩台相機參數
-        /// </summary>
-        private CamParam[] _camParam = new CamParam[2];
         /// <summary>
         ///顱顎面資訊Go Po Or Me...
         /// </summary>
@@ -120,9 +113,9 @@ namespace Nart
 
         public CalcCoord()
         {
-
-            _camParam[0] = new CamParam("../../../data/CaliR_L.txt");
-            _camParam[1] = new CamParam("../../../data/CaliR_R.txt");
+            
+            //_camParam[0] = new CamParam("../../../data/CaliR_L.txt");
+            //_camParam[1] = new CamParam("../../../data/CaliR_R.txt");
             _craniofacialInfo = new CraniofacialInfo("../../../data/ceph.csv");
 
 
@@ -142,8 +135,8 @@ namespace Nart
             LensCenter[1] = new Point4D(0, 0, 0, 1);
 
            
-            LensCenter[0] = _camParam[0].InvExtParam.Transform(LensCenter[0]);
-            LensCenter[1] = _camParam[1].InvExtParam.Transform(LensCenter[1]);
+            LensCenter[0] = SystemData.CameraParam[0].InvExtParam.Transform(LensCenter[0]);
+            LensCenter[1] = SystemData.CameraParam[1].InvExtParam.Transform(LensCenter[1]);
         }
         /// <summary>
         /// 計算基線座標系
@@ -151,9 +144,9 @@ namespace Nart
         private void CalcEpipolarGeometry()
         {
             //虛擬成像平面的中心
-            Point4D plainCenter = new Point4D(0, 0, _camParam[0].FocalLength, 1);                       
+            Point4D plainCenter = new Point4D(0, 0, SystemData.CameraParam[0].FocalLength, 1);                       
 
-            plainCenter = _camParam[0].InvExtParam.Transform(plainCenter);
+            plainCenter = SystemData.CameraParam[0].InvExtParam.Transform(plainCenter);
 
             //Base line            
             Vector3D vecX = new Vector3D(LensCenter[1].X - LensCenter[0].X, LensCenter[1].Y - LensCenter[0].Y, LensCenter[1].Z - LensCenter[0].Z);
@@ -193,23 +186,23 @@ namespace Nart
 
                         PointF imagePoint=(PointF)(outputMarker[i][j].CornerPoint[k].ImagePoint);
 
-                        double xd = _camParam[i].Dpx * (imagePoint.X - _camParam[i].Cx) / _camParam[i].Sx;
-                        double yd = _camParam[i].Dy * (imagePoint.Y - _camParam[i].Cy);
+                        double xd = SystemData.CameraParam[i].Dpx * (imagePoint.X - SystemData.CameraParam[i].Cx) / SystemData.CameraParam[i].Sx;
+                        double yd = SystemData.CameraParam[i].Dy * (imagePoint.Y - SystemData.CameraParam[i].Cy);
 
 
                         double r = Math.Sqrt(xd * xd + yd * yd);
 
-                        double xu = xd * (1 + _camParam[i].Kappa1 * r * r);
-                        double yu = yd * (1 + _camParam[i].Kappa1 * r * r);
+                        double xu = xd * (1 + SystemData.CameraParam[i].Kappa1 * r * r);
+                        double yu = yd * (1 + SystemData.CameraParam[i].Kappa1 * r * r);
 
                         //儲存計算出來的相機座標系的點
-                        outputMarker[i][j].CornerPoint[k].CameraPoint = new Point4D(xu, yu, _camParam[i].FocalLength, 1);
+                        outputMarker[i][j].CornerPoint[k].CameraPoint = new Point4D(xu, yu, SystemData.CameraParam[i].FocalLength, 1);
 
-                        Point4D worldPoint = _camParam[i].RotationInvert.Transform(outputMarker[i][j].CornerPoint[k].CameraPoint);
+                        Point4D worldPoint = SystemData.CameraParam[i].RotationInvert.Transform(outputMarker[i][j].CornerPoint[k].CameraPoint);
 
                         Point4D rectifyPoint = EpipolarCoord.Transform(worldPoint);
 
-                        double rectifyY = _camParam[i].FocalLength * rectifyPoint.Y / rectifyPoint.Z / _camParam[i].Dy;
+                        double rectifyY = SystemData.CameraParam[i].FocalLength * rectifyPoint.Y / rectifyPoint.Z / SystemData.CameraParam[i].Dy;
                         //儲存此點扭正後的值
                         outputMarker[i][j].CornerPoint[k].RectifyY = rectifyY;
                         
@@ -266,8 +259,8 @@ namespace Nart
         public Point3D CalcWorldPoint(Point4D a, Point4D b)
         {
 
-            Point4D worldPoint1 = _camParam[0].InvExtParam.Transform(a);
-            Point4D worldPoint2 = _camParam[1].InvExtParam.Transform(b);
+            Point4D worldPoint1 = SystemData.CameraParam[0].InvExtParam.Transform(a);
+            Point4D worldPoint2 = SystemData.CameraParam[1].InvExtParam.Transform(b);
 
 
             Vector3D d1 = new Vector3D(LensCenter[0].X - worldPoint1.X, LensCenter[0].Y - worldPoint1.Y, LensCenter[0].Z - worldPoint1.Z);
@@ -301,6 +294,7 @@ namespace Nart
         /// </summary>
         public void MatchAndCalc3D(List<BWMarker>[] outputMarker)
         {
+            MarkerDatabase Database = MainViewModel.ProjData.database;
             _curWorldPoints.Clear();
             for (int i = 0, count = 0; i < outputMarker[0].Count; i++) //左相機Marker尋訪
             {
@@ -394,15 +388,14 @@ namespace Nart
         /// </summary>
         private void SimplifyDatabase()
         {
-            //Reset 資料庫中的Marker
-            //database = new MarkerDatabase();
+
             //尋訪資料庫中的Marker
-            for (int i = 0, j = 0; i < Database.MarkerInfo.Count; i++)
+            for (int i = 0, j = 0; i < SystemData.MarkerData.MarkerInfo.Count; i++)
             {   //尋訪世界座標中的Marker
                 for (j = 0; j < _curWorldPoints.Count; j++)
                 {
                     //如果資料庫中的MarkerID存在當前資料庫就檢查下一個
-                    if (Database.MarkerInfo[i].MarkerID.Equals(_curWorldPoints[j].MarkerId))
+                    if (SystemData.MarkerData.MarkerInfo[i].MarkerID.Equals(_curWorldPoints[j].MarkerId))
                     {
                         break; //換下一個資料庫中的Marker
                     }
@@ -410,11 +403,11 @@ namespace Nart
                 //資料庫中的Marker在WorldPoint中都找不到時
                 if (j == _curWorldPoints.Count)
                 {
-                    Database.MarkerInfo.RemoveAt(i);
+                    SystemData.MarkerData.MarkerInfo.RemoveAt(i);
                     i--;
                 }
             }
-            Database.ResetIndex();
+            SystemData.MarkerData.ResetIndex();
             //Database重建之後，將meanFilter裡面的stack也重建
            // _meanFilter.CreatePointStack(Database);
         }
@@ -661,7 +654,7 @@ namespace Nart
                 {
                     MessageBox.Show("找不到咬板以及頭部標記片");
                 }
-                MainViewModel.Data.RegToggle = false;
+                MainViewModel.ProjData.RegToggle = false;
                 return;
             }
 
@@ -669,7 +662,7 @@ namespace Nart
             //讀進_splintInCT檔案
             if (!LoadSplintPoint("../../../data/蔡慧君測試用.txt"))
             {
-                MainViewModel.Data.RegToggle = false;
+                MainViewModel.ProjData.RegToggle = false;
                 return;
             }
             //簡化資料庫的Marker
@@ -682,7 +675,7 @@ namespace Nart
             _worldtoCT = TransformCoordinate(ref _curWorldPoints[RegSplintIndex].ThreePoints,ref _splintInCT);
 
 
-            MainViewModel.Data.IsRegInitialized = true;
+            MainViewModel.ProjData.IsRegInitialized = true;
             
         }
         /// <summary>
@@ -716,12 +709,12 @@ namespace Nart
 
                     CalcFHCoord();
 
-                    for (int i = 0; i < Database.MarkerInfo.Count; i++)
+                    for (int i = 0; i < SystemData.MarkerData.MarkerInfo.Count; i++)
                     {
-                        Console.WriteLine("\n\n" + Database.MarkerInfo[i].ThreeLength[0] + " " + Database.MarkerInfo[i].ThreeLength[1] + " " + Database.MarkerInfo[i].ThreeLength[2]);
+                        Console.WriteLine("\n\n" + SystemData.MarkerData.MarkerInfo[i].ThreeLength[0] + " " + SystemData.MarkerData.MarkerInfo[i].ThreeLength[1] + " " + SystemData.MarkerData.MarkerInfo[i].ThreeLength[2]);
                     }
-                    Console.WriteLine("splint:" + Database.SplintIndex);
-                    Console.WriteLine("Head:" + Database.HeadIndex);
+                    Console.WriteLine("splint:" + SystemData.MarkerData.SplintIndex);
+                    Console.WriteLine("Head:" + SystemData.MarkerData.HeadIndex);
                     
 
                     for (int i = 0; i < _curWorldPoints.Count; i++)
@@ -777,7 +770,7 @@ namespace Nart
             {
                 MessageBox.Show("包括咬板與頭部還需要其他標記片");
             }
-            MainViewModel.Data.RegToggle = false;
+            MainViewModel.ProjData.RegToggle = false;
         }
         /// <summary>
         /// 導航的註冊
@@ -788,7 +781,7 @@ namespace Nart
             _msWorldPoints.Clear();
 
             //註冊前初始化
-            if (!MainViewModel.Data.IsRegInitialized)
+            if (!MainViewModel.ProjData.IsRegInitialized)
             {
                 InitializeRegistration();
             }
@@ -903,7 +896,7 @@ namespace Nart
                     _headMarkerStack.Clear();
                     _splintMarkerStack.Clear();
                     MessageBox.Show("註冊了" + _curWorldPoints.Count + "組Marker");
-                    MainViewModel.Data.RegToggle = false;
+                    MainViewModel.ProjData.RegToggle = false;
                 }
             }
         }        
@@ -935,7 +928,7 @@ namespace Nart
                         
                         Matrix3D final = _CTtoMS * level2 * level3 * _MStoCT;
 
-                        var boneCollection = MainViewModel.Data.BoneCollection;
+                        var boneCollection = MainViewModel.ProjData.BoneCollection;
                        foreach (BoneModel boneModel in boneCollection)
                        {                          
                            if (boneModel != null && boneModel.MarkerId == _curWorldPoints[i].MarkerId)
@@ -976,7 +969,7 @@ namespace Nart
 
                         Matrix3D final =  level1 * level2 * _worldtoCT;
 
-                        var boneCollection = MainViewModel.Data.BoneCollection;
+                        var boneCollection = MainViewModel.ProjData.BoneCollection;
                         foreach (BoneModel boneModel in boneCollection)
                         {                           
                             if (boneModel.MarkerId == _curWorldPoints[i].MarkerId&& boneModel.IsRendering)
@@ -1178,10 +1171,10 @@ namespace Nart
                 DraggableTriangle targetTriangle;
                 DraggableTriangle movedTriangle;
                 //在第二階段
-                if (MainViewModel.Data.IsSecondStage)
+                if (MainViewModel.ProjData.IsSecondStage)
                 {                    
                     //第二階段但第一階段導的是上顎
-                    if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
+                    if (MainViewModel.ProjData.FirstNavigation.Equals("Maxilla"))
                     {
                         targetTriangle = MultiAngleViewModel.TriangleModelCollection[1] as DraggableTriangle;
                         movedTriangle = MultiAngleViewModel.TriangleModelCollection[3] as DraggableTriangle;                        
@@ -1193,9 +1186,9 @@ namespace Nart
                     }
                 }
                 //在第一階段
-                else if (MainViewModel.Data.IsFirstStage)
+                else if (MainViewModel.ProjData.IsFirstStage)
                 {
-                    if (MainViewModel.Data.FirstNavigation.Equals("Maxilla"))
+                    if (MainViewModel.ProjData.FirstNavigation.Equals("Maxilla"))
                     {
                         targetTriangle = MultiAngleViewModel.TriangleModelCollection[0] as DraggableTriangle;
                         movedTriangle = MultiAngleViewModel.TriangleModelCollection[2] as DraggableTriangle;
@@ -1259,8 +1252,8 @@ namespace Nart
                 string ballDistanceInfo ="".PadLeft(15)+ "dx".PadLeft(10) + "dy".PadLeft(10) + "dz".PadLeft(10);
 
                 //以下這段計算導航小球的距離 
-                ObservableCollection <BallModel> ballCollection = MainViewModel.Data.BallCollection;
-                ProjectData data = MainViewModel.Data;
+                ObservableCollection <BallModel> ballCollection = MainViewModel.ProjData.BallCollection;
+                ProjectData data = MainViewModel.ProjData;
 
 
                 //當選擇的是先導航上顎且在第一個階段  或  選擇先導航下顎但已經在第二階段

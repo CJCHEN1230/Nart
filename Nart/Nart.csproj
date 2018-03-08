@@ -168,6 +168,7 @@
     <Compile Include="Model\ModelType.cs" />
     <Compile Include="Model\MeanFilter.cs" />
     <Compile Include="Model\ProjectData.cs" />
+    <Compile Include="Model\SystemData.cs" />
     <Compile Include="ObservableObject.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Resource\DarkTheme.xaml.cs">

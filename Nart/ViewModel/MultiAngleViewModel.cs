@@ -235,7 +235,7 @@ namespace Nart
         /// </summary>
         public static void ResetCameraPosition()
         {
-            var boneCollection=MainViewModel.Data.BoneCollection;
+            var boneCollection=MainViewModel.ProjData.BoneCollection;
             Model3DGroup modelGroup = new Model3DGroup();
 
             //一般的BoneModel放置的位置，目前暫定放原始位置
@@ -251,7 +251,7 @@ namespace Nart
                     }
                 }
             }
-            var targetCollection = MainViewModel.Data.TargetCollection;
+            var targetCollection = MainViewModel.ProjData.TargetCollection;
             //TargetCollection 放置上下顎的目標位置
             if (targetCollection != null && targetCollection.Count != 0)
             {
@@ -334,7 +334,7 @@ namespace Nart
         }           
         public void OnMouseDoubleClickHandler(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (!MainViewModel.Data.CanSelectPoints)
+            if (!MainViewModel.ProjData.CanSelectPoints)
                 return;
 
             Viewport3DX viewport = sender as Viewport3DX;
@@ -376,7 +376,7 @@ namespace Nart
 
                 //這邊很怪 拿不到該有的屬性資訊只有一些基底類別的資訊的
                 BoneModel model = hit.ModelHit as BoneModel;
-                foreach (BoneModel modeltemp in MainViewModel.Data.BoneCollection)
+                foreach (BoneModel modeltemp in MainViewModel.ProjData.BoneCollection)
                 {
                     if (modeltemp.Geometry.Positions.Count == model.Geometry.Positions.Count)
                     {
@@ -432,7 +432,7 @@ namespace Nart
                 //ball.Material = PhongMaterials.Silver;
                 //ball.Transform = new MatrixTransform3D();
 
-                MainViewModel.Data.BallCollection.Add(ball);
+                MainViewModel.ProjData.BallCollection.Add(ball);
 
                 //////////////////測試另外一顆球
                 //BallModel ball2 = new BallModel
