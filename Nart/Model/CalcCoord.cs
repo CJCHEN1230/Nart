@@ -21,14 +21,6 @@ namespace Nart
 {
     public class CalcCoord
     {
-        ///<summary>
-        ///頭在註冊資料中引數
-        /// </summary>
-        public int RegHeadIndex = -1;
-        ///<summary>
-        ///咬板在註冊資料中引數
-        /// </summary>
-        public int RegSplintIndex = -1;
 
         /// <summary>
         ///雙相機鏡心在世界座標
@@ -113,9 +105,7 @@ namespace Nart
 
         public CalcCoord()
         {
-            
-            //_camParam[0] = new CamParam("../../../data/CaliR_L.txt");
-            //_camParam[1] = new CamParam("../../../data/CaliR_R.txt");
+
             _craniofacialInfo = new CraniofacialInfo("../../../data/ceph.csv");
 
 
@@ -632,20 +622,20 @@ namespace Nart
             _msWorldPoints.Clear();
            
             //取得咬板Marker在WorldPoints中的索引值
-            RegSplintIndex = GetSpecIndex(_curWorldPoints, "Splint");             
+            SystemData.RegSplintIndex = GetSpecIndex(_curWorldPoints, "Splint");             
             //取得頭Marker在WorldPoints中的索引值
-            RegHeadIndex = GetSpecIndex(_curWorldPoints, "Head");
+            SystemData.RegHeadIndex = GetSpecIndex(_curWorldPoints, "Head");
 
             //註冊需要咬板與頭部標記片，找不到就返回
-            if (RegSplintIndex == -1 || RegHeadIndex== -1)
+            if (SystemData.RegSplintIndex == -1 || SystemData.RegHeadIndex== -1)
             {
                 //只缺少咬板標記片
-                if (RegSplintIndex == -1 && RegHeadIndex != -1)
+                if (SystemData.RegSplintIndex == -1 && SystemData.RegHeadIndex != -1)
                 {
                     MessageBox.Show("找不到咬板標記片");
                 }
                 //只缺少頭部標記片
-                else if (RegSplintIndex != -1 && RegHeadIndex == -1)
+                else if (SystemData.RegSplintIndex != -1 && SystemData.RegHeadIndex == -1)
                 {
                     MessageBox.Show("找不到頭部標記片");
                 }
@@ -671,8 +661,8 @@ namespace Nart
             CalcFHCoord();
             
                 
-            _cTtoWorld = TransformCoordinate(ref _splintInCT,ref  _curWorldPoints[RegSplintIndex].ThreePoints);
-            _worldtoCT = TransformCoordinate(ref _curWorldPoints[RegSplintIndex].ThreePoints,ref _splintInCT);
+            _cTtoWorld = TransformCoordinate(ref _splintInCT,ref  _curWorldPoints[SystemData.RegSplintIndex].ThreePoints);
+            _worldtoCT = TransformCoordinate(ref _curWorldPoints[SystemData.RegSplintIndex].ThreePoints,ref _splintInCT);
 
 
             MainViewModel.ProjData.IsRegInitialized = true;
@@ -695,14 +685,14 @@ namespace Nart
             if (_curWorldPoints.Count >= 2)
             {
                 //取得咬板Marker在WorldPoints中的索引值
-                RegSplintIndex = GetSpecIndex(_curWorldPoints, "Splint");
-                Console.WriteLine("\n\n第" + (RegSplintIndex + 1) + "組點是咬板");
+                SystemData.RegSplintIndex = GetSpecIndex(_curWorldPoints, "Splint");
+                Console.WriteLine("\n\n第" + (SystemData.RegSplintIndex + 1) + "組點是咬板");
                 //取得頭Marker在WorldPoints中的索引值
-                RegHeadIndex = GetSpecIndex(_curWorldPoints, "Head");
-                Console.WriteLine("\n\n第" + (RegHeadIndex + 1) + "組點是頭部");
+                SystemData.RegHeadIndex = GetSpecIndex(_curWorldPoints, "Head");
+                Console.WriteLine("\n\n第" + (SystemData.RegHeadIndex + 1) + "組點是頭部");
 
                 //註冊需要咬板與頭部標記片
-                if (RegSplintIndex != -1 && RegHeadIndex != -1)
+                if (SystemData.RegSplintIndex != -1 && SystemData.RegHeadIndex != -1)
                 {
 
                     SimplifyDatabase();
@@ -723,7 +713,7 @@ namespace Nart
                     }
 
 
-                    _oriWorldtoMS = TransformCoordinate(ref _curWorldPoints[RegSplintIndex].ThreePoints,ref _MSSplintMarker);
+                    _oriWorldtoMS = TransformCoordinate(ref _curWorldPoints[SystemData.RegSplintIndex].ThreePoints,ref _MSSplintMarker);
 
                     foreach (Marker3D marker3D in _curWorldPoints)
                     {
@@ -787,17 +777,17 @@ namespace Nart
             }
 
             //取得咬板Marker在WorldPoints中的索引值
-            RegSplintIndex = GetSpecIndex(_curWorldPoints, "Splint");
+            SystemData.RegSplintIndex = GetSpecIndex(_curWorldPoints, "Splint");
             //取得頭Marker在WorldPoints中的索引值
-            RegHeadIndex = GetSpecIndex(_curWorldPoints, "Head");
+            SystemData.RegHeadIndex = GetSpecIndex(_curWorldPoints, "Head");
 
 
             //註冊需要咬板與頭部標記片
-            if (RegSplintIndex != -1 && RegHeadIndex != -1)
+            if (SystemData.RegSplintIndex != -1 && SystemData.RegHeadIndex != -1)
             {
 
-                _splintMarkerStack.Add(_curWorldPoints[RegSplintIndex].ThreePoints);
-                _headMarkerStack.Add(_curWorldPoints[RegHeadIndex].ThreePoints);
+                _splintMarkerStack.Add(_curWorldPoints[SystemData.RegSplintIndex].ThreePoints);
+                _headMarkerStack.Add(_curWorldPoints[SystemData.RegHeadIndex].ThreePoints);
 
 
                 //各收集到100組後進來
@@ -864,13 +854,13 @@ namespace Nart
                     splintMarkerPoint[2].Z /= _splintMarkerStack.Count;
 
 
-                    _curWorldPoints[RegSplintIndex].ThreePoints = splintMarkerPoint;
-                    _curWorldPoints[RegHeadIndex].ThreePoints = headMarkerPoint;
+                    _curWorldPoints[SystemData.RegSplintIndex].ThreePoints = splintMarkerPoint;
+                    _curWorldPoints[SystemData.RegHeadIndex].ThreePoints = headMarkerPoint;
 
 
 
-                    _cTtoWorld = TransformCoordinate(ref _splintInCT,ref  _curWorldPoints[RegSplintIndex].ThreePoints);
-                    _worldtoCT = TransformCoordinate(ref _curWorldPoints[RegSplintIndex].ThreePoints,ref  _splintInCT);
+                    _cTtoWorld = TransformCoordinate(ref _splintInCT,ref  _curWorldPoints[SystemData.RegSplintIndex].ThreePoints);
+                    _worldtoCT = TransformCoordinate(ref _curWorldPoints[SystemData.RegSplintIndex].ThreePoints,ref  _splintInCT);
 
 
                     Marker3D oriWorldPoint1 = new Marker3D
@@ -889,8 +879,8 @@ namespace Nart
                     oriWorldPoint2.SortedByLength();
                     _oriWorldPoints.Add(oriWorldPoint2);
 
-                    RegSplintIndex = 0;                    
-                    RegHeadIndex = 1;
+                    SystemData.RegSplintIndex = 0;                    
+                    SystemData.RegHeadIndex = 1;
 
 
                     _headMarkerStack.Clear();
@@ -922,7 +912,7 @@ namespace Nart
 
                         Matrix3D level2 = TransformCoordinate(ref _msWorldPoints[mSandOriIndex].ThreePoints,ref _curWorldPoints[i].ThreePoints);//"註冊檔紀錄的可動部分的marker座標轉到MS座標的結果 MS Marker" to "追蹤LED(現在位置)"
 
-                        Matrix3D level3 = TransformCoordinate(ref _curWorldPoints[currentHeadIndex].ThreePoints,ref _msWorldPoints[RegHeadIndex].ThreePoints);
+                        Matrix3D level3 = TransformCoordinate(ref _curWorldPoints[currentHeadIndex].ThreePoints,ref _msWorldPoints[SystemData.RegHeadIndex].ThreePoints);
 
                         //Matrix3D level4 = TransformCoordinate(MSBall, CTBall);
                         
@@ -964,7 +954,7 @@ namespace Nart
 
                         Matrix3D level1 = TransformCoordinate(ref _splintInCT,ref _curWorldPoints[i].ThreePoints);
 
-                        Matrix3D level2 = TransformCoordinate(ref _curWorldPoints[currentHeadIndex].ThreePoints,ref  _oriWorldPoints[RegHeadIndex].ThreePoints);
+                        Matrix3D level2 = TransformCoordinate(ref _curWorldPoints[currentHeadIndex].ThreePoints,ref  _oriWorldPoints[SystemData.RegHeadIndex].ThreePoints);
 
 
                         Matrix3D final =  level1 * level2 * _worldtoCT;

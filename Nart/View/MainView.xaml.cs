@@ -175,33 +175,11 @@ namespace Nart
 
         private void button_Click_1(object sender, RoutedEventArgs e)
         {
-
-            SelectTB.IsEnabled = !SelectTB.IsEnabled;
-
-            Console.WriteLine("SelectTB.IsEnabled:"+ SelectTB.IsEnabled);
-            //FileStream myFileStream = new FileStream(@"D:\Desktop\ttt2.xml", FileMode.Create);
-            ////建立 BinaryFormatter 物件
-            //SoapFormatter myBinaryFormatter = new SoapFormatter();
-
-            //myBinaryFormatter.Serialize(myFileStream, MainViewModel.Data);
-
-            //myFileStream.Close();
-
-            //// 反序列化，從檔案取出資料成員           
-            // myFileStream = new FileStream(@"D:\Desktop\ttt2.xml", FileMode.Open);
-            // myBinaryFormatter = new SoapFormatter();
-
-            //ProjectData mydata = (ProjectData)
-            //    myBinaryFormatter.Deserialize(myFileStream);
-
-            //myFileStream.Close();
-            //// 於控制臺輸出資料			
-            //Console.WriteLine(mydata.Name);
-            //Console.WriteLine(mydata.ID);
-            //Console.WriteLine(mydata.Institution);
-
-
-
+            for (int i = 0; i<10000000;i++)
+            {
+                Console.WriteLine("123");
+            }
+           
         }
 
         private void button_Click_2(object sender, RoutedEventArgs e)

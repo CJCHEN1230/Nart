@@ -30,6 +30,18 @@ namespace Nart.Experiment
         int currentLine = 2;
         int count = 0;
 
+        private void DisplayLoop()
+        {
+            myport.Write("MoveXPosi");
+            string get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+            myport.Write("MoveXPosi");
+            get = myport.ReadLine();
+            Console.WriteLine("\n!!!!!!!!!:" + get);
+            
+        }
+
+
         private  List<Marker3D> CurWorldPoints = new List<Marker3D>(10);
         public CtrlRotPlatform()
         {
@@ -63,16 +75,23 @@ namespace Nart.Experiment
         }
         private void EnterClick(object sender, RoutedEventArgs e)
         {
-            if (!(inputTB.Text == ""))
+            string temp = inputTB.Text;
+
+            new Thread(() =>
             {
-                myport.Write(inputTB.Text);
-                string get = myport.ReadLine();
-                Console.WriteLine("\n!!!!!!!!!:" + get);
-                //Thread.Sleep(2000);
-                //WriteLengthData();
-                inputTB.Text = "";
-            }
-            
+      
+                if (!(temp == ""))
+                {
+                    myport.Write(temp);
+                    string get = myport.ReadLine();
+                    Console.WriteLine("\n!!!!!!!!!:" + get);
+                    //Thread.Sleep(2000);
+                    //WriteLengthData();
+                    
+                }
+
+            }).Start();
+            inputTB.Text = "";
         }
         private void DoExperiemntClick(object sender, RoutedEventArgs e)
         {
@@ -287,6 +306,7 @@ namespace Nart.Experiment
 
         private void XPosiBtn_Click(object sender, RoutedEventArgs e)
         {
+
             myport.Write("MoveXPosi");
             string get = myport.ReadLine();
             Console.WriteLine("\n!!!!!!!!!:" + get);

@@ -9,6 +9,14 @@ namespace Nart
     public static class SystemData
     {
 
+        ///<summary>
+        ///頭在註冊資料中引數
+        /// </summary>
+        public static int RegHeadIndex = -1;
+        ///<summary>
+        ///咬板在註冊資料中引數
+        /// </summary>
+        public static int RegSplintIndex = -1;
         public static  CamParam[] CameraParam = new CamParam[2];
         public static MarkerDatabase MarkerData = new MarkerDatabase();
 
