@@ -59,6 +59,8 @@ namespace Nart
             DeleteBoneCommad = new RelayCommand(DeleteBoneItem);
             SaveProjectCommand = new RelayCommand(SaveProject);
             LoadProjectCommand = new RelayCommand(LoadProject);
+            FlyInSettingCommand = new RelayCommand(FlyInSettingView);
+            FlyOutSettingCommand = new RelayCommand(FlyOutSettingView);
 
             BindPatientData();
             BindBallData();
@@ -115,6 +117,14 @@ namespace Nart
         /// 刪除骨骼模型的Command        
         /// </summary>
         public ICommand DeleteBoneCommad { private set; get; }
+        /// <summary>
+        /// 飛入設定頁面        
+        /// </summary>
+        public ICommand FlyInSettingCommand { private set; get; }
+        /// <summary>
+        /// 飛出設定頁面        
+        /// </summary>
+        public ICommand FlyOutSettingCommand { private set; get; }
         /// <summary>
         /// 開啟控制旋轉平台的Command        
         /// </summary>
@@ -364,6 +374,77 @@ namespace Nart
                 ImportFile(dlg.FileName);
             }
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
+        }
+        private void FlyInSettingView(object o)
+        {
+            ColumnDefinition Col0 = _mainWindow.Col0;
+            ColumnDefinition Col1 = _mainWindow.Col1;
+            ColumnDefinition Col2 = _mainWindow.Col2;
+            var storyboard = new Storyboard();
+
+            Col2.Width = new GridLength(Col2.ActualWidth, GridUnitType.Pixel);
+
+            GridLengthAnimation gla2 =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(Col1.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(0, GridUnitType.Pixel),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
+
+
+            Storyboard.SetTargetProperty(gla2, new PropertyPath(ColumnDefinition.WidthProperty));
+            Storyboard.SetTarget(gla2, Col1);
+
+            storyboard.Children.Add(gla2);
+
+            GridLengthAnimation gla =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(Col0.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(Col1.ActualWidth, GridUnitType.Pixel),
+                    Duration = new TimeSpan(0, 0, 0, 0, 200),
+                    FillBehavior = FillBehavior.HoldEnd,
+
+                };
+            Storyboard.SetTargetProperty(gla, new PropertyPath(ColumnDefinition.WidthProperty));
+            Storyboard.SetTarget(gla, Col0);
+
+
+            storyboard.Children.Add(gla);
+
+            _mainWindow.BeginStoryboard(storyboard);
+        }
+        private void FlyOutSettingView(object o)
+        {
+            ColumnDefinition Col0 = _mainWindow.Col0;
+            ColumnDefinition Col1 = _mainWindow.Col1;
+            ColumnDefinition Col2 = _mainWindow.Col2;
+
+            Col2.Width = new GridLength(Col2.ActualWidth, GridUnitType.Pixel);
+
+            GridLengthAnimation gla =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(Col0.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(0, GridUnitType.Pixel),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
+
+            GridLengthAnimation gla2 =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(Col1.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(Col0.ActualWidth, GridUnitType.Pixel),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
+
+
+            Col0.BeginAnimation(ColumnDefinition.WidthProperty, gla);
+            Col1.BeginAnimation(ColumnDefinition.WidthProperty, gla2);
         }
         public void ImportFile(string filename)
         {
