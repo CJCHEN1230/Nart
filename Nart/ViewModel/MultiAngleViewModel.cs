@@ -293,7 +293,7 @@ namespace Nart
                 orthoCam1.Position = new Point3D(modelCenter.X, modelCenter.Y - (boundingBox.SizeY), modelCenter.Z);
                 orthoCam1.UpDirection = new Vector3D(0, 0, 1);
                 orthoCam1.LookDirection = new Vector3D(0, boundingBox.SizeY, 0);
-                orthoCam1.NearPlaneDistance = -1000;
+                orthoCam1.NearPlaneDistance = -boundingBox.SizeY;
                 orthoCam1.FarPlaneDistance = 1e15;
                 orthoCam1.Width = boundingBox.SizeX + 110;
             }
@@ -304,7 +304,7 @@ namespace Nart
                 orthoCam2.Position = new Point3D(modelCenter.X, modelCenter.Y, modelCenter.Z - (boundingBox.SizeZ));
                 orthoCam2.UpDirection = new Vector3D(0, 1, 0);
                 orthoCam2.LookDirection = new Vector3D(0, 0, boundingBox.SizeZ);
-                orthoCam2.NearPlaneDistance = -1000;
+                orthoCam2.NearPlaneDistance = 1;
                 orthoCam2.FarPlaneDistance = 1e15;
                 orthoCam2.Width = boundingBox.SizeX + 110;
             }
@@ -315,7 +315,7 @@ namespace Nart
                 orthoCam3.Position = new Point3D(modelCenter.X - (boundingBox.SizeX), modelCenter.Y, modelCenter.Z);
                 orthoCam3.UpDirection = new Vector3D(0, 0, 1);
                 orthoCam3.LookDirection = new Vector3D(boundingBox.SizeX, 0, 0);
-                orthoCam3.NearPlaneDistance = -1000;
+                orthoCam3.NearPlaneDistance = -500;
                 orthoCam3.FarPlaneDistance = 1e15;
                 orthoCam3.Width = boundingBox.SizeX + 110;
             }
@@ -331,9 +331,13 @@ namespace Nart
             binding.Source = this;
             binding.Mode = BindingMode.OneWayToSource;
             BindingOperations.SetBinding(camera, ProjectionCamera.LookDirectionProperty, binding);
-        }           
+        }
+        /// <summary>
+        /// 連續點擊兩下產生出球
+        /// </summary>
         public void OnMouseDoubleClickHandler(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            //如果當前可點擊的狀態為否則直接return
             if (!MainViewModel.ProjData.CanSelectPoints)
                 return;
 
@@ -349,70 +353,37 @@ namespace Nart
 
             foreach (var hit in hitTests)
             {
-                //不是BoneModel的話換下一個模型
+                //有可能點到對稱面，不是BoneModel的話換下一個模型
                 if (!(hit.ModelHit is BoneModel))
                     continue;
-
-
-                Point3D pointHit = hit.PointHit;
-                Vector3D normal = hit.NormalAtHit;
-                //normal.Normalize();
-                normal.X = 0;
-                normal.Y = -1;
-                normal.Z = 0;
-
-                double temp1 = 1;
-                double temp2 = 4;
-
-                Vector3 point1 = new Vector3(Convert.ToSingle(pointHit.X - temp1 * normal.X), Convert.ToSingle(pointHit.Y - temp1 * normal.Y), Convert.ToSingle(pointHit.Z - temp1 * normal.Z));
-                Vector3 point2 = new Vector3(Convert.ToSingle(pointHit.X + temp2 * normal.X), Convert.ToSingle(pointHit.Y + temp2 * normal.Y), Convert.ToSingle(pointHit.Z + temp2 * normal.Z));
-
-
-
+                
                 BallModel ball = new BallModel
                 {
                     BallName = "Ball",                    
                 };
 
-                //這邊很怪 拿不到該有的屬性資訊只有一些基底類別的資訊的
+                //這邊很怪 拿不到該有的屬性資訊只有一些基底類別的資訊
                 BoneModel model = hit.ModelHit as BoneModel;
-                foreach (BoneModel modeltemp in MainViewModel.ProjData.BoneCollection)
+                foreach (BoneModel modeltem in MainViewModel.ProjData.BoneCollection)
                 {
-                    if (modeltemp.Geometry.Positions.Count == model.Geometry.Positions.Count)
+                    //先找出當前點到的BoneModel是哪個，並將點擊的球的ModelType設定成跟該Model一樣
+                    if (modeltem.Geometry.Positions.Count == model.Geometry.Positions.Count)
                     {
-                        ball.ModelType = modeltemp.ModelType;
+                        ball.ModelType = modeltem.ModelType;
                         Binding binding = new Binding("Transform");
-                        binding.Source = modeltemp;
+                        binding.Source = modeltem;
                         binding.Mode = BindingMode.OneWay;
                         BindingOperations.SetBinding(ball, HelixToolkit.Wpf.SharpDX.Model3D.TransformProperty, binding);
 
                     }
                 }
 
-
-                var all = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+                
                 var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
-                var cylinderContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
-
-
-                double theta = Math.Acos(1.0 / 1.5);
-                double length = 1.5 * Math.Sin(theta);
-                Vector3 ballCenter = new Vector3(Convert.ToSingle(point2.X + length * normal.X),
-                    Convert.ToSingle(point2.Y + length * normal.Y), Convert.ToSingle(point2.Z + length * normal.Z));
-                ball.BallCenter = ballCenter;
-
-
-                ballContainer.AddSphere(ballCenter, 1.5);
-                cylinderContainer.AddPipe(point1, point2, 2, 5, 200);
-
-                all.AddSphere(ballCenter, 1.5);
-                all.AddPipe(point1, point2, 2, 5, 200);
-                //將球跟管分開儲存
-                ball.ballGeometry = ballContainer.ToMeshGeometry3D();
-                ball.pipeGeometry = cylinderContainer.ToMeshGeometry3D();
-
-                ball.Geometry = all.ToMeshGeometry3D();
-
+                Vector3 ballCenter = new Vector3(Convert.ToSingle(hit.PointHit.X), Convert.ToSingle(hit.PointHit.Y), Convert.ToSingle(hit.PointHit.Z));                    
+                ball.BallCenter = ballCenter;                
+                ballContainer.AddSphere(ballCenter, 6);
+                ball.Geometry = ballContainer.ToMeshGeometry3D();
 
                 PhongMaterial material = new PhongMaterial();
 
@@ -425,28 +396,10 @@ namespace Nart
                 material.SpecularShininess = 60;
                 material.DiffuseColor = new Color4(1.0f, 1.0f, 1.0f, 0.8f);
 
-
-
-
                 ball.Material = material;
-                //ball.Material = PhongMaterials.Silver;
-                //ball.Transform = new MatrixTransform3D();
 
                 MainViewModel.ProjData.BallCollection.Add(ball);
-
-                //////////////////測試另外一顆球
-                //BallModel ball2 = new BallModel
-                //{
-                //    BallName = "!!!!!",
-                //    BallInfo = "!!!!!"
-                //};
-                //var ballContainer2 = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
-                //ballContainer2.AddSphere(ballCenter, 4);
-                //ball2.Geometry = ballContainer2.ToMeshGeometry3D();
-                //ball2.Material = PhongMaterials.Black;
-                //ball2.Transform = new MatrixTransform3D();
-
-                //MainViewModel.Data.BallCollection2.Add(ball2);
+                
                 break;
             }
         }

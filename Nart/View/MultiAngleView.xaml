@@ -83,7 +83,6 @@
 
 
             </hx:ModelContainer3DX>
-
             <hx:Viewport3DX  x:Name="Viewport2"
                         ShowViewCube="True" 
                         ZoomExtentsWhenLoaded="False" Margin="0" 
@@ -205,6 +204,8 @@
                 <Label x:Name="NavBallDistanceLabel" IsHitTestVisible="False" Content="{Binding NavBallDistance, Mode=OneWay}" Margin="0,20,0,0"  HorizontalContentAlignment="Left" FontWeight="Bold" FontSize="20" Foreground="White" Grid.Row="1"/>
                 <Label x:Name="CephLabel" IsHitTestVisible="False" Content="{Binding CraniofacialInfo, Mode=OneWay}"  ContentStringFormat="" Margin="1,1,0,1" HorizontalAlignment="Left" FontWeight="Bold" FontSize="20" Foreground="White" Width="248" Grid.Row="0"/>
             </Grid>
+            <TextBox Text="{Binding Camera1.Position, StringFormat=Position: \{0:0.0\}}" HorizontalAlignment="Left" Width="200" Height="35" VerticalAlignment="Top"/>
+            <TextBox Text="{Binding Camera1.LookDirection, StringFormat=LookDirection: \{0:0.0\}}" HorizontalAlignment="Left" Width="250" Height="35" VerticalAlignment="Top" Margin="222,2,0,0"/>
 
         </Grid>
 
