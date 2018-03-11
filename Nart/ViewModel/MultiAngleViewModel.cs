@@ -47,6 +47,8 @@ namespace Nart
             _multiview = multiview;           
             SetLight();
             SetCamera();
+           
+
         }
 
         /// <summary>
@@ -191,7 +193,8 @@ namespace Nart
             }
         }
         public IEffectsManager EffectsManager { get; protected set; }
-        public IRenderTechniquesManager RenderTechniquesManager { get; protected set; }
+        public IRenderTechniquesManager RenderTechniquesManager { get; protected set;}
+
         public static ObservableCollection<Element3D> OspModelCollection
         {
             get;
@@ -212,24 +215,6 @@ namespace Nart
             get;
             set;
         } = new ObservableCollection<Element3D>();
-        /// <summary>
-        /// 設定光源Ambientlight顏色、DirectionaLlight顏色        
-        /// </summary>
-        internal void SetLight()
-        {         
-            DirectionalLightColor = Color.White;
-        }
-        /// <summary>
-        /// 初始化相機參數，並綁定相機觀看方向
-        /// </summary>
-        private void SetCamera()
-        {
-            SetupCameraBindings("Cam1LookDir", Camera1);
-            SetupCameraBindings("Cam2LookDir", Camera2);
-            SetupCameraBindings("Cam3LookDir", Camera3);
-
-            ResetCameraPosition();
-        }
         /// <summary>
         /// 重設相機觀向位置
         /// </summary>
@@ -293,7 +278,7 @@ namespace Nart
                 orthoCam1.Position = new Point3D(modelCenter.X, modelCenter.Y - (boundingBox.SizeY), modelCenter.Z);
                 orthoCam1.UpDirection = new Vector3D(0, 0, 1);
                 orthoCam1.LookDirection = new Vector3D(0, boundingBox.SizeY, 0);
-                orthoCam1.NearPlaneDistance = -boundingBox.SizeY;
+                orthoCam1.NearPlaneDistance = -500;
                 orthoCam1.FarPlaneDistance = 1e15;
                 orthoCam1.Width = boundingBox.SizeX + 110;
             }
@@ -304,7 +289,7 @@ namespace Nart
                 orthoCam2.Position = new Point3D(modelCenter.X, modelCenter.Y, modelCenter.Z - (boundingBox.SizeZ));
                 orthoCam2.UpDirection = new Vector3D(0, 1, 0);
                 orthoCam2.LookDirection = new Vector3D(0, 0, boundingBox.SizeZ);
-                orthoCam2.NearPlaneDistance = 1;
+                orthoCam2.NearPlaneDistance = -500;
                 orthoCam2.FarPlaneDistance = 1e15;
                 orthoCam2.Width = boundingBox.SizeX + 110;
             }
@@ -379,24 +364,11 @@ namespace Nart
                 }
 
                 
-                var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
-                Vector3 ballCenter = new Vector3(Convert.ToSingle(hit.PointHit.X), Convert.ToSingle(hit.PointHit.Y), Convert.ToSingle(hit.PointHit.Z));                    
-                ball.BallCenter = ballCenter;                
-                ballContainer.AddSphere(ballCenter, 6);
-                ball.Geometry = ballContainer.ToMeshGeometry3D();
-
-                PhongMaterial material = new PhongMaterial();
-
-                material.ReflectiveColor = SharpDX.Color.Black;
-                float ambient = 0.0f;
-                material.AmbientColor = new SharpDX.Color(ambient, ambient, ambient, 1.0f);
-                material.EmissiveColor = SharpDX.Color.Black; //這是自己發光的顏色
-                int specular = 90;
-                material.SpecularColor = new SharpDX.Color(specular, specular, specular, 255);
-                material.SpecularShininess = 60;
-                material.DiffuseColor = new Color4(1.0f, 1.0f, 1.0f, 0.8f);
-
-                ball.Material = material;
+                var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();   
+                ball.BallCenter = new Vector3(Convert.ToSingle(hit.PointHit.X), Convert.ToSingle(hit.PointHit.Y), Convert.ToSingle(hit.PointHit.Z));
+                ballContainer.AddSphere(ball.BallCenter, 1.5);
+                ball.Geometry = ballContainer.ToMeshGeometry3D();                
+                ball.Material = PhongMaterials.White;
 
                 MainViewModel.ProjData.BallCollection.Add(ball);
                 
@@ -473,8 +445,21 @@ namespace Nart
             e.Effects = DragDropEffects.None;
             e.Handled = true;
         }
+        private void SetLight()
+        {
+            DirectionalLightColor = Color.White;
+        }
+        /// <summary>
+        /// 初始化相機參數，並綁定相機觀看方向
+        /// </summary>
+        private void SetCamera()
+        {
+            SetupCameraBindings("Cam1LookDir", Camera1);
+            SetupCameraBindings("Cam2LookDir", Camera2);
+            SetupCameraBindings("Cam3LookDir", Camera3);
 
-
+            ResetCameraPosition();
+        }
 
         public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;
         protected static void OnStaticPropertyChanged([CallerMemberName]string info = "")

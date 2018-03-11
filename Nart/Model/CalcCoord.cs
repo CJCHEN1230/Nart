@@ -284,7 +284,7 @@ namespace Nart
         /// </summary>
         public void MatchAndCalc3D(List<BWMarker>[] outputMarker)
         {
-            MarkerDatabase Database = MainViewModel.ProjData.database;
+            MarkerDatabase Database = MainViewModel.ProjData.MarkerData;
             _curWorldPoints.Clear();
             for (int i = 0, count = 0; i < outputMarker[0].Count; i++) //左相機Marker尋訪
             {
@@ -380,12 +380,12 @@ namespace Nart
         {
 
             //尋訪資料庫中的Marker
-            for (int i = 0, j = 0; i < SystemData.MarkerData.MarkerInfo.Count; i++)
+            for (int i = 0, j = 0; i < MainViewModel.ProjData.MarkerData.MarkerInfo.Count; i++)
             {   //尋訪世界座標中的Marker
                 for (j = 0; j < _curWorldPoints.Count; j++)
                 {
                     //如果資料庫中的MarkerID存在當前資料庫就檢查下一個
-                    if (SystemData.MarkerData.MarkerInfo[i].MarkerID.Equals(_curWorldPoints[j].MarkerId))
+                    if (MainViewModel.ProjData.MarkerData.MarkerInfo[i].MarkerID.Equals(_curWorldPoints[j].MarkerId))
                     {
                         break; //換下一個資料庫中的Marker
                     }
@@ -393,11 +393,11 @@ namespace Nart
                 //資料庫中的Marker在WorldPoint中都找不到時
                 if (j == _curWorldPoints.Count)
                 {
-                    SystemData.MarkerData.MarkerInfo.RemoveAt(i);
+                    MainViewModel.ProjData.MarkerData.MarkerInfo.RemoveAt(i);
                     i--;
                 }
             }
-            SystemData.MarkerData.ResetIndex();
+            MainViewModel.ProjData.MarkerData.ResetIndex();
             //Database重建之後，將meanFilter裡面的stack也重建
            // _meanFilter.CreatePointStack(Database);
         }
@@ -644,7 +644,7 @@ namespace Nart
                 {
                     MessageBox.Show("找不到咬板以及頭部標記片");
                 }
-                MainViewModel.ProjData.RegToggle = false;
+                SystemData.RegToggle = false;
                 return;
             }
 
@@ -652,7 +652,7 @@ namespace Nart
             //讀進_splintInCT檔案
             if (!LoadSplintPoint("../../../data/蔡慧君測試用.txt"))
             {
-                MainViewModel.ProjData.RegToggle = false;
+                SystemData.RegToggle = false;
                 return;
             }
             //簡化資料庫的Marker
@@ -699,12 +699,12 @@ namespace Nart
 
                     CalcFHCoord();
 
-                    for (int i = 0; i < SystemData.MarkerData.MarkerInfo.Count; i++)
+                    for (int i = 0; i < MainViewModel.ProjData.MarkerData.MarkerInfo.Count; i++)
                     {
-                        Console.WriteLine("\n\n" + SystemData.MarkerData.MarkerInfo[i].ThreeLength[0] + " " + SystemData.MarkerData.MarkerInfo[i].ThreeLength[1] + " " + SystemData.MarkerData.MarkerInfo[i].ThreeLength[2]);
+                        Console.WriteLine("\n\n" + MainViewModel.ProjData.MarkerData.MarkerInfo[i].ThreeLength[0] + " " + MainViewModel.ProjData.MarkerData.MarkerInfo[i].ThreeLength[1] + " " + MainViewModel.ProjData.MarkerData.MarkerInfo[i].ThreeLength[2]);
                     }
-                    Console.WriteLine("splint:" + SystemData.MarkerData.SplintIndex);
-                    Console.WriteLine("Head:" + SystemData.MarkerData.HeadIndex);
+                    Console.WriteLine("splint:" + MainViewModel.ProjData.MarkerData.SplintIndex);
+                    Console.WriteLine("Head:" + MainViewModel.ProjData.MarkerData.HeadIndex);
                     
 
                     for (int i = 0; i < _curWorldPoints.Count; i++)
@@ -760,7 +760,7 @@ namespace Nart
             {
                 MessageBox.Show("包括咬板與頭部還需要其他標記片");
             }
-            MainViewModel.ProjData.RegToggle = false;
+            SystemData.RegToggle = false;
         }
         /// <summary>
         /// 導航的註冊
@@ -886,7 +886,8 @@ namespace Nart
                     _headMarkerStack.Clear();
                     _splintMarkerStack.Clear();
                     MessageBox.Show("註冊了" + _curWorldPoints.Count + "組Marker");
-                    MainViewModel.ProjData.RegToggle = false;
+                    //註冊結束之後，將註冊狀態關閉
+                    SystemData.RegToggle = false;
                 }
             }
         }        

@@ -54,9 +54,6 @@ namespace Nart
             margin.Right = 0;
             buttonList.Margin = margin;
 
-         
-
-
             this.DataContext = MainViewModel;
 
             AllocConsole();
@@ -104,14 +101,10 @@ namespace Nart
             var storyboard = new Storyboard();
             storyboard.Children.Add(animation);
         }
-
     
         private void button_Click_1(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i<10000000;i++)
-            {
-                Console.WriteLine("123");
-            }
+           
            
         }
 

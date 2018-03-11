@@ -17,16 +17,6 @@ namespace Nart
     [Serializable]
     public class ProjectData : ObservableObject , ISerializable
     {
-        /// <summary>
-        /// 開啟Registration Button的功能
-        /// </summary>
-        public bool RegToggle = false;
-        /// <summary>
-        /// 開啟Tracking Button的功能
-        /// </summary>
-        public bool TrackToggle = false;
-
-
 
         //病人資訊
         private string _name = "蔡慧君";
@@ -34,14 +24,13 @@ namespace Nart
         private string _institution = "成大";
         private string _regFilePath = "../../../data/蔡慧君測試用.txt";
 
-        public MarkerDatabase database = new MarkerDatabase();
+        public MarkerDatabase MarkerData = new MarkerDatabase();
         public bool IsRegInitialized = false;
         public bool IsNavigationSet = false;
         public bool IsFirstStage = false;       
         public bool IsSecondStage = false;
         public bool IsFinished = false;
         public string FirstNavigation = "Maxilla";
-
         private bool _canSelectPoints = true;
         private string _selectPointState = "OFF";
 

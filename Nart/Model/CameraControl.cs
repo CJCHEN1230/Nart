@@ -184,12 +184,12 @@ namespace Nart
             
 
             
-            if (MainViewModel.ProjData.RegToggle)
+            if (SystemData.RegToggle)
             {
                 _calcCoord.Registraion2();
             }
 
-            if (MainViewModel.ProjData.TrackToggle) 
+            if (SystemData.TrackToggle) 
             {
                 _calcCoord.CalcModelTransform2();
 

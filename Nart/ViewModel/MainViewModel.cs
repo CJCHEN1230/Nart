@@ -48,6 +48,11 @@ namespace Nart
         public MainViewModel(MainView mainWindow)
         {
             _mainWindow = mainWindow;
+
+            //_mainWindow.RegBtn.IsEnabled = false;
+            //_mainWindow.TrackBtn.IsEnabled = false;
+
+
             LoadMarkerDatabaseCommand = new RelayCommand(LoadMarkerData);
             SetModelCommand = new RelayCommand(SetModel);
             RegisterCommand = new RelayCommand(Register);
@@ -61,6 +66,9 @@ namespace Nart
             LoadProjectCommand = new RelayCommand(LoadProject);
             FlyInSettingCommand = new RelayCommand(FlyInSettingView);
             FlyOutSettingCommand = new RelayCommand(FlyOutSettingView);
+            Stage1Command = new RelayCommand(Stage1);
+            Stage2Command = new RelayCommand(Stage2);
+            FinishCommand = new RelayCommand(Finish);
 
             BindPatientData();
             BindBallData();
@@ -129,6 +137,10 @@ namespace Nart
         /// 開啟控制旋轉平台的Command        
         /// </summary>
         public ICommand CtrlRotPlatformCommand { private set; get; }
+        public ICommand Stage1Command { private set; get; }
+        public ICommand Stage2Command { private set; get; }
+        public ICommand FinishCommand { private set; get; }
+
         public void InitCamCtrl()
         {
 
@@ -136,7 +148,79 @@ namespace Nart
             CamCtrl.CameraStart();
         }
 
+        public void ImportFile(string filename)
+        {
 
+
+            string fullFilePath = filename;
+
+            switch (System.IO.Path.GetExtension(fullFilePath).ToLower())
+            {
+
+                case ".nart":
+                    {
+
+                        string projectName = System.IO.Path.GetFileNameWithoutExtension(fullFilePath);//檔名不包含副檔名
+                        string filePath = System.IO.Path.GetDirectoryName(fullFilePath);//路徑
+                        string tempDirectory = System.IO.Path.Combine(filePath, projectName);//路徑+檔名(不包含副檔名)
+
+                        Directory.CreateDirectory(tempDirectory);
+                        ZipFile.ExtractToDirectory(fullFilePath, tempDirectory);
+
+                        string xmlFilePath = System.IO.Path.Combine(tempDirectory, projectName + ".xml");
+                        if (!File.Exists(xmlFilePath))
+                        {
+                            return;
+                        }
+
+                        ProjectData projectData;
+                        using (FileStream myFileStream = new FileStream(xmlFilePath, FileMode.Open))
+                        {
+                            SoapFormatter soapFormatter = new SoapFormatter();
+                            projectData = (ProjectData)soapFormatter.Deserialize(myFileStream);
+                            myFileStream.Close();
+                        }
+
+
+                        foreach (BoneModel boneModel in projectData.BoneCollection)
+                        {
+                            //BoneModel boneModel = projectData.BoneCollection[i];
+                            boneModel.FilePath = System.IO.Path.Combine(tempDirectory, boneModel.SafeFileName);
+                            boneModel.LoadModel();
+                            if (boneModel.ModelType == ModelType.MovedMaxilla)
+                            {
+                                foreach (BoneModel targetModel in projectData.TargetCollection)
+                                {
+                                    if (targetModel.ModelType == ModelType.TargetMaxilla)
+                                    {
+                                        targetModel.FilePath = boneModel.FilePath;
+                                        targetModel.LoadModel();
+                                    }
+                                }
+                            }
+                            else if (boneModel.ModelType == ModelType.MovedMandible)
+                            {
+                                foreach (BoneModel targetModel in projectData.TargetCollection)
+                                {
+                                    if (targetModel.ModelType == ModelType.TargetMandible)
+                                    {
+                                        targetModel.FilePath = boneModel.FilePath;
+                                        targetModel.LoadModel();
+                                    }
+                                }
+                            }
+                        }
+
+
+
+                        MainViewModel.ProjData.UpdateData(projectData);
+                        MultiAngleViewModel.ResetCameraPosition();
+                        System.IO.Directory.Delete(tempDirectory, true);
+                        break;
+                    }
+
+            }
+        }
         private void LoadMarkerData(object o)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
@@ -205,12 +289,12 @@ namespace Nart
         }
         private void Register(object o)
         {
-            MainViewModel.ProjData.RegToggle = !MainViewModel.ProjData.RegToggle;
+            SystemData.RegToggle = !SystemData.RegToggle;
             RestoreGridLength();
         }
         private void Track(object o)
         {
-            MainViewModel.ProjData.TrackToggle = !MainViewModel.ProjData.TrackToggle;
+            SystemData.TrackToggle = !SystemData.TrackToggle;
             RestoreGridLength();
         }
         private void OnClosed(object o)
@@ -446,79 +530,163 @@ namespace Nart
             Col0.BeginAnimation(ColumnDefinition.WidthProperty, gla);
             Col1.BeginAnimation(ColumnDefinition.WidthProperty, gla2);
         }
-        public void ImportFile(string filename)
+        /// <summary>
+        /// 這個階段主要要顯示出所設定的第一階段的上or下顎，且顯示三角形模型
+        /// </summary>
+        private void Stage1(Object o)
         {
+            //確定已經設定導航資訊，且已經有按Tracking的情形
+            if (!MainViewModel.ProjData.IsNavigationSet || !SystemData.TrackToggle)
+                return;
 
+            string firstNavigation = MainViewModel.ProjData.FirstNavigation;
+            foreach (Element3D model in MultiAngleViewModel.TriangleModelCollection)
+            {
+                DraggableTriangle dragModel = model as DraggableTriangle;
+                if (dragModel == null)
+                    return;
 
-            string fullFilePath = filename;
-
-                switch (System.IO.Path.GetExtension(fullFilePath).ToLower())
+                switch (firstNavigation)
                 {
-
-                    case ".nart":
+                    case "Maxilla":
+                        if (dragModel.ModelType == ModelType.TargetMaxillaTriangle ||
+                            dragModel.ModelType == ModelType.MovedMaxillaTriangle)
                         {
-
-                            string projectName = System.IO.Path.GetFileNameWithoutExtension(fullFilePath);//檔名不包含副檔名
-                            string filePath = System.IO.Path.GetDirectoryName(fullFilePath);//路徑
-                            string tempDirectory = System.IO.Path.Combine(filePath, projectName);//路徑+檔名(不包含副檔名)
-
-                            Directory.CreateDirectory(tempDirectory);
-                            ZipFile.ExtractToDirectory(fullFilePath, tempDirectory);
-
-                            string xmlFilePath = System.IO.Path.Combine(tempDirectory, projectName + ".xml");
-                            if (!File.Exists(xmlFilePath))
-                            {
-                                return;
-                            }
-
-                            ProjectData projectData;
-                            using (FileStream myFileStream = new FileStream(xmlFilePath, FileMode.Open))
-                            {
-                                SoapFormatter soapFormatter = new SoapFormatter();
-                                projectData = (ProjectData)soapFormatter.Deserialize(myFileStream);
-                                myFileStream.Close();
-                            }
-
-
-                            foreach (BoneModel boneModel in projectData.BoneCollection)
-                            {
-                                //BoneModel boneModel = projectData.BoneCollection[i];
-                                boneModel.FilePath = System.IO.Path.Combine(tempDirectory, boneModel.SafeFileName);
-                                boneModel.LoadModel();
-                                if (boneModel.ModelType == ModelType.MovedMaxilla)
-                                {                                   
-                                    foreach (BoneModel targetModel in projectData.TargetCollection)
-                                    {
-                                        if (targetModel.ModelType == ModelType.TargetMaxilla)
-                                        {
-                                            targetModel.FilePath = boneModel.FilePath;
-                                            targetModel.LoadModel();
-                                        }
-                                    }
-                                }
-                                else if (boneModel.ModelType == ModelType.MovedMandible)
-                                {
-                                    foreach (BoneModel targetModel in projectData.TargetCollection)
-                                    {
-                                        if (targetModel.ModelType == ModelType.TargetMandible)
-                                        {
-                                            targetModel.FilePath = boneModel.FilePath;
-                                            targetModel.LoadModel();
-                                        }
-                                    }
-                                }
-                            }
-
-                          
-
-                            MainViewModel.ProjData.UpdateData(projectData);
-                            MultiAngleViewModel.ResetCameraPosition();
-                            System.IO.Directory.Delete(tempDirectory, true);
-                            break;
+                            dragModel.IsRendering = true;
                         }
-
+                        else
+                        {
+                            dragModel.IsRendering = false;
+                        }
+                        break;
+                    case "Mandible":
+                        if (dragModel.ModelType == ModelType.TargetMandibleTriangle ||
+                            dragModel.ModelType == ModelType.MovedMandibleTriangle)
+                        {
+                            dragModel.IsRendering = true;
+                        }
+                        else
+                        {
+                            dragModel.IsRendering = false;
+                        }
+                        break;
                 }
+            }
+
+            var boneCollection = MainViewModel.ProjData.BoneCollection;
+            foreach (BoneModel model in boneCollection)
+            {
+                switch (firstNavigation)
+                {
+                    //骨骼名稱是不是所選的第一導引骨頭(上、下顎)，不是的話不讓他改變位置
+                    case "Maxilla":
+                        if (model.ModelType == ModelType.MovedMandible)
+                        {
+                            model.Transform = Transform3D.Identity;
+                            model.IsTransformApplied = false;
+                        }
+                        break;
+                    case "Mandible":
+                        if (model.ModelType == ModelType.MovedMaxilla)
+                        {
+                            model.Transform = Transform3D.Identity;
+                            model.IsTransformApplied = false;
+                        }
+                        break;
+                }
+            }
+
+            var targetCollection = MainViewModel.ProjData.TargetCollection;
+            //顯示出所選擇的目標模型
+            foreach (BoneModel targetModel in targetCollection)
+            {
+
+                if (targetModel == null)
+                    return;
+                //骨骼名稱是不是所選的第一導引骨頭(上、下顎)，不是的話則不顯示
+                switch (firstNavigation)
+                {
+                    case "Maxilla":
+                        if (targetModel.ModelType == ModelType.TargetMaxilla)
+                        {
+                            targetModel.IsRendering = true;
+                        }
+                        break;
+                    case "Mandible":
+                        if (targetModel.ModelType == ModelType.TargetMandible)
+                        {
+                            targetModel.IsRendering = true;
+                        }
+                        break;
+                }
+            }
+            //第一階段按下
+            MainViewModel.ProjData.IsFirstStage = true;
         }
+        /// <summary>
+        /// 這個階段主要要顯示出所設定的第二階段的上or下顎，且顯示三角形模型
+        /// </summary>
+        private void Stage2(Object o)
+        {
+            //確定已經註冊的情況
+            if (!MainViewModel.ProjData.IsNavigationSet || !MainViewModel.ProjData.IsFirstStage || !SystemData.TrackToggle)
+                return;
+            string firstNavigation = MainViewModel.ProjData.FirstNavigation;
+
+            //因為是第二階段，所以三角導引物是否顯示相反就好
+            foreach (Element3D dragModel in MultiAngleViewModel.TriangleModelCollection)
+            {
+                DraggableTriangle model = dragModel as DraggableTriangle;
+
+                if (model != null)
+                    model.IsRendering = !model.IsRendering;
+            }
+            var boneCollection = MainViewModel.ProjData.BoneCollection;
+
+            //因為是第二階段，所以模型是否可以更新位置相反就好
+            foreach (BoneModel model in boneCollection)
+            {
+                model.IsTransformApplied = !model.IsTransformApplied;
+            }
+
+
+
+            foreach (BoneModel targetModel in MainViewModel.ProjData.TargetCollection)
+            {
+                if (targetModel != null &&
+                    (targetModel.ModelType.Equals(ModelType.TargetMandible) || targetModel.ModelType.Equals(ModelType.TargetMaxilla)))
+                {
+                    targetModel.IsRendering = !targetModel.IsRendering;
+                }
+            }
+            MainViewModel.ProjData.IsFirstStage = false;
+            MainViewModel.ProjData.IsSecondStage = true;
+        }
+        private void Finish(Object o)
+        {
+            foreach (BoneModel targetModel in MainViewModel.ProjData.TargetCollection)
+            {
+                if (targetModel != null &&
+                    (targetModel.ModelType.Equals(ModelType.TargetMandible) || targetModel.ModelType.Equals(ModelType.TargetMaxilla)))
+                {
+                    targetModel.IsRendering = false;
+                }
+            }
+
+            foreach (Element3D dragModel in MultiAngleViewModel.TriangleModelCollection)
+            {
+                DraggableTriangle model = dragModel as DraggableTriangle;
+
+                if (model != null)
+                    model.IsRendering = false;
+            }
+
+            SystemData.RegToggle = false;
+            SystemData.TrackToggle = false;
+            MainViewModel.ProjData.IsFirstStage = false;
+            MainViewModel.ProjData.IsSecondStage = false;
+        }
+        
         /// <summary>
         /// 將Grid回復到原始狀態 
         /// </summary>
