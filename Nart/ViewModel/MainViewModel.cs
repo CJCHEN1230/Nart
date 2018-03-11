@@ -49,8 +49,8 @@ namespace Nart
         {
             _mainWindow = mainWindow;
 
-            //_mainWindow.RegBtn.IsEnabled = false;
-            //_mainWindow.TrackBtn.IsEnabled = false;
+            _mainWindow.RegBtn.IsEnabled = false;
+            _mainWindow.TrackBtn.IsEnabled = false;
 
 
             LoadMarkerDatabaseCommand = new RelayCommand(LoadMarkerData);

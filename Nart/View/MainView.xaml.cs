@@ -105,7 +105,7 @@ namespace Nart
         private void button_Click_1(object sender, RoutedEventArgs e)
         {
            
-           
+
         }
 
         private void button_Click_2(object sender, RoutedEventArgs e)
