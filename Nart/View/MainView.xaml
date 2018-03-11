@@ -114,8 +114,8 @@
 
 
         <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="4" Background="White" Grid.Row="1" Margin="0"/>
-        <GridSplitter  Margin="0,0,0,0"  Grid.Row="2" Grid.Column="2"  Style="{DynamicResource VerticalGridSplitter}" Background="White" HorizontalAlignment="Left"  Width="Auto" />
-        <!--<GridSplitter  Margin="-5,0"  Grid.Row="2" Grid.Column="3"   HorizontalAlignment="Left" Background="White"   Width="3" />-->
+        <!--<GridSplitter  Margin="0,0,0,0"  Grid.Row="2" Grid.Column="2"  Style="{DynamicResource VerticalGridSplitter}" Background="White" HorizontalAlignment="Left"  Width="Auto" />-->
+        <GridSplitter  Margin="0,0"  Grid.Row="2" Grid.Column="2"   HorizontalAlignment="Left" Background="Transparent"   Width="5" />
 
 
         <ScrollViewer  Margin="0,0,0,0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Grid.Column="1" Grid.Row="2" >
