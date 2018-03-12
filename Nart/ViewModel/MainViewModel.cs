@@ -75,7 +75,7 @@ namespace Nart
             BindPatientData();
             BindBallData();
             BindBoneData();
-            
+            BindProgramState();
         }
                 
         public static int TabIndex
@@ -269,12 +269,6 @@ namespace Nart
 
             _navigatedlg.ShowDialog();
 
-
-            if (MainViewModel.ProjData.IsNavSet)
-            {
-                _mainWindow.RegBtn.IsEnabled = true;
-
-            }
             RestoreGridLength();
         }
         private void OpenRotPlatform(object o)
@@ -701,7 +695,8 @@ namespace Nart
             MainViewModel.ProjData.IsSecondStage = false;
 
             SystemData.TrackToggle = false;
-            _mainWindow.TrackBtn.IsEnabled = false;               
+            _mainWindow.TrackBtn.IsEnabled = false;
+            
             _mainWindow.FinishBtn.Visibility = Visibility.Hidden;
         }        
         /// <summary>
@@ -842,11 +837,12 @@ namespace Nart
         /// </summary>
         private void BindProgramState()
         {
+            //綁定IsNavSet到Registration Button上面，如果設置完成則RegBtn可以點選
             Binding binding = new Binding("IsNavSet");
             binding.Source = ProjData;
             binding.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.RegBtn, Button.IsEnabledProperty, binding);
-
+            //綁定IsRegistered到Registration Button上面，如果設置完成則RegBtn可以點選
             Binding binding2 = new Binding("IsRegistered");
             binding2.Source = ProjData;
             binding2.Mode = BindingMode.TwoWay;

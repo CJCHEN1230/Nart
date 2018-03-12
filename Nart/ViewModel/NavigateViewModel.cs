@@ -377,17 +377,18 @@ namespace Nart
         /// </summary>
         private void BindFirstNavigation()
         {
+            //這邊主要是綁定一組RadioButton的IsChecked到FirstNavigation
             EnumMatchToBooleanConverter converter = new EnumMatchToBooleanConverter();
             Binding binding = new Binding("FirstNavigation");
             binding.Source = MainViewModel.ProjData;
-            binding.Mode = BindingMode.OneWayToSource;            
+            binding.Mode = BindingMode.TwoWay;            
             binding.Converter = converter;
             binding.ConverterParameter = "Maxilla";
             BindingOperations.SetBinding(_navigateView.MaxRadioButton, RadioButton.IsCheckedProperty, binding);
 
             Binding binding2 = new Binding("FirstNavigation");
             binding2.Source = MainViewModel.ProjData;
-            binding2.Mode = BindingMode.OneWayToSource;
+            binding2.Mode = BindingMode.TwoWay;
             binding2.Converter = converter;
             binding2.ConverterParameter = "Mandible";
             BindingOperations.SetBinding(_navigateView.ManRadioButton, RadioButton.IsCheckedProperty, binding2);

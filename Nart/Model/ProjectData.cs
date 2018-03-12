@@ -23,6 +23,7 @@ namespace Nart
         private string _id = "123456";
         private string _institution = "成大";
         private string _regFilePath = "../../../data/蔡慧君測試用.txt";
+        private string _firstNavigation = "Maxilla";
 
         public MarkerDatabase MarkerData = new MarkerDatabase();        
 
@@ -33,18 +34,8 @@ namespace Nart
         public bool IsFirstStage = false;       
         public bool IsSecondStage = false;
         public bool IsFinished = false;
-        public string _firstNavigation = "Maxilla";
-        public string FirstNavigation
-        {
-            get
-            {
-                return _firstNavigation;
-            }
-            set
-            {
-                SetValue(ref _firstNavigation, value);
-            }
-        }
+        
+        
         private bool _canSelectPoints = true;
         private string _selectPointState = "OFF";
         private bool _isNavSet = false;
@@ -65,7 +56,7 @@ namespace Nart
             Institution = (string)info.GetValue("Institution", typeof(string));
             RegFilePath = (string)info.GetValue("RegFilePath", typeof(string));
             IsRegInitialized = (bool)info.GetValue("IsRegInitialized", typeof(bool));
-            _isNavSet = (bool)info.GetValue("IsNavigationSet", typeof(bool));
+            IsNavSet = (bool)info.GetValue("IsNavSet", typeof(bool));
             IsFirstStage = (bool)info.GetValue("IsFirstStage", typeof(bool));
             IsSecondStage = (bool)info.GetValue("IsSecondStage", typeof(bool));
             IsFinished = (bool)info.GetValue("IsFinished", typeof(bool));
@@ -109,7 +100,7 @@ namespace Nart
             this.Institution = projectData.Institution;
             this.RegFilePath = projectData.RegFilePath;
             this.IsRegInitialized = projectData.IsRegInitialized;
-            this._isNavSet = projectData._isNavSet; 
+            this.IsNavSet = projectData._isNavSet; 
             this.IsFirstStage = projectData.IsFirstStage;
             this.IsSecondStage = projectData.IsSecondStage;
             this.IsFinished = projectData.IsFinished;
@@ -234,6 +225,17 @@ namespace Nart
             set
             {
                 SetValue(ref _selectPointState, value);
+            }
+        }
+        public string FirstNavigation
+        {
+            get
+            {
+                return _firstNavigation;
+            }
+            set
+            {
+                SetValue(ref _firstNavigation, value);
             }
         }
         public bool IsNavSet

@@ -115,7 +115,7 @@
                     <StackPanel  Grid.Row="1" Orientation="Horizontal" Margin="112,0,0,0">
                         <Button x:Name="Stage1Btn" Content="Stage1" Margin="10,0,0,0"  Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Center" Width="67"  Command="{Binding Stage1Command}"/>
                         <Button x:Name="Stage2Btn" Content="Stage2" Margin="10,0,0,0" Grid.Row="1" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Center" Width="67" Command="{Binding Stage2Command}"/>
-                        <Button x:Name="FinishBtn" Content="Finish" Margin="10,0,0,0" Grid.Row="1" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Center" Width="67" Command="{Binding Stage1Command}"/>
+                        <Button x:Name="FinishBtn" Content="Finish" Margin="10,0,0,0" Grid.Row="1" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Center" Width="67" Command="{Binding FinishCommand}"/>
                     </StackPanel>
                 </Grid >
             </TabItem>
@@ -345,8 +345,7 @@
 
                 <StackPanel Margin="0" Grid.Row="2">
                     <Button x:Name="LoadDataBtn" Command="{Binding LoadMarkerDatabaseCommand}" Content="Load Marker Database" Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                    <Button x:Name="button1_Copy" Command="{Binding SetNavigationCommand}" Content="Set Navigation" Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                    <Button x:Name="button1" Command="{Binding SetModelCommand}" Content="Set Model"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                    <Button x:Name="NavBtn" Command="{Binding SetNavigationCommand}" Content="Set Navigation" Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
                     <Button x:Name="RegBtn" Command="{Binding RegisterCommand}" Content="Registration"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
                     <Button x:Name="TrackBtn" Command="{Binding TrackCommand}"   Content="Tracking"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
                     <Button x:Name="button" Content="Save Ball Information" VerticalAlignment="Top"    Margin="0,5,2,0"  Click="button_Click_2" Style="{DynamicResource ResourceKey=SideButton}"  Height="68"/>

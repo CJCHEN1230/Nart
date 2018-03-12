@@ -30,9 +30,7 @@ namespace Nart
             InitializeComponent();
             _modelSettingViewModel = new ModelSettingViewModel(this);
             this.DataContext = _modelSettingViewModel;
-        }       
-        
-
+        }               
         /// <summary>
         /// 設定頁面按下紅色按紐
         /// </summary>

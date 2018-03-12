@@ -281,6 +281,7 @@ namespace Nart
                 orthoCam1.NearPlaneDistance = -500;
                 orthoCam1.FarPlaneDistance = 1e15;
                 orthoCam1.Width = boundingBox.SizeX + 110;
+                
             }
 
             OrthographicCamera orthoCam2 = Camera2 as OrthographicCamera;

@@ -94,14 +94,21 @@
                         EnableSharedModelMode="True"                               
                         BackgroundColor="0 0 0 0"
                         SharedModelContainer="{Binding ElementName=SharedContainer}"
+                        ModelUpDirection="0,0,1"
+                        ViewCubeBackText ="R"
+                        ViewCubeFrontText="L"
+                        ViewCubeTopText="S"
+                        ViewCubeBottomText="I"
+                        ViewCubeLeftText="P"  
+                        ViewCubeRightText="A"            
                         ShowFrameRate="True" Grid.Column="2">
                 <hx:Viewport3DX.InputBindings>
-                    <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
-                    <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
-                    <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
-                    <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
-                    <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
-                    <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
+                    <KeyBinding Key="R" Command="hx:ViewportCommands.BackView" />
+                    <KeyBinding Key="L" Command="hx:ViewportCommands.FrontView" />
+                    <KeyBinding Key="S" Command="hx:ViewportCommands.TopView" />
+                    <KeyBinding Key="I" Command="hx:ViewportCommands.BottomView" />
+                    <KeyBinding Key="A" Command="hx:ViewportCommands.LeftView" />
+                    <KeyBinding Key="P" Command="hx:ViewportCommands.RightView" />
                     <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
                     <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
                     <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
@@ -127,16 +134,25 @@
                         UseDefaultGestures="True"
                         EnableSharedModelMode="True"
                         SharedModelContainer="{Binding ElementName=SharedContainer}"
+                        ShowCoordinateSystem="True"
+                        CoordinateSystemLabelForeground="White"          
                         BackgroundColor="0 0 0 0"
                         ShowFrameRate="True"
+                        ModelUpDirection="0,0,1"
+                        ViewCubeBackText ="R"
+                        ViewCubeFrontText="L"
+                        ViewCubeTopText="S"
+                        ViewCubeBottomText="I"
+                        ViewCubeLeftText="P"  
+                        ViewCubeRightText="A"       
                         Grid.Column="2" Grid.Row="2">
                 <hx:Viewport3DX.InputBindings>
-                    <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
-                    <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
-                    <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
-                    <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
-                    <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
-                    <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
+                    <KeyBinding Key="R" Command="hx:ViewportCommands.BackView" />
+                    <KeyBinding Key="L" Command="hx:ViewportCommands.FrontView" />
+                    <KeyBinding Key="S" Command="hx:ViewportCommands.TopView" />
+                    <KeyBinding Key="I" Command="hx:ViewportCommands.BottomView" />
+                    <KeyBinding Key="A" Command="hx:ViewportCommands.LeftView" />
+                    <KeyBinding Key="P" Command="hx:ViewportCommands.RightView" />
                     <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
                     <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
                     <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
@@ -166,14 +182,21 @@
                         CoordinateSystemLabelForeground="White"                         
                         BackgroundColor="0 0 0 0"  
                         ShowFrameRate="False"
+                        ModelUpDirection="0,0,1"                             
+                        ViewCubeBackText ="R"
+                        ViewCubeFrontText="L"
+                        ViewCubeTopText="S"
+                        ViewCubeBottomText="I"
+                        ViewCubeLeftText="P"  
+                        ViewCubeRightText="A"                             
                         Grid.RowSpan="3" >
                 <hx:Viewport3DX.InputBindings>
-                    <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
-                    <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
-                    <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
-                    <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
-                    <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
-                    <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
+                    <KeyBinding Key="R" Command="hx:ViewportCommands.BackView" />
+                    <KeyBinding Key="L" Command="hx:ViewportCommands.FrontView" />
+                    <KeyBinding Key="S" Command="hx:ViewportCommands.TopView" />
+                    <KeyBinding Key="I" Command="hx:ViewportCommands.BottomView" />
+                    <KeyBinding Key="A" Command="hx:ViewportCommands.LeftView" />
+                    <KeyBinding Key="P" Command="hx:ViewportCommands.RightView" />
                     <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
                     <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="LeftClick" />
                     <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
