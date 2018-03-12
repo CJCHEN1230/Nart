@@ -190,11 +190,6 @@
                 Color="{Binding DirectionalLightColor}" />
 
             </hx:Viewport3DX>
-
-
-            <!--<Button x:Name="Stage1Btn" Content="Stage1" Margin="124,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67"  Command="{Binding Stage1Command}"/>
-            <Button x:Name="Stage2Btn" Content="Stage2" Margin="212,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67" Command="{Binding Stage2Command}"/>
-            <Button x:Name="FinishBtn" Content="Finish" Margin="300,0,0,8" Grid.Row="2" Background="{x:Null}" Foreground="White" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="67" Command="{Binding Stage1Command}"/>-->
             <Grid Margin="0" Grid.RowSpan="3">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>

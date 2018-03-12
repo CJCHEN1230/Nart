@@ -51,7 +51,9 @@ namespace Nart
 
             _mainWindow.RegBtn.IsEnabled = false;
             _mainWindow.TrackBtn.IsEnabled = false;
-
+            _mainWindow.Stage1Btn.Visibility = Visibility.Hidden;
+            _mainWindow.Stage2Btn.Visibility = Visibility.Hidden;
+            _mainWindow.FinishBtn.Visibility = Visibility.Hidden;
 
             LoadMarkerDatabaseCommand = new RelayCommand(LoadMarkerData);
             SetModelCommand = new RelayCommand(SetModel);
@@ -73,11 +75,7 @@ namespace Nart
             BindPatientData();
             BindBallData();
             BindBoneData();
-
-            //mainWindow.ExpanderInfo.BindPatientInfo(Data);
-            //mainWindow.ExpanderNavigationBalls .BindBallCollection(Data);
-            //mainWindow.ExpanderTargetModel.BindBoneCollection(Data);
-
+            
         }
                 
         public static int TabIndex
@@ -271,6 +269,12 @@ namespace Nart
 
             _navigatedlg.ShowDialog();
 
+
+            if (MainViewModel.ProjData.IsNavSet)
+            {
+                _mainWindow.RegBtn.IsEnabled = true;
+
+            }
             RestoreGridLength();
         }
         private void OpenRotPlatform(object o)
@@ -295,6 +299,9 @@ namespace Nart
         private void Track(object o)
         {
             SystemData.TrackToggle = !SystemData.TrackToggle;
+
+            _mainWindow.Stage1Btn.Visibility = Visibility.Visible;
+
             RestoreGridLength();
         }
         private void OnClosed(object o)
@@ -533,10 +540,10 @@ namespace Nart
         /// <summary>
         /// 這個階段主要要顯示出所設定的第一階段的上or下顎，且顯示三角形模型
         /// </summary>
-        private void Stage1(Object o)
+        private void Stage1(object o)
         {
             //確定已經設定導航資訊，且已經有按Tracking的情形
-            if (!MainViewModel.ProjData.IsNavigationSet || !SystemData.TrackToggle)
+            if (!MainViewModel.ProjData.IsNavSet || !SystemData.TrackToggle)
                 return;
 
             string firstNavigation = MainViewModel.ProjData.FirstNavigation;
@@ -622,14 +629,17 @@ namespace Nart
             }
             //第一階段按下
             MainViewModel.ProjData.IsFirstStage = true;
+
+            _mainWindow.Stage1Btn.Visibility = Visibility.Hidden;
+            _mainWindow.Stage2Btn.Visibility = Visibility.Visible;
         }
         /// <summary>
         /// 這個階段主要要顯示出所設定的第二階段的上or下顎，且顯示三角形模型
         /// </summary>
-        private void Stage2(Object o)
+        private void Stage2(object o)
         {
             //確定已經註冊的情況
-            if (!MainViewModel.ProjData.IsNavigationSet || !MainViewModel.ProjData.IsFirstStage || !SystemData.TrackToggle)
+            if (!MainViewModel.ProjData.IsNavSet || !MainViewModel.ProjData.IsFirstStage || !SystemData.TrackToggle)
                 return;
             string firstNavigation = MainViewModel.ProjData.FirstNavigation;
 
@@ -661,8 +671,12 @@ namespace Nart
             }
             MainViewModel.ProjData.IsFirstStage = false;
             MainViewModel.ProjData.IsSecondStage = true;
+
+            
+            _mainWindow.Stage2Btn.Visibility = Visibility.Hidden;
+            _mainWindow.FinishBtn.Visibility = Visibility.Visible;
         }
-        private void Finish(Object o)
+        private void Finish(object o)
         {
             foreach (BoneModel targetModel in MainViewModel.ProjData.TargetCollection)
             {
@@ -685,8 +699,11 @@ namespace Nart
             SystemData.TrackToggle = false;
             MainViewModel.ProjData.IsFirstStage = false;
             MainViewModel.ProjData.IsSecondStage = false;
-        }
-        
+
+            SystemData.TrackToggle = false;
+            _mainWindow.TrackBtn.IsEnabled = false;               
+            _mainWindow.FinishBtn.Visibility = Visibility.Hidden;
+        }        
         /// <summary>
         /// 將Grid回復到原始狀態 
         /// </summary>
@@ -820,7 +837,21 @@ namespace Nart
             binding4.Mode = BindingMode.OneWay;
             BindingOperations.SetBinding(_mainWindow.multiAngleView.Targetollection, ItemsModel3D.ItemsSourceProperty, binding4);
         }
+        /// <summary>
+        /// 綁定狀態資訊到Button的IsEnabled狀態
+        /// </summary>
+        private void BindProgramState()
+        {
+            Binding binding = new Binding("IsNavSet");
+            binding.Source = ProjData;
+            binding.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(_mainWindow.RegBtn, Button.IsEnabledProperty, binding);
 
+            Binding binding2 = new Binding("IsRegistered");
+            binding2.Source = ProjData;
+            binding2.Mode = BindingMode.TwoWay;
+            BindingOperations.SetBinding(_mainWindow.TrackBtn, Button.IsEnabledProperty, binding2);
+        }
 
         public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;
         protected static void OnStaticPropertyChanged([CallerMemberName]string info = "")

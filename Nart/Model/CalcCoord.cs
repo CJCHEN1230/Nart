@@ -888,6 +888,7 @@ namespace Nart
                     MessageBox.Show("註冊了" + _curWorldPoints.Count + "組Marker");
                     //註冊結束之後，將註冊狀態關閉
                     SystemData.RegToggle = false;
+                    MainViewModel.ProjData.IsRegistered = true;
                 }
             }
         }        

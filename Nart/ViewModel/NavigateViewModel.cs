@@ -9,10 +9,12 @@ using System.Threading.Tasks;
 
 namespace Nart
 {
+    using Converter;
     using ExtensionMethods;
     using Model_Object;
     using System.IO;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Input;
     using System.Windows.Media.Media3D;
@@ -24,10 +26,6 @@ namespace Nart
         /// NavigateView頁面
         /// </summary>
         private readonly NavigateView _navigateView;
-        /// <summary>
-        /// 導引順序先開上顎or先開下顎
-        /// </summary>
-        private  string _firstNavigation = "Maxilla";
 
         #region N-Art計畫部分
         /// <summary>
@@ -76,15 +74,12 @@ namespace Nart
         private string _mandibleOsp = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl";
         #endregion
 
-        
-
-
-
-
         public NavigateViewModel(NavigateView navigateView)
         {
             _navigateView = navigateView;
-            ModelSettingCommand = new RelayCommand(LoadSettingModel);            
+            ModelSettingCommand = new RelayCommand(LoadSettingModel);
+            //直接綁FirstNavigation到專案資料裡面
+            BindFirstNavigation();
         }
 
 
@@ -199,28 +194,9 @@ namespace Nart
                 SetValue(ref _mandibleOsp, value);
             }
         } 
-        public string FirstNavigation
-        {
-            get
-            {
-                return _firstNavigation;
-            }
-            set
-            {
-                SetValue(ref _firstNavigation, value);
-                //更新先導航順序
-                MainViewModel.ProjData.FirstNavigation = value;
-            }
-        } //這邊記得綁在Data裡面
+     
         public ICommand ModelSettingCommand { get; }
 
-        private void SetBinding(object source, DependencyObject target, string propertyName, DependencyProperty dp, BindingMode mode)
-        {
-            Binding binding = new Binding(propertyName);
-            binding.Source = source;
-            binding.Mode = mode;
-            BindingOperations.SetBinding(target, dp, binding);
-        }
         public Matrix ReadMatrixFile(string  path)
         {            
             try
@@ -249,7 +225,10 @@ namespace Nart
             MainViewModel.ProjData.BoneCollection.Clear();
             MultiAngleViewModel.OspModelCollection.Clear();
             MultiAngleViewModel.TriangleModelCollection.Clear();
+
             
+
+
             //讀取原始上下顎 加上 規劃後的轉移矩陣
             Matrix plannedMatrix = ReadMatrixFile(_plannedMaxillaMatrix);
             BoneModel targetMaxilla = new BoneModel
@@ -382,11 +361,37 @@ namespace Nart
 
             MultiAngleViewModel.ResetCameraPosition();
 
-            MainViewModel.ProjData.IsNavigationSet = true;
+            MainViewModel.ProjData.IsNavSet = true;
 
             _navigateView.Hide();
         }
+        private void SetBinding(object source, DependencyObject target, string propertyName, DependencyProperty dp, BindingMode mode)
+        {
+            Binding binding = new Binding(propertyName);
+            binding.Source = source;
+            binding.Mode = mode;
+            BindingOperations.SetBinding(target, dp, binding);
+        }
+        /// <summary>
+        /// 綁定Naviagation View的FirstNavigation到ProjData
+        /// </summary>
+        private void BindFirstNavigation()
+        {
+            EnumMatchToBooleanConverter converter = new EnumMatchToBooleanConverter();
+            Binding binding = new Binding("FirstNavigation");
+            binding.Source = MainViewModel.ProjData;
+            binding.Mode = BindingMode.OneWayToSource;            
+            binding.Converter = converter;
+            binding.ConverterParameter = "Maxilla";
+            BindingOperations.SetBinding(_navigateView.MaxRadioButton, RadioButton.IsCheckedProperty, binding);
 
-        
+            Binding binding2 = new Binding("FirstNavigation");
+            binding2.Source = MainViewModel.ProjData;
+            binding2.Mode = BindingMode.OneWayToSource;
+            binding2.Converter = converter;
+            binding2.ConverterParameter = "Mandible";
+            BindingOperations.SetBinding(_navigateView.ManRadioButton, RadioButton.IsCheckedProperty, binding2);
+        }
+
     }
 }
