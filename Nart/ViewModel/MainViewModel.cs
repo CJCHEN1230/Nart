@@ -673,6 +673,8 @@ namespace Nart
         }
         private void Finish(object o)
         {
+            SystemData.IsFinished = true;
+
             foreach (BoneModel targetModel in MainViewModel.ProjData.TargetCollection)
             {
                 if (targetModel != null &&
@@ -690,14 +692,57 @@ namespace Nart
                     model.IsRendering = false;
             }
 
+
+            //如果已在導航結束的階段則直接顯示所有球資訊
+            if (SystemData.IsFinished)
+            {
+                MultiAngleViewModel.NavBallDistance = "Stage1"                                         
+                    + "\nRed:      " + Math.Round(MainViewModel.ProjData.Stage1Red, 2)
+                    + "\n" + "Green:  " + Math.Round(MainViewModel.ProjData.Stage1Green, 2)
+                    + "\n" + "Blue:     " + Math.Round(MainViewModel.ProjData.Stage1Blue, 2)
+                    + "\n\nStage2"
+                    + "\nRed:      " + Math.Round(MainViewModel.ProjData.Stage2Red, 2)
+                    + "\n" + "Green:  " + Math.Round(MainViewModel.ProjData.Stage2Green, 2)
+                    + "\n" + "Blue:     " + Math.Round(MainViewModel.ProjData.Stage2Blue, 2);
+
+                ObservableCollection<BallModel> ballCollection = MainViewModel.ProjData.BallCollection;
+                string maxillaBallInfo = "Maxilla";
+                string mandibleBallInfo = "\nMandible";
+                foreach (BallModel model in ballCollection)
+                {
+                    if (model.ModelType == ModelType.MovedMaxilla)
+                    {                     
+                        maxillaBallInfo += "\n" + model.BallName.PadLeft(10) +
+                                            ("" + Math.Abs(Math.Round(model.BallDistance.X, 2))).PadLeft(10) +
+                                            ("" + Math.Abs(Math.Round(model.BallDistance.Y, 2))).PadLeft(10) +
+                                            ("" + Math.Abs(Math.Round(model.BallDistance.Z, 2))).PadLeft(10);
+
+                    }
+                    else if (model.ModelType == ModelType.MovedMandible)
+                    {
+                        mandibleBallInfo += "\n" + model.BallName.PadLeft(10) +
+                                            ("" + Math.Abs(Math.Round(model.BallDistance.X, 2))).PadLeft(10) +
+                                            ("" + Math.Abs(Math.Round(model.BallDistance.Y, 2))).PadLeft(10) +
+                                            ("" + Math.Abs(Math.Round(model.BallDistance.Z, 2))).PadLeft(10);
+
+                    }
+                }
+
+                MultiAngleViewModel.BallDistance = maxillaBallInfo + mandibleBallInfo;
+
+
+
+
+
+            }
+
             SystemData.RegToggle = false;
             SystemData.TrackToggle = false;
             SystemData.IsFirstStage = false;
             SystemData.IsSecondStage = false;
 
-            SystemData.TrackToggle = false;
             _mainWindow.TrackBtn.IsEnabled = false;
-            
+
             _mainWindow.FinishBtn.Visibility = Visibility.Hidden;
         }
         /// <summary>
@@ -710,8 +755,7 @@ namespace Nart
         private void ShowCoordinate(object o)
         {
             MultiAngleViewModel.ShowCoordinate = !MultiAngleViewModel.ShowCoordinate;
-        }
-        
+        }        
         /// <summary>
         /// 將Grid回復到原始狀態 
         /// </summary>
@@ -765,13 +809,7 @@ namespace Nart
             //    _mainWindow.Col1.Width = gla2.To;
             //};
             //_mainWindow.MainGrid.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla2);
-        }
-        
-
-
-
-
-
+        }   
         /// <summary>
         /// Bind Patient Information expander裡面的textbox 
         /// </summary>

@@ -31,6 +31,7 @@ namespace Nart
 
         public MarkerDatabase MarkerData = new MarkerDatabase();
         public bool IsRegInitialized = false;
+
         public float Stage1Red;
         public float Stage1Green;
         public float Stage1Blue;

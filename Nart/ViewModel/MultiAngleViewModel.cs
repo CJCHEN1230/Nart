@@ -37,9 +37,6 @@ namespace Nart
         private Vector3D _cam1LookDir;
         private Vector3D _cam2LookDir;
         private Vector3D _cam3LookDir;
-
-
-
         public MultiAngleViewModel(MultiAngleView multiview)
         {
             RenderTechniquesManager = new DefaultRenderTechniquesManager();
@@ -49,7 +46,6 @@ namespace Nart
             SetLight();
             SetCamera();
         }
-
         /// <summary>
         /// 五項指標資訊
         /// </summary>
@@ -100,7 +96,6 @@ namespace Nart
                 SetStaticValue(ref _showCoordinate, value);
             }
         }
-
         public static Camera Camera1
         {
             get;
@@ -205,7 +200,6 @@ namespace Nart
         }
         public IEffectsManager EffectsManager { get; protected set; }
         public IRenderTechniquesManager RenderTechniquesManager { get; protected set;}
-
         public static ObservableCollection<Element3D> OspModelCollection
         {
             get;

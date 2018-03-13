@@ -1159,6 +1159,8 @@ namespace Nart
                 //如果沒有三角形導引物則返回
                 if (MultiAngleViewModel.TriangleModelCollection == null || MultiAngleViewModel.TriangleModelCollection.Count == 0)
                     return;
+                if (SystemData.IsFinished == true)
+                    return;
 
                 DraggableTriangle targetTriangle;//導引目標
                 DraggableTriangle movedTriangle;//移動物件
@@ -1236,14 +1238,14 @@ namespace Nart
                 {
                     MainViewModel.ProjData.Stage1Red = redLength;
                     MainViewModel.ProjData.Stage1Green = greenLength;
-                    MainViewModel.ProjData.Stage1Green = blueLength;
+                    MainViewModel.ProjData.Stage1Blue = blueLength;
                 }
 
                 if (SystemData.IsSecondStage)
                 {
                     MainViewModel.ProjData.Stage2Red = redLength;
                     MainViewModel.ProjData.Stage2Green = greenLength;
-                    MainViewModel.ProjData.Stage2Green = blueLength;
+                    MainViewModel.ProjData.Stage2Blue = blueLength;
                 }
 
                 string navInfo = "Red:      " + Math.Round(redLength, 2)
@@ -1309,7 +1311,7 @@ namespace Nart
                             Vector3 ballCenter = model.BallCenter;
                             Vector3.TransformCoordinate(ref ballCenter, ref mat3, out outputPoint);
                             Vector3.Subtract(ref ballCenter, ref outputPoint, out outputDistance);
-                            float distance = outputDistance.Length();
+                            model.BallDistance = outputDistance;
 
                             ballDistanceInfo += "\n" + model.BallName.PadLeft(10) +
                                                 ("" + Math.Abs(Math.Round(outputDistance.X, 2))).PadLeft(10) +
