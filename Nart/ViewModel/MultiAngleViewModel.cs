@@ -28,6 +28,7 @@ namespace Nart
         private static string _craniofacialInfo;
         private static string _navBallDistance;
         private static string _ballDistance;
+        private static bool _showCoordinate = true;
         private readonly MultiAngleView _multiview;
         private RenderTechnique _renderTechnique;
         private Vector3 _light1Direction;
@@ -47,8 +48,6 @@ namespace Nart
             _multiview = multiview;           
             SetLight();
             SetCamera();
-           
-
         }
 
         /// <summary>
@@ -90,6 +89,18 @@ namespace Nart
                 SetStaticValue(ref _ballDistance, value);
             }
         }
+        public static bool ShowCoordinate
+        {
+            get
+            {
+                return _showCoordinate;
+            }
+            set
+            {
+                SetStaticValue(ref _showCoordinate, value);
+            }
+        }
+
         public static Camera Camera1
         {
             get;

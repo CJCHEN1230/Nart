@@ -8,6 +8,9 @@ namespace Nart
 {
     public static class SystemData
     {
+        public static bool IsFirstStage = false;
+        public static bool IsSecondStage = false;
+        public static bool IsFinished = false;
 
         /// <summary>
         /// 註冊狀態，註冊當下會開啟，註冊完之後會自動關閉

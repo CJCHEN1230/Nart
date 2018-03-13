@@ -24,22 +24,19 @@ namespace Nart
         private string _institution = "成大";
         private string _regFilePath = "../../../data/蔡慧君測試用.txt";
         private string _firstNavigation = "Maxilla";
-
-        public MarkerDatabase MarkerData = new MarkerDatabase();        
-
-
-        public bool IsRegInitialized = false;
-        
-
-        public bool IsFirstStage = false;       
-        public bool IsSecondStage = false;
-        public bool IsFinished = false;
-        
-        
         private bool _canSelectPoints = true;
         private string _selectPointState = "OFF";
         private bool _isNavSet = false;
         private bool _isRegistered = false;
+
+        public MarkerDatabase MarkerData = new MarkerDatabase();
+        public bool IsRegInitialized = false;
+        public float Stage1Red;
+        public float Stage1Green;
+        public float Stage1Blue;
+        public float Stage2Red;
+        public float Stage2Green;
+        public float Stage2Blue;
 
         private  ObservableCollection<BallModel> _ballCollection=  new ObservableCollection<BallModel>();
         private  ObservableCollection<BoneModel> _boneCollection =  new ObservableCollection<BoneModel>();
@@ -57,9 +54,12 @@ namespace Nart
             RegFilePath = (string)info.GetValue("RegFilePath", typeof(string));
             IsRegInitialized = (bool)info.GetValue("IsRegInitialized", typeof(bool));
             IsNavSet = (bool)info.GetValue("IsNavSet", typeof(bool));
-            IsFirstStage = (bool)info.GetValue("IsFirstStage", typeof(bool));
-            IsSecondStage = (bool)info.GetValue("IsSecondStage", typeof(bool));
-            IsFinished = (bool)info.GetValue("IsFinished", typeof(bool));
+            Stage1Red = (float)info.GetValue("Stage1Red", typeof(float));
+            Stage1Green = (float)info.GetValue("Stage1Green", typeof(float));
+            Stage1Blue = (float)info.GetValue("Stage1Blue", typeof(float));
+            Stage2Red = (float)info.GetValue("Stage2Red", typeof(float));
+            Stage2Green = (float)info.GetValue("Stage2Green", typeof(float));
+            Stage2Blue = (float)info.GetValue("Stage2Blue", typeof(float));
             FirstNavigation = (string)info.GetValue("FirstNavigation", typeof(string));
 
 
@@ -100,10 +100,13 @@ namespace Nart
             this.Institution = projectData.Institution;
             this.RegFilePath = projectData.RegFilePath;
             this.IsRegInitialized = projectData.IsRegInitialized;
-            this.IsNavSet = projectData._isNavSet; 
-            this.IsFirstStage = projectData.IsFirstStage;
-            this.IsSecondStage = projectData.IsSecondStage;
-            this.IsFinished = projectData.IsFinished;
+            this.IsNavSet = projectData._isNavSet;
+            this.Stage1Red = projectData.Stage1Red;
+            this.Stage1Green = projectData.Stage1Green;
+            this.Stage1Blue = projectData.Stage1Blue;
+            this.Stage2Red = projectData.Stage2Red;
+            this.Stage2Green = projectData.Stage2Green;
+            this.Stage2Blue = projectData.Stage2Blue;
             this.FirstNavigation = projectData.FirstNavigation;
 
             this.BallCollection.Clear();
@@ -135,9 +138,16 @@ namespace Nart
             info.AddValue("RegFilePath", RegFilePath);
             info.AddValue("IsRegInitialized", IsRegInitialized);
             info.AddValue("IsNavigationSet", _isNavSet);
-            info.AddValue("IsFirstStage", IsFirstStage);
-            info.AddValue("IsSecondStage", IsSecondStage);
-            info.AddValue("IsFinished", IsFinished);
+
+            info.AddValue("Stage1Red", Stage1Red);
+            info.AddValue("Stage1Green", Stage1Green);
+            info.AddValue("Stage1Blue", Stage1Blue);
+
+            info.AddValue("Stage2Red", Stage2Red);
+            info.AddValue("Stage2Green", Stage2Green);
+            info.AddValue("Stage2Blue", Stage2Blue);
+
+
             info.AddValue("FirstNavigation", FirstNavigation);
 
             info.AddValue("BallCollection_Count", BallCollection.Count);

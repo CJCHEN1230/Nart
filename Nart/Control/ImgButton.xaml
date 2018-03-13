@@ -5,17 +5,43 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"             
              xmlns:local="clr-namespace:Nart.Control"  
              mc:Ignorable="d"
-             MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" 
-             Background="{x:Null}" Height="50" Width="50" BorderThickness="0">
+             MouseEnter="Button_MouseEnter"
+             MouseLeave="Button_MouseLeave"
+             Background="{x:Null}" d:DesignHeight="45" d:DesignWidth="45" >
+    <Button.Style>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Button.Style>
     <Button.Content>
-        <StackPanel Height="47" Width="48" Orientation="Vertical" HorizontalAlignment="Center">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="1.5*"/>
+            </Grid.RowDefinitions>
             <Image x:Name="ButtonImage"
-                   Height="31"
-                   Source="{Binding ButtonImageSource, RelativeSource={RelativeSource AncestorType=local:ImgButton}}"
-                   VerticalAlignment="Stretch"/>
-            <Label HorizontalContentAlignment="Stretch" FontSize="10" VerticalContentAlignment="Top"  Height="22"
+                   Grid.Row="0" 
+                   Source="{Binding ButtonImageSource, RelativeSource={RelativeSource AncestorType=local:ImgButton}}"                   
                    HorizontalAlignment="Stretch"
-                   Content="{Binding ButtonLabel, RelativeSource={RelativeSource AncestorType=local:ImgButton}}"/>
-        </StackPanel>
+                   VerticalAlignment="Stretch"/>
+            <Label 
+                   Grid.Row="1" 
+                   FontSize="15"
+                   VerticalContentAlignment="Stretch" 
+                   HorizontalContentAlignment="Center"                 
+                   HorizontalAlignment="Stretch"
+                   Foreground="White"
+                   Content="{Binding ButtonLabel, RelativeSource={RelativeSource AncestorType=local:ImgButton}}"                 
+                   Padding="0,0,0,0"/>
+        </Grid>
     </Button.Content>
 </Button>

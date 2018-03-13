@@ -67,7 +67,8 @@ namespace Nart.Control
         #endregion
         private void Button_MouseEnter(object sender, MouseEventArgs e)
         {
-            this.Background = new SolidColorBrush(Colors.LightYellow);
+            this.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x5D, 0x5D, 0x5D));
+
         }
 
         private void Button_MouseLeave(object sender, MouseEventArgs e)

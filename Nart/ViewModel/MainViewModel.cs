@@ -71,6 +71,8 @@ namespace Nart
             Stage1Command = new RelayCommand(Stage1);
             Stage2Command = new RelayCommand(Stage2);
             FinishCommand = new RelayCommand(Finish);
+            ResetCommand = new RelayCommand(Reset);
+            ShowCoordinateCommand = new RelayCommand(ShowCoordinate);
 
             BindPatientData();
             BindBallData();
@@ -138,7 +140,8 @@ namespace Nart
         public ICommand Stage1Command { private set; get; }
         public ICommand Stage2Command { private set; get; }
         public ICommand FinishCommand { private set; get; }
-
+        public ICommand ResetCommand { private set; get; }
+        public ICommand ShowCoordinateCommand { private set; get; }
         public void InitCamCtrl()
         {
 
@@ -148,8 +151,6 @@ namespace Nart
 
         public void ImportFile(string filename)
         {
-
-
             string fullFilePath = filename;
 
             switch (System.IO.Path.GetExtension(fullFilePath).ToLower())
@@ -622,7 +623,7 @@ namespace Nart
                 }
             }
             //第一階段按下
-            MainViewModel.ProjData.IsFirstStage = true;
+            SystemData.IsFirstStage = true;
 
             _mainWindow.Stage1Btn.Visibility = Visibility.Hidden;
             _mainWindow.Stage2Btn.Visibility = Visibility.Visible;
@@ -633,7 +634,7 @@ namespace Nart
         private void Stage2(object o)
         {
             //確定已經註冊的情況
-            if (!MainViewModel.ProjData.IsNavSet || !MainViewModel.ProjData.IsFirstStage || !SystemData.TrackToggle)
+            if (!MainViewModel.ProjData.IsNavSet || !SystemData.IsFirstStage || !SystemData.TrackToggle)
                 return;
             string firstNavigation = MainViewModel.ProjData.FirstNavigation;
 
@@ -663,8 +664,8 @@ namespace Nart
                     targetModel.IsRendering = !targetModel.IsRendering;
                 }
             }
-            MainViewModel.ProjData.IsFirstStage = false;
-            MainViewModel.ProjData.IsSecondStage = true;
+            SystemData.IsFirstStage = false;
+            SystemData.IsSecondStage = true;
 
             
             _mainWindow.Stage2Btn.Visibility = Visibility.Hidden;
@@ -691,14 +692,26 @@ namespace Nart
 
             SystemData.RegToggle = false;
             SystemData.TrackToggle = false;
-            MainViewModel.ProjData.IsFirstStage = false;
-            MainViewModel.ProjData.IsSecondStage = false;
+            SystemData.IsFirstStage = false;
+            SystemData.IsSecondStage = false;
 
             SystemData.TrackToggle = false;
             _mainWindow.TrackBtn.IsEnabled = false;
             
             _mainWindow.FinishBtn.Visibility = Visibility.Hidden;
-        }        
+        }
+        /// <summary>
+        /// 重設相機
+        /// </summary>
+        private void Reset(object o)
+        {
+            MultiAngleViewModel.ResetCameraPosition();
+        }
+        private void ShowCoordinate(object o)
+        {
+            MultiAngleViewModel.ShowCoordinate = !MultiAngleViewModel.ShowCoordinate;
+        }
+        
         /// <summary>
         /// 將Grid回復到原始狀態 
         /// </summary>
@@ -753,7 +766,7 @@ namespace Nart
             //};
             //_mainWindow.MainGrid.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla2);
         }
-
+        
 
 
 

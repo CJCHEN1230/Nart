@@ -340,6 +340,20 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icon\export.png" />
+    <Resource Include="Icon\import.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icon\load.png" />
+    <Resource Include="Icon\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icon\resize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icon\coordinate.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

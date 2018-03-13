@@ -1156,14 +1156,14 @@ namespace Nart
             //累計次數到五次才進來
             if (ShowPeriod2 == 5)
             {
-
+                //如果沒有三角形導引物則返回
                 if (MultiAngleViewModel.TriangleModelCollection == null || MultiAngleViewModel.TriangleModelCollection.Count == 0)
                     return;
 
-                DraggableTriangle targetTriangle;
-                DraggableTriangle movedTriangle;
+                DraggableTriangle targetTriangle;//導引目標
+                DraggableTriangle movedTriangle;//移動物件
                 //在第二階段
-                if (MainViewModel.ProjData.IsSecondStage)
+                if (SystemData.IsSecondStage)
                 {                    
                     //第二階段但第一階段導的是上顎
                     if (MainViewModel.ProjData.FirstNavigation.Equals("Maxilla"))
@@ -1178,7 +1178,7 @@ namespace Nart
                     }
                 }
                 //在第一階段
-                else if (MainViewModel.ProjData.IsFirstStage)
+                else if (SystemData.IsFirstStage)
                 {
                     if (MainViewModel.ProjData.FirstNavigation.Equals("Maxilla"))
                     {
@@ -1204,6 +1204,7 @@ namespace Nart
                 Vector3 green;
                 Vector3 blue;
                 Matrix mat = Matrix3DExtensions.ToMatrix(movedTriangle.Transform.Value);
+                //計算三顆球乘上轉移矩陣過後
                 Vector3.TransformCoordinate(ref movedTriangle.Positions[0], ref mat, out red);
                 Vector3.TransformCoordinate(ref movedTriangle.Positions[1], ref mat, out green);
                 Vector3.TransformCoordinate(ref movedTriangle.Positions[2], ref mat, out blue);
@@ -1231,6 +1232,19 @@ namespace Nart
                 float greenLength = greenVector.Length();
                 float blueLength = blueVector.Length();
 
+                if (SystemData.IsFirstStage)
+                {
+                    MainViewModel.ProjData.Stage1Red = redLength;
+                    MainViewModel.ProjData.Stage1Green = greenLength;
+                    MainViewModel.ProjData.Stage1Green = blueLength;
+                }
+
+                if (SystemData.IsSecondStage)
+                {
+                    MainViewModel.ProjData.Stage2Red = redLength;
+                    MainViewModel.ProjData.Stage2Green = greenLength;
+                    MainViewModel.ProjData.Stage2Green = blueLength;
+                }
 
                 string navInfo = "Red:      " + Math.Round(redLength, 2)
                     + "\n\n" + "Green:  " + Math.Round(greenLength, 2)
@@ -1247,10 +1261,9 @@ namespace Nart
                 ObservableCollection <BallModel> ballCollection = MainViewModel.ProjData.BallCollection;
                 ProjectData data = MainViewModel.ProjData;
 
-
                 //當選擇的是先導航上顎且在第一個階段  或  選擇先導航下顎但已經在第二階段
-                if ((data.FirstNavigation.Equals("Maxilla")&& data.IsFirstStage) ||
-                    (data.FirstNavigation.Equals("Mandible") && data.IsSecondStage))
+                if ((data.FirstNavigation.Equals("Maxilla")&& SystemData.IsFirstStage) ||
+                    (data.FirstNavigation.Equals("Mandible") && SystemData.IsSecondStage))
                 {
                     foreach (BallModel model in ballCollection)
                     {
@@ -1280,8 +1293,8 @@ namespace Nart
                         }
                     }
                 }
-                else if ((data.FirstNavigation.Equals("Mandible") && data.IsFirstStage) ||
-                         (data.FirstNavigation.Equals("Maxilla") && data.IsSecondStage))
+                else if ((data.FirstNavigation.Equals("Mandible") && SystemData.IsFirstStage) ||
+                         (data.FirstNavigation.Equals("Maxilla") && SystemData.IsSecondStage))
                 {
                     foreach (BallModel model in ballCollection)
                     {

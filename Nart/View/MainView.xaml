@@ -41,7 +41,7 @@
             <ColumnDefinition x:Name="Col2" Width="5*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="25*"/>
+            <RowDefinition Height="20*"/>
             <RowDefinition Height="4"/>
             <RowDefinition Height="180*"/>
             <RowDefinition Height="5*"/>
@@ -334,7 +334,7 @@
             </ScrollViewer.Background>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="25*"/>
+                    <RowDefinition Height="20*"/>
                     <RowDefinition Height="4"/>
                     <RowDefinition Height="180*"/>
                     <RowDefinition Height="5*"/>
@@ -355,7 +355,6 @@
             </Grid>
         </ScrollViewer>
         <Button x:Name="settingButton1" HorizontalAlignment="Center" Style="{DynamicResource ResourceKey=SettingButton}" Width="40" Height="40" VerticalAlignment="Center"  Grid.Column="1" Command="{Binding FlyInSettingCommand}"  />
-        <Button x:Name="button5_Copy1" Content="Button" Grid.Column="3" HorizontalAlignment="Left" Margin="300,53,0,0" VerticalAlignment="Top" Width="74" Click="button_Click_1" Height="18"/>
         <Border BorderThickness="0"  Grid.ColumnSpan="4" Margin="0,0,0,0" Grid.Row="3" Background="#FF007ACC">
             <StatusBar Background="{x:Null}" Foreground="White" FontSize="13" >
                 <StatusBarItem HorizontalAlignment="Left" >
@@ -366,8 +365,17 @@
                 </StatusBarItem>
             </StatusBar>
         </Border>
-        <Button x:Name="button2" Content="Save"  Command="{Binding SaveProjectCommand}"  Grid.Column="3" HorizontalAlignment="Left" Margin="9,26,0,0" VerticalAlignment="Top" Width="80" Height="68" />
-        <Button x:Name="button2_Copy" Content="Load"  Command="{Binding LoadProjectCommand}"  Grid.Column="3" HorizontalAlignment="Left" Margin="110,28,0,0" VerticalAlignment="Top" Width="80" Height="68"/>
+        
+        <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left" Margin="10,0,0,0" Width="962">
+            <Controls:ImgButton x:Name="SaveBtn" ButtonLabel="Save"  ButtonImageSource="../Icon/save.png" Margin="20,0"
+            Command="{Binding SaveProjectCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
+            <Controls:ImgButton x:Name="LoadBtn" ButtonLabel="Load"  ButtonImageSource="../Icon/load.png" Margin="10,0"
+            Command="{Binding LoadProjectCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
+            <Controls:ImgButton x:Name="ResetBtn" ButtonLabel="Reset"  ButtonImageSource="../Icon/resize.png" Margin="10,0"
+            Command="{Binding ResetCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
+            <Controls:ImgButton x:Name="CoordBtn" ButtonLabel="Coordinate"  ButtonImageSource="../Icon/coordinate.png" Margin="10,0"
+            Command="{Binding ShowCoordinateCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
+        </StackPanel>
 
 
     </Grid>
