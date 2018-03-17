@@ -29,6 +29,7 @@ namespace Nart
         private static string _navBallDistance;
         private static string _ballDistance;
         private static bool _showCoordinate = true;
+        private static bool _showCube = true;
         private readonly MultiAngleView _multiview;
         private RenderTechnique _renderTechnique;
         private Vector3 _light1Direction;
@@ -94,6 +95,17 @@ namespace Nart
             set
             {
                 SetStaticValue(ref _showCoordinate, value);
+            }
+        }
+        public static bool ShowCube
+        {
+            get
+            {
+                return _showCube;
+            }
+            set
+            {
+                SetStaticValue(ref _showCube, value);
             }
         }
         public static Camera Camera1
@@ -280,10 +292,10 @@ namespace Nart
             OrthographicCamera orthoCam1 = Camera1 as OrthographicCamera;
             if (orthoCam1 != null)
             {
-                orthoCam1.Position = new Point3D(modelCenter.X, modelCenter.Y - (boundingBox.SizeY), modelCenter.Z);
+                orthoCam1.Position = new Point3D(modelCenter.X, modelCenter.Y - (boundingBox.SizeY)*100, modelCenter.Z);
                 orthoCam1.UpDirection = new Vector3D(0, 0, 1);
-                orthoCam1.LookDirection = new Vector3D(0, boundingBox.SizeY, 0);
-                orthoCam1.NearPlaneDistance = -500;
+                orthoCam1.LookDirection = new Vector3D(0, boundingBox.SizeY*100, 0);
+                orthoCam1.NearPlaneDistance = 0;
                 orthoCam1.FarPlaneDistance = 1e15;
                 orthoCam1.Width = boundingBox.SizeX + 110;
                 

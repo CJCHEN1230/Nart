@@ -284,7 +284,7 @@ namespace Nart
         /// </summary>
         public void MatchAndCalc3D(List<BWMarker>[] outputMarker)
         {
-            MarkerDatabase Database = MainViewModel.ProjData.MarkerData;
+            MarkerDatabase Database = SystemData.MarkerData;
             _curWorldPoints.Clear();
             for (int i = 0, count = 0; i < outputMarker[0].Count; i++) //左相機Marker尋訪
             {
@@ -380,12 +380,12 @@ namespace Nart
         {
 
             //尋訪資料庫中的Marker
-            for (int i = 0, j = 0; i < MainViewModel.ProjData.MarkerData.MarkerInfo.Count; i++)
+            for (int i = 0, j = 0; i < SystemData.MarkerData.MarkerInfo.Count; i++)
             {   //尋訪世界座標中的Marker
                 for (j = 0; j < _curWorldPoints.Count; j++)
                 {
                     //如果資料庫中的MarkerID存在當前資料庫就檢查下一個
-                    if (MainViewModel.ProjData.MarkerData.MarkerInfo[i].MarkerID.Equals(_curWorldPoints[j].MarkerId))
+                    if (SystemData.MarkerData.MarkerInfo[i].MarkerID.Equals(_curWorldPoints[j].MarkerId))
                     {
                         break; //換下一個資料庫中的Marker
                     }
@@ -393,11 +393,11 @@ namespace Nart
                 //資料庫中的Marker在WorldPoint中都找不到時
                 if (j == _curWorldPoints.Count)
                 {
-                    MainViewModel.ProjData.MarkerData.MarkerInfo.RemoveAt(i);
+                    SystemData.MarkerData.MarkerInfo.RemoveAt(i);
                     i--;
                 }
             }
-            MainViewModel.ProjData.MarkerData.ResetIndex();
+            SystemData.MarkerData.ResetIndex();
             //Database重建之後，將meanFilter裡面的stack也重建
            // _meanFilter.CreatePointStack(Database);
         }
@@ -699,12 +699,12 @@ namespace Nart
 
                     CalcFHCoord();
 
-                    for (int i = 0; i < MainViewModel.ProjData.MarkerData.MarkerInfo.Count; i++)
+                    for (int i = 0; i < SystemData.MarkerData.MarkerInfo.Count; i++)
                     {
-                        Console.WriteLine("\n\n" + MainViewModel.ProjData.MarkerData.MarkerInfo[i].ThreeLength[0] + " " + MainViewModel.ProjData.MarkerData.MarkerInfo[i].ThreeLength[1] + " " + MainViewModel.ProjData.MarkerData.MarkerInfo[i].ThreeLength[2]);
+                        Console.WriteLine("\n\n" + SystemData.MarkerData.MarkerInfo[i].ThreeLength[0] + " " + SystemData.MarkerData.MarkerInfo[i].ThreeLength[1] + " " + SystemData.MarkerData.MarkerInfo[i].ThreeLength[2]);
                     }
-                    Console.WriteLine("splint:" + MainViewModel.ProjData.MarkerData.SplintIndex);
-                    Console.WriteLine("Head:" + MainViewModel.ProjData.MarkerData.HeadIndex);
+                    Console.WriteLine("splint:" + SystemData.MarkerData.SplintIndex);
+                    Console.WriteLine("Head:" + SystemData.MarkerData.HeadIndex);
                     
 
                     for (int i = 0; i < _curWorldPoints.Count; i++)
@@ -1140,6 +1140,15 @@ namespace Nart
                         + "\n\nFDA:  "+ Math.Round(fda, 2)
                         + "\n\nHDA: "+ Math.Round(hda, 2)
                         + "\n\nPDD:  "+ Math.Round(pdd, 3);
+
+                MainViewModel.ProjData.DA = Convert.ToSingle(da);
+                MainViewModel.ProjData.FDA = Convert.ToSingle(fda);
+                MainViewModel.ProjData.HDA = Convert.ToSingle(hda);
+                MainViewModel.ProjData.DD = Convert.ToSingle(dd);
+                MainViewModel.ProjData.PDD = Convert.ToSingle(pdd);
+
+
+
 
                 MultiAngleViewModel.CraniofacialInfo = info;
 

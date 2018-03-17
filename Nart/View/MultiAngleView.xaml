@@ -84,7 +84,7 @@
 
             </hx:ModelContainer3DX>
             <hx:Viewport3DX  x:Name="Viewport2"
-                        ShowViewCube="True" 
+                        ShowViewCube="{Binding ShowCube}"
                         ZoomExtentsWhenLoaded="False" Margin="0" 
                         Camera="{Binding Camera2}"
                         CameraRotationMode="Trackball"
@@ -126,7 +126,7 @@
                 Color="{Binding DirectionalLightColor}" />
             </hx:Viewport3DX>
             <hx:Viewport3DX  x:Name="Viewport3"
-                        ShowViewCube="True" 
+                        ShowViewCube="{Binding ShowCube}"
                         ZoomExtentsWhenLoaded="False" 
                         Margin="0" 
                         Camera="{Binding Camera3}"
@@ -170,7 +170,7 @@
                 Color="{Binding DirectionalLightColor}" />
             </hx:Viewport3DX>
             <hx:Viewport3DX  x:Name="Viewport1"
-                        ShowViewCube="True" 
+                        ShowViewCube="{Binding ShowCube}"
                         ZoomExtentsWhenLoaded="False" 
                         Margin="0"                                      
                         Camera="{Binding Camera1}"

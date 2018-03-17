@@ -56,8 +56,15 @@ namespace Nart
 
             this.DataContext = MainViewModel;
 
-            AllocConsole();
+            Col0.Width = new GridLength(0, GridUnitType.Star);
+            Col1.Width = new GridLength(1.2, GridUnitType.Star);
+            Col2.Width = new GridLength(5, GridUnitType.Star);
 
+            AllocConsole();
+            Console.WriteLine("Col0:" + Col0.Width + "  Actual 0:" + Col0.ActualWidth + "  MinWidth:" + Col0.MinWidth + "  MaxWidth:" + Col0.MaxWidth);
+            Console.WriteLine("Col1:" + Col1.Width + "  Actual 1:" + Col1.ActualWidth + "  MinWidth:" + Col1.MinWidth + "  MaxWidth:" + Col1.MaxWidth);
+            Console.WriteLine("Col2:" + Col2.Width + "  Actual 2:" + Col2.ActualWidth + "  MinWidth:" + Col2.MinWidth + "  MaxWidth:" + Col2.MaxWidth);
+            Console.WriteLine();
         }
 
        
@@ -107,7 +114,6 @@ namespace Nart
            
 
         }
-
         private void button_Click_2(object sender, RoutedEventArgs e)
         {
             //ball的模型
@@ -120,7 +126,7 @@ namespace Nart
                     Normals = new Vector3DCollection(),
                     TriangleIndices = new Int32Collection()
                 };
-                HelixToolkit.Wpf.SharpDX.MeshGeometry3D geometry = model.ballGeometry as HelixToolkit.Wpf.SharpDX.MeshGeometry3D;
+                HelixToolkit.Wpf.SharpDX.MeshGeometry3D geometry = model.Geometry as HelixToolkit.Wpf.SharpDX.MeshGeometry3D;
 
                 if (geometry == null)
                     return;
@@ -153,50 +159,7 @@ namespace Nart
             }
 
 
-
-            //cylinder的模型
-            Model3DGroup pipeGroup = new Model3DGroup();
-            foreach (BallModel model in MainViewModel.ProjData.BallCollection)
-            {
-                System.Windows.Media.Media3D.MeshGeometry3D pipeMesh = new System.Windows.Media.Media3D.MeshGeometry3D
-                {
-                    Positions = new Point3DCollection(),
-                    Normals = new Vector3DCollection(),
-                    TriangleIndices = new Int32Collection()
-                };
-                HelixToolkit.Wpf.SharpDX.MeshGeometry3D geometry = model.pipeGeometry as HelixToolkit.Wpf.SharpDX.MeshGeometry3D;
-
-                if (geometry == null)
-                    return;
-
-                foreach (Vector3 position in geometry.Positions)
-                {
-                    pipeMesh.Positions.Add(new Point3D(position.X, position.Y, position.Z));
-                }
-                foreach (Vector3 normal in geometry.Normals)
-                {
-                    pipeMesh.Normals.Add(new Vector3D(normal.X, normal.Y, normal.Z));
-                }
-                foreach (int triangleindice in geometry.TriangleIndices)
-                {
-                    pipeMesh.TriangleIndices.Add(triangleindice);
-                }
-                System.Windows.Media.Media3D.GeometryModel3D pipeModel = new System.Windows.Media.Media3D.GeometryModel3D
-                {
-                    Geometry = pipeMesh,
-                };
-
-                pipeGroup.Children.Add(pipeModel);
-            }
-
-            StlExporter export2 = new StlExporter();
-            string name2 = "pipe.stl";
-            using (var fileStream = File.Create("D:\\Desktop\\test\\" + name2))
-            {
-                export2.Export(pipeGroup, fileStream);
-            }
-
-
+            
             //存球資料
             FileStream fs = new FileStream("D:\\Desktop\\test\\balldata.txt", FileMode.Create);
             StreamWriter sw = new StreamWriter(fs);
@@ -214,13 +177,22 @@ namespace Nart
 
 
 }
-
         private void MainGrid_Loaded(object sender, RoutedEventArgs e)
         {
             Col2.MaxWidth = MainGrid.ActualWidth;
-            Col2.MinWidth = MainGrid.ActualWidth * 2.0/3.0;
+            Col2.MinWidth = MainGrid.ActualWidth * 1.0/3.0;
         }
+        private void TestBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Col0:" + Col0.Width + "  Actual 0:" + Col0.ActualWidth + "  MinWidth:" + Col0.MinWidth + "  MaxWidth:" + Col0.MaxWidth);
+            Console.WriteLine("Col1:" + Col1.Width + "  Actual 1:" + Col1.ActualWidth + "  MinWidth:" + Col1.MinWidth + "  MaxWidth:" + Col1.MaxWidth);
+            Console.WriteLine("Col2:" + Col2.Width + "  Actual 2:" + Col2.ActualWidth + "  MinWidth:" + Col2.MinWidth + "  MaxWidth:" + Col2.MaxWidth);
 
-       
+            Col1.Width = new GridLength(1, GridUnitType.Auto);
+
+           
+
+            Console.WriteLine();
+        }
     }
 }

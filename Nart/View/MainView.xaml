@@ -348,8 +348,8 @@
                     <Button x:Name="NavBtn" Command="{Binding SetNavigationCommand}" Content="Set Navigation" Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
                     <Button x:Name="RegBtn" Command="{Binding RegisterCommand}" Content="Registration"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
                     <Button x:Name="TrackBtn" Command="{Binding TrackCommand}"   Content="Tracking"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                    <Button x:Name="button" Content="Save Ball Information" VerticalAlignment="Top"    Margin="0,5,2,0"  Click="button_Click_2" Style="{DynamicResource ResourceKey=SideButton}"  Height="68"/>
-                    <Button x:Name="button5" Command="{Binding CtrlRotPlatformCommand}"   Content="rotation" VerticalAlignment="Top"    Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}"  Height="68"/>
+                    <Button x:Name="button" Content="Save Ball Information" VerticalAlignment="Top"    Margin="0,5,2,0"  Click="button_Click_2" Style="{DynamicResource ResourceKey=SideButton}"  Height="68" Visibility="Hidden"/>
+                    <Button x:Name="button5" Command="{Binding CtrlRotPlatformCommand}"   Content="rotation" VerticalAlignment="Top"    Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}"  Height="68" Visibility="Hidden"/>
                 </StackPanel>
 
             </Grid>
@@ -367,14 +367,19 @@
         </Border>
         
         <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left" Margin="10,0,0,0" Width="962">
-            <Controls:ImgButton x:Name="SaveBtn" ButtonLabel="Save"  ButtonImageSource="../Icon/save.png" Margin="20,0"
+            <Controls:ImgButton x:Name="SaveBtn" ButtonLabel="Save"  ButtonImageSource="pack://application:,,,/Nart;component/Icon/save.png" Margin="20,0"
             Command="{Binding SaveProjectCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
-            <Controls:ImgButton x:Name="LoadBtn" ButtonLabel="Load"  ButtonImageSource="../Icon/load.png" Margin="10,0"
+            <Controls:ImgButton x:Name="LoadBtn" ButtonLabel="Load"  ButtonImageSource="pack://application:,,,/Nart;component/Icon/load.png" Margin="10,0"
             Command="{Binding LoadProjectCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
-            <Controls:ImgButton x:Name="ResetBtn" ButtonLabel="Reset"  ButtonImageSource="../Icon/resize.png" Margin="10,0"
+            <Controls:ImgButton x:Name="ResetBtn" ButtonLabel="Reset"  ButtonImageSource="pack://application:,,,/Nart;component/Icon/resize.png" Margin="10,0"
             Command="{Binding ResetCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
-            <Controls:ImgButton x:Name="CoordBtn" ButtonLabel="Coordinate"  ButtonImageSource="../Icon/coordinate.png" Margin="10,0"
+            <Controls:ImgButton x:Name="CoordBtn" ButtonLabel="Coordinate"  ButtonImageSource="pack://application:,,,/Nart;component/Icon/coordinate.png" Margin="10,0"
             Command="{Binding ShowCoordinateCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
+            <Controls:ImgButton x:Name="CubeBtn" ButtonLabel="Cube"  ButtonImageSource="pack://application:,,,/Nart;component/Icon/cube.png" Margin="10,14"
+            Command="{Binding ShowCubeCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
+            <Button x:Name="TestBtn" Margin="10,14"
+            HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" Click="TestBtn_Click" />
+
         </StackPanel>
 
 

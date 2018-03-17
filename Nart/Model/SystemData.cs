@@ -11,7 +11,7 @@ namespace Nart
         public static bool IsFirstStage = false;
         public static bool IsSecondStage = false;
         public static bool IsFinished = false;
-
+        public static MarkerDatabase MarkerData;
         /// <summary>
         /// 註冊狀態，註冊當下會開啟，註冊完之後會自動關閉
         /// </summary>
@@ -36,6 +36,7 @@ namespace Nart
         {
             CameraParam[0] = new CamParam("../../../data/CaliR_L.txt");
             CameraParam[1] = new CamParam("../../../data/CaliR_R.txt");
+            MarkerData = new MarkerDatabase();
         }
 
     }

@@ -16,9 +16,24 @@ namespace Nart
 {
     [Serializable]
     public class ProjectData : ObservableObject , ISerializable
-    {
+    {        
+        public bool IsRegInitialized = false;
+        public bool IsNavDone = true;
 
-        //病人資訊
+        public float Stage1Red;
+        public float Stage1Green;
+        public float Stage1Blue;
+        public float Stage2Red;
+        public float Stage2Green;
+        public float Stage2Blue;
+
+        public float DA;    //DeviationAngle
+        public float FDA;   // FrontalDeviationAngle
+        public float HDA;   //HorizontalDeviationAngle
+        public float DD;    //DeviationDistance
+        public float PDD;   //PosteriorDeviationDistance;
+
+         //病人資訊
         private string _name = "蔡慧君";
         private string _id = "123456";
         private string _institution = "成大";
@@ -28,21 +43,15 @@ namespace Nart
         private string _selectPointState = "OFF";
         private bool _isNavSet = false;
         private bool _isRegistered = false;
-
-        public MarkerDatabase MarkerData = new MarkerDatabase();
-        public bool IsRegInitialized = false;
-
-        public float Stage1Red;
-        public float Stage1Green;
-        public float Stage1Blue;
-        public float Stage2Red;
-        public float Stage2Green;
-        public float Stage2Blue;
-
-        private  ObservableCollection<BallModel> _ballCollection=  new ObservableCollection<BallModel>();
-        private  ObservableCollection<BoneModel> _boneCollection =  new ObservableCollection<BoneModel>();
+        private ObservableCollection<BallModel> _ballCollection=  new ObservableCollection<BallModel>();
+        private ObservableCollection<BoneModel> _boneCollection =  new ObservableCollection<BoneModel>();
         private ObservableCollection <BoneModel> _targetCollection = new ObservableCollection<BoneModel>();
+        private ObservableCollection<Element3D> _ospCollection = new ObservableCollection<Element3D>();
 
+        static ProjectData()
+        {
+            //MarkerDatabase MarkerData = new MarkerDatabase();
+        }
         public ProjectData()
         {            
         }
@@ -61,8 +70,13 @@ namespace Nart
             Stage2Red = (float)info.GetValue("Stage2Red", typeof(float));
             Stage2Green = (float)info.GetValue("Stage2Green", typeof(float));
             Stage2Blue = (float)info.GetValue("Stage2Blue", typeof(float));
+            DA = (float)info.GetValue("DA", typeof(float));
+            FDA = (float)info.GetValue("FDA", typeof(float));
+            HDA = (float)info.GetValue("HDA", typeof(float));
+            DD = (float)info.GetValue("DD", typeof(float));
+            PDD = (float)info.GetValue("PDD", typeof(float));
             FirstNavigation = (string)info.GetValue("FirstNavigation", typeof(string));
-
+            IsNavDone = (bool)info.GetValue("IsNavDone", typeof(bool));
 
             int count = (int)info.GetValue("BallCollection_Count", typeof(int));
             ObservableCollection<BallModel> ballCollection = new ObservableCollection<BallModel>();
@@ -108,8 +122,16 @@ namespace Nart
             this.Stage2Red = projectData.Stage2Red;
             this.Stage2Green = projectData.Stage2Green;
             this.Stage2Blue = projectData.Stage2Blue;
-            this.FirstNavigation = projectData.FirstNavigation;
 
+            this.DA = projectData.DA;
+            this.FDA = projectData.FDA;
+            this.HDA = projectData.HDA;
+            this.DD = projectData.DD;
+            this.PDD = projectData.PDD;
+
+
+            this.FirstNavigation = projectData.FirstNavigation;
+            this.IsNavDone = projectData.IsNavDone;
             this.BallCollection.Clear();
             for (int i = 0; i < projectData.BallCollection.Count; i++)
             {
@@ -138,7 +160,7 @@ namespace Nart
             info.AddValue("Institution", Institution);
             info.AddValue("RegFilePath", RegFilePath);
             info.AddValue("IsRegInitialized", IsRegInitialized);
-            info.AddValue("IsNavigationSet", _isNavSet);
+            info.AddValue("IsNavSet", _isNavSet);
 
             info.AddValue("Stage1Red", Stage1Red);
             info.AddValue("Stage1Green", Stage1Green);
@@ -148,8 +170,14 @@ namespace Nart
             info.AddValue("Stage2Green", Stage2Green);
             info.AddValue("Stage2Blue", Stage2Blue);
 
+            info.AddValue("DA", DA);
+            info.AddValue("FDA", FDA);
+            info.AddValue("HDA", HDA);
+            info.AddValue("DD", DD);
+            info.AddValue("PDD", PDD);
 
             info.AddValue("FirstNavigation", FirstNavigation);
+            info.AddValue("IsNavDone", IsNavDone);
 
             info.AddValue("BallCollection_Count", BallCollection.Count);
             for (int i = 0; i < BallCollection.Count; i++)

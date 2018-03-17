@@ -12,9 +12,7 @@ using HelixToolkit.Wpf;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf.SharpDX.Core;
 using SharpDX;
-using GeometryModel3D = System.Windows.Media.Media3D.GeometryModel3D;
-using MeshGeometry3D = System.Windows.Media.Media3D.MeshGeometry3D;
-using Model3D = System.Windows.Media.Media3D.Model3D;
+
 
 namespace Nart.Model_Object
 {
@@ -22,6 +20,9 @@ namespace Nart.Model_Object
     using System.Windows.Media;
     using Color = System.Windows.Media.Color;
     using Quaternion = System.Windows.Media.Media3D.Quaternion;
+    using GeometryModel3D = System.Windows.Media.Media3D.GeometryModel3D;
+    using MeshGeometry3D = System.Windows.Media.Media3D.MeshGeometry3D;
+    using Model3D = System.Windows.Media.Media3D.Model3D;
     [Serializable]
     public class BoneModel : MeshGeometryModel3D,  INotifyPropertyChanged, ISerializable
     {

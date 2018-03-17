@@ -67,11 +67,11 @@ namespace Nart
         /// <summary>
         /// 頭部對稱面
         /// </summary>
-        private string _headOsp = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\max_OSP.stl";
+        private string _headOsp = "../../../data/蔡慧君/max_OSP.stl";
         /// <summary>
         /// 下顎對稱面
         /// </summary>
-        private string _mandibleOsp = "D:\\Desktop\\研究資料\\蔡慧君_15755388_20151231\\註冊\\man_OSP.stl";
+        private string _mandibleOsp = "../../../data/蔡慧君/man_OSP.stl";
         #endregion
 
         public NavigateViewModel(NavigateView navigateView)

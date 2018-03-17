@@ -73,6 +73,7 @@ namespace Nart
             FinishCommand = new RelayCommand(Finish);
             ResetCommand = new RelayCommand(Reset);
             ShowCoordinateCommand = new RelayCommand(ShowCoordinate);
+            ShowCubeCommand = new RelayCommand(ShowCube);
 
             BindPatientData();
             BindBallData();
@@ -99,7 +100,6 @@ namespace Nart
                 SetStaticValue(ref _pointNumber, value);
             }
         }
-
         public ICommand SaveProjectCommand { private set; get; }
         public ICommand LoadProjectCommand { private set; get; }
         public ICommand SetModelCommand { private set; get; }
@@ -142,14 +142,17 @@ namespace Nart
         public ICommand FinishCommand { private set; get; }
         public ICommand ResetCommand { private set; get; }
         public ICommand ShowCoordinateCommand { private set; get; }
+        public ICommand ShowCubeCommand { private set; get; }
         public void InitCamCtrl()
         {
 
             CamCtrl = new CameraControl(new TIS.Imaging.ICImagingControl[2] { _mainWindow.CamHost1.IcImagingControl, _mainWindow.CamHost2.IcImagingControl });
             CamCtrl.CameraStart();
         }
-
-        public void ImportFile(string filename)
+        /// <summary>
+        /// 開啟儲存的專案        
+        /// </summary>
+        public void ImportProject(string filename)
         {
             string fullFilePath = filename;
 
@@ -215,6 +218,12 @@ namespace Nart
                         MainViewModel.ProjData.UpdateData(projectData);
                         MultiAngleViewModel.ResetCameraPosition();
                         System.IO.Directory.Delete(tempDirectory, true);
+
+                        if (MainViewModel.ProjData.IsNavDone)
+                        {
+                            ShowFinalInfo();
+                        }
+
                         break;
                     }
 
@@ -240,7 +249,6 @@ namespace Nart
             }
             RestoreGridLength();
         }
-
         /// <summary>
         /// 顯示設置好的各項模型資訊，按下Set Model 之後並且按ok後會走到這
         /// </summary>       
@@ -297,7 +305,40 @@ namespace Nart
 
             _mainWindow.Stage1Btn.Visibility = Visibility.Visible;
 
-            RestoreGridLength();
+            //RestoreGridLength();
+            GridLengthAnimation gla =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(_mainWindow.Col0.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(0, GridUnitType.Pixel),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
+
+            GridLengthAnimation gla2 =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(_mainWindow.Col1.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(2, GridUnitType.Pixel),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
+
+            GridLengthAnimation gla3 =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(_mainWindow.Col2.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(5, GridUnitType.Star),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
+
+            _mainWindow.Col0.BeginAnimation(ColumnDefinition.WidthProperty, gla);
+            _mainWindow.Col1.BeginAnimation(ColumnDefinition.WidthProperty, gla2);
+            _mainWindow.Col2.BeginAnimation(ColumnDefinition.WidthProperty, gla3);
+
+
+
         }
         private void OnClosed(object o)
         {
@@ -457,7 +498,7 @@ namespace Nart
                 if (System.IO.Path.GetExtension(dlg.FileName).ToLower() != ".nart")
                     return;
 
-                ImportFile(dlg.FileName);
+                ImportProject(dlg.FileName);
             }
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
         }
@@ -696,54 +737,19 @@ namespace Nart
             //如果已在導航結束的階段則直接顯示所有球資訊
             if (SystemData.IsFinished)
             {
-                MultiAngleViewModel.NavBallDistance = "Stage1"                                         
-                    + "\nRed:      " + Math.Round(MainViewModel.ProjData.Stage1Red, 2)
-                    + "\n" + "Green:  " + Math.Round(MainViewModel.ProjData.Stage1Green, 2)
-                    + "\n" + "Blue:     " + Math.Round(MainViewModel.ProjData.Stage1Blue, 2)
-                    + "\n\nStage2"
-                    + "\nRed:      " + Math.Round(MainViewModel.ProjData.Stage2Red, 2)
-                    + "\n" + "Green:  " + Math.Round(MainViewModel.ProjData.Stage2Green, 2)
-                    + "\n" + "Blue:     " + Math.Round(MainViewModel.ProjData.Stage2Blue, 2);
-
-                ObservableCollection<BallModel> ballCollection = MainViewModel.ProjData.BallCollection;
-                string maxillaBallInfo = "Maxilla";
-                string mandibleBallInfo = "\nMandible";
-                foreach (BallModel model in ballCollection)
-                {
-                    if (model.ModelType == ModelType.MovedMaxilla)
-                    {                     
-                        maxillaBallInfo += "\n" + model.BallName.PadLeft(10) +
-                                            ("" + Math.Abs(Math.Round(model.BallDistance.X, 2))).PadLeft(10) +
-                                            ("" + Math.Abs(Math.Round(model.BallDistance.Y, 2))).PadLeft(10) +
-                                            ("" + Math.Abs(Math.Round(model.BallDistance.Z, 2))).PadLeft(10);
-
-                    }
-                    else if (model.ModelType == ModelType.MovedMandible)
-                    {
-                        mandibleBallInfo += "\n" + model.BallName.PadLeft(10) +
-                                            ("" + Math.Abs(Math.Round(model.BallDistance.X, 2))).PadLeft(10) +
-                                            ("" + Math.Abs(Math.Round(model.BallDistance.Y, 2))).PadLeft(10) +
-                                            ("" + Math.Abs(Math.Round(model.BallDistance.Z, 2))).PadLeft(10);
-
-                    }
-                }
-
-                MultiAngleViewModel.BallDistance = maxillaBallInfo + mandibleBallInfo;
-
-
-
-
-
+                ShowFinalInfo();
             }
 
             SystemData.RegToggle = false;
             SystemData.TrackToggle = false;
             SystemData.IsFirstStage = false;
             SystemData.IsSecondStage = false;
-
+            ProjData.IsNavDone = true;
             _mainWindow.TrackBtn.IsEnabled = false;
 
             _mainWindow.FinishBtn.Visibility = Visibility.Hidden;
+
+            
         }
         /// <summary>
         /// 重設相機
@@ -755,7 +761,11 @@ namespace Nart
         private void ShowCoordinate(object o)
         {
             MultiAngleViewModel.ShowCoordinate = !MultiAngleViewModel.ShowCoordinate;
-        }        
+        }
+        private void ShowCube(object o)
+        {
+            MultiAngleViewModel.ShowCube = !MultiAngleViewModel.ShowCube;
+        }
         /// <summary>
         /// 將Grid回復到原始狀態 
         /// </summary>
@@ -898,6 +908,46 @@ namespace Nart
             binding2.Source = ProjData;
             binding2.Mode = BindingMode.TwoWay;
             BindingOperations.SetBinding(_mainWindow.TrackBtn, Button.IsEnabledProperty, binding2);
+        }
+        private void ShowFinalInfo()
+        {
+            MultiAngleViewModel.NavBallDistance = "Stage1"
+                    + "\nRed:      " + Math.Round(MainViewModel.ProjData.Stage1Red, 2)
+                    + "\n" + "Green:  " + Math.Round(MainViewModel.ProjData.Stage1Green, 2)
+                    + "\n" + "Blue:     " + Math.Round(MainViewModel.ProjData.Stage1Blue, 2)
+                    + "\n\nStage2"
+                    + "\nRed:      " + Math.Round(MainViewModel.ProjData.Stage2Red, 2)
+                    + "\n" + "Green:  " + Math.Round(MainViewModel.ProjData.Stage2Green, 2)
+                    + "\n" + "Blue:     " + Math.Round(MainViewModel.ProjData.Stage2Blue, 2);
+
+            ObservableCollection<BallModel> ballCollection = MainViewModel.ProjData.BallCollection;
+            string maxillaBallInfo = "Maxilla";
+            string mandibleBallInfo = "\nMandible";
+            foreach (BallModel model in ballCollection)
+            {
+                if (model.ModelType == ModelType.MovedMaxilla)
+                {
+                    maxillaBallInfo += "\n" + model.BallName.PadLeft(10) +
+                                        ("" + Math.Abs(Math.Round(model.BallDistance.X, 2))).PadLeft(10) +
+                                        ("" + Math.Abs(Math.Round(model.BallDistance.Y, 2))).PadLeft(10) +
+                                        ("" + Math.Abs(Math.Round(model.BallDistance.Z, 2))).PadLeft(10);
+                }
+                else if (model.ModelType == ModelType.MovedMandible)
+                {
+                    mandibleBallInfo += "\n" + model.BallName.PadLeft(10) +
+                                        ("" + Math.Abs(Math.Round(model.BallDistance.X, 2))).PadLeft(10) +
+                                        ("" + Math.Abs(Math.Round(model.BallDistance.Y, 2))).PadLeft(10) +
+                                        ("" + Math.Abs(Math.Round(model.BallDistance.Z, 2))).PadLeft(10);
+                }
+            }
+
+            MultiAngleViewModel.BallDistance = maxillaBallInfo + mandibleBallInfo;
+            string info = "DA:    " + Math.Round(MainViewModel.ProjData.DA, 4)
+                   + "\n\nDD:    " + Math.Round(MainViewModel.ProjData.DD, 3)
+                   + "\n\nFDA:  " + Math.Round(MainViewModel.ProjData.FDA, 2)
+                   + "\n\nHDA: " + Math.Round(MainViewModel.ProjData.HDA, 2)
+                   + "\n\nPDD:  " + Math.Round(MainViewModel.ProjData.PDD, 3);
+            MultiAngleViewModel.CraniofacialInfo = info;
         }
 
         public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;

@@ -31,7 +31,7 @@ namespace Nart
            
             if (filename != string.Empty)
             {
-                mainView.MainViewModel.ImportFile(filename);
+                mainView.MainViewModel.ImportProject(filename);
             }
             mainView.Show();
 

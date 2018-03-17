@@ -30,10 +30,7 @@ namespace Nart.Model_Object
         /// </summary>
         private Vector3 _ballCenter;
         private Vector3 _ballDistance;
-
-        public HelixToolkit.Wpf.SharpDX.MeshGeometry3D ballGeometry;
-        public HelixToolkit.Wpf.SharpDX.MeshGeometry3D pipeGeometry;
-
+        
       
         public BallModel()
                     : this(new Point3D(0,0,0))
