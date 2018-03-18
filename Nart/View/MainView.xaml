@@ -35,8 +35,8 @@
 
     <Grid x:Name="MainGrid" Margin="0,-30,0,0" Loaded="MainGrid_Loaded" >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="Col0" Width="0*" />
-            <ColumnDefinition x:Name="Col1" Width="1.2*"  />
+            <ColumnDefinition x:Name="Col0" Width="0*"/>
+            <ColumnDefinition x:Name="Col1" Width="Auto"/>
             <!--<ColumnDefinition  Width="10"/>-->
             <ColumnDefinition x:Name="Col2" Width="5*" />
         </Grid.ColumnDefinitions>
@@ -344,9 +344,9 @@
 
                 <StackPanel Margin="0" Grid.Row="2">
                     <Button x:Name="LoadDataBtn" Command="{Binding LoadMarkerDatabaseCommand}" Content="Load Marker Database" Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                    <Button x:Name="NavBtn" Command="{Binding SetNavigationCommand}" Content="Set Navigation" Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                    <Button x:Name="RegBtn" Command="{Binding RegisterCommand}" Content="Registration"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                    <Button x:Name="TrackBtn" Command="{Binding TrackCommand}"   Content="Tracking"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                    <Button x:Name="NavBtn" Command="{Binding SetNavigationCommand}" Content="Set up" Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                    <Button x:Name="RegBtn" Command="{Binding RegisterCommand}" Content="Register"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
+                    <Button x:Name="TrackBtn" Command="{Binding TrackCommand}"   Content="Track"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
                     <Button x:Name="button" Content="Save Ball Information" VerticalAlignment="Top"    Margin="0,5,2,0"  Click="button_Click_2" Style="{DynamicResource ResourceKey=SideButton}"  Height="68" Visibility="Hidden"/>
                     <Button x:Name="button5" Command="{Binding CtrlRotPlatformCommand}"   Content="rotation" VerticalAlignment="Top"    Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}"  Height="68" Visibility="Hidden"/>
                 </StackPanel>
@@ -376,15 +376,12 @@
             Command="{Binding ShowCoordinateCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
             <Controls:ImgButton x:Name="CubeBtn" ButtonLabel="Cube"  ButtonImageSource="pack://application:,,,/Nart;component/Icon/cube.png" Margin="10,14"
             Command="{Binding ShowCubeCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
-            <Button x:Name="TestBtn" Margin="10,14"
-            HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" Click="TestBtn_Click" />
-            <Button x:Name="TestBtn2" Margin="10,14"
-            HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" Click="Test2Btn_Click" />
-            <Button x:Name="TestBtn3" Margin="10,14"
-            HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" Click="Test3Btn_Click" />
+            <Controls:ImgButton x:Name="CubeBtn2" ButtonLabel="Layout"  ButtonImageSource="pack://application:,,,/Nart;component/Icon/layout.png" Margin="10,14"
+            Command="{Binding ResetInterfaceCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
+
 
         </StackPanel>
-        <GridSplitter  Margin="-5,0,0,0"  Grid.Row="2" Grid.Column="2"   HorizontalAlignment="Left" Background="Transparent"   Width="10" />
+        <GridSplitter   Margin="-5,0,0,0"  Grid.Row="2" Grid.Column="2"   HorizontalAlignment="Left" Background="Transparent"   Width="10" />
 
 
     </Grid>

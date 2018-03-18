@@ -74,6 +74,7 @@ namespace Nart
             ResetCommand = new RelayCommand(Reset);
             ShowCoordinateCommand = new RelayCommand(ShowCoordinate);
             ShowCubeCommand = new RelayCommand(ShowCube);
+            ResetInterfaceCommand = new RelayCommand(ResetInterface);
 
             BindPatientData();
             BindBallData();
@@ -143,6 +144,7 @@ namespace Nart
         public ICommand ResetCommand { private set; get; }
         public ICommand ShowCoordinateCommand { private set; get; }
         public ICommand ShowCubeCommand { private set; get; }
+        public ICommand ResetInterfaceCommand { private set; get; }
         public void InitCamCtrl()
         {
 
@@ -303,44 +305,9 @@ namespace Nart
         {
             SystemData.TrackToggle = !SystemData.TrackToggle;
 
-            //_mainWindow.Stage1Btn.Visibility = Visibility.Visible;
-            
-            GridLengthAnimation gla =
-                new GridLengthAnimation
-                {
-                    From = new GridLength(_mainWindow.Col0.ActualWidth, GridUnitType.Pixel),
-                    To = new GridLength(0, GridUnitType.Star),
-                    Duration = new TimeSpan(0, 0, 0, 0, 150),
-                    FillBehavior = FillBehavior.HoldEnd
-                };
-
-            GridLengthAnimation gla2 =
-                new GridLengthAnimation
-                {
-                    From = new GridLength(_mainWindow.Col1.ActualWidth, GridUnitType.Pixel),
-                    To = new GridLength(1, GridUnitType.Star),
-                    Duration = new TimeSpan(0, 0, 0, 0, 150),
-                    FillBehavior = FillBehavior.HoldEnd
-                };
-
-            GridLengthAnimation gla3 =
-                new GridLengthAnimation
-                {
-                    From = new GridLength(_mainWindow.Col2.ActualWidth, GridUnitType.Pixel),
-                    //To = new GridLength(_mainWindow.MainGrid.ActualWidth, GridUnitType.Pixel),
-                    To = new GridLength(5, GridUnitType.Star),
-                    Duration = new TimeSpan(0, 0, 0, 0, 200),
-                    FillBehavior = FillBehavior.Stop,
-                };
-            gla3.Completed += (s, e) =>
-            {
-                _mainWindow.Col2.Width = new GridLength(_mainWindow.MainGrid.ActualWidth, GridUnitType.Pixel);
-            };
+            _mainWindow.Stage1Btn.Visibility = Visibility.Visible;
             
 
-            _mainWindow.Col0.BeginAnimation(ColumnDefinition.WidthProperty, gla);
-            _mainWindow.Col1.BeginAnimation(ColumnDefinition.WidthProperty, gla2);
-            _mainWindow.Col2.BeginAnimation(ColumnDefinition.WidthProperty, gla3);
 
 
 
@@ -527,7 +494,7 @@ namespace Nart
                 };
             Storyboard.SetTargetProperty(gla2, new PropertyPath(ColumnDefinition.WidthProperty));
             Storyboard.SetTarget(gla2, Col1);
-            storyboard.Children.Add(gla2);
+
 
             //設定Col0從當前Pixel長度到Col1動畫前的Pixel長度
             GridLengthAnimation gla =
@@ -541,8 +508,47 @@ namespace Nart
             Storyboard.SetTargetProperty(gla, new PropertyPath(ColumnDefinition.WidthProperty));
             Storyboard.SetTarget(gla, Col0);
             storyboard.Children.Add(gla);
-
+            storyboard.Children.Add(gla2);
             _mainWindow.BeginStoryboard(storyboard);
+
+
+
+
+            //ColumnDefinition Col0 = _mainWindow.Col0;
+            //ColumnDefinition Col1 = _mainWindow.Col1;
+            //ColumnDefinition Col2 = _mainWindow.Col2;
+
+            //Col2.Width = new GridLength(Col2.ActualWidth, GridUnitType.Pixel);
+
+            //GridLengthAnimation gla =
+            //    new GridLengthAnimation
+            //    {
+            //        From = new GridLength(Col0.ActualWidth, GridUnitType.Pixel),
+            //        To = new GridLength(Col1.ActualWidth, GridUnitType.Pixel),
+            //        Duration = new TimeSpan(0, 0, 0, 0, 150),
+            //        FillBehavior = FillBehavior.HoldEnd
+            //    };
+
+            //GridLengthAnimation gla2 =
+            //    new GridLengthAnimation
+            //    {
+            //        From = new GridLength(Col1.ActualWidth, GridUnitType.Pixel),
+            //        To = new GridLength(0, GridUnitType.Star),
+            //        Duration = new TimeSpan(0, 0, 0, 0, 150),
+            //        FillBehavior = FillBehavior.HoldEnd
+            //    };
+
+
+            //Col0.BeginAnimation(ColumnDefinition.WidthProperty, gla);
+            //Col1.BeginAnimation(ColumnDefinition.WidthProperty, gla2);
+
+
+
+
+
+
+
+
         }
         private void FlyOutSettingView(object o)
         {
@@ -556,7 +562,7 @@ namespace Nart
                 new GridLengthAnimation
                 {
                     From = new GridLength(Col0.ActualWidth, GridUnitType.Pixel),
-                    To = new GridLength(0, GridUnitType.Pixel),
+                    To = new GridLength(0, GridUnitType.Star),
                     Duration = new TimeSpan(0, 0, 0, 0, 150),
                     FillBehavior = FillBehavior.HoldEnd
                 };
@@ -755,7 +761,11 @@ namespace Nart
 
             _mainWindow.FinishBtn.Visibility = Visibility.Hidden;
 
-            
+
+            ResetLayout();
+
+
+
         }
         /// <summary>
         /// 重設相機
@@ -770,14 +780,19 @@ namespace Nart
         }
         private void ShowCube(object o)
         {
-            MultiAngleViewModel.ShowCube = !MultiAngleViewModel.ShowCube;
+            MultiAngleViewModel.ShowCube = !MultiAngleViewModel.ShowCube;            
         }
+        private void ResetInterface(object o)
+        {
+            ResetLayout();
+        }
+        
         /// <summary>
         /// 將Grid回復到原始狀態 
         /// </summary>
         private void RestoreGridLength()
         {
-            //Col2.Width = new GridLength(Col2.ActualWidth, GridUnitType.Pixel);
+            
 
             GridLengthAnimation gla =
                 new GridLengthAnimation
@@ -798,34 +813,95 @@ namespace Nart
                 };
 
             _mainWindow.Col0.BeginAnimation(ColumnDefinition.WidthProperty, gla);
+            _mainWindow.Col1.BeginAnimation(ColumnDefinition.WidthProperty, gla2);          
+        }
+        /// <summary>
+        /// 重新設定整個Layout
+        /// </summary>
+        private void ResetLayout()
+        {
+            GridLengthAnimation gla =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(_mainWindow.Col0.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(0, GridUnitType.Star),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
+
+            GridLengthAnimation gla2 =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(_mainWindow.Col1.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(_mainWindow.MainGrid.ActualWidth - _mainWindow.InitialGridLength, GridUnitType.Star),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
+            GridLengthAnimation gla3 =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(_mainWindow.Col2.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(_mainWindow.InitialGridLength, GridUnitType.Star),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.Stop,
+                };
+            gla3.Completed += (s, e) =>
+            {
+                _mainWindow.Col2.Width = new GridLength(_mainWindow.InitialGridLength, GridUnitType.Pixel);
+            };
+
+
+            _mainWindow.Col0.BeginAnimation(ColumnDefinition.WidthProperty, gla);
             _mainWindow.Col1.BeginAnimation(ColumnDefinition.WidthProperty, gla2);
-            //GridLengthAnimation gla = new GridLengthAnimation
-            //{
-            //    From = _mainWindow.Col0.Width,
-            //    To = new GridLength(0, GridUnitType.Star),
-            //    Duration = new TimeSpan(0, 0, 0, 0, 100),
-            //    FillBehavior = FillBehavior.Stop
-            //};
-            //gla.Completed += (s, e) =>
-            //{
-            //    _mainWindow.Col0.Width = gla.To;
-            //};
-            //_mainWindow.MainGrid.ColumnDefinitions[0].BeginAnimation(ColumnDefinition.WidthProperty, gla);
+            _mainWindow.Col2.BeginAnimation(ColumnDefinition.WidthProperty, gla3);
+
+        }
+        /// <summary>
+        /// 將觀看Model的View放到最大，tracking的時候用
+        /// </summary>
+        private void AmplifyModelView()
+        {
 
 
-            //GridLengthAnimation gla2 = new GridLengthAnimation
-            //{
-            //    From = _mainWindow.Col1.Width,
-            //    To = new GridLength(0, GridUnitType.Auto),
-            //    Duration = new TimeSpan(0, 0, 0, 0, 100),
-            //    FillBehavior = FillBehavior.Stop
-            //};
-            //gla2.Completed += (s, e) =>
-            //{
-            //    _mainWindow.Col1.Width = gla2.To;
-            //};
-            //_mainWindow.MainGrid.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla2);
-        }   
+            GridLengthAnimation gla =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(_mainWindow.Col0.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(0, GridUnitType.Star),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
+
+            GridLengthAnimation gla2 =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(_mainWindow.Col1.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(1, GridUnitType.Star),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
+
+            GridLengthAnimation gla3 =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(_mainWindow.Col2.ActualWidth, GridUnitType.Pixel),
+                    //To = new GridLength(_mainWindow.MainGrid.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(5, GridUnitType.Star),
+                    Duration = new TimeSpan(0, 0, 0, 0, 200),
+                    FillBehavior = FillBehavior.Stop,
+                };
+            gla3.Completed += (s, e) =>
+            {
+                _mainWindow.Col2.Width = new GridLength(_mainWindow.MainGrid.ActualWidth, GridUnitType.Pixel);
+            };
+
+
+            _mainWindow.Col0.BeginAnimation(ColumnDefinition.WidthProperty, gla);
+            _mainWindow.Col1.BeginAnimation(ColumnDefinition.WidthProperty, gla2);
+            _mainWindow.Col2.BeginAnimation(ColumnDefinition.WidthProperty, gla3);
+
+        }
+        
         /// <summary>
         /// Bind Patient Information expander裡面的textbox 
         /// </summary>

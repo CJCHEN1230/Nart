@@ -69,6 +69,16 @@ namespace Nart
             }
             else
                 return new GridLength(animationClock.CurrentProgress.Value * (toVal - fromVal) + fromVal, GridUnitType.Star);
+
+            //if (fromVal > toVal)
+            //    return new GridLength((1 - animationClock.CurrentProgress.Value) *
+            //        (fromVal - toVal) + toVal, this.From.IsStar ? GridUnitType.Star : GridUnitType.Pixel);
+            //else
+            //    return new GridLength(animationClock.CurrentProgress.Value *
+            //        (toVal - fromVal) + fromVal, this.From.IsStar ? GridUnitType.Star : GridUnitType.Pixel);
         }
     }
+
+
+
 }
