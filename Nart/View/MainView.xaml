@@ -124,7 +124,6 @@
 
         <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="4" Background="White" Grid.Row="1" Margin="0"/>
         <!--<GridSplitter  Margin="0,0,0,0"  Grid.Row="2" Grid.Column="2"  Style="{DynamicResource VerticalGridSplitter}" Background="White" HorizontalAlignment="Left"  Width="Auto" />-->
-        <GridSplitter  Margin="0,0"  Grid.Row="2" Grid.Column="2"   HorizontalAlignment="Left" Background="Transparent"   Width="5" />
 
 
         <ScrollViewer  Margin="0,0,0,0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Grid.Column="1" Grid.Row="2" >
@@ -365,7 +364,7 @@
                 </StatusBarItem>
             </StatusBar>
         </Border>
-        
+
         <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left" Margin="10,0,0,0" Width="962">
             <Controls:ImgButton x:Name="SaveBtn" ButtonLabel="Save"  ButtonImageSource="pack://application:,,,/Nart;component/Icon/save.png" Margin="20,0"
             Command="{Binding SaveProjectCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
@@ -379,8 +378,13 @@
             Command="{Binding ShowCubeCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" />
             <Button x:Name="TestBtn" Margin="10,14"
             HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" Click="TestBtn_Click" />
+            <Button x:Name="TestBtn2" Margin="10,14"
+            HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" Click="Test2Btn_Click" />
+            <Button x:Name="TestBtn3" Margin="10,14"
+            HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" Height="70" Click="Test3Btn_Click" />
 
         </StackPanel>
+        <GridSplitter  Margin="-5,0,0,0"  Grid.Row="2" Grid.Column="2"   HorizontalAlignment="Left" Background="Transparent"   Width="10" />
 
 
     </Grid>

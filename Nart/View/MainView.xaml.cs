@@ -61,9 +61,9 @@ namespace Nart
             Col2.Width = new GridLength(5, GridUnitType.Star);
 
             AllocConsole();
-            Console.WriteLine("Col0:" + Col0.Width + "  Actual 0:" + Col0.ActualWidth + "  MinWidth:" + Col0.MinWidth + "  MaxWidth:" + Col0.MaxWidth);
-            Console.WriteLine("Col1:" + Col1.Width + "  Actual 1:" + Col1.ActualWidth + "  MinWidth:" + Col1.MinWidth + "  MaxWidth:" + Col1.MaxWidth);
-            Console.WriteLine("Col2:" + Col2.Width + "  Actual 2:" + Col2.ActualWidth + "  MinWidth:" + Col2.MinWidth + "  MaxWidth:" + Col2.MaxWidth);
+            Console.WriteLine(("Col0:" + Col0.Width).PadRight(10) + ("  Actual 0:" + Col0.ActualWidth).PadRight(10) + ("  MinWidth:" + Col0.MinWidth).PadRight(10) + ("  MaxWidth:" + Col0.MaxWidth).PadRight(10));
+            Console.WriteLine(("Col1:" + Col1.Width).PadRight(10) + ("  Actual 1:" + Col1.ActualWidth).PadRight(10) + ("  MinWidth:" + Col1.MinWidth).PadRight(10) + ("  MaxWidth:" + Col1.MaxWidth).PadRight(10));
+            Console.WriteLine(("Col2:" + Col2.Width).PadRight(10) + ("  Actual 2:" + Col2.ActualWidth).PadRight(10) + ("  MinWidth:" + Col2.MinWidth).PadRight(10) + ("  MaxWidth:" + Col2.MaxWidth).PadRight(10));
             Console.WriteLine();
         }
 
@@ -179,16 +179,40 @@ namespace Nart
 }
         private void MainGrid_Loaded(object sender, RoutedEventArgs e)
         {
-            Col2.MaxWidth = MainGrid.ActualWidth;
-            Col2.MinWidth = MainGrid.ActualWidth * 1.0/3.0;
+            //Col2.MaxWidth = MainGrid.ActualWidth;
+            Col2.MinWidth = MainGrid.ActualWidth * 1.0/2.0;
         }
         private void TestBtn_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Col0:" + Col0.Width + "  Actual 0:" + Col0.ActualWidth + "  MinWidth:" + Col0.MinWidth + "  MaxWidth:" + Col0.MaxWidth);
-            Console.WriteLine("Col1:" + Col1.Width + "  Actual 1:" + Col1.ActualWidth + "  MinWidth:" + Col1.MinWidth + "  MaxWidth:" + Col1.MaxWidth);
-            Console.WriteLine("Col2:" + Col2.Width + "  Actual 2:" + Col2.ActualWidth + "  MinWidth:" + Col2.MinWidth + "  MaxWidth:" + Col2.MaxWidth);
+            Console.WriteLine(("Col0:" + Col0.Width).PadRight(30) + ("  Actual 0:" + Col0.ActualWidth).PadRight(30) + ("  MinWidth:" + Col0.MinWidth).PadRight(15) + ("  MaxWidth:" + Col0.MaxWidth).PadRight(15));
+            Console.WriteLine(("Col1:" + Col1.Width).PadRight(30) + ("  Actual 1:" + Col1.ActualWidth).PadRight(30) + ("  MinWidth:" + Col1.MinWidth).PadRight(15) + ("  MaxWidth:" + Col1.MaxWidth).PadRight(15));
+            Console.WriteLine(("Col2:" + Col2.Width).PadRight(30) + ("  Actual 2:" + Col2.ActualWidth).PadRight(30) + ("  MinWidth:" + Col2.MinWidth).PadRight(15) + ("  MaxWidth:" + Col2.MaxWidth).PadRight(15));
+            Console.WriteLine();
 
-            Col1.Width = new GridLength(1, GridUnitType.Auto);
+
+            
+        }
+
+        private void Test2Btn_Click(object sender, RoutedEventArgs e)
+        {
+            Col0.Width = new GridLength(1, GridUnitType.Auto);
+
+            Console.WriteLine();
+        }
+
+        private void Test3Btn_Click(object sender, RoutedEventArgs e)
+        {
+            
+            GridLengthAnimation gla3 =
+                new GridLengthAnimation
+                {
+                    From = new GridLength(Col2.ActualWidth, GridUnitType.Pixel),
+                    To = new GridLength(MainGrid.ActualWidth, GridUnitType.Pixel),
+                    Duration = new TimeSpan(0, 0, 0, 0, 150),
+                    FillBehavior = FillBehavior.HoldEnd
+                };
+
+            Col2.BeginAnimation(ColumnDefinition.WidthProperty, gla3);
 
            
 

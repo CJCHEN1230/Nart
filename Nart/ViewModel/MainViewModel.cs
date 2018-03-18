@@ -303,14 +303,13 @@ namespace Nart
         {
             SystemData.TrackToggle = !SystemData.TrackToggle;
 
-            _mainWindow.Stage1Btn.Visibility = Visibility.Visible;
-
-            //RestoreGridLength();
+            //_mainWindow.Stage1Btn.Visibility = Visibility.Visible;
+            
             GridLengthAnimation gla =
                 new GridLengthAnimation
                 {
                     From = new GridLength(_mainWindow.Col0.ActualWidth, GridUnitType.Pixel),
-                    To = new GridLength(0, GridUnitType.Pixel),
+                    To = new GridLength(0, GridUnitType.Star),
                     Duration = new TimeSpan(0, 0, 0, 0, 150),
                     FillBehavior = FillBehavior.HoldEnd
                 };
@@ -319,7 +318,7 @@ namespace Nart
                 new GridLengthAnimation
                 {
                     From = new GridLength(_mainWindow.Col1.ActualWidth, GridUnitType.Pixel),
-                    To = new GridLength(2, GridUnitType.Pixel),
+                    To = new GridLength(1, GridUnitType.Star),
                     Duration = new TimeSpan(0, 0, 0, 0, 150),
                     FillBehavior = FillBehavior.HoldEnd
                 };
@@ -328,10 +327,16 @@ namespace Nart
                 new GridLengthAnimation
                 {
                     From = new GridLength(_mainWindow.Col2.ActualWidth, GridUnitType.Pixel),
+                    //To = new GridLength(_mainWindow.MainGrid.ActualWidth, GridUnitType.Pixel),
                     To = new GridLength(5, GridUnitType.Star),
-                    Duration = new TimeSpan(0, 0, 0, 0, 150),
-                    FillBehavior = FillBehavior.HoldEnd
+                    Duration = new TimeSpan(0, 0, 0, 0, 200),
+                    FillBehavior = FillBehavior.Stop,
                 };
+            gla3.Completed += (s, e) =>
+            {
+                _mainWindow.Col2.Width = new GridLength(_mainWindow.MainGrid.ActualWidth, GridUnitType.Pixel);
+            };
+            
 
             _mainWindow.Col0.BeginAnimation(ColumnDefinition.WidthProperty, gla);
             _mainWindow.Col1.BeginAnimation(ColumnDefinition.WidthProperty, gla2);
@@ -508,9 +513,10 @@ namespace Nart
             ColumnDefinition Col1 = _mainWindow.Col1;
             ColumnDefinition Col2 = _mainWindow.Col2;
             var storyboard = new Storyboard();
-
+            //先把Col2設定成固定值
             Col2.Width = new GridLength(Col2.ActualWidth, GridUnitType.Pixel);
 
+            //設定Col1從當前Pixel長度到0Pixel
             GridLengthAnimation gla2 =
                 new GridLengthAnimation
                 {
@@ -519,13 +525,11 @@ namespace Nart
                     Duration = new TimeSpan(0, 0, 0, 0, 150),
                     FillBehavior = FillBehavior.HoldEnd
                 };
-
-
             Storyboard.SetTargetProperty(gla2, new PropertyPath(ColumnDefinition.WidthProperty));
             Storyboard.SetTarget(gla2, Col1);
-
             storyboard.Children.Add(gla2);
 
+            //設定Col0從當前Pixel長度到Col1動畫前的Pixel長度
             GridLengthAnimation gla =
                 new GridLengthAnimation
                 {
@@ -533,12 +537,9 @@ namespace Nart
                     To = new GridLength(Col1.ActualWidth, GridUnitType.Pixel),
                     Duration = new TimeSpan(0, 0, 0, 0, 200),
                     FillBehavior = FillBehavior.HoldEnd,
-
                 };
             Storyboard.SetTargetProperty(gla, new PropertyPath(ColumnDefinition.WidthProperty));
             Storyboard.SetTarget(gla, Col0);
-
-
             storyboard.Children.Add(gla);
 
             _mainWindow.BeginStoryboard(storyboard);
@@ -559,6 +560,11 @@ namespace Nart
                     Duration = new TimeSpan(0, 0, 0, 0, 150),
                     FillBehavior = FillBehavior.HoldEnd
                 };
+
+            //myanim.Completed += (s, e) =>
+            //{
+            //    //your completed action here
+            //};
 
             GridLengthAnimation gla2 =
                 new GridLengthAnimation

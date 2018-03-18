@@ -25,15 +25,6 @@ namespace Nart
         /// 記錄在資料庫中對應的MarkerID
         /// </summary>
         public string MarkerId = "";
-
-
-
-
-
-
-
-
-
         private Point3D[,] _pointsStack = new Point3D[10, 3];
         private Point3D[] _totalValue = new Point3D[3];
 
@@ -71,19 +62,6 @@ namespace Nart
             _currentIndex = _currentIndex % _pointsStack.GetLength(1);
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
         /// <summary>
         /// 依照邊長排序點
         /// </summary>

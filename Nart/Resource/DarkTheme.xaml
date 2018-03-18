@@ -1104,8 +1104,7 @@
     </Style>
     <!--另外一種(球在中間黑色的)自製toggle switch -->
     <Style x:Key="AnimatedToggleSwitch3" TargetType="{x:Type ToggleButton}">
-        <Setter Property="Foreground" Value="Black" />
-        <Setter Property="Background" Value="#ADADAD" />
+        <Setter Property="Background" Value="#FFF9F9FA" />
         <Setter Property="BorderBrush" Value="#FF333333" />
         <Setter Property="Template">
             <Setter.Value>

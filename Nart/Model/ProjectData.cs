@@ -40,7 +40,7 @@ namespace Nart
         private string _regFilePath = "../../../data/蔡慧君測試用.txt";
         private string _firstNavigation = "Maxilla";
         private bool _canSelectPoints = true;
-        private string _selectPointState = "OFF";
+        private string _selectPointState = "ON";
         private bool _isNavSet = false;
         private bool _isRegistered = false;
         private ObservableCollection<BallModel> _ballCollection=  new ObservableCollection<BallModel>();
