@@ -43,18 +43,11 @@ namespace Nart
     {
 
         public MainViewModel MainViewModel = null;
-        public double InitialGridLength;
+        
         public MainView()
         {
             InitializeComponent();
-
             MainViewModel = new MainViewModel(this);
-            //介面為了方便將 Setting的View的Margin左邊設定成-500，這邊只是讓他回到原位
-            Thickness margin = buttonList.Margin;
-            margin.Left = 0;
-            margin.Right = 0;
-            buttonList.Margin = margin;
-
             this.DataContext = MainViewModel;
             AllocConsole();
         }
@@ -87,20 +80,7 @@ namespace Nart
 
 
 
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            GridLengthAnimation animation = new GridLengthAnimation();
-            animation.From = new GridLength(0D);
-            animation.To = Col1.Width;
-            animation.Duration = new Duration(TimeSpan.FromSeconds(0.2));
-
-            Storyboard.SetTargetProperty(animation, new PropertyPath(Grid.WidthProperty));
-            Storyboard.SetTarget(animation, Col0);
-
-            var storyboard = new Storyboard();
-            storyboard.Children.Add(animation);
-        }
-    
+        
         private void button_Click_1(object sender, RoutedEventArgs e)
         {
            
@@ -169,17 +149,6 @@ namespace Nart
 
 
 }
-        private void MainGrid_Loaded(object sender, RoutedEventArgs e)
-        {
-            Col2.MaxWidth = MainGrid.ActualWidth;
-            Col2.MinWidth = MainGrid.ActualWidth * 1.0/2.0;
-            
-            //一定要將Col0 Col1的Width都是Star，且Col2的Width是absolute，GridSplitter才能正常運作         
-            Col1.Width = new GridLength(Col1.ActualWidth, GridUnitType.Star);
-            Col2.Width = new GridLength(Col2.ActualWidth, GridUnitType.Pixel);
-            InitialGridLength = Col2.ActualWidth;
 
-        }
-     
     }
 }

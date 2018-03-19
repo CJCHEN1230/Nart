@@ -12,16 +12,15 @@
              xmlns:modelObject="clr-namespace:Nart.Model_Object"
              mc:Ignorable="d" 
              Height="421.973" Width="793.895">
-
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Drop">
-            <ie:CallMethodAction MethodName="OnDrop" TargetObject="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Mode=OneWay}" />
+            <ie:CallMethodAction MethodName="OnDrop" TargetObject="{Binding}" />
         </i:EventTrigger>
         <i:EventTrigger EventName="DragEnter">
-            <ie:CallMethodAction MethodName="OnDragEnter" TargetObject="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Mode=OneWay}" />
+            <ie:CallMethodAction MethodName="OnDragEnter" TargetObject="{Binding}" />
         </i:EventTrigger>
         <i:EventTrigger EventName="DragOver">
-            <ie:CallMethodAction MethodName="OnDragOver" TargetObject="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Mode=OneWay}" />
+            <ie:CallMethodAction MethodName="OnDragOver" TargetObject="{Binding}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Border BorderThickness="2" BorderBrush="#FFF0F0F0" CornerRadius="3">

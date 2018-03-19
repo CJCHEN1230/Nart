@@ -27,18 +27,23 @@
         <i:EventTrigger EventName="Closed">
             <i:InvokeCommandAction Command="{Binding CloseWindowCommand}" />
         </i:EventTrigger>
+        <!--<i:EventTrigger EventName="Loaded">
+            <ie:CallMethodAction MethodName="CamHost1_Loaded" TargetObject="{Binding}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Loaded">
+            <ie:CallMethodAction MethodName="CamHost2_Loaded" TargetObject="{Binding}" />
+        </i:EventTrigger>-->
     </i:Interaction.Triggers>
-
-
-
-
-
-    <Grid x:Name="MainGrid" Margin="0,-30,0,0" Loaded="MainGrid_Loaded" >
+    <Grid x:Name="MainGrid" Margin="0,-30,0,0">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="Loaded">
+                <i:InvokeCommandAction Command="{Binding GridLoadedCommand}" />
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="Col0" Width="0*"/>
-            <ColumnDefinition x:Name="Col1" Width="Auto"/>
-            <!--<ColumnDefinition  Width="10"/>-->
-            <ColumnDefinition x:Name="Col2" Width="5*" />
+            <ColumnDefinition x:Name="SettingCol" Width="0*"/>
+            <ColumnDefinition x:Name="InfoCol" Width="Auto"/>
+            <ColumnDefinition x:Name="ModelViewCol" Width="5*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20*"/>
@@ -79,21 +84,23 @@
                             <ColumnDefinition Width="10"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Controls:CameraWrapper x:Name="CamHost1" Grid.Column="0"  Grid.Row="1"  Margin="0" Loaded="CamHost1_Loaded">
-                            <i:Interaction.Triggers>
+                        <Controls:CameraWrapper x:Name="CamHost1" Loaded="CamHost1_Loaded" Grid.Column="0"  Grid.Row="1"  Margin="0" >
+                            <!--<i:EventTrigger EventName="Loaded">
+                                <ie:CallMethodAction MethodName="CamHost1_Loaded" TargetObject="{Binding}" />
+                            </i:EventTrigger>-->
+                            <!--<i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Loaded">
                                     <i:InvokeCommandAction Command="{Binding CameraOneLoadedCommand}" />
                                 </i:EventTrigger>
-                            </i:Interaction.Triggers>
+                            </i:Interaction.Triggers>-->
                         </Controls:CameraWrapper>
-                        <Controls:CameraWrapper x:Name="CamHost2" Grid.Column="2"  Grid.Row="1"  Margin="0" Loaded="CamHost2_Loaded">
+                        <Controls:CameraWrapper x:Name="CamHost2" Loaded="CamHost2_Loaded" Grid.Column="2"  Grid.Row="1"  Margin="0" >
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Loaded">
                                     <i:InvokeCommandAction Command="{Binding CameraTwoLoadedCommand}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Controls:CameraWrapper>
-
                         <Rectangle Fill="#FF474747" HorizontalAlignment="Center" Grid.Column="1" Margin="0" Stroke="Black" Width="10" RadiusY="61" RadiusX="61" Grid.ColumnSpan="1" Grid.RowSpan="3"/>
 
                     </Grid>
