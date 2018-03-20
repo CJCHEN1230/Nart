@@ -1040,11 +1040,21 @@ namespace Nart
         }
         public void CamHost1_Loaded(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("CamHost1");
+            
+            if (!_mainWindow.CamHost1.IsActivated)
+            {
+                _mainWindow.CamHost1.InitializeCamSetting(_mainWindow.CamHost1.ActualWidth, _mainWindow.CamHost1.ActualHeight);
+            }
         }
         public void CamHost2_Loaded(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("CamHost2");
+            if (!_mainWindow.CamHost2.IsActivated)
+            {
+                _mainWindow.CamHost2.InitializeCamSetting(_mainWindow.CamHost2.ActualWidth, _mainWindow.CamHost2.ActualHeight);
+                InitCamCtrl();
+                _mainWindow.CamHost1.IsActivated = true;
+                _mainWindow.CamHost2.IsActivated = true;
+            }
         }
 
         public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;

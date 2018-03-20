@@ -53,23 +53,23 @@ namespace Nart
         }
 
        
-        private void CamHost1_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (!CamHost1.IsActivated)
-            {
-                CamHost1.InitializeCamSetting(CamHost1.ActualWidth, CamHost1.ActualHeight);
-            }
-        }
-        private void CamHost2_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (!CamHost2.IsActivated)
-            {
-                CamHost2.InitializeCamSetting(CamHost2.ActualWidth, CamHost2.ActualHeight);
-                MainViewModel.InitCamCtrl();
-                CamHost1.IsActivated = true;
-                CamHost2.IsActivated = true;
-            }
-        }
+        //private void CamHost1_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    if (!CamHost1.IsActivated)
+        //    {
+        //        CamHost1.InitializeCamSetting(CamHost1.ActualWidth, CamHost1.ActualHeight);
+        //    }
+        //}
+        //private void CamHost2_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    if (!CamHost2.IsActivated)
+        //    {
+        //        CamHost2.InitializeCamSetting(CamHost2.ActualWidth, CamHost2.ActualHeight);
+        //        MainViewModel.InitCamCtrl();
+        //        CamHost1.IsActivated = true;
+        //        CamHost2.IsActivated = true;
+        //    }
+        //}
 
         
         [DllImport("kernel32.dll", SetLastError = true)]

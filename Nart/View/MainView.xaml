@@ -84,20 +84,17 @@
                             <ColumnDefinition Width="10"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Controls:CameraWrapper x:Name="CamHost1" Loaded="CamHost1_Loaded" Grid.Column="0"  Grid.Row="1"  Margin="0" >
-                            <!--<i:EventTrigger EventName="Loaded">
-                                <ie:CallMethodAction MethodName="CamHost1_Loaded" TargetObject="{Binding}" />
-                            </i:EventTrigger>-->
-                            <!--<i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Loaded">
-                                    <i:InvokeCommandAction Command="{Binding CameraOneLoadedCommand}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>-->
-                        </Controls:CameraWrapper>
-                        <Controls:CameraWrapper x:Name="CamHost2" Loaded="CamHost2_Loaded" Grid.Column="2"  Grid.Row="1"  Margin="0" >
+                        <Controls:CameraWrapper x:Name="CamHost1" Grid.Column="0"  Grid.Row="1"  Margin="0" >
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Loaded">
-                                    <i:InvokeCommandAction Command="{Binding CameraTwoLoadedCommand}" />
+                                    <ie:CallMethodAction MethodName="CamHost1_Loaded" TargetObject="{Binding}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Controls:CameraWrapper>
+                        <Controls:CameraWrapper x:Name="CamHost2"  Grid.Column="2"  Grid.Row="1"  Margin="0" >
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Loaded">
+                                    <ie:CallMethodAction MethodName="CamHost2_Loaded" TargetObject="{Binding}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Controls:CameraWrapper>
