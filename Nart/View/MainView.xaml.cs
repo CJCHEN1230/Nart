@@ -50,27 +50,59 @@ namespace Nart
             MainViewModel = new MainViewModel(this);
             this.DataContext = MainViewModel;
             AllocConsole();
+            
         }
+        public void LoadBalls()
+        {
+            try
+            {
+                string fileContent = File.ReadAllText("../../../data/balldata.txt");
+                string[] contentArray = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
 
-       
-        //private void CamHost1_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    if (!CamHost1.IsActivated)
-        //    {
-        //        CamHost1.InitializeCamSetting(CamHost1.ActualWidth, CamHost1.ActualHeight);
-        //    }
-        //}
-        //private void CamHost2_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    if (!CamHost2.IsActivated)
-        //    {
-        //        CamHost2.InitializeCamSetting(CamHost2.ActualWidth, CamHost2.ActualHeight);
-        //        MainViewModel.InitCamCtrl();
-        //        CamHost1.IsActivated = true;
-        //        CamHost2.IsActivated = true;
-        //    }
-        //}
+                MainViewModel.ProjData.BallCollection.Clear();
 
+                for (int i=0;i< contentArray.Length; i+=5)
+                {
+                    BallModel ball = new BallModel();
+
+                    var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+                    ball.BallCenter = new Vector3(Convert.ToSingle(contentArray[i]), Convert.ToSingle(contentArray[i+1]), Convert.ToSingle(contentArray[i+2]));
+                    ball.BallName = contentArray[i + 3];
+                    ballContainer.AddSphere(ball.BallCenter, 1.5);
+                    ball.Geometry = ballContainer.ToMeshGeometry3D();
+                    ball.Material = PhongMaterials.White;
+                    if (contentArray[i + 4].Equals("MovedMaxilla"))
+                    {
+                        ball.ModelType = ModelType.MovedMaxilla;
+                    }
+                    else if (contentArray[i + 4].Equals("MovedMandible"))
+                    {
+                        ball.ModelType = ModelType.MovedMandible;
+                    }
+
+
+                    foreach (BoneModel modeltem in MainViewModel.ProjData.BoneCollection)
+                    {
+                        if (modeltem.ModelType.Equals(ball.ModelType))
+                        {
+                            ball.ModelType = modeltem.ModelType;
+                            System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Transform");
+                            binding.Source = modeltem;
+                            binding.Mode = BindingMode.OneWay;
+                            BindingOperations.SetBinding(ball, HelixToolkit.Wpf.SharpDX.Model3D.TransformProperty, binding);
+                        }
+                    }
+
+
+
+                    MainViewModel.ProjData.BallCollection.Add(ball);
+                }
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("Load檔案失敗");
+            }
+        }
         
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -149,6 +181,9 @@ namespace Nart
 
 
 }
-
+        private void LoadBall_Click(object sender, RoutedEventArgs e)
+        {
+                LoadBalls();
+        }
     }
 }

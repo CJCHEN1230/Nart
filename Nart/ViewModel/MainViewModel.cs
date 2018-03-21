@@ -736,6 +736,11 @@ namespace Nart
                     model.IsRendering = false;
             }
 
+            foreach (BallModel ballModel in MainViewModel.ProjData.BallCollection)
+            {
+                    ballModel.IsRendering = true;
+            }
+
 
             //如果已在導航結束的階段則直接顯示所有球資訊
             if (SystemData.IsFinished)

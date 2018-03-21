@@ -19,16 +19,33 @@ namespace Nart.Model_Object
     [Serializable]
     public class BallModel : MeshGeometryModel3D ,  INotifyPropertyChanged , ISerializable
     {
-
+        /// <summary>
+        /// 球伴隨的模型
+        /// </summary>
         public ModelType ModelType;
+        /// <summary>
+        /// 球的名稱，主要用來Binding在Expander的資料的
+        /// </summary>
         private string _ballName;
+        /// <summary>
+        /// 也是模型的中心，主要用來Binding在Expander裡面的X座標
+        /// </summary>
         private string _ballXCoord;
+        /// <summary>
+        /// 也是模型的中心，主要用來Binding在Expander裡面的的Y座標
+        /// </summary>
         private string _ballYCoord;
+        /// <summary>
+        /// 也是模型的中心，主要用來Binding在Expander裡面的的Z座標
+        /// </summary>
         private string _ballZCoord;
         /// <summary>
         /// 紀錄模型中心
         /// </summary>
         private Vector3 _ballCenter;
+        /// <summary>
+        /// 導引之後移動的距離
+        /// </summary>
         private Vector3 _ballDistance;
         
       
@@ -57,6 +74,13 @@ namespace Nart.Model_Object
             BallXCoord = (string)info.GetValue("BallXCoord", typeof(string));
             BallYCoord = (string)info.GetValue("BallYCoord", typeof(string));
             BallZCoord = (string)info.GetValue("BallZCoord", typeof(string));
+
+            Vector3 ballDistance = new Vector3();
+            ballDistance.X = (float)info.GetValue("BallDistanceX", typeof(float));
+            ballDistance.Y = (float)info.GetValue("BallDistanceY", typeof(float));
+            ballDistance.Z = (float)info.GetValue("BallDistanceZ", typeof(float));
+            BallDistance = ballDistance;
+
             ModelType = (ModelType)info.GetValue("ModelType", typeof(ModelType));
         }
 
@@ -72,6 +96,9 @@ namespace Nart.Model_Object
             info.AddValue("BallYCoord", BallYCoord);
             info.AddValue("BallZCoord", BallZCoord);
             info.AddValue("ModelType", ModelType);
+            info.AddValue("BallDistanceX", BallDistance.X);
+            info.AddValue("BallDistanceY", BallDistance.Y);
+            info.AddValue("BallDistanceZ", BallDistance.Z);
         }
 
         public void CreateBall()
