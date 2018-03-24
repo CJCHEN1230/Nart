@@ -41,7 +41,7 @@ namespace Nart
         /// <summary>
         /// 註冊檔名
         /// </summary>
-        private static String _regPath = "../../../data/reg20170713.txt";
+        private static String _regPath = "./data/reg20170713.txt";
         /// <summary>
         /// ModelSettingView的物件
         /// </summary>

@@ -31,7 +31,7 @@
             <Image x:Name="ButtonImage"
                    Grid.Row="0" 
                    Source="{Binding ButtonImageSource, RelativeSource={RelativeSource AncestorType=local:ImgButton}}"                   
-                   HorizontalAlignment="Stretch"
+                   HorizontalAlignment="Center" 
                    VerticalAlignment="Stretch"/>
             <Label 
                    Grid.Row="1" 

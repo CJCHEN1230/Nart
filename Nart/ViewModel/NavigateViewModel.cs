@@ -31,17 +31,17 @@ namespace Nart
         /// <summary>
         /// 最後上顎轉移矩陣
         /// </summary>
-        private string _plannedMaxillaMatrix = "../../../data/蔡慧君/plan-maxilla-matrix.txt";
+        private string _plannedMaxillaMatrix = "./data/蔡慧君/plan-maxilla-matrix.txt";
         /// <summary>
         /// 最後下顎轉移矩陣
         /// </summary>
-        private string _plannedMandibleMatrix = "../../../data/蔡慧君/plan-mandible-matrix.txt";
+        private string _plannedMandibleMatrix = "./data/蔡慧君/plan-mandible-matrix.txt";
         #endregion       
         #region 原始模型設定部分
         /// <summary>
         /// 最後上顎轉移矩陣
         /// </summary>
-        private string _headModel = "../../../data/蔡慧君/head.stl";
+        private string _headModel = "./data/蔡慧君/head.stl";
         /// <summary>
         /// 頭部模型顏色
         /// </summary>
@@ -49,7 +49,7 @@ namespace Nart
         /// <summary>
         /// 最後下顎轉移矩陣
         /// </summary>
-        private string _maxillaModel = "../../../data/蔡慧君/pre-maxilla.stl";
+        private string _maxillaModel = "./data/蔡慧君/pre-maxilla.stl";
         /// <summary>
         /// 上顎模型顏色
         /// </summary>
@@ -57,7 +57,7 @@ namespace Nart
         /// <summary>
         /// 最後上顎規劃後模型
         /// </summary>
-        private string _mandibleModel = "../../../data/蔡慧君/pre-mandible.stl";
+        private string _mandibleModel = "./data/蔡慧君/pre-mandible.stl";
         /// <summary>
         /// 下顎模型顏色
         /// </summary>
@@ -67,11 +67,11 @@ namespace Nart
         /// <summary>
         /// 頭部對稱面
         /// </summary>
-        private string _headOsp = "../../../data/蔡慧君/max_OSP.stl";
+        private string _headOsp = "./data/蔡慧君/max_OSP.stl";
         /// <summary>
         /// 下顎對稱面
         /// </summary>
-        private string _mandibleOsp = "../../../data/蔡慧君/man_OSP.stl";
+        private string _mandibleOsp = "./data/蔡慧君/man_OSP.stl";
         #endregion
 
         public NavigateViewModel(NavigateView navigateView)

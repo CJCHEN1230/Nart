@@ -364,9 +364,10 @@
         <Border BorderThickness="0"  Grid.ColumnSpan="4" Margin="0,0,0,0" Grid.Row="3" Background="#FF007ACC">
             <StatusBar Background="{x:Null}" Foreground="White" FontSize="13" >
                 <StatusBarItem HorizontalAlignment="Left" >
-                    <StackPanel Orientation="Horizontal"  >
+                    <StackPanel Orientation="Horizontal" Width="614"  >
                         <TextBlock Text="Ready" VerticalAlignment="Center" />
-                        <TextBlock x:Name="PointLabel"  Foreground="White" Text="{Binding Path = PointNumber}"  VerticalAlignment="Center" Margin="100,0,0,0" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="PointNumber"  Foreground="White" Text="{Binding Path = PointNumber}"  VerticalAlignment="Center" Margin="100,0,0,0" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="MarkerNumber"  Foreground="White" Text="{Binding Path = MarkerNumber}"  VerticalAlignment="Center" Margin="100,0,0,0" TextWrapping="Wrap"/>
                     </StackPanel>
                 </StatusBarItem>
             </StatusBar>

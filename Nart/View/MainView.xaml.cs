@@ -56,7 +56,7 @@ namespace Nart
         {
             try
             {
-                string fileContent = File.ReadAllText("../../../data/balldata.txt");
+                string fileContent = File.ReadAllText("./data/balldata.txt");
                 string[] contentArray = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
 
                 MainViewModel.ProjData.BallCollection.Clear();

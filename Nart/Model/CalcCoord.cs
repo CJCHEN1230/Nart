@@ -106,7 +106,7 @@ namespace Nart
         public CalcCoord()
         {
 
-            _craniofacialInfo = new CraniofacialInfo("../../../data/ceph.csv");
+            _craniofacialInfo = new CraniofacialInfo("./data/ceph.csv");
 
 
             //_meanFilter = new MeanFilter(Database);
@@ -286,6 +286,8 @@ namespace Nart
         {
             MarkerDatabase Database = SystemData.MarkerData;
             _curWorldPoints.Clear();
+            int markerNumber = 0;
+            string markerName = "";
             for (int i = 0, count = 0; i < outputMarker[0].Count; i++) //左相機Marker尋訪
             {
                 for (int j = count; j < outputMarker[1].Count; j++) //右相機Marker尋訪
@@ -311,19 +313,31 @@ namespace Nart
                         _curWorldPoints.Add(threeWorldPoints);
 
                         count = j + 1;
-                        break;                        
+                        
+
+                        if (threeWorldPoints.MarkerId != "")
+                        {
+                            markerNumber++;
+
+                            markerName += threeWorldPoints.MarkerId + "  ";
+                        }
+
+                        break;
                     }             
                 }
             }
 
-            ForExperiment.Clear();
-            for (int i =0;i<_curWorldPoints.Count ; i++)
-            {
-                ForExperiment.Add(_curWorldPoints[i]);
-            }
+            //ForExperiment.Clear();
+            //for (int i =0;i<_curWorldPoints.Count ; i++)
+            //{
+            //    ForExperiment.Add(_curWorldPoints[i]);
+            //}
             ///_meanFilter.filter(ref _curWorldPoints);
-            
-            MainViewModel.PointNumber = (_curWorldPoints.Count * 3).ToString() + "個點";      
+
+
+            MainViewModel.PointNumber = (_curWorldPoints.Count * 3).ToString() + "Points";
+            MainViewModel.MarkerNumber = markerNumber.ToString() + "Markers:" + markerName;
+
         }       
         /// <summary>
         /// 目前尚未使用這種排序
@@ -650,7 +664,7 @@ namespace Nart
 
 
             //讀進_splintInCT檔案
-            if (!LoadSplintPoint("../../../data/蔡慧君測試用.txt"))
+            if (!LoadSplintPoint("./data/蔡慧君測試用.txt"))
             {
                 SystemData.RegToggle = false;
                 return;

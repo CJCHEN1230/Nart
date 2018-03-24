@@ -92,8 +92,8 @@ namespace Nart
         {
             try
             {
-                IcImagingControl[0].LoadDeviceStateFromFile("../../../data/Cam1.xml", true);
-                IcImagingControl[1].LoadDeviceStateFromFile("../../../data/Cam2.xml", true);
+                IcImagingControl[0].LoadDeviceStateFromFile("./data/Cam1.xml", true);
+                IcImagingControl[1].LoadDeviceStateFromFile("./data/Cam2.xml", true);
             }
             catch (Exception)
             {

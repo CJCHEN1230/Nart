@@ -15,7 +15,7 @@ namespace Nart
         /// <summary>
         ///預設資料庫檔案路徑
         /// </summary>
-        public string Filepath = "../../../data/MarkerDatabase.xml";
+        public string Filepath = "./data/MarkerDatabase.xml";
         /// <summary>
         ///使用一個Struct專門記錄三邊長與ID
         /// </summary>

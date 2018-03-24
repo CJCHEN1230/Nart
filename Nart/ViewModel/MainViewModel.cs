@@ -44,6 +44,11 @@ namespace Nart
         /// 顯示點的數量，顯示在StatusBar
         /// </summary>
         private static string _pointNumber;
+
+        private static string _markerNumber;
+
+        private static string _markerName;
+
         /// <summary>
         /// tab頁面索引值    
         /// </summary>
@@ -120,10 +125,24 @@ namespace Nart
         }
         public static string PointNumber
         {
-            get { return _pointNumber; }
+            get
+            {
+                return _pointNumber;
+            }
             set
             {
                 SetStaticValue(ref _pointNumber, value);
+            }
+        }
+        public static string MarkerNumber
+        {
+            get
+            {
+                return _markerNumber;
+            }
+            set
+            {
+                SetStaticValue(ref _markerNumber, value);
             }
         }
         public ICommand SaveProjectCommand { private set; get; }
@@ -1045,17 +1064,26 @@ namespace Nart
         }
         public void CamHost1_Loaded(object sender, RoutedEventArgs e)
         {
-            
+
             if (!_mainWindow.CamHost1.IsActivated)
             {
-                _mainWindow.CamHost1.InitializeCamSetting(_mainWindow.CamHost1.ActualWidth, _mainWindow.CamHost1.ActualHeight);
+
+                PresentationSource source = PresentationSource.FromVisual(_mainWindow);
+                System.Windows.Media.Matrix transformToDevice = source.CompositionTarget.TransformToDevice;
+                var pixelSize = (Size)transformToDevice.Transform(new Vector(_mainWindow.CamHost1.ActualWidth, _mainWindow.CamHost1.ActualHeight));
+                _mainWindow.CamHost1.InitializeCamSetting(pixelSize.Width, pixelSize.Height);
             }
         }
         public void CamHost2_Loaded(object sender, RoutedEventArgs e)
         {
             if (!_mainWindow.CamHost2.IsActivated)
             {
-                _mainWindow.CamHost2.InitializeCamSetting(_mainWindow.CamHost2.ActualWidth, _mainWindow.CamHost2.ActualHeight);
+                PresentationSource source = PresentationSource.FromVisual(_mainWindow);
+                System.Windows.Media.Matrix transformToDevice = source.CompositionTarget.TransformToDevice;
+                var pixelSize = (Size)transformToDevice.Transform(new Vector(_mainWindow.CamHost2.ActualWidth, _mainWindow.CamHost2.ActualHeight));
+
+
+                _mainWindow.CamHost2.InitializeCamSetting(pixelSize.Width, pixelSize.Height);
                 InitCamCtrl();
                 _mainWindow.CamHost1.IsActivated = true;
                 _mainWindow.CamHost2.IsActivated = true;

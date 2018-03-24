@@ -34,8 +34,8 @@ namespace Nart
         public static  CamParam[] CameraParam = new CamParam[2];
         static SystemData()
         {
-            CameraParam[0] = new CamParam("../../../data/CaliR_L.txt");
-            CameraParam[1] = new CamParam("../../../data/CaliR_R.txt");
+            CameraParam[0] = new CamParam("./data/CaliR_L.txt");
+            CameraParam[1] = new CamParam("./data/CaliR_R.txt");
             MarkerData = new MarkerDatabase();
         }
 
