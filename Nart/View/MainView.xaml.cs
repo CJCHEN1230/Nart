@@ -168,8 +168,7 @@ namespace Nart
             FileStream fs = new FileStream("D:\\Desktop\\test\\balldata.txt", FileMode.Create);
             StreamWriter sw = new StreamWriter(fs);
             foreach (BallModel model in MainViewModel.ProjData.BallCollection)
-            {               
-                
+            {                               
                sw.Write(model.BallCenter.X+" "+model.BallCenter.Y+" "+ model.BallCenter.Z+"\r\n");
             }
             //清空緩衝區

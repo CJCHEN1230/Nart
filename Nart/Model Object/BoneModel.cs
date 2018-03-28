@@ -472,13 +472,25 @@ namespace Nart.Model_Object
                 Geometry = mesh,
 
             };
-            if (isSavedTransform)
-            {
-                model.Transform = Transform;
-            }
 
 
             StlExporter export = new StlExporter();
+
+            if (isSavedTransform)
+            {             
+                model.Transform = Transform;
+
+                string fileAfterTransform = System.IO.Path.GetFileNameWithoutExtension(SafeFileName);
+                fileAfterTransform += "(transform).stl";
+                using (var fileStream = File.Create(System.IO.Path.Combine(filepath, fileAfterTransform)))
+                {
+                    export.Export(model, fileStream);
+                }
+                return;
+            }
+
+
+            
             
             using (var fileStream = File.Create(System.IO.Path.Combine(filepath, SafeFileName)))
             {

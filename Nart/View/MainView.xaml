@@ -354,7 +354,7 @@
                     <Button x:Name="LoadBall"   Content="LoadBall"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68" Click="LoadBall_Click"/>
                     <Button x:Name="button" Content="Save Ball Information" VerticalAlignment="Top"    Margin="0,5,2,0"  Click="button_Click_2" Style="{DynamicResource ResourceKey=SideButton}"  Height="68" Visibility="Hidden"/>
                     
-                    <Button x:Name="button5" Command="{Binding CtrlRotPlatformCommand}"   Content="rotation" VerticalAlignment="Top"    Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}"  Height="68" Visibility="Hidden"/>
+                    <Button x:Name="button5" Command="{Binding CtrlRotPlatformCommand}"   Content="rotation" VerticalAlignment="Top"    Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}"  Height="68" Visibility="Visible"/>
                     
                 </StackPanel>
 

@@ -327,11 +327,11 @@ namespace Nart
                 }
             }
 
-            //ForExperiment.Clear();
-            //for (int i =0;i<_curWorldPoints.Count ; i++)
-            //{
-            //    ForExperiment.Add(_curWorldPoints[i]);
-            //}
+            ForExperiment.Clear();
+            for (int i = 0; i < _curWorldPoints.Count; i++)
+            {
+                ForExperiment.Add(_curWorldPoints[i]);
+            }
             ///_meanFilter.filter(ref _curWorldPoints);
 
 

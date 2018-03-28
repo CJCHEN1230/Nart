@@ -239,12 +239,13 @@ namespace Nart
                             myFileStream.Close();
                         }
 
-
+                        //尋訪每個BoneModel
                         foreach (BoneModel boneModel in projectData.BoneCollection)
                         {
                             //BoneModel boneModel = projectData.BoneCollection[i];
                             boneModel.FilePath = System.IO.Path.Combine(tempDirectory, boneModel.SafeFileName);
                             boneModel.LoadModel();
+                            //取得當前為MovedMaxilla的模型
                             if (boneModel.ModelType == ModelType.MovedMaxilla)
                             {
                                 foreach (BoneModel targetModel in projectData.TargetCollection)
@@ -253,6 +254,14 @@ namespace Nart
                                     {
                                         targetModel.FilePath = boneModel.FilePath;
                                         targetModel.LoadModel();
+                                    }
+                                }
+
+                                foreach (BallModel ballModel in projectData.BallCollection)
+                                {
+                                    if (ballModel.ModelType == ModelType.MovedMaxilla)
+                                    {
+                                        ballModel.Transform = boneModel.Transform;                                        
                                     }
                                 }
                             }
@@ -264,6 +273,14 @@ namespace Nart
                                     {
                                         targetModel.FilePath = boneModel.FilePath;
                                         targetModel.LoadModel();
+                                    }
+                                }
+
+                                foreach (BallModel ballModel in projectData.BallCollection)
+                                {
+                                    if (ballModel.ModelType == ModelType.MovedMandible)
+                                    {
+                                        ballModel.Transform = boneModel.Transform;
                                     }
                                 }
                             }
@@ -283,6 +300,33 @@ namespace Nart
                         break;
                     }
 
+            }
+        }
+        public void CamHost1_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            if (!_mainWindow.CamHost1.IsActivated)
+            {
+
+                PresentationSource source = PresentationSource.FromVisual(_mainWindow);
+                System.Windows.Media.Matrix transformToDevice = source.CompositionTarget.TransformToDevice;
+                var pixelSize = (Size)transformToDevice.Transform(new Vector(_mainWindow.CamHost1.ActualWidth, _mainWindow.CamHost1.ActualHeight));
+                _mainWindow.CamHost1.InitializeCamSetting(pixelSize.Width, pixelSize.Height);
+            }
+        }
+        public void CamHost2_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!_mainWindow.CamHost2.IsActivated)
+            {
+                PresentationSource source = PresentationSource.FromVisual(_mainWindow);
+                System.Windows.Media.Matrix transformToDevice = source.CompositionTarget.TransformToDevice;
+                var pixelSize = (Size)transformToDevice.Transform(new Vector(_mainWindow.CamHost2.ActualWidth, _mainWindow.CamHost2.ActualHeight));
+
+
+                _mainWindow.CamHost2.InitializeCamSetting(pixelSize.Width, pixelSize.Height);
+                InitCamCtrl();
+                _mainWindow.CamHost1.IsActivated = true;
+                _mainWindow.CamHost2.IsActivated = true;
             }
         }
         private void LoadMarkerData(object o)
@@ -493,9 +537,14 @@ namespace Nart
                 foreach (BoneModel boneModel in MainViewModel.ProjData.BoneCollection)
                 {
                     boneModel.SaveModel(tempDirectory, false);
+                    if (!boneModel.ModelType.Equals(ModelType.Head))
+                    {
+                        boneModel.SaveModel(tempDirectory, true);
+                    }
                 }
 
-                
+                SaveTransformMatrix(tempDirectory);
+
 
 
                 ZipFile.CreateFromDirectory(tempDirectory, fullFilePath);
@@ -1062,33 +1111,34 @@ namespace Nart
                    + "\n\nPDD:  " + Math.Round(MainViewModel.ProjData.PDD, 3);
             MultiAngleViewModel.CraniofacialInfo = info;
         }
-        public void CamHost1_Loaded(object sender, RoutedEventArgs e)
+        private void SaveTransformMatrix( string filepath)
         {
 
-            if (!_mainWindow.CamHost1.IsActivated)
+            foreach (BoneModel model in ProjData.BoneCollection)
             {
+                
 
-                PresentationSource source = PresentationSource.FromVisual(_mainWindow);
-                System.Windows.Media.Matrix transformToDevice = source.CompositionTarget.TransformToDevice;
-                var pixelSize = (Size)transformToDevice.Transform(new Vector(_mainWindow.CamHost1.ActualWidth, _mainWindow.CamHost1.ActualHeight));
-                _mainWindow.CamHost1.InitializeCamSetting(pixelSize.Width, pixelSize.Height);
+                //存球資料
+                FileStream fs = new FileStream(filepath+"\\" + System.IO.Path.GetFileNameWithoutExtension(model.SafeFileName) + ".txt", FileMode.Create);
+                StreamWriter sw = new StreamWriter(fs);
+               
+                    sw.Write(model.Transform.Value.M11 + " " + model.Transform.Value.M12 + " " + model.Transform.Value.M13 + " " + model.Transform.Value.M14+ " " + "\r\n");
+                sw.Write(model.Transform.Value.M21 + " " + model.Transform.Value.M22 + " " + model.Transform.Value.M23 + " " + model.Transform.Value.M24 + " " + "\r\n");
+                sw.Write(model.Transform.Value.M31 + " " + model.Transform.Value.M32 + " " + model.Transform.Value.M33 + " " + model.Transform.Value.M34 + " " + "\r\n");
+                sw.Write(model.Transform.Value.OffsetX + " " + model.Transform.Value.OffsetY + " " + model.Transform.Value.OffsetZ + " " + model.Transform.Value.M44 + " " + "\r\n");
+
+                //清空緩衝區
+                sw.Flush();
+                //關閉流
+                sw.Close();
+                fs.Close();
+
+
             }
+
         }
-        public void CamHost2_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (!_mainWindow.CamHost2.IsActivated)
-            {
-                PresentationSource source = PresentationSource.FromVisual(_mainWindow);
-                System.Windows.Media.Matrix transformToDevice = source.CompositionTarget.TransformToDevice;
-                var pixelSize = (Size)transformToDevice.Transform(new Vector(_mainWindow.CamHost2.ActualWidth, _mainWindow.CamHost2.ActualHeight));
 
 
-                _mainWindow.CamHost2.InitializeCamSetting(pixelSize.Width, pixelSize.Height);
-                InitCamCtrl();
-                _mainWindow.CamHost1.IsActivated = true;
-                _mainWindow.CamHost2.IsActivated = true;
-            }
-        }
 
         public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;
         protected static void OnStaticPropertyChanged([CallerMemberName]string info = "")
