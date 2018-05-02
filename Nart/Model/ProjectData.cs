@@ -36,7 +36,7 @@ namespace Nart
          //病人資訊
         private string _name = "蔡慧君";
         private string _id = "123456";
-        private string _institution = "成大";
+        private string _institution = "成大醫院";
         private string _regFilePath = "./data/蔡慧君測試用.txt";
         private string _firstNavigation = "Maxilla";
         private bool _canSelectPoints = true;

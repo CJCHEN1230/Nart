@@ -17,7 +17,7 @@ namespace Nart
         
 
         public double FocalLength;
-        public double Kappa1;
+        public double Kappa;
         public double Cx;
         public double Cy;
         public double Sx;
@@ -72,7 +72,7 @@ namespace Nart
 
 
                 FocalLength = cameraData[12];
-                Kappa1 = cameraData[13];
+                Kappa = cameraData[13];
                 Cx = cameraData[14];                             
                 Cy = cameraData[15];
                 Sx = cameraData[19];
@@ -85,7 +85,7 @@ namespace Nart
 
             Console.WriteLine(ExtParam);
             Console.WriteLine(FocalLength);
-            Console.WriteLine(Kappa1);
+            Console.WriteLine(Kappa);
             Console.WriteLine(Cx);
             Console.WriteLine(Cy);
             Console.WriteLine(Sx);

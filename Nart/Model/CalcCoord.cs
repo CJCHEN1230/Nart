@@ -65,7 +65,14 @@ namespace Nart
         /// <summary>
         ///咬板Marker在CT中的座標
         /// </summary>
-        private Point3D[] _splintInCT;
+        private Point3D[] _oriSplintInCT;
+        private Point3D[] _interSplintInCT;
+        private Point3D[] _finalSplintInCT;
+
+
+
+
+
         /// <summary>
         ///咬板Marker從CT中轉到世界座標
         /// </summary>
@@ -134,16 +141,16 @@ namespace Nart
         private void CalcEpipolarGeometry()
         {
             //虛擬成像平面的中心
-            Point4D plainCenter = new Point4D(0, 0, SystemData.CameraParam[0].FocalLength, 1);                       
+            Point4D planeCenter = new Point4D(0, 0, SystemData.CameraParam[0].FocalLength, 1);                       
 
-            plainCenter = SystemData.CameraParam[0].InvExtParam.Transform(plainCenter);
+            planeCenter = SystemData.CameraParam[0].InvExtParam.Transform(planeCenter);
 
             //Base line            
             Vector3D vecX = new Vector3D(LensCenter[1].X - LensCenter[0].X, LensCenter[1].Y - LensCenter[0].Y, LensCenter[1].Z - LensCenter[0].Z);
 
             vecX.Normalize();
           
-            Vector3D vecTemp =new Vector3D(plainCenter.X - LensCenter[0].X, plainCenter.Y - LensCenter[0].Y, plainCenter.Z - LensCenter[0].Z);
+            Vector3D vecTemp =new Vector3D(planeCenter.X - LensCenter[0].X, planeCenter.Y - LensCenter[0].Y, planeCenter.Z - LensCenter[0].Z);
                   
             Vector3D vecY = Vector3D.CrossProduct(vecTemp, vecX);
             vecY.Normalize();
@@ -182,8 +189,8 @@ namespace Nart
 
                         double r = Math.Sqrt(xd * xd + yd * yd);
 
-                        double xu = xd * (1 + SystemData.CameraParam[i].Kappa1 * r * r);
-                        double yu = yd * (1 + SystemData.CameraParam[i].Kappa1 * r * r);
+                        double xu = xd * (1 + SystemData.CameraParam[i].Kappa * r * r);
+                        double yu = yd * (1 + SystemData.CameraParam[i].Kappa * r * r);
 
                         //儲存計算出來的相機座標系的點
                         outputMarker[i][j].CornerPoint[k].CameraPoint = new Point4D(xu, yu, SystemData.CameraParam[i].FocalLength, 1);
@@ -336,7 +343,7 @@ namespace Nart
 
 
             MainViewModel.PointNumber = (_curWorldPoints.Count * 3).ToString() + "Points";
-            MainViewModel.MarkerNumber = markerNumber.ToString() + "Markers:" + markerName;
+            MainViewModel.MarkerNumber = markerNumber.ToString() + "Markers:   " + markerName;
 
         }       
         /// <summary>
@@ -597,7 +604,7 @@ namespace Nart
                     throw new Exception();
                 }
 
-                _splintInCT = new Point3D[3] { new Point3D(matrixInfo[0], matrixInfo[1], matrixInfo[2]),
+                _oriSplintInCT = new Point3D[3] { new Point3D(matrixInfo[0], matrixInfo[1], matrixInfo[2]),
                                             new Point3D(matrixInfo[3], matrixInfo[4], matrixInfo[5]),
                                             new Point3D(matrixInfo[6], matrixInfo[7], matrixInfo[8])};
 
@@ -674,9 +681,9 @@ namespace Nart
             //
             CalcFHCoord();
             
-                
-            _cTtoWorld = TransformCoordinate(ref _splintInCT,ref  _curWorldPoints[SystemData.RegSplintIndex].ThreePoints);
-            _worldtoCT = TransformCoordinate(ref _curWorldPoints[SystemData.RegSplintIndex].ThreePoints,ref _splintInCT);
+        
+            _cTtoWorld = TransformCoordinate(ref _oriSplintInCT,ref  _curWorldPoints[SystemData.RegSplintIndex].ThreePoints);
+            _worldtoCT = TransformCoordinate(ref _curWorldPoints[SystemData.RegSplintIndex].ThreePoints,ref _oriSplintInCT);
 
 
             MainViewModel.ProjData.IsRegInitialized = true;
@@ -873,8 +880,8 @@ namespace Nart
 
 
 
-                    _cTtoWorld = TransformCoordinate(ref _splintInCT,ref  _curWorldPoints[SystemData.RegSplintIndex].ThreePoints);
-                    _worldtoCT = TransformCoordinate(ref _curWorldPoints[SystemData.RegSplintIndex].ThreePoints,ref  _splintInCT);
+                    _cTtoWorld = TransformCoordinate(ref _oriSplintInCT,ref  _curWorldPoints[SystemData.RegSplintIndex].ThreePoints);
+                    _worldtoCT = TransformCoordinate(ref _curWorldPoints[SystemData.RegSplintIndex].ThreePoints,ref  _oriSplintInCT);
 
 
                     Marker3D oriWorldPoint1 = new Marker3D
@@ -968,7 +975,7 @@ namespace Nart
                         int splintMarkerIndex = GetSpecIndex(_curWorldPoints, "Splint");//取得當前世界座標在註冊時的座標索引值是多少
 
 
-                        Matrix3D level1 = TransformCoordinate(ref _splintInCT,ref _curWorldPoints[i].ThreePoints);
+                        Matrix3D level1 = TransformCoordinate(ref _oriSplintInCT,ref _curWorldPoints[i].ThreePoints);
 
                         Matrix3D level2 = TransformCoordinate(ref _curWorldPoints[currentHeadIndex].ThreePoints,ref  _oriWorldPoints[SystemData.RegHeadIndex].ThreePoints);
 

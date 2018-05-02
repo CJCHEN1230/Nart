@@ -184,5 +184,42 @@ namespace Nart
         {
                 LoadBalls();
         }
+
+        private void CalcBtn_Click(object sender, RoutedEventArgs e)
+        {
+            BoneModel model1 = MainViewModel.ProjData.BoneCollection[1];
+            BoneModel model2 = MainViewModel.ProjData.BoneCollection[2];
+
+            HelixToolkit.Wpf.SharpDX.Core.Vector3Collection model1Position = model1.Geometry.Positions;
+            HelixToolkit.Wpf.SharpDX.Core.Vector3Collection model2Position = model2.Geometry.Positions;
+
+            double total = 0;
+            double max = 0;
+            for(int i =0;i<model1Position.Count ;i++)
+            {
+                if (Math.Sqrt(
+                              Math.Pow(model1Position[i].X - model2Position[i].X, 2)
+                          + Math.Pow(model1Position[i].Y - model2Position[i].Y, 2)
+                          + Math.Pow(model1Position[i].Z - model2Position[i].Z, 2)
+                          ) > max)
+                {
+                    max = Math.Sqrt(
+                              Math.Pow(model1Position[i].X - model2Position[i].X, 2)
+                          + Math.Pow(model1Position[i].Y - model2Position[i].Y, 2)
+                          + Math.Pow(model1Position[i].Z - model2Position[i].Z, 2)
+                          );
+
+                }
+
+                total += Math.Sqrt(
+                              Math.Pow(model1Position[i].X - model2Position[i].X, 2)
+                          + Math.Pow(model1Position[i].Y - model2Position[i].Y, 2)
+                          + Math.Pow(model1Position[i].Z - model2Position[i].Z, 2)
+                          );
+            }
+
+            Console.WriteLine("Mean:"+total/model1Position.Count);
+            Console.WriteLine("Max:" + max);
+        }
     }
 }
