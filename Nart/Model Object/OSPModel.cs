@@ -175,6 +175,10 @@ namespace Nart.Model_Object
 
             var mesh = geometryModel.Geometry as System.Windows.Media.Media3D.MeshGeometry3D;
 
+            //MIP產生的OSP一定是六個點
+            if (mesh.Positions.Count != 6)
+                return;
+
             this.OspOriNormal = new Vector3D(mesh.Normals[0].X, mesh.Normals[0].Y, mesh.Normals[0].Z);
             this.OspOriNormal.Normalize();//將上述向量正規化
             this.OspPlanePoint = mesh.Positions[0];

@@ -184,8 +184,8 @@
     <Compile Include="View\MultiAngleView.xaml.cs">
       <DependentUpon>MultiAngleView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\NavigateView.xaml.cs">
-      <DependentUpon>NavigateView.xaml</DependentUpon>
+    <Compile Include="View\NavigateSettingView.xaml.cs">
+      <DependentUpon>NavigateSettingView.xaml</DependentUpon>
     </Compile>
     <Page Include="Control\CameraWrapper.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -244,7 +244,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\NavigateView.xaml">
+    <Page Include="View\NavigateSettingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -278,6 +278,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram2.cd" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

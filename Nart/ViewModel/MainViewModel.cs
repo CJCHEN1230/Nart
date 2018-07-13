@@ -106,11 +106,13 @@ namespace Nart
             ShowCubeCommand = new RelayCommand(ShowCube);
             ResetInterfaceCommand = new RelayCommand(ResetInterface);
             GridLoadedCommand = new RelayCommand(GridLoaded);
+            ResetCamSizeCommand = new RelayCommand(ResetCamSize);
 
             BindPatientData();
             BindBallData();
             BindBoneData();
             BindProgramState();
+            
         }                
         public static int TabIndex
         {
@@ -199,6 +201,8 @@ namespace Nart
         public ICommand ShowCubeCommand { private set; get; }
         public ICommand ResetInterfaceCommand { private set; get; }
         public ICommand GridLoadedCommand { private set; get; }
+        public ICommand ResetCamSizeCommand { private set; get; }
+
         public void InitCamCtrl()
         {
 
@@ -404,7 +408,6 @@ namespace Nart
             SystemData.TrackToggle = !SystemData.TrackToggle;
 
             _mainWindow.Stage1Btn.Visibility = Visibility.Visible;
-
 
             AmplifyModelView();
 
@@ -869,6 +872,18 @@ namespace Nart
             ModelViewWidth = ModelViewCol.ActualWidth;
         }
         /// <summary>
+        /// 重設控制項中的相片大小 
+        /// </summary>
+        private void ResetCamSize(object o)
+        {
+            PresentationSource source = PresentationSource.FromVisual(_mainWindow);
+            System.Windows.Media.Matrix transformToDevice = source.CompositionTarget.TransformToDevice;
+            var pixelSize = (Size)transformToDevice.Transform(new Vector(_mainWindow.CamHost1.ActualWidth, _mainWindow.CamHost1.ActualHeight));
+            var pixelSize2 = (Size)transformToDevice.Transform(new Vector(_mainWindow.CamHost2.ActualWidth, _mainWindow.CamHost2.ActualHeight));
+            _mainWindow.CamHost1.ResetCameraSize(pixelSize.Width, pixelSize.Height);
+            _mainWindow.CamHost2.ResetCameraSize(pixelSize2.Width, pixelSize2.Height);
+        }
+        /// <summary>
         /// 將Grid回復到原始狀態 
         /// </summary>
         private void RestoreGridLength()
@@ -990,17 +1005,17 @@ namespace Nart
             Binding binding1 = new Binding("Name");
             binding1.Source = ProjData;
             binding1.Mode = BindingMode.TwoWay;
-            BindingOperations.SetBinding(_mainWindow.NameTB, TextBlock.TextProperty, binding1);
+            BindingOperations.SetBinding(_mainWindow.NameTB, TextBox.TextProperty, binding1);
 
             Binding binding2 = new Binding("ID");
             binding2.Source = ProjData;
             binding2.Mode = BindingMode.TwoWay;
-            BindingOperations.SetBinding(_mainWindow.IDTB, TextBlock.TextProperty, binding2);
+            BindingOperations.SetBinding(_mainWindow.IDTB, TextBox.TextProperty, binding2);
 
             Binding binding3 = new Binding("Institution");
             binding3.Source = ProjData;
             binding3.Mode = BindingMode.TwoWay;
-            BindingOperations.SetBinding(_mainWindow.InstitutionTB, TextBlock.TextProperty, binding3);
+            BindingOperations.SetBinding(_mainWindow.InstitutionTB, TextBox.TextProperty, binding3);
         }
         /// <summary>
         /// Bind Navigation balls expander裡面的listview跟switch toggle 

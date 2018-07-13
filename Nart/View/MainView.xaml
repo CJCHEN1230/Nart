@@ -99,7 +99,6 @@
                             </i:Interaction.Triggers>
                         </Controls:CameraWrapper>
                         <Rectangle Fill="#FF474747" HorizontalAlignment="Center" Grid.Column="1" Margin="0" Stroke="Black" Width="10" RadiusY="61" RadiusX="61" Grid.ColumnSpan="1" Grid.RowSpan="3"/>
-
                     </Grid>
                 </Border>
             </TabItem>
@@ -166,11 +165,11 @@
 
                             <TextBlock  TextWrapping="Wrap" Text="Institution:" Margin="0,10" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.Column="0" Grid.Row="2"/>
 
-                            <TextBlock x:Name="NameTB"  TextWrapping="Wrap" Text="蔡慧君" Margin="0,10"  Grid.Row="0"   Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <TextBox x:Name="NameTB"         CaretBrush="White"  TextWrapping="Wrap"  Background="Transparent" Foreground="White" BorderThickness="0"  Margin="0,10"  Grid.Row="0"   Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 
-                            <TextBlock x:Name="IDTB" TextWrapping="Wrap" Text="A12345678" Margin="0,10"  Grid.Row="1"  Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <TextBox x:Name="IDTB"                CaretBrush="White"  TextWrapping="Wrap"  Background="Transparent" Foreground="White" BorderThickness="0" Margin="0,10"  Grid.Row="1"  Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 
-                            <TextBlock x:Name="InstitutionTB" TextWrapping="Wrap" Text="" Margin="0,10" Grid.Row="2" Grid.Column="1"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <TextBox x:Name="InstitutionTB" CaretBrush="White"  TextWrapping="Wrap"  Background="Transparent" Foreground="White" BorderThickness="0" Margin="0,10" Grid.Row="2" Grid.Column="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
 
                         </Grid>
                     </Expander.Content>
@@ -200,7 +199,7 @@
                                                 <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
                                             </CheckBox.LayoutTransform>
                                         </CheckBox>
-                                        <TextBox  TextWrapping="Wrap" Margin="5,0,0,0"  Text="{Binding BallName , UpdateSourceTrigger=LostFocus}" Background="Transparent" Foreground="White" BorderThickness="0"/>
+                                        <TextBox  CaretBrush="White"  TextWrapping="Wrap" Margin="5,0,0,0"  Text="{Binding BallName , UpdateSourceTrigger=LostFocus}" HorizontalAlignment="Stretch" Background="Transparent" Foreground="White" BorderThickness="0"/>
                                     </StackPanel>
                                 </Expander.Header>
                                 <Expander.Content>
@@ -351,8 +350,8 @@
                     <Button x:Name="NavBtn" Command="{Binding SetNavigationCommand}" Content="Set up" Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
                     <Button x:Name="RegBtn" Command="{Binding RegisterCommand}" Content="Register"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
                     <Button x:Name="TrackBtn" Command="{Binding TrackCommand}"   Content="Track"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68"/>
-                    <Button x:Name="LoadBall"   Content="LoadBall"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68" Click="LoadBall_Click"/>
-                    <Button x:Name="button" Content="Save Ball Information" VerticalAlignment="Top"    Margin="0,5,2,0"  Click="button_Click_2" Style="{DynamicResource ResourceKey=SideButton}"  Height="68" Visibility="Visible"/>
+                    <Button x:Name="LoadBall"   Content="LoadBall"  Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}" Height="68" Click="LoadBall_Click" Visibility="Visible"/>
+                    <Button x:Name="button" Content="Save Ball Information" VerticalAlignment="Top"    Margin="0,5,2,0"  Click="button_Click_2" Style="{DynamicResource ResourceKey=SideButton}"  Height="68" Visibility="Hidden"/>
                     
                     <Button x:Name="button5" Command="{Binding CtrlRotPlatformCommand}"   Content="rotation" VerticalAlignment="Top"    Margin="0,5,2,0" Style="{DynamicResource ResourceKey=SideButton}"  Height="68" Visibility="Hidden" />
                     
@@ -392,7 +391,13 @@
 
 
         </StackPanel>
-        <GridSplitter   Margin="-5,0,0,0"  Grid.Row="2" Grid.Column="2"   HorizontalAlignment="Left" Background="Transparent"   Width="10" />
+        <GridSplitter   Name="MainSplitter"   Margin="-5,0,0,0"  Grid.Row="2" Grid.Column="2"   HorizontalAlignment="Left" Background="Transparent"   Width="10" >
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="DragCompleted">
+                    <i:InvokeCommandAction Command="{Binding ResetCamSizeCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </GridSplitter>
 
 
     </Grid>

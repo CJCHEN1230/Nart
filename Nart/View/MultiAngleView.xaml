@@ -98,8 +98,8 @@
                         ModelUpDirection="0,0,1"
                         ViewCubeBackText ="R"
                         ViewCubeFrontText="L"
-                        ViewCubeTopText="S"
-                        ViewCubeBottomText="I"
+                        ViewCubeTopText="V"
+                        ViewCubeBottomText="S"
                         ViewCubeLeftText="P"  
                         ViewCubeRightText="A"            
                         ShowFrameRate="True" Grid.Column="2">
@@ -142,8 +142,8 @@
                         ModelUpDirection="0,0,1"
                         ViewCubeBackText ="R"
                         ViewCubeFrontText="L"
-                        ViewCubeTopText="S"
-                        ViewCubeBottomText="I"
+                        ViewCubeTopText="V"
+                        ViewCubeBottomText="S"
                         ViewCubeLeftText="P"  
                         ViewCubeRightText="A"       
                         Grid.Column="2" Grid.Row="2">
@@ -186,8 +186,8 @@
                         ModelUpDirection="0,0,1"                             
                         ViewCubeBackText ="R"
                         ViewCubeFrontText="L"
-                        ViewCubeTopText="S"
-                        ViewCubeBottomText="I"
+                        ViewCubeTopText="V"
+                        ViewCubeBottomText="S"
                         ViewCubeLeftText="P"  
                         ViewCubeRightText="A"                             
                         Grid.RowSpan="3" >

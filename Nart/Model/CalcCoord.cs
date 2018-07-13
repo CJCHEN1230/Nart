@@ -65,10 +65,10 @@ namespace Nart
         /// <summary>
         ///咬板Marker在CT中的座標
         /// </summary>
-        private Point3D[] _oriSplintInCT;
-        private Point3D[] _interSplintInCT;
-        private Point3D[] _finalSplintInCT;
-
+        private Point3D[] _oriSplintInCT = new Point3D[3];
+        private Point3D[] _interSplintInCT = new Point3D[3];
+        private Point3D[] _finalSplintInCT = new Point3D[3];
+        private Point3D[] _headMarkerInCT;
 
 
 
@@ -118,7 +118,7 @@ namespace Nart
 
             //_meanFilter = new MeanFilter(Database);
 
-            
+
 
             CalcLensCenter();
             CalcEpipolarGeometry();
@@ -480,20 +480,38 @@ namespace Nart
         /// </summary>
         private Matrix3D TransformCoordinate(ref Point3D[] a,ref Point3D[] b)
         {
-            Point3D aavg = new Point3D((a[0].X + a[1].X + a[2].X) / 3.0, (a[0].Y + a[1].Y + a[2].Y) / 3.0, (a[0].Z + a[1].Z + a[2].Z) / 3.0);
-            Point3D bavg = new Point3D((b[0].X + b[1].X + b[2].X) / 3.0, (b[0].Y + b[1].Y + b[2].Y) / 3.0, (b[0].Z + b[1].Z + b[2].Z) / 3.0);
+            if (a.Length != b.Length)
+                return new Matrix3D();
 
-            var PT = DenseMatrix.OfArray(new float[,] {
-                { Convert.ToSingle(a[0].X-aavg.X),Convert.ToSingle(a[1].X-aavg.X),Convert.ToSingle(a[2].X-aavg.X)},
-                { Convert.ToSingle(a[0].Y-aavg.Y),Convert.ToSingle(a[1].Y-aavg.Y),Convert.ToSingle(a[2].Y-aavg.Y) },
-                { Convert.ToSingle(a[0].Z-aavg.Z),Convert.ToSingle(a[1].Z-aavg.Z),Convert.ToSingle(a[2].Z-aavg.Z)  }});
+            Point3D aavg = new Point3D(0, 0, 0);
+            Point3D bavg = new Point3D(0, 0, 0);
 
+            int Length = a.Length;
 
+            //先算兩批點的點中心
+            for (int i = 0; i < Length; i++) 
+            {
+                aavg.X += a[i].X;  aavg.Y += a[i].Y; aavg.Z += a[i].Z;
+                bavg.X += b[i].X; bavg.Y += b[i].Y; bavg.Z += b[i].Z;
+                if (i == Length-1)
+                {
+                    aavg.X /= Length; aavg.Y /= Length; aavg.Z /= Length;
+                    bavg.X /= Length; bavg.Y /= Length; bavg.Z /= Length;
+                }
+            }
+       
+            float[,] PTArray = new float[Length, 3];
+            float[,] QArray = new float[Length, 3];
 
-            var Q = DenseMatrix.OfArray(new float[,] {
-                { Convert.ToSingle(b[0].X-bavg.X),Convert.ToSingle(b[0].Y-bavg.Y),Convert.ToSingle(b[0].Z-bavg.Z)},
-                {  Convert.ToSingle(b[1].X-bavg.X),Convert.ToSingle(b[1].Y-bavg.Y),Convert.ToSingle(b[1].Z-bavg.Z) },
-                { Convert.ToSingle(b[2].X-bavg.X),Convert.ToSingle(b[2].Y-bavg.Y), Convert.ToSingle(b[2].Z-bavg.Z) }});
+            for (int i = 0; i < Length; i++)
+            {
+                PTArray[i, 0] = Convert.ToSingle(a[i].X - aavg.X); PTArray[i, 1] = Convert.ToSingle(a[i].Y - aavg.Y); PTArray[i, 2] = Convert.ToSingle(a[i].Z - aavg.Z);
+                QArray[i, 0] = Convert.ToSingle(b[i].X - bavg.X); QArray[i, 1] = Convert.ToSingle(b[i].Y - bavg.Y); QArray[i, 2] = Convert.ToSingle(b[i].Z - bavg.Z);
+            }
+
+            var PT = DenseMatrix.OfArray(PTArray).Transpose();
+            var Q = DenseMatrix.OfArray(QArray);
+            
 
             var A = PT * Q;
             var svd1 = A.Svd(true);
@@ -515,8 +533,10 @@ namespace Nart
                                                                 , 0, 1, 0, 0
                                                                 , 0, 0, 1, 0
                                                                 , -aavg.X, -aavg.Y, -aavg.Z, 1);
-            Matrix3D R1 = new Matrix3D(R[0, 0], R[0, 1], R[0, 2], 0, R[1, 0], R[1, 1], R[1, 2], 0, R[2, 0], R[2, 1],
-                R[2, 2], 0, bavg.X, bavg.Y, bavg.Z, 1);
+            Matrix3D R1 = new Matrix3D(R[0, 0], R[0, 1], R[0, 2], 0
+                                                                  , R[1, 0], R[1, 1], R[1, 2], 0
+                                                                  , R[2, 0], R[2, 1], R[2, 2], 0,
+                                                                  bavg.X, bavg.Y, bavg.Z, 1);
 
 
 
@@ -607,11 +627,6 @@ namespace Nart
                 _oriSplintInCT = new Point3D[3] { new Point3D(matrixInfo[0], matrixInfo[1], matrixInfo[2]),
                                             new Point3D(matrixInfo[3], matrixInfo[4], matrixInfo[5]),
                                             new Point3D(matrixInfo[6], matrixInfo[7], matrixInfo[8])};
-
-
-                
-
-
                 return true;
             }
             catch
@@ -620,6 +635,215 @@ namespace Nart
                 return false;
             }
         }
+
+
+        private void LoadSplintPoint2()
+        {
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                                             
+                {
+                    doc.Load("./data/蔡慧君/原咬.xml");
+                    XmlNodeList pointList = doc.SelectNodes("SplintData/MSFiducial/Point");
+                    Point3D[] fiducialPointMS = new Point3D[pointList.Count];
+                    for (int i = 0; i < pointList.Count; i++)
+                    {
+                        XmlNodeList fiducialPoint = pointList[i].ChildNodes;
+
+                        fiducialPointMS[i].X = Convert.ToDouble(fiducialPoint[0].InnerText);
+                        fiducialPointMS[i].Y = Convert.ToDouble(fiducialPoint[1].InnerText);
+                        fiducialPointMS[i].Z = Convert.ToDouble(fiducialPoint[2].InnerText);
+                    }
+                    pointList = doc.SelectNodes("SplintData/CT/Point");
+                    Point3D[] fiducialPointCT = new Point3D[pointList.Count];
+                    for (int i = 0; i < pointList.Count; i++)
+                    {
+                        XmlNodeList fiducialPoint = pointList[i].ChildNodes;
+
+                        fiducialPointCT[i].X = Convert.ToDouble(fiducialPoint[0].InnerText);
+                        fiducialPointCT[i].Y = Convert.ToDouble(fiducialPoint[1].InnerText);
+                        fiducialPointCT[i].Z = Convert.ToDouble(fiducialPoint[2].InnerText);
+                    }
+                    pointList = doc.SelectNodes("SplintData/MSMarker/Point");
+                    Point3D[] MSMarkerPoint = new Point3D[pointList.Count];
+                    for (int i = 0; i < pointList.Count; i++)
+                    {
+                        XmlNodeList fiducialPoint = pointList[i].ChildNodes;
+
+                        MSMarkerPoint[i].X = Convert.ToDouble(fiducialPoint[0].InnerText);
+                        MSMarkerPoint[i].Y = Convert.ToDouble(fiducialPoint[1].InnerText);
+                        MSMarkerPoint[i].Z = Convert.ToDouble(fiducialPoint[2].InnerText);
+                    }
+
+                    Matrix3D transformMat = TransformCoordinate(ref fiducialPointMS, ref fiducialPointCT);
+                    transformMat.Transform(MSMarkerPoint);
+                    _oriSplintInCT = MSMarkerPoint;
+
+                    string path = "D:\\Desktop\\OriSplintInCT.txt";
+                    try
+                    {
+                        string fileContent = File.ReadAllText(path);
+                        string[] contentArray = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
+                        float[] pointInfo = Array.ConvertAll(contentArray, float.Parse);
+                        _oriSplintInCT[0] = new Point3D(pointInfo[0], pointInfo[1], pointInfo[2]);
+                        _oriSplintInCT[1] = new Point3D(pointInfo[3], pointInfo[4], pointInfo[5]);
+                        _oriSplintInCT[2] = new Point3D(pointInfo[6], pointInfo[7], pointInfo[8]);
+
+                        //////////////////////////
+                        Matrix3D level2 = TransformCoordinate(ref _oriSplintInCT, ref MSMarkerPoint);
+
+                        level2.Transform(fiducialPointCT);
+
+                    }
+                    catch
+                    {
+                        System.Windows.MessageBox.Show("點的讀取錯誤");
+                    }
+                }
+                {
+                    doc.Load("./data/蔡慧君/疊上inter.xml");
+                    XmlNodeList pointList = doc.SelectNodes("SplintData/MSFiducial/Point");
+                    Point3D[] fiducialPointMS = new Point3D[pointList.Count];
+                    for (int i = 0; i < pointList.Count; i++)
+                    {
+                        XmlNodeList fiducialPoint = pointList[i].ChildNodes;
+
+                        fiducialPointMS[i].X = Convert.ToDouble(fiducialPoint[0].InnerText);
+                        fiducialPointMS[i].Y = Convert.ToDouble(fiducialPoint[1].InnerText);
+                        fiducialPointMS[i].Z = Convert.ToDouble(fiducialPoint[2].InnerText);
+                    }
+                    pointList = doc.SelectNodes("SplintData/CT/Point");
+                    Point3D[] fiducialPointCT = new Point3D[pointList.Count];
+                    for (int i = 0; i < pointList.Count; i++)
+                    {
+                        XmlNodeList fiducialPoint = pointList[i].ChildNodes;
+
+                        fiducialPointCT[i].X = Convert.ToDouble(fiducialPoint[0].InnerText);
+                        fiducialPointCT[i].Y = Convert.ToDouble(fiducialPoint[1].InnerText);
+                        fiducialPointCT[i].Z = Convert.ToDouble(fiducialPoint[2].InnerText);
+                    }
+                    pointList = doc.SelectNodes("SplintData/MSMarker/Point");
+                    Point3D[] MSMarkerPoint = new Point3D[pointList.Count];
+                    for (int i = 0; i < pointList.Count; i++)
+                    {
+                        XmlNodeList fiducialPoint = pointList[i].ChildNodes;
+
+                        MSMarkerPoint[i].X = Convert.ToDouble(fiducialPoint[0].InnerText);
+                        MSMarkerPoint[i].Y = Convert.ToDouble(fiducialPoint[1].InnerText);
+                        MSMarkerPoint[i].Z = Convert.ToDouble(fiducialPoint[2].InnerText);
+                    }
+
+                    Matrix3D transformMat = TransformCoordinate(ref fiducialPointMS, ref fiducialPointCT);
+                    transformMat.Transform(MSMarkerPoint);
+                    _interSplintInCT = MSMarkerPoint;
+
+                    //string path = "D:\\Desktop\\interSplintInCT.txt";
+                    //try
+                    //{
+                    //    string fileContent = File.ReadAllText(path);
+                    //    string[] contentArray = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
+                    //    float[] pointInfo = Array.ConvertAll(contentArray, float.Parse);
+                    //    _interSplintInCT[0] = new Point3D(pointInfo[0], pointInfo[1], pointInfo[2]);
+                    //    _interSplintInCT[1] = new Point3D(pointInfo[3], pointInfo[4], pointInfo[5]);
+                    //    _interSplintInCT[2] = new Point3D(pointInfo[6], pointInfo[7], pointInfo[8]);
+
+                    //    //////////////////////////
+                    //    Matrix3D level2 = TransformCoordinate(ref _interSplintInCT, ref MSMarkerPoint);
+
+                    //    level2.Transform(fiducialPointCT);
+                    //}
+                    //catch
+                    //{
+                    //    System.Windows.MessageBox.Show("點的讀取錯誤");
+
+                    //}
+
+                }
+                {
+                    doc.Load("./data/蔡慧君/疊下final.xml");
+                    XmlNodeList pointList = doc.SelectNodes("SplintData/MSFiducial/Point");
+                    Point3D[] fiducialPointMS = new Point3D[pointList.Count];
+                    for (int i = 0; i < pointList.Count; i++)
+                    {
+                        XmlNodeList fiducialPoint = pointList[i].ChildNodes;
+
+                        fiducialPointMS[i].X = Convert.ToDouble(fiducialPoint[0].InnerText);
+                        fiducialPointMS[i].Y = Convert.ToDouble(fiducialPoint[1].InnerText);
+                        fiducialPointMS[i].Z = Convert.ToDouble(fiducialPoint[2].InnerText);
+                    }
+                    pointList = doc.SelectNodes("SplintData/CT/Point");
+                    Point3D[] fiducialPointCT = new Point3D[pointList.Count];
+                    for (int i = 0; i < pointList.Count; i++)
+                    {
+                        XmlNodeList fiducialPoint = pointList[i].ChildNodes;
+
+                        fiducialPointCT[i].X = Convert.ToDouble(fiducialPoint[0].InnerText);
+                        fiducialPointCT[i].Y = Convert.ToDouble(fiducialPoint[1].InnerText);
+                        fiducialPointCT[i].Z = Convert.ToDouble(fiducialPoint[2].InnerText);
+                    }
+                    pointList = doc.SelectNodes("SplintData/MSMarker/Point");
+                    Point3D[] MSMarkerPoint = new Point3D[pointList.Count];
+                    for (int i = 0; i < pointList.Count; i++)
+                    {
+                        XmlNodeList fiducialPoint = pointList[i].ChildNodes;
+
+                        MSMarkerPoint[i].X = Convert.ToDouble(fiducialPoint[0].InnerText);
+                        MSMarkerPoint[i].Y = Convert.ToDouble(fiducialPoint[1].InnerText);
+                        MSMarkerPoint[i].Z = Convert.ToDouble(fiducialPoint[2].InnerText);
+                    }
+
+                    Matrix3D transformMat = TransformCoordinate(ref fiducialPointMS, ref fiducialPointCT);
+                    transformMat.Transform(MSMarkerPoint);
+                    _finalSplintInCT = MSMarkerPoint;
+
+                    //string path = "D:\\Desktop\\finalSplintInCT.txt";
+                    //try
+                    //{
+                    //    string fileContent = File.ReadAllText(path);
+                    //    string[] contentArray = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
+                    //    float[] pointInfo = Array.ConvertAll(contentArray, float.Parse);
+                    //    _finalSplintInCT[0] = new Point3D(pointInfo[0], pointInfo[1], pointInfo[2]);
+                    //    _finalSplintInCT[1] = new Point3D(pointInfo[3], pointInfo[4], pointInfo[5]);
+                    //    _finalSplintInCT[2] = new Point3D(pointInfo[6], pointInfo[7], pointInfo[8]);
+
+                    //    Matrix3D level2 = TransformCoordinate(ref _finalSplintInCT, ref MSMarkerPoint);
+
+                    //    level2.Transform(fiducialPointCT);
+                    //}
+                    //catch
+                    //{
+                    //    System.Windows.MessageBox.Show("點的讀取錯誤");
+
+                    //}
+                }
+            }
+            catch
+            {
+                MessageBox.Show("咬板檔案錯誤");
+            }
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
         /// <summary>
         /// 輸入點群資料跟指定的Marker(上、下顎、頭)ID，回傳資料庫的索引位置
         /// </summary>
@@ -676,6 +900,10 @@ namespace Nart
                 SystemData.RegToggle = false;
                 return;
             }
+
+            LoadSplintPoint2();
+
+
             //簡化資料庫的Marker
             SimplifyDatabase();
             //
@@ -883,6 +1111,19 @@ namespace Nart
                     _cTtoWorld = TransformCoordinate(ref _oriSplintInCT,ref  _curWorldPoints[SystemData.RegSplintIndex].ThreePoints);
                     _worldtoCT = TransformCoordinate(ref _curWorldPoints[SystemData.RegSplintIndex].ThreePoints,ref  _oriSplintInCT);
 
+                    _headMarkerInCT = new Point3D[3];
+
+                    _curWorldPoints[SystemData.RegHeadIndex].ThreePoints.CopyTo(_headMarkerInCT, 0);
+
+                      _worldtoCT.Transform(_headMarkerInCT);
+
+                    
+
+
+
+
+
+
 
                     Marker3D oriWorldPoint1 = new Marker3D
                     {
@@ -973,14 +1214,20 @@ namespace Nart
                     {
                   
                         int splintMarkerIndex = GetSpecIndex(_curWorldPoints, "Splint");//取得當前世界座標在註冊時的座標索引值是多少
+                        Matrix3D level1;
+                                     
+                            
+                        if (SystemData.IsFirstStage)           
+                            level1 = TransformCoordinate(ref _interSplintInCT, ref _curWorldPoints[i].ThreePoints);
+                        else if(SystemData.IsSecondStage)
+                            level1 = TransformCoordinate(ref _finalSplintInCT, ref _curWorldPoints[i].ThreePoints);
+                        else
+                            level1 = TransformCoordinate(ref _oriSplintInCT, ref _curWorldPoints[i].ThreePoints);
+
+                        Matrix3D level2 = TransformCoordinate(ref _curWorldPoints[currentHeadIndex].ThreePoints,ref  _headMarkerInCT);
 
 
-                        Matrix3D level1 = TransformCoordinate(ref _oriSplintInCT,ref _curWorldPoints[i].ThreePoints);
-
-                        Matrix3D level2 = TransformCoordinate(ref _curWorldPoints[currentHeadIndex].ThreePoints,ref  _oriWorldPoints[SystemData.RegHeadIndex].ThreePoints);
-
-
-                        Matrix3D final =  level1 * level2 * _worldtoCT;
+                        Matrix3D final =  level1 * level2;
 
                         var boneCollection = MainViewModel.ProjData.BoneCollection;
                         foreach (BoneModel boneModel in boneCollection)
@@ -997,7 +1244,7 @@ namespace Nart
             }
         }
         /// <summary>
-        /// 計算出FH平片所形成的坐標系，以及Go點連線與下顎對稱面交點
+        /// 計算出FH平面所形成的坐標系，以及Go點連線與下顎對稱面交點
         /// </summary>
         private void CalcFHCoord()
         {

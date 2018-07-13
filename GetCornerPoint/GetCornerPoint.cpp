@@ -65,8 +65,11 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 
 
 	Mat threshold_output; //二值化後結果
-	adaptiveThreshold(src1, threshold_output, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 65, 0);//自適性二值化結果
+	adaptiveThreshold(src1, threshold_output, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 35, 0);//自適性二值化結果
+	
 	blur(threshold_output, threshold_output, Size(3, 3));  //模糊化濾小輪廓
+	//medianBlur(threshold_output, threshold_output, 3);
+
 	vector<vector<Point>> contours;
 	/// 將二值化結果尋找輪廓
 	findContours(threshold_output, contours,/* hierarchy,*/CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE/*, Point(0, 0)*/);
@@ -109,9 +112,9 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 	concurrent_vector<vector<MyPoint>> EachEllipsePoint;//存每個橢圓內部角點
 
 
-
+	Mat srcClone=src1.clone();
 														//此平行運算是分別對找到的橢圓計算角點
-	parallel_for(0u,/*1u*/ (unsigned int)EllipseSet.size(), [&src1, &mask, &EllipseSet, &EachEllipsePoint](int value)
+	parallel_for(0u,/*1u*/ (unsigned int)EllipseSet.size(), [&src1,&srcClone, &mask, &EllipseSet, &EachEllipsePoint](int value)
 	{
 		//分別對橢圓所在的位置擷取成最小方框
 
@@ -123,12 +126,12 @@ DLLIMPORT void CalcPoint(unsigned char* srcPtr1, int ImageRow, int ImageCol, vec
 			return;
 		}
 
-		Mat srcTemp = src1(ROI);
+		Mat srcTemp = srcClone(ROI);
 		Mat maskTemp = mask(ROI);
 
 
 		/// Shi-Tomasi的參數設置  
-		double qualityLevel = 0.001;	//最小特徵值小於qualityLevel*最大特徵值的點將被忽略
+		double qualityLevel = 0.01;	//最小特徵值小於qualityLevel*最大特徵值的點將被忽略
 		double minDistance = 20;		//兩角點間最小距離 
 		int blockSize = 3;
 		bool useHarrisDetector = false;   //不使用Harris  

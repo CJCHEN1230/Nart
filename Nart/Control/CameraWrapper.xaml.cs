@@ -41,7 +41,8 @@ namespace Nart.Control
         private void DefaultControlSetting(double width, double height)
         {
             ((System.ComponentModel.ISupportInitialize)(IcImagingControl)).BeginInit();
-            IcImagingControl.Size = new System.Drawing.Size((int)width, (int)height);
+            //IcImagingControl.Size = new System.Drawing.Size((int)width, (int)height);
+            //ResetCameraSize(width, height);
             IcImagingControl.DeviceListChangedExecutionMode = TIS.Imaging.EventExecutionMode.Invoke;
             IcImagingControl.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
             IcImagingControl.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
@@ -52,10 +53,17 @@ namespace Nart.Control
             IcImagingControl.LiveCaptureContinuous = true; //LiveCaptureContinuous = True means that every frame is copied to the ring buffer.
             IcImagingControl.LiveCaptureLastImage = false;
             IcImagingControl.LiveDisplay = false; //設定為false才能將影像處理顯示在control
-            IcImagingControl.LiveDisplayHeight = IcImagingControl.Height;
-            IcImagingControl.LiveDisplayWidth = IcImagingControl.Width;
+            //IcImagingControl.LiveDisplayHeight = IcImagingControl.Height;
+            //IcImagingControl.LiveDisplayWidth = IcImagingControl.Width;
+            ResetCameraSize(width, height);
             IcImagingControl.MemoryCurrentGrabberColorformat = ICImagingControlColorformats.ICY800;
             ((System.ComponentModel.ISupportInitialize)(IcImagingControl)).EndInit();
+        }
+        public void ResetCameraSize(double width, double height)
+        {
+            IcImagingControl.Size = new System.Drawing.Size((int)width, (int)height);
+            IcImagingControl.LiveDisplayHeight = IcImagingControl.Height;
+            IcImagingControl.LiveDisplayWidth = IcImagingControl.Width;
         }
     }
 }

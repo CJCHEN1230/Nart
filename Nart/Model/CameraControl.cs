@@ -218,7 +218,6 @@ namespace Nart
                 {
 
                     byte* data = _displayBuffer[0].Ptr;
-
                     _outputMarker[0] = _corPtFltr[0].GetCornerPoint(IcImagingControl[0].ImageSize.Width, IcImagingControl[0].ImageSize.Height, data);
 
                     _count.Signal();

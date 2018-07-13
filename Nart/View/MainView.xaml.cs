@@ -51,6 +51,10 @@ namespace Nart
             this.DataContext = MainViewModel;
             AllocConsole();
             
+        
+
+           
+
         }
         public void LoadBalls()
         {
@@ -110,9 +114,6 @@ namespace Nart
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
-
-
-        
         private void button_Click_1(object sender, RoutedEventArgs e)
         {
            
@@ -184,7 +185,6 @@ namespace Nart
         {
                 LoadBalls();
         }
-
         private void CalcBtn_Click(object sender, RoutedEventArgs e)
         {
             BoneModel model1 = MainViewModel.ProjData.BoneCollection[1];
@@ -194,32 +194,173 @@ namespace Nart
             HelixToolkit.Wpf.SharpDX.Core.Vector3Collection model2Position = model2.Geometry.Positions;
 
             double total = 0;
+            double Xtotal = 0;
+            double Ytotal = 0;
+            double Ztotal = 0;
+
+            double totalfordev = 0;
+            double Xtotalfordev = 0;
+            double Ytotalfordev = 0;
+            double Ztotalfordev = 0;
+            double RMStotal = 0;
+
             double max = 0;
+            double XMax = 0;
+            double YMax = 0;
+            double ZMax = 0;
+            if (model1Position.Count != model2Position.Count)
+            {
+                System.Windows.MessageBox.Show("模型不同  有錯");
+                return;
+            }
             for(int i =0;i<model1Position.Count ;i++)
             {
-                if (Math.Sqrt(
-                              Math.Pow(model1Position[i].X - model2Position[i].X, 2)
-                          + Math.Pow(model1Position[i].Y - model2Position[i].Y, 2)
-                          + Math.Pow(model1Position[i].Z - model2Position[i].Z, 2)
-                          ) > max)
-                {
-                    max = Math.Sqrt(
-                              Math.Pow(model1Position[i].X - model2Position[i].X, 2)
-                          + Math.Pow(model1Position[i].Y - model2Position[i].Y, 2)
-                          + Math.Pow(model1Position[i].Z - model2Position[i].Z, 2)
-                          );
+                double distance = Math.Sqrt(Math.Pow(model1Position[i].X - model2Position[i].X, 2)
+                                                + Math.Pow(model1Position[i].Y - model2Position[i].Y, 2)
+                                                + Math.Pow(model1Position[i].Z - model2Position[i].Z, 2));
 
-                }
+                double Xdistance = Math.Abs(model1Position[i].X - model2Position[i].X);
+                double Ydistance = Math.Abs(model1Position[i].Y - model2Position[i].Y);
+                double Zdistance = Math.Abs(model1Position[i].Z - model2Position[i].Z);
 
-                total += Math.Sqrt(
-                              Math.Pow(model1Position[i].X - model2Position[i].X, 2)
-                          + Math.Pow(model1Position[i].Y - model2Position[i].Y, 2)
-                          + Math.Pow(model1Position[i].Z - model2Position[i].Z, 2)
-                          );
+
+                //目前距離大於最大的          
+                if (distance > max)
+                    max = distance;
+                
+                if (Xdistance > XMax)                
+                    XMax = Xdistance;
+                
+                if (Ydistance > YMax)                
+                    YMax = Ydistance;
+                                
+                if (Zdistance > ZMax)                
+                    ZMax = Zdistance;                
+
+
+                total += distance;
+                Xtotal += Xdistance;
+                Ytotal += Ydistance;
+                Ztotal += Zdistance;
+                RMStotal += distance * distance;
+                
             }
 
-            Console.WriteLine("Mean:"+total/model1Position.Count);
-            Console.WriteLine("Max:" + max);
+            double avg = Math.Round(total / model1Position.Count, 3);
+            double xavg = Math.Round(Xtotal / model1Position.Count, 3);
+            double yavg = Math.Round(Ytotal / model1Position.Count, 3);
+            double zavg = Math.Round(Ztotal / model1Position.Count, 3);
+
+
+
+            for (int i = 0; i < model1Position.Count; i++)
+            {
+                double distance = Math.Sqrt(Math.Pow(model1Position[i].X - model2Position[i].X, 2)
+                                                + Math.Pow(model1Position[i].Y - model2Position[i].Y, 2)
+                                                + Math.Pow(model1Position[i].Z - model2Position[i].Z, 2));
+
+                double Xdistance = Math.Abs(model1Position[i].X - model2Position[i].X);
+                double Ydistance = Math.Abs(model1Position[i].Y - model2Position[i].Y);
+                double Zdistance = Math.Abs(model1Position[i].Z - model2Position[i].Z);
+
+
+            
+
+                totalfordev += (distance- avg) * (distance - avg);
+                Xtotalfordev += (Xdistance - xavg) * (Xdistance - xavg);
+                Ytotalfordev += (Ydistance - yavg) * (Ydistance - yavg);
+                Ztotalfordev += (Zdistance - zavg) * (Zdistance - zavg);
+            }
+            
+            double Dev = Math.Sqrt(totalfordev / model1Position.Count);
+            double XDev = Math.Sqrt(Xtotalfordev / model1Position.Count);
+            double YDev = Math.Sqrt(Ytotalfordev / model1Position.Count);
+            double ZDev = Math.Sqrt(Ztotalfordev / model1Position.Count);
+
+            double RMS = Math.Sqrt(RMStotal / model1Position.Count);
+
+
+
+            Console.WriteLine("模型一:" + model1.FilePath);
+            Console.WriteLine("模型二:" + model2.FilePath);
+            Console.WriteLine("整體:" + avg + "±" + Math.Round(Dev, 3) + "  " + Math.Round(max, 3));
+
+
+
+            Console.WriteLine("RMS Error:" + Math.Round(RMS, 3));
+
+            Console.WriteLine("XYZ Mean:" + xavg + "±" + Math.Round(XDev, 3) + "  " + yavg + "±" + Math.Round(YDev, 3) + "  " + zavg + "±" + Math.Round(ZDev, 3));
+            
+            Console.WriteLine("XYZ Max:" + Math.Round(XMax, 3) + "  " + Math.Round(YMax, 3) + "  " + Math.Round(ZMax, 3) + "  ");
+
+
+            Console.WriteLine("\n");
+        }
+
+        //用來輸入文字文件，然後輸出球的模型檔案
+        private void SaveBall()
+        {
+            string path= "D:\\Desktop\\新文字文件.txt";
+            try
+            {
+                string fileContent = File.ReadAllText(path);
+                string[] contentArray = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
+                float[] pointInfo = Array.ConvertAll(contentArray, float.Parse);
+                if (pointInfo.Length%3 != 0)                
+                    throw new Exception();
+
+                var ballContainer = new HelixToolkit.Wpf.SharpDX.MeshBuilder();
+                for (int i = 0; i < pointInfo.Length / 3; i++) 
+                {
+                    ballContainer.AddSphere(new Vector3(pointInfo[i * 3], pointInfo[i * 3 + 1], pointInfo[i * 3 + 2]), 1.5);                   
+                }
+
+                System.Windows.Media.Media3D.MeshGeometry3D ballMesh = new System.Windows.Media.Media3D.MeshGeometry3D
+                {
+                    Positions = new Point3DCollection(),
+                    Normals = new Vector3DCollection(),
+                    TriangleIndices = new Int32Collection()
+                };
+                HelixToolkit.Wpf.SharpDX.MeshGeometry3D geometry = ballContainer.ToMeshGeometry3D();
+
+                foreach (Vector3 position in geometry.Positions)
+                {
+                    ballMesh.Positions.Add(new Point3D(position.X, position.Y, position.Z));
+                }
+                foreach (Vector3 normal in geometry.Normals)
+                {
+                    ballMesh.Normals.Add(new Vector3D(normal.X, normal.Y, normal.Z));
+                }
+                foreach (int triangleindice in geometry.TriangleIndices)
+                {
+                    ballMesh.TriangleIndices.Add(triangleindice);
+                }
+
+                System.Windows.Media.Media3D.GeometryModel3D ballModel = new System.Windows.Media.Media3D.GeometryModel3D
+                {
+                    Geometry = ballMesh,
+                };
+
+                Model3DGroup ballGroup = new Model3DGroup();
+
+
+                ballGroup.Children.Add(ballModel);
+
+                StlExporter export1 = new StlExporter();
+                string name1 = "ball.stl";
+                using (var fileStream = File.Create("D:\\Desktop\\" + name1))
+                {
+                    export1.Export(ballGroup, fileStream);
+                }
+
+
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("點的讀取錯誤");
+                
+            }
+
         }
     }
 }
